@@ -51,7 +51,9 @@ const RandumText = ({ navigation }) => {
       {/* Hiển thị 12 chữ ngẫu nhiên */}
       <Text onPress={generateRandomWords}>Đổi chữ khác</Text>
       {randomWords.map((word) => (
-        <Text key={word}>{word}</Text>
+        <Text style={styles.randumText}>
+          <Text key={word}>{word}</Text>
+        </Text>
       ))}
       <TouchableOpacity onPress={() => navigation.navigate("Account")}>
         <Text>Next</Text>

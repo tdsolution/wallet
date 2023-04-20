@@ -1,20 +1,16 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Button,
-  TextInput,
-} from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "../Style/Style";
 
 const Import = ({ navigation }) => {
-  // const [number, onChangeNumber] = React.useState("");
-
+  // Điều kiện đê Show
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   return (
     <View>
-      <TouchableOpacity style={styles.importGoBack} onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        style={styles.importGoBack}
+        onPress={() => navigation.goBack()}
+      >
         <Text style={styles.backButton}>
           <Image
             style={styles.backButtonimg}
@@ -38,10 +34,13 @@ const Import = ({ navigation }) => {
             <View>
               <View style={styles.importText}>
                 <Text style={styles.loginText1}>Secret Recovery Phrase</Text>
-                <Text>Show</Text>
+                <Text onPress={() => setSecureTextEntry(!secureTextEntry)}>
+                  Show
+                </Text>
               </View>
 
               <TextInput
+                secureTextEntry={secureTextEntry}
                 style={[styles.importInput, styles.importShawdow]}
                 placeholder="..."
               />
@@ -50,10 +49,13 @@ const Import = ({ navigation }) => {
             <View>
               <View style={styles.importText}>
                 <Text style={styles.loginText1}>Secret Recovery Phrase</Text>
-                <Text>Show</Text>
+                <Text nPress={() => setSecureTextEntry(!secureTextEntry)}>
+                  Show
+                </Text>
               </View>
 
               <TextInput
+                secureTextEntry={secureTextEntry}
                 style={[styles.importInput, styles.importShawdow]}
                 // onChangeText={onChangeNumber}
                 // value={number}
@@ -68,6 +70,7 @@ const Import = ({ navigation }) => {
               </View>
 
               <TextInput
+                secureTextEntry={true}
                 style={[styles.importInput, styles.importShawdow]}
                 // onChangeText={onChangeNumber}
                 // value={number}

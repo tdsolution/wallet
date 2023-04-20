@@ -6,11 +6,16 @@ import Login from "./Commponents/Page/Login";
 import Import from "./Commponents/Page/Import";
 import RandumText from "./Commponents/Page/RandumText";
 import Account from "./Commponents/Page/Account";
+import Spinner from 'react-native-loading-spinner-overlay';
+import { useState } from "react";
+import { ActivityIndicator } from 'react-native';
 
 export default function App() {
+  // const [isLoading, setIsLoading] = useState(false);
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
+      {/* {isLoading && <ActivityIndicator />} */}
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={({ route, navigation }) => ({
@@ -19,6 +24,7 @@ export default function App() {
           ...TransitionPresets.ModalPresentationIOS,
         })}
       >
+        
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="BackupLogin" component={BackupLogin} />
         <Stack.Screen name="Import" component={Import} />

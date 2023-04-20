@@ -27,6 +27,16 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: "center",
   },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   //  CSS Button
   buttonContainer: {
     alignItems: "center",
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
     height:40,
-    fontSize:20,
+    fontSize:15,
   },
   importShawdow: {
     // borderWidth: 1,
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.8,
-    shadowRadius: 20,
+    shadowRadius: 5,
     elevation: 3,
   },
   importTextBottom: {
@@ -164,6 +174,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 20,
     textAlign: "center",
+  },
+  // Randum Text
+  randumText:{
+    margin:5,
+    flexDirection: "row",
   },
 });
 

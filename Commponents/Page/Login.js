@@ -1,8 +1,9 @@
-import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import styles from "../Style/Style";
 import { useNavigation } from "@react-navigation/native";
+
 const data = [
   {
     id: 1,
@@ -24,6 +25,14 @@ const data = [
   },
 ];
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleNavigate = () => {
+    setIsLoading(true); // Set isLoading = true khi chuyển trang
+    setTimeout(() => {
+      setIsLoading(false); // Set isLoading = false sau 1s để tắt hiệu ứng loading
+      navigation.navigate("BackupLogin");
+    }, 3000);
+  };
   const navigation = useNavigation();
   // console.log("ffffffffffffff",navigation);
   const renderItem = ({ item }) => {
@@ -48,10 +57,12 @@ const Login = () => {
         />
         {/* Button chuyển trang */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("BackupLogin")}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleNavigate}>
+            {isLoading && (
+              <View style={styles.loading}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            )}
             <Text>Create a new wallet</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Import")}>
