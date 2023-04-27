@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {trendyColor, height, width} from '../../assets/styles/common';
-
+// Dimensions README.md
 var fullWidth = Dimensions.get('window').width;
 var fullHeight = Dimensions.get('window').height;
 

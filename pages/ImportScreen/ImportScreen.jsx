@@ -104,7 +104,7 @@ export default function ImportScreen({ navigation }) {
         </View>
       </SafeAreaView>
       <ExternalShadow>
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate("BottomNavigation")}>
           <Text style={stylesImport.button}>Import</Text>
         </Pressable>
       </ExternalShadow>
