@@ -19,8 +19,7 @@ var fullWidth = Dimensions.get("window").width;
 const Setting = ({ navigation }) => {
   // Out về trang chủ
   const handleLogout = () => {
-    clearAll();
-    navigation.navigate('navigationlogin');
+    navigation.navigate('Login');
   };
 
   return (
