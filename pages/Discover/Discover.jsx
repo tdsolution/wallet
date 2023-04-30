@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image, Pressable, Dimensions } from "react-native";
+import {View, Text, SafeAreaView, Image, Pressable, Dimensions} from "react-native";
 import React from "react";
 import StyleDiscover from "./StyleDiscover";
 import images from "../../assets/images";
@@ -92,6 +92,9 @@ const Discover = ({ navigation }) => {
           autoplay
         />
       </View>
+    {/*    ==== Button Send and Receive ===== */}
+    {/*    Button Send */}
+
     </SafeAreaView>
   );
 };

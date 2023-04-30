@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
 import React from "react";
-import { WebView } from "react-native-webview";
+import { View } from "react-native";
 
 const YOUTUBE = "https://www.youtube.com";
 const Browser = () => {
