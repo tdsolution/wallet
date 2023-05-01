@@ -5,6 +5,9 @@ import images from "../../assets/images";
 import ExternalShadow from "../../commponents/BoxShadow/ExternalShadow";
 import ButtonToBack from "../../commponents/ButtonToBack/ButtonToBack";
 import Carousel from "react-native-snap-carousel";
+import styleDiscover from "./StyleDiscover";
+import InternalShadow from "../../commponents/BoxShadow/InternalShadow";
+import Images from "../../assets/images";
 
 const Discover = ({ navigation }) => {
   // Setting Carousel
@@ -92,8 +95,77 @@ const Discover = ({ navigation }) => {
           autoplay
         />
       </View>
-    {/*    ==== Button Send and Receive ===== */}
-    {/*    Button Send */}
+    {/*    ==== Button Send and Receive and Copy ===== */}
+        <View style={styleDiscover.threeButtonWrap}>
+            {/*Button Send */}
+            <ExternalShadow>
+                <Pressable style={styleDiscover.button}>
+                    <ExternalShadow style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }} padding={0.1}>
+                        <InternalShadow style={styleDiscover.innnerShadow}>
+                            <Image source={images.iconSend} style={styleDiscover.contentImage}/>
+                        </InternalShadow>
+                    </ExternalShadow>
+                    <Text style={[styleDiscover.textButton, styleDiscover.textShadow]}>Send</Text>
+                </Pressable>
+            </ExternalShadow>
+            {/*Button Receive*/}
+            <ExternalShadow>
+                <Pressable style={styleDiscover.button}>
+                    <ExternalShadow style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }} padding={0.1}>
+                        <InternalShadow style={styleDiscover.innnerShadow}>
+                            <Image source={images.iconReceive} style={styleDiscover.contentImage}/>
+                        </InternalShadow>
+                    </ExternalShadow>
+                    <Text style={[styleDiscover.textButton, styleDiscover.textShadow]}>Receive</Text>
+                </Pressable>
+            </ExternalShadow>
+            {/*Button copy*/}
+            <ExternalShadow>
+                <Pressable style={[
+                    styleDiscover.button,
+                    {
+                        marginRight: 5,
+                        width: 30,
+                        height: 35,
+                    },
+                ]}>
+                   <ExternalShadow style={{
+                       alignItems: 'center',
+                       justifyContent: 'center',
+                   }} padding={0.1}>
+                       <InternalShadow style={styleDiscover.innnerShadow}>
+                            <Image source={images.iconClipBoard} style={styleDiscover.contentImage}/>
+                       </InternalShadow>
+                   </ExternalShadow>
+                </Pressable>
+            </ExternalShadow>
+
+        </View>
+        {/*    Line    */}
+        <View
+            style={[
+                styleDiscover.line,
+                {
+                    marginTop: 10,
+                    opacity: 0.6,
+                },
+            ]}
+        />
+        <View
+            style={[
+                styleDiscover.line,
+                {
+                    marginBottom: 10,
+                    opacity: 0.4,
+                },
+            ]}
+        />
 
     </SafeAreaView>
   );

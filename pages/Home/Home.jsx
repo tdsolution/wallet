@@ -182,6 +182,7 @@ export default function HomePages() {
                 </Text>
               </Pressable>
             </ExternalShadow>
+            {/*Button Receive*/}
             <ExternalShadow>
               <Pressable style={StyleHome.button}>
                 <ExternalShadow
@@ -203,6 +204,7 @@ export default function HomePages() {
                 </Text>
               </Pressable>
             </ExternalShadow>
+            {/*Button Buy*/}
             <ExternalShadow>
               <Pressable style={StyleHome.button}>
                 <ExternalShadow
