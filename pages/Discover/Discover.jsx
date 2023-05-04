@@ -1,23 +1,21 @@
+import React from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
+  Dimensions,
   Image,
   Pressable,
-  Dimensions,
+  SafeAreaView,
+  Text,
+  View,
 } from "react-native";
-import React from "react";
-import StyleDiscover from "./StyleDiscover";
+import Carousel from "react-native-snap-carousel";
 import images from "../../assets/images";
 import ExternalShadow from "../../commponents/BoxShadow/ExternalShadow";
-import ButtonToBack from "../../commponents/ButtonToBack/ButtonToBack";
-import Carousel from "react-native-snap-carousel";
-import styleDiscover from "./StyleDiscover";
 import InternalShadow from "../../commponents/BoxShadow/InternalShadow";
-import Images from "../../assets/images";
+import ButtonToBack from "../../commponents/ButtonToBack/ButtonToBack";
+import { default as StyleDiscover, default as styleDiscover } from "./StyleDiscover";
 
 const Discover = ({ navigation }) => {
-  // Setting Carousel
+  //  Setting Carousel
   const SLIDER_WIDTH = Dimensions.get("window").width;
   const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
   const data = [
@@ -177,7 +175,8 @@ const Discover = ({ navigation }) => {
           </Pressable>
         </ExternalShadow>
       </View>
-      {/*    Line    */}
+      {/*    Line   */}
+      
       <View
         style={[
           styleDiscover.line,
