@@ -13,7 +13,6 @@ const Login = ({ navigation }) => {
     <>
       <View style={styles.container}>
         <MyCarousel />
-        {/* // Footer bootom */}
         <View style={styles.footer}>
           <ExternalShadow>
             <TouchableOpacity onPress={() => navigation.navigate("Backup")}>
