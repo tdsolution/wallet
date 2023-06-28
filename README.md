@@ -5,6 +5,8 @@ Chạy build dự án lên IOS và Android: https://docs.expo.dev/workflow/custo
 
 -- npx expo run:android
 
+[Figma](https://www.figma.com/file/dCYRRsOseWM32zVODtkkI1/Trendydefi?type=design&node-id=0-1&mode=design&t=GDA7bEzmsU4NBnnT-0)
+
 # Ethers
 -- Thư viện doc: https://docs.ethers.org/v5/cookbook/react-native/
 
