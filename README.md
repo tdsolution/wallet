@@ -1,17 +1,61 @@
-### Chạy Build trên Android và IOS
-Chạy build dự án lên IOS và Android: https://docs.expo.dev/workflow/customizing/
+# Tonkeeper Wallet
 
--- npx expo run:ios
+[![License](https://img.shields.io/github/license/tonkeeper/wallet)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/tonkeeper/wallet)](https://github.com/tonkeeper/wallet/releases)
 
--- npx expo run:android
+**[tonkeeper.com](https://tonkeeper.com)**
 
-[Figma](https://www.figma.com/file/dCYRRsOseWM32zVODtkkI1/Trendydefi?type=design&node-id=0-1&mode=design&t=GDA7bEzmsU4NBnnT-0)
 
-# Ethers
--- Thư viện doc: https://docs.ethers.org/v5/cookbook/react-native/
+Welcome to Tonkeeper repository.
+If you have questions or suggestions, please file an [Issue](https://github.com/tonkeeper/wallet/issues/new/choose).
 
--- Ethers là một thư viện JavaScript được sử dụng để tương tác với các blockchain và smart contract. Nó cung cấp các công cụ để tạo và quản lý các ví tiền điện tử, ký và gửi các giao dịch, truy vấn thông tin blockchain và thực hiện các hành động khác liên quan đến blockchain.
+## Install dependencies
 
--- Trong React Native, ethers có thể được sử dụng để tương tác với các blockchain và smart contract thông qua các API của nó. Để sử dụng ethers trong React Native, bạn cần cài đặt thư viện ethers.js và import nó vào file của bạn. Sau đó, bạn có thể sử dụng các hàm và đối tượng của ethers để tương tác với blockchain và smart contract.
-# Dimensions
--- Là một module trong React Native cung cấp thông tin về kích thước của thiết bị. Nó cho phép bạn lấy kích thước của màn hình, cũng như các kích thước khác của thiết bị, như chiều rộng và chiều cao của cửa sổ.
+```bash
+$ yarn install
+```
+
+##### For iOS run
+```bash
+$ yarn pods
+$ yarn start:mobile
+$ yarn run:ios
+```
+
+##### For Android run
+```bash
+$ yarn adb
+$ yarn start:mobile
+$ yarn run:android
+```
+
+More information about android build in [android readme](packages/mobile/android/README.md).
+
+
+## Adding icons
+
+All icon files are named according to `ic-name-24.svg` scheme. And placed in `src/assets/icons/svg`.
+
+After adding the icon, run the convert command
+
+```bash
+$ yarn icons
+```
+
+To convert you need `librsvg`.
+
+If `librsvg` not already installed, run
+
+```bash
+$ brew install librsvg
+```
+
+## License
+
+The code and data files in this distribution are licensed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+See https://www.gnu.org/licenses/ for a copy of this license.
+
+See [LICENSE](LICENSE) file.
+
+
+This project is tested with [Browserstack](https://browserstack.com).
