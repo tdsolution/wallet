@@ -1,30 +1,34 @@
-import React, { FC, useContext, useMemo } from 'react';
-import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BlurView } from 'expo-blur';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
-import { TabsStackRouteNames } from '$navigation';
-import { TabStackParamList } from './TabStack.interface';
-import { Icon, ScrollPositionContext, View } from '$uikit';
-import { usePreloadChart } from '$hooks/usePreloadChart';
-import { useTheme } from '$hooks/useTheme';
-import { isAndroid, nfs, ns } from '$utils';
-import { t } from '@tonkeeper/shared/i18n';
-import { SettingsStack } from '$navigation/SettingsStack/SettingsStack';
-import { TabBarBadgeIndicator } from './TabBarBadgeIndicator';
-import { WalletScreen } from '../../../tabs/Wallet/WalletScreen';
-import Animated from 'react-native-reanimated';
-import { FONT } from '$styled';
-import { useCheckForUpdates } from '$hooks/useCheckForUpdates';
-import { useLoadExpiringDomains } from '$store/zustand/domains/useExpiringDomains';
-import { ActivityStack } from '$navigation/ActivityStack/ActivityStack';
-import { BackupIndicator } from '$navigation/MainStack/TabStack/BackupIndicator';
-import { useFetchMethodsToBuy } from '$store/zustand/methodsToBuy/useMethodsToBuyStore';
-import { trackEvent } from '$utils/stats';
-import { useRemoteBridge } from '$tonconnect';
-import { BrowserStack } from '$navigation/BrowserStack/BrowserStack';
-import { useWallet } from '@tonkeeper/shared/hooks';
-import { useDAppsNotifications } from '$store';
+import React, { FC, useContext, useMemo } from "react";
+import {
+  BottomTabBar,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
+import { BlurView } from "expo-blur";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
+import { TabsStackRouteNames } from "$navigation";
+import { TabStackParamList } from "./TabStack.interface";
+import { Icon, ScrollPositionContext, View } from "$uikit";
+import { usePreloadChart } from "$hooks/usePreloadChart";
+import { useTheme } from "$hooks/useTheme";
+import { isAndroid, nfs, ns } from "$utils";
+import { t } from "@tonkeeper/shared/i18n";
+import { SettingsStack } from "$navigation/SettingsStack/SettingsStack";
+import { TabBarBadgeIndicator } from "./TabBarBadgeIndicator";
+import { WalletScreen } from "../../../tabs/Wallet/WalletScreen";
+import Animated from "react-native-reanimated";
+import { FONT } from "$styled";
+import { useCheckForUpdates } from "$hooks/useCheckForUpdates";
+import { useLoadExpiringDomains } from "$store/zustand/domains/useExpiringDomains";
+import { ActivityStack } from "$navigation/ActivityStack/ActivityStack";
+import { BackupIndicator } from "$navigation/MainStack/TabStack/BackupIndicator";
+import { useFetchMethodsToBuy } from "$store/zustand/methodsToBuy/useMethodsToBuyStore";
+import { trackEvent } from "$utils/stats";
+import { useRemoteBridge } from "$tonconnect";
+import { BrowserStack } from "$navigation/BrowserStack/BrowserStack";
+import { useWallet } from "@tonkeeper/shared/hooks";
+import { useDAppsNotifications } from "$store";
+import { WalletStack } from "$navigation/WalletStack/WalletStack";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -43,7 +47,7 @@ export const TabStack: FC = () => {
   const tabBarStyle = { height: ns(64) + (safeArea.bottom > 0 ? ns(20) : 0) };
   const containerTabStyle = useMemo(
     () => [tabBarStyle, styles.tabBarContainer, bottomSeparatorStyle],
-    [safeArea.bottom, bottomSeparatorStyle, tabBarStyle],
+    [safeArea.bottom, bottomSeparatorStyle, tabBarStyle]
   );
 
   const wallet = useWallet();
@@ -77,7 +81,11 @@ export const TabStack: FC = () => {
               ]}
             />
           ) : (
-            <BlurView tint="dark" intensity={48} style={StyleSheet.absoluteFill}>
+            <BlurView
+              tint="dark"
+              intensity={48}
+              style={StyleSheet.absoluteFill}
+            >
               <View
                 style={[
                   styles.tabBarBlurBackground,
@@ -91,11 +99,13 @@ export const TabStack: FC = () => {
       )}
     >
       <Tab.Screen
-        component={WalletScreen}
+        component={WalletStack}
         name={TabsStackRouteNames.Balances}
         options={{
-          tabBarLabel: t('wallet.screen_title'),
-          tabBarIcon: ({ color }) => <Icon colorHex={color} name="ic-wallet-28" />,
+          tabBarLabel: t("wallet.screen_title"),
+          tabBarIcon: ({ color }) => (
+            <Icon colorHex={color} name="ic-wallet-28" />
+          ),
         }}
       />
       <Tab.Screen
@@ -107,7 +117,7 @@ export const TabStack: FC = () => {
           },
         }}
         options={{
-          tabBarLabel: t('activity.screen_title'),
+          tabBarLabel: t("activity.screen_title"),
           tabBarIcon: ({ color }) => (
             <View style={styles.settingsIcon}>
               <Icon colorHex={color} name="ic-flash-28" />
@@ -121,12 +131,14 @@ export const TabStack: FC = () => {
           component={BrowserStack}
           name={TabsStackRouteNames.BrowserStack}
           options={{
-            tabBarLabel: t('tab_browser'),
-            tabBarIcon: ({ color }) => <Icon colorHex={color} name="ic-explore-28" />,
+            tabBarLabel: t("tab_browser"),
+            tabBarIcon: ({ color }) => (
+              <Icon colorHex={color} name="ic-explore-28" />
+            ),
           }}
           listeners={{
             tabPress: (e) => {
-              trackEvent('browser_open');
+              trackEvent("browser_open");
             },
           }}
         />
@@ -135,7 +147,7 @@ export const TabStack: FC = () => {
         component={SettingsStack}
         name={TabsStackRouteNames.SettingsStack}
         options={{
-          tabBarLabel: t('tab_settings'),
+          tabBarLabel: t("tab_settings"),
           tabBarIcon: ({ color }) => (
             <View style={styles.settingsIcon}>
               <Icon colorHex={color} name="ic-settings-28" />
@@ -151,15 +163,15 @@ export const TabStack: FC = () => {
 const styles = StyleSheet.create({
   tabBarContainer: {
     paddingHorizontal: ns(16),
-    backgroundColor: 'transparent',
-    position: 'absolute',
+    backgroundColor: "transparent",
+    position: "absolute",
     borderTopWidth: StyleSheet.hairlineWidth,
     left: 0,
     right: 0,
     bottom: 0,
   },
   tabBarSplashBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -171,14 +183,14 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     padding: 0,
     margin: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderTopWidth: 0,
     elevation: 0,
   },
   tabBarItemStyle: {
     height: ns(64),
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
   tabBarIconStyle: {
@@ -192,9 +204,9 @@ const styles = StyleSheet.create({
     fontFamily: FONT.medium,
     marginTop: ns(4),
     paddingTop: 0,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   settingsIcon: {
-    position: 'relative',
+    position: "relative",
   },
 });
