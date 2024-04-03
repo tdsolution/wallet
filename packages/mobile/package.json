@@ -61,6 +61,7 @@
     "date-fns": "^2.30.0",
     "domain-from-partial-url": "^1.1.0",
     "dotenv": "^16.0.3",
+    "ethers": "^6.11.1",
     "expo": "~49.0.13",
     "expo-blur": "~12.6.0",
     "expo-local-authentication": "0.0.1-canary-20240228-7cee619",
