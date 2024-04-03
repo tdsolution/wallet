@@ -2,6 +2,7 @@ import { MainStackRouteNames } from '../navigationNames';
 import { CryptoCurrency } from '$shared/constants';
 
 export type MainStackParamList = {
+  [MainStackRouteNames.Onboarding]: {};
   [MainStackRouteNames.Start]: {};
   [MainStackRouteNames.CreateWalletStack]: {};
   [MainStackRouteNames.ImportWalletStack]: {};

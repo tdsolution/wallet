@@ -13,16 +13,6 @@ export const getBiometryName = (
     instrumental?: boolean;
   },
 ) => {
-  if (type === BiometryType.Fingerprint) {
-    let text = t(`biometry.${platform}.fingerprint`);
-    if (params?.genitive) {
-      text = t(`biometry.${platform}.fingerprint_genitive`);
-    }
-    if (params?.instrumental) {
-      text = t(`biometry.${platform}.fingerprint_instrumental`);
-    }
-    return params?.capitalized ? capitalizeFirstLetter(text) : text;
-  }
   if (type === BiometryType.FaceRecognition) {
     let text = t(`biometry.${platform}.face_recognition`);
     if (params?.genitive) {
@@ -33,7 +23,16 @@ export const getBiometryName = (
     }
     return params?.capitalized ? capitalizeFirstLetter(text) : text;
   }
-
+  if (type === BiometryType.Fingerprint) {
+    let text = t(`biometry.${platform}.fingerprint`);
+    if (params?.genitive) {
+      text = t(`biometry.${platform}.fingerprint_genitive`);
+    }
+    if (params?.instrumental) {
+      text = t(`biometry.${platform}.fingerprint_instrumental`);
+    }
+    return params?.capitalized ? capitalizeFirstLetter(text) : text;
+  }
   let text = t('biometry.default');
   if (params?.genitive) {
     text = t('biometry.default_genitive');
@@ -48,11 +47,11 @@ export const getBiometryName = (
 };
 
 export const getBiometryIcon = (type: BiometryType): IconNames => {
-  if (type === BiometryType.Fingerprint) {
-    return isIOS ? 'ic-fingerprint-28' : 'ic-fingerprint-android-28';
-  }
   if (type === BiometryType.FaceRecognition) {
     return isIOS ? 'ic-faceid-28' : 'ic-faceid-android-28';
+  }
+  if (type === BiometryType.Fingerprint) {
+    return isIOS ? 'ic-fingerprint-28' : 'ic-fingerprint-android-28';
   }
   return 'ic-fingerprint-android-28';
 };

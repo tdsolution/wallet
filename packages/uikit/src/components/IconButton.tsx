@@ -60,9 +60,9 @@ const styles = Steezy.create(({ colors }) => ({
   iconContainer: {
     width: 44,
     height: 44,
-    borderRadius: 44 / 2,
+    borderRadius: 10,
     marginBottom: 8,
-    backgroundColor: colors.buttonTertiaryBackground,
+    backgroundColor: colors.primaryColor,
     justifyContent: 'center',
     alignItems: 'center',
   },

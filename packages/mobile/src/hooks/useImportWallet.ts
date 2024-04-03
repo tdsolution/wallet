@@ -35,7 +35,6 @@ export const useImportWallet = () => {
             onDone: async () => {
               if (isMigration) {
                 const pin = getLastEnteredPasscode();
-
                 dispatch(
                   walletActions.createWallet({
                     pin,
@@ -43,9 +42,7 @@ export const useImportWallet = () => {
                     onDone: async (identifiers) => {
                       tk.setMigrated();
                       tk.saveLastBackupTimestampAll(identifiers, true);
-
                       dispatch(walletActions.clearGeneratedVault());
-
                       // Enable notifications if it was enabled before migration
                       try {
                         const [isNotificationsDenied, status] = await Promise.all([

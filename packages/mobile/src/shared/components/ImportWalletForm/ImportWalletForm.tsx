@@ -9,26 +9,24 @@ import { useDispatch } from 'react-redux';
 
 import { deviceHeight, isAndroid, ns, parseLockupConfig } from '$utils';
 import { InputItem } from './InputItem';
-import { Button, Input, NavBarHelper, Text } from '$uikit';
+import { Button, Input, NavBarHelper, Text, TouchableOpacity, View } from '$uikit';
 import * as S from './ImportWalletForm.style';
 import { useReanimatedKeyboardHeight } from '$hooks/useKeyboardHeight';
 import { ImportWalletFormProps } from './ImportWalletForm.interface';
 import { useInputsRegistry } from './useInputRegistry';
 import { WordHintsPopup, WordHintsPopupRef } from './WordHintsPopup';
-import { Keyboard } from 'react-native';
+import { Alert, Keyboard, ScrollView } from 'react-native';
 import { wordlist } from '$libs/Ton/mnemonic/wordlist';
 import { Toast } from '$store';
 import { t } from '@tonkeeper/shared/i18n';
 
 export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
+  const [isWord24, setIsWord24] = useState<boolean>(true);
   const { onWordsFilled } = props;
-
-  
   const { bottom: bottomInset } = useSafeAreaInsets();
   const dispatch = useDispatch();
   const inputsRegistry = useInputsRegistry();
-  const inputs = useMemo(() => Array(24).fill(0), []);
-
+  const [inputs, setInputs] = useState(Array(24).fill(0));
   const scrollRef = useRef<Animated.ScrollView>(null);
   const wordHintsRef = useRef<WordHintsPopupRef>(null);
   const scrollY = useSharedValue(0);
@@ -48,7 +46,26 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
       }
     },
   });
-
+  const handle12Word = useCallback(() => {
+    Alert.alert(
+      'Warning',
+      'Selecting 12 words is not supported on the TON network.',
+      [
+        { text: 'OK', onPress: () => { setIsWord24(false);setInputs(inputs.slice(0, 12));}} // Hoặc thực hiện hành động mong muốn
+      ],
+      { cancelable: false }
+    );
+  }, [inputs]);
+ const handle24Word = useCallback(() => {
+     setIsWord24(true);
+    if (inputs.length === 12) {
+    const newInputs = [...inputs];
+    for (let i = 12; i < 24; i++) {
+      newInputs.push(0); // Hoặc bạn có thể thay thế giá trị 0 bằng giá trị mong muốn
+    }
+    setInputs(newInputs);
+    }// Hoặc thực hiện hành động mong muốn
+  }, [inputs]);
   const handleShowConfigInput = useCallback(() => {
     setConfigInputShown(true);
   }, []);
@@ -58,33 +75,57 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
   }, []);
 
   const handleMultipleWords = useCallback((index: number, text: string) => {
-    const words = text
+    if(!isWord24){
+     const words = text
+      .split(' ')
+      .map((word) => word.trim())
+      .filter((word) => word.length > 0);
+       let cursor = index;
+         for (const word of words) {
+        inputsRegistry.getRef(cursor)?.setValue(word);
+        cursor += 1;
+        if (cursor === 12) {
+          break;
+        }
+      }
+
+    }else{
+      const words = text
       .split(' ')
       .map((word) => word.trim())
       .filter((word) => word.length > 0);
 
-    let cursor = index;
-    for (const word of words) {
-      inputsRegistry.getRef(cursor)?.setValue(word);
-      cursor += 1;
-      if (cursor === 24) {
-        break;
+      let cursor = index;
+      for (const word of words) {
+        inputsRegistry.getRef(cursor)?.setValue(word);
+        cursor += 1;
+        if (cursor === 24) {
+          break;
+        }
       }
-    }
 
-    if (cursor > 0) {
-      inputsRegistry.getRef(cursor - 1)?.focus();
+      if (cursor > 0) {
+        inputsRegistry.getRef(cursor - 1)?.focus();
+      }
     }
   }, []);
 
   const handleSpace = useCallback((index: number) => {
-    if (index === 24) {
+    if(!isWord24 ){
+    if (index === 12) {
       return;
     }
     inputsRegistry.getRef(index + 1)?.focus();
+    }else{
+      if (index === 24) {
+      return;
+    }
+    inputsRegistry.getRef(index + 1)?.focus();
+    }
+   
   }, []);
 
-  const handleSend = useCallback(() => {
+   const handleSend = useCallback(() => {
     if (isRestoring) {
       return;
     }
@@ -92,14 +133,17 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     setRestoring(true);
 
     const values: string[] = [];
+    const totalInputs = isWord24 ? 24 : 12; 
     for (let key in inputsRegistry.refs) {
       values.push(inputsRegistry.refs[key]?.getValue() ?? '');
     }
-
+    const words = values.slice(0, totalInputs); // Chỉ lấy số lượng từ cần thiết
+    console.log(words);
     let hasFailed = false;
-    for (let i = 0; i < inputs.length; i++) {
-      const isFailed = !values[i].length || !wordlist.enMap.has(values[i]);
+    for (let i = 0; i < totalInputs; i++) {
+      const isFailed = !words[i].length || !wordlist.enMap.has(words[i]);
       if (isFailed) {
+        console.log(hasFailed);
         hasFailed = true;
         const ref = inputsRegistry.getRef(i);
         ref?.markAsFailed();
@@ -126,22 +170,33 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         return;
       }
     }
-
-    onWordsFilled(Object.values(values).join(' '), configParsed, () =>
+    onWordsFilled(Object.values(words).join(' '), configParsed, () =>
       setRestoring(false),
     );
   }, [isRestoring, isConfigInputShown, config, onWordsFilled, dispatch, t]);
 
   const handleInputSubmit = useCallback(
     (index: number) => () => {
-      const suggests = wordHintsRef.current?.getCurrentSuggests();
-      if (suggests?.length === 1) {
-        inputsRegistry.getRef(index)?.setValue(suggests[0]);
-      }
-      if (index < 23) {
-        inputsRegistry.getRef(index + 1)?.focus();
-      } else {
-        handleSend();
+      if(!isWord24){
+        const suggests = wordHintsRef.current?.getCurrentSuggests();
+        if (suggests?.length === 1) {
+          inputsRegistry.getRef(index)?.setValue(suggests[0]);
+        }
+        if (index < 11) {
+          inputsRegistry.getRef(index + 1)?.focus();
+        } else {
+          handleSend();
+       } 
+      }else{
+        const suggests = wordHintsRef.current?.getCurrentSuggests();
+        if (suggests?.length === 1) {
+          inputsRegistry.getRef(index)?.setValue(suggests[0]);
+        }
+        if (index < 23) {
+          inputsRegistry.getRef(index + 1)?.focus();
+        } else {
+          handleSend();
+       } 
       }
     },
     [handleSend],
@@ -151,7 +206,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     const inputPos = inputsRegistry.getPosition(index);
     if (inputPos !== undefined) {
       scrollRef.current?.scrollTo({
-        y: inputPos - (deviceHeight - offsetBottom) / 2 + ns(16),
+        y: inputPos - (deviceHeight - offsetBottom) / 2 + ns(10),
         animated: true,
       });
     }
@@ -182,6 +237,8 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
       }
     });
   }, []);
+
+
 
   const handleChangeText = useCallback(
     (index: number) => (text: string) => {
@@ -217,7 +274,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         indexedWords={wordlist.enIndexed}
         ref={wordHintsRef}
       />
-      <Animated.ScrollView
+      <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
@@ -225,8 +282,8 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         removeClippedSubviews={false}
         scrollEventThrottle={16}
         contentContainerStyle={{
-          paddingHorizontal: ns(32),
-          paddingBottom: ns(32) + bottomInset,
+          paddingHorizontal: ns(35),
+          paddingBottom: ns(35) + bottomInset,
         }}
       >
         <NavBarHelper />
@@ -239,6 +296,31 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
               {t('import_wallet_caption')}
             </Text>
           </S.HeaderCaptionWrapper>
+           <S.HeaderButton>
+              <Text style={{color:'#4871EA', marginBottom:4 }} variant="body1" textAlign="center">Choose the security with</Text>
+           <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                <TouchableOpacity onPress={handle24Word}>
+                <View style={{
+                  width:25, height:25, backgroundColor:'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:'#4871EA', justifyContent:'center',alignItems:'center'}}>
+                  <View style={{marginHorizontal:10, width:15, height:15, backgroundColor:isWord24 ? '#4871EA' :'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:isWord24 ? '#4871EA' :'#f9f9f9', alignItems:'center', textAlign:'center'}}>
+                 </View>
+                </View>
+                </TouchableOpacity>
+                <Text style={{color:'#4871EA'}} variant="body1" textAlign="center">24-words</Text>
+              </View>
+               <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center'}}>
+                <TouchableOpacity onPress={handle12Word}>
+                <View style={{
+                  width:25, height:25, backgroundColor:'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:'#4871EA', justifyContent:'center',alignItems:'center'}}>
+                  <View style={{marginHorizontal:10, width:15, height:15, backgroundColor: isWord24 ? '#f9f9f9' :'#4871EA', marginRight:10, borderRadius:20, borderWidth:2, borderColor: isWord24 ? '#f9f9f9' :'#4871EA', alignItems:'center', textAlign:'center'}}>
+                 </View>
+                </View>
+                </TouchableOpacity>
+                <Text style={{color:'#4871EA'}} variant="body1" textAlign="center">12-words</Text>
+              </View>
+          </View>
+        </S.HeaderButton>
         </S.Header>
         {isConfigInputShown && (
           <Input
@@ -264,11 +346,11 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
           />
         ))}
         <S.ButtonWrap>
-          <Button onPress={handleSend} isLoading={isRestoring}>
+          <Button onPress={handleSend} isLoading={isRestoring} style={{backgroundColor:'#4871EA'}}>
             {t('continue')}
           </Button>
         </S.ButtonWrap>
-      </Animated.ScrollView>
+      </ScrollView>
     </>
   );
 };

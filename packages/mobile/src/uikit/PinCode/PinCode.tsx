@@ -110,9 +110,9 @@ const Point: FC<PointProps> = ({ isActive, isError, isSuccess, index }) => {
         colorVal.value,
         [0, 1, 2, 3],
         [
-          theme.colors.backgroundTertiary,
-          theme.colors.accentPrimary,
-          isSuccess ? theme.colors.accentPositive : theme.colors.accentNegative,
+          theme.colors.backgroundHighlighted,
+          theme.colors.primaryColor,
+          isSuccess ? theme.colors.backgroundPrimary : theme.colors.primaryColor,
           theme.colors.backgroundTertiary,
         ],
       ),

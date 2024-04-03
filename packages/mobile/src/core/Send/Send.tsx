@@ -418,7 +418,7 @@ export const Send: FC<SendProps> = ({ route }) => {
   const secondaryName = name ? shortenedAddress : '';
 
   const subtitle = isAddressStep ? null : (
-    <Text variant="body2" color="textSecondary">
+    <Text variant="body2" color="textSecondary" style={{color:'#000'}} >
       {`${t('send_screen_steps.amount.recipient_label')} ${primaryName} `}
       {secondaryName.length ? (
         <Text variant="body2" color="textTertiary">

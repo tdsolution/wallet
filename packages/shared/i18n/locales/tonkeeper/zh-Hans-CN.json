@@ -1,4 +1,7 @@
 {
+   "onboarding_screen": {
+      "get_started":"开始使用"
+  },
   "about_ton" : "TON 是 Telegram 为数十亿用户设计的完全去中心化的第一层区块链。它拥有超快的交易速度、极低的费用、易于使用的应用程序，并且非常环保。",
   "access_confirmation_logout" : "退出登录",
   "access_confirmation_reset" : "重置",

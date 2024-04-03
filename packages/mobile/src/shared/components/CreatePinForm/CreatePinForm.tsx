@@ -180,7 +180,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
       <S.Steps style={stepsStyle}>
         <S.Step>
           <S.PinWrap>
-            <S.Title>{t('create_pin_current_title')}</S.Title>
+            <S.Title style={{color:'#4871EA'}}>{t('create_pin_current_title')}</S.Title>
             <S.Pin>
               <PinCode value={value0} ref={oldPinRef} />
             </S.Pin>
@@ -188,7 +188,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         </S.Step>
         <S.Step>
           <S.PinWrap>
-            <S.Title>{t('create_pin_new_title')}</S.Title>
+            <S.Title style={{color:'#4871EA'}}>{t('create_pin_new_title')}</S.Title>
             <S.Pin>
               <PinCode value={value1} />
             </S.Pin>
@@ -196,7 +196,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         </S.Step>
         <S.Step>
           <S.PinWrap>
-            <S.Title>{t('create_pin_repeat_title')}</S.Title>
+            <S.Title style={{color:'#4871EA'}}>{t('create_pin_repeat_title')}</S.Title>
             <S.Pin>
               <PinCode value={value2} ref={pinRef} />
             </S.Pin>

@@ -11,6 +11,7 @@ import { useMigration } from '$hooks/useMigration';
 import { CreatePinForm } from '$shared/components';
 import { t } from '@tonkeeper/shared/i18n';
 
+
 export const MigrationCreatePasscode: FC<{
   route: RouteProp<MigrationStackParamList, MigrationStackRouteNames.CreatePasscode>;
 }> = (props) => {

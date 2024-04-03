@@ -152,9 +152,9 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
       <Animated.View
         style={[
           { height: headerHeight },
-          styles.container,
           ejectionShiftStyle,
           !gradient && { backgroundColor: theme.backgroundPage },
+          styles.container,
           !isModal && { paddingTop: safeArea.top },
           styles.absolute,
         ]}
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     zIndex: 10,
+    backgroundColor:'#f9f9f9s'
   },
   absolute: {
     position: 'absolute',

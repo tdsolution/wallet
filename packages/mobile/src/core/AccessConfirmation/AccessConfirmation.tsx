@@ -163,10 +163,9 @@ export const AccessConfirmation: FC = () => {
   }, [dispatch, isUnlock, triggerError, wallet]);
 
   useEffect(() => {
-    if (params.withoutBiometryOnOpen || !biometry.isEnabled || !biometry.isAvailable) {
-      return;
-    }
-
+    // if (params.withoutBiometryOnOpen || !biometry.isEnabled || !biometry.isAvailable) {
+    //   return;
+    // }
     handleBiometry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -202,8 +201,8 @@ export const AccessConfirmation: FC = () => {
       return (
         <Button
           size="navbar_small"
-          mode="secondary"
-          style={{ marginRight: ns(16) }}
+          mode="primary"
+          style={{ marginRight: ns(16), backgroundColor:'#4871EA' }}
           onPress={handleLogout}
         >
           {t('access_confirmation_logout')}
@@ -224,7 +223,7 @@ export const AccessConfirmation: FC = () => {
       />
       <S.Content style={{ paddingBottom: bottomInset }}>
         <S.PinWrap>
-          <Text variant="h3">{t('access_confirmation_title')}</Text>
+          <Text variant="h3" style={{color:'#4871EA'}}>{t('access_confirmation_title')}</Text>
           <S.Pin>
             <PinCode value={value} ref={pinRef} />
           </S.Pin>

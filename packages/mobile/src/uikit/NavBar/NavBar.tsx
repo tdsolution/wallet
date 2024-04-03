@@ -165,7 +165,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
             disabled={hideBackButton}
           >
             <S.BackButton style={backButtonAnimatedStyle}>
-              <Icon name={iconName} color="foregroundPrimary" />
+              <Icon name={iconName} color="backgroundPrimary" />
             </S.BackButton>
           </S.BackButtonContainer>
           <S.CenterContent style={titleAnimatedStyle}>
@@ -174,6 +174,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
                 textAlign="center"
                 variant={isSmallTitle ? 'label1' : 'h3'}
                 numberOfLines={1}
+                style={{color:'#4871EA'}}
                 {...titleProps}
               >
                 {children}

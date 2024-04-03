@@ -56,7 +56,7 @@ export const TabStack: FC = () => {
       screenOptions={{
         lazy: true,
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.accentPrimary,
+        tabBarActiveTintColor: theme.colors.primaryColor,
         tabBarInactiveTintColor: theme.colors.foregroundSecondary,
         tabBarStyle: [styles.tabBarStyle, tabBarStyle],
         tabBarItemStyle: styles.tabBarItemStyle,
@@ -81,7 +81,7 @@ export const TabStack: FC = () => {
               <View
                 style={[
                   styles.tabBarBlurBackground,
-                  { backgroundColor: theme.colors.backgroundPrimaryTrans },
+                  { backgroundColor: theme.colors.backgroundPrimary },
                 ]}
               />
             </BlurView>

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { i18n, t } from '@tonkeeper/shared/i18n';
 import {
   Button,
@@ -12,11 +12,12 @@ import {
   Spacer,
   copyText,
   Haptics,
+  deviceHeight,
 } from '@tonkeeper/uikit';
 import { InternalNotification, Tag } from '$uikit';
 import { useNavigation } from '@tonkeeper/router';
 import { ScanQRButton } from '../../components/ScanQRButton';
-import { RefreshControl, useWindowDimensions } from 'react-native';
+import { ImageBackground, RefreshControl, useWindowDimensions,Image } from 'react-native';
 import { NFTCardItem } from './NFTCardItem';
 import { useDispatch } from 'react-redux';
 import { ns } from '$utils';
@@ -48,12 +49,17 @@ import { BatteryIcon } from '@tonkeeper/shared/components/BatteryIcon/BatteryIco
 import { useNetInfo } from '@react-native-community/netinfo';
 import { format } from 'date-fns';
 import { getLocale } from '$utils/date';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useWallet, useWalletCurrency, useWalletStatus } from '@tonkeeper/shared/hooks';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useChain, useWallet, useWalletCurrency, useWalletStatus } from '@tonkeeper/shared/hooks';
 import { WalletSelector } from './components/WalletSelector';
 import { useInscriptionBalances } from '$hooks/useInscriptionBalances';
-
-export const WalletScreen = memo(({ navigation }) => {
+import { LogoButton } from '../../components/LogoButton';
+import { NotificationButton } from '../../components/NotificationButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { chainActive } from '@tonkeeper/shared/utils/KEY_STORAGE';
+import { DataChains } from '@tonkeeper/shared/utils/network';
+export const WalletScreen = memo(({ navigation }:any) => {
+  const chain = useChain()?.chain; 
   const flags = useFlags(['disable_swap']);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -68,17 +74,13 @@ export const WalletScreen = memo(({ navigation }) => {
   const balance = useBalance(tokens.total.fiat);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
-
+  const HEIGHT_RATIO = deviceHeight / 844;
   const { isReloading: isRefreshing, updatedAt: walletUpdatedAt } = useWalletStatus();
-
   const isFocused = useIsFocused();
-
   const tronBalances = undefined;
-
   const notifications = useInternalNotifications();
-
   const { isConnected } = useNetInfo();
-
+  
   // TODO: rewrite
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -86,7 +88,6 @@ export const WalletScreen = memo(({ navigation }) => {
     }, 500);
     return () => clearTimeout(timer);
   }, [dispatch]);
-
   const handlePressSwap = useCallback(() => {
     if (wallet) {
       nav.openModal('Swap');
@@ -126,7 +127,6 @@ export const WalletScreen = memo(({ navigation }) => {
     if (!wallet) {
       return;
     }
-
     wallet.reload();
   }, [wallet]);
 
@@ -311,18 +311,104 @@ export const WalletScreen = memo(({ navigation }) => {
       </Screen>
     );
   }
-
   return (
     <Screen>
       <Screen.Header
         title={<WalletSelector />}
-        rightContent={!isWatchOnly ? <ScanQRButton /> : null}
+        rightContent={!isWatchOnly ?<View style={{flexDirection:'row',alignItems:'center', marginRight:10}}><ScanQRButton /><View style={{width:10}}></View><NotificationButton/><View style={{width:10}}></View></View>  : null}
         hideBackButton
+        children={<LogoButton />}
       />
+      <ScrollView>
+         <View style={{height: 120 * HEIGHT_RATIO,marginBottom:10}}>
+        <View style={{padding: 15 * HEIGHT_RATIO,margin:1,borderRadius:50}}>
+          <ImageBackground source={require('../../assets/logo/bg_card.png')} resizeMode="cover" style={{borderRadius:10,paddingHorizontal:10, borderWidth:1, borderColor:'#7A6BFF'}}>
+             <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+              <Text style={{fontSize:14}}>Main Balance</Text>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <TouchableOpacity
+                onPress={()=>{
+                   nav.openModal('/select-network');
+                }}
+                activeOpacity={0.6}
+                > 
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                    <View style={{margin:4, borderWidth:2, borderRadius:50, borderColor:'#fff', backgroundColor:'#fff'}}>
+                      <Image source={{uri: chain.logo}} style={{width:20, height:20, borderRadius:10}} resizeMode='contain'/>
+                    </View>
+                    <Image source={require("../../assets/icons_v1/icon_more.png")}  style={{width:14, height:14}} resizeMode='contain'/>
+                </View>
+             </TouchableOpacity> 
+              </View>
+             </View>
+             <View style={{marginTop:1, marginBottom:2}}>
+                <ShowBalance amount={balance.total.fiat} />
+              </View>
+              <View style={{marginBottom:2, flexDirection:'row', alignItems:'center'}}>
+                 <TouchableOpacity
+                    hitSlop={{ top: 8, bottom: 8, left: 18, right: 18 }}
+                    style={{ zIndex: 3, marginVertical: 8 }}
+                    onPress={copyText(wallet.address.ton.friendly)}
+                    activeOpacity={0.6}
+                  >
+                <Text color="textSecondary" type="body2" style={{color:'#fff'}}>
+                  {wallet.address.ton.short}
+                </Text>
+              </TouchableOpacity>
+                 <TouchableOpacity
+                onPress={copyText(wallet.address.ton.friendly)}
+                activeOpacity={0.6}
+                style={{marginLeft:10}}
+                > 
+                    <Image source={require("../../assets/icons_v1/icon_copy.png")}  style={{width:20, height:20}} resizeMode='contain'/>
+             </TouchableOpacity> 
+              </View>
+            </ImageBackground>
+        </View>
+       </View>
+       <View style={{alignItems:'flex-end', marginRight:20, paddingTop:10}}>
+        <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}>
+         <Image source={require("../../assets/icons_v1/icon_drow.png")}  style={{width:10, height:10, marginRight:4}} resizeMode='contain'/>
+         <Text style={{color:theme.colors.primaryColor, fontWeight:'700', fontSize:14}}>Vi TTT</Text>
+          <Image source={require("../../assets/icons_v1/icon_eye.png")}  style={{width:10, height:10, marginLeft:4}} resizeMode='contain'/>
+        </TouchableOpacity>
+       </View>
+       <View style={{marginTop:4}}>
+       <IconButtonList style={styles.actionButtons}>
+         {!isWatchOnly ? (
+            <IconButton
+              onPress={handlePressSend}
+              iconName="ic-arrow-up-28"
+              title={t('wallet.send_btn')}
+            />
+          ) : null}
+          <IconButton
+            onPress={handlePressRecevie}
+            iconName="ic-arrow-down-28"
+            title={t('wallet.receive_btn')}
+          />
+          {!isWatchOnly ? (
+            <IconButton
+              onPress={handlePressBuy}
+              iconName="ic-usd-28"
+              title={t('wallet.buy_btn')}
+            />
+          ) : null}
+           {!flags.disable_swap && !isWatchOnly && (
+            <IconButton
+              onPress={handlePressSwap}
+              iconName="ic-swap-horizontal-28"
+              title={t('wallet.swap_btn')}
+            />
+          )}
+       </IconButtonList>
+       </View>
+      </ScrollView>
+      
       {isPagerView ? (
         <PagerView estimatedHeaderHeight={288}>
           <PagerView.Header>
-            {ListHeader}
+            {/* {ListHeader} */}
             <PagerView.TabBar centered>
               <PagerView.TabBarItem label={t('wallet.tonkens_tab_lable')} index={0} />
               <PagerView.TabBarItem label={t('wallet.nft_tab_lable')} index={1} />
@@ -367,19 +453,19 @@ export const WalletScreen = memo(({ navigation }) => {
           </PagerView.Pages>
         </PagerView>
       ) : (
-        <WalletContentList
-          inscriptions={inscriptions}
-          currency={currency}
-          tronBalances={tronBalances}
-          ListHeaderComponent={ListHeader}
-          handleRefresh={handleRefresh}
-          isRefreshing={isRefreshing}
-          isFocused={isFocused}
-          balance={balance}
-          tokens={tokens}
-          tonPrice={tonPrice}
-          nfts={nfts}
-        />
+        // <WalletContentList
+        //   inscriptions={inscriptions}
+        //   currency={currency}
+        //   tronBalances={tronBalances}
+        //   handleRefresh={handleRefresh}
+        //   isRefreshing={isRefreshing}
+        //   isFocused={isFocused}
+        //   balance={balance}
+        //   tokens={tokens}
+        //   tonPrice={tonPrice}
+        //   nfts={nfts}
+        // />
+        <View></View>
       )}
     </Screen>
   );

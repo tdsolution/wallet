@@ -1,4 +1,7 @@
-{
+{ "select_a_network":"Select a network",
+  "onboarding_screen": {
+     "get_started":"Get Started"
+  },
   "about_ton": "TON is a fully decentralized layer-1 blockchain designed by Telegram to onboard billions of users. It boasts ultra-fast transactions, tiny fees, easy-to-use apps, and is environmentally friendly.",
   "access_confirmation_logout": "Sign Out",
   "access_confirmation_title": "Enter passcode",

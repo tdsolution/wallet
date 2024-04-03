@@ -89,7 +89,7 @@ export const InlineKeyboard: FC<InlineKeyboardProps> = (props) => {
         const num = j + 1 + i * 3;
         line.push(
           <Key key={`${num}`} onPress={handlePress(num)} disabled={disabled}>
-            <S.KeyLabel>{num}</S.KeyLabel>
+            <S.KeyLabel style={{color:'#4871EA'}}>{num}</S.KeyLabel>
           </Key>,
         );
       }
@@ -118,10 +118,10 @@ export const InlineKeyboard: FC<InlineKeyboardProps> = (props) => {
       <S.Line key="last">
         {biometryButton}
         <Key onPress={handlePress(0)} disabled={disabled}>
-          <S.KeyLabel>0</S.KeyLabel>
+          <S.KeyLabel style={{color:'#4871EA'}}>0</S.KeyLabel>
         </Key>
         <Key onPress={handleBackspace} disabled={disabled}>
-          <Icon name="ic-delete-36" color="foregroundPrimary" />
+          <Icon name="ic-delete-36" color="backgroundHighlighted" />
         </Key>
       </S.Line>,
     );

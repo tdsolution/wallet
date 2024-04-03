@@ -23,7 +23,7 @@ export const ImportWallet: FC<{
 
   const isTestnet = !!props.route.params?.testnet;
 
-  const handleWordsFilled = useCallback(
+   const handleWordsFilled = useCallback(
     async (mnemonic: string, lockupConfig: any, onEnd: () => void) => {
       try {
         let walletsInfo: ImportWalletInfo[] | null = null;
@@ -59,9 +59,10 @@ export const ImportWallet: FC<{
     [doImportWallet, isTestnet, nav],
   );
 
+
   return (
     <S.Wrap style={{ paddingBottom: keyboardHeight }}>
-      <NavBar isTransparent />
+      <NavBar isForceBackIcon />
       <ImportWalletForm onWordsFilled={handleWordsFilled} />
     </S.Wrap>
   );

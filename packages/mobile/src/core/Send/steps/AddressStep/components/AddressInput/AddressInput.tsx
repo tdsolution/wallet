@@ -20,6 +20,7 @@ import { InputContentSize } from '$uikit/Input/Input.interface';
 import { Toast } from '$store';
 import { TextInput } from 'react-native-gesture-handler';
 import { Address } from '@tonkeeper/core';
+import { css } from '$styled';
 
 interface Props {
   wordHintsRef?: RefObject<WordHintsPopupRef>;
@@ -242,6 +243,10 @@ const AddressInputComponent: FC<Props> = (props) => {
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleInputLayout}
         label={t('send_address_placeholder')}
+        wrapperStyle={css`
+          background-color: #f2f2f2;
+        `}
+        style={{color:'#000'}}
         innerRef={textInputRef}
         autoComplete="off"
         returnKeyType="next"
@@ -254,12 +259,12 @@ const AddressInputComponent: FC<Props> = (props) => {
         spellCheck={false}
         onSubmitEditing={handleSubmit}
         isFailed={isFailed}
+        withPasteButton
         rightContent={
           <S.ScanQRTouchable disabled={!canScanQR} onPress={handleScanQR}>
-            <Icon name="ic-viewfinder-28" color="accentPrimary" />
+            <Icon name="ic-viewfinder-28" colorHex="#4871EA"  />
           </S.ScanQRTouchable>
         }
-        withPasteButton
       />
       <S.LoaderContainer style={loadingContainerStyle} pointerEvents="none">
         <Loader size="small" />

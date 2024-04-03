@@ -30,6 +30,7 @@ export enum AppStackRouteNames {
 }
 
 export enum MainStackRouteNames {
+  Onboarding = 'Onboarding',
   Start = 'Start',
   CreateWalletStack = 'CreateWalletStack',
   ImportWalletStack = 'ImportWalletStack',

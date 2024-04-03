@@ -33,6 +33,7 @@ import {
   BackupPhraseScreen,
   BackupScreen,
   BackupCheckPhraseScreen,
+  OnboardingScreen,
 } from '../../screens';
 import { CreateWalletStack } from '../CreateWalletStack';
 import { ImportWalletStack } from '$navigation/ImportWalletStack';
@@ -87,8 +88,8 @@ export const MainStack: FC = () => {
         />
       );
     }
-
-    return <Stack.Screen name={MainStackRouteNames.Start} component={StartScreen} />;
+    // return <Stack.Screen name={MainStackRouteNames.Start} component={StartScreen} />;
+    return <Stack.Screen name={MainStackRouteNames.Onboarding} component={OnboardingScreen} />
   }, [hasWallet, isMigrated, showLockScreen]);
 
   return (
@@ -98,12 +99,13 @@ export const MainStack: FC = () => {
         headerShown: false,
         gestureEnabled: true,
         contentStyle: {
-          backgroundColor: theme.colors.backgroundPrimary,
+          backgroundColor: theme.colors.primaryColor,
         },
         fullScreenGestureEnabled: true,
       }}
     >
       {root}
+       <Stack.Screen name={MainStackRouteNames.Start} component={StartScreen} />
       <Stack.Screen
         name={MainStackRouteNames.CreateWalletStack}
         component={CreateWalletStack}

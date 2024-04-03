@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { Icon, TouchableOpacity } from '$uikit';
 import { Steezy } from '$styles';
 import { store } from '$store';
+import {Image} from 'react-native'
 import { openScanQR, openSend } from '$navigation';
 import { CryptoCurrencies } from '$shared/constants';
 import { DeeplinkOrigin, useDeeplinking } from '$libs/deeplinking';
@@ -56,7 +57,7 @@ export const ScanQRButton = memo(() => {
       activeOpacity={0.6}
       hitSlop={hitSlop}
     >
-      <Icon name="ic-viewfinder-28" color="accentPrimary" />
+       <Image source={require("../assets/icons_v1/icon_qr.png")} resizeMode='contain' style={{width:25, height:25}}/>
     </TouchableOpacity>
   );
 });
@@ -64,5 +65,6 @@ export const ScanQRButton = memo(() => {
 const styles = Steezy.create({
   container: {
     zIndex: 3,
+    padding:10
   },
 });

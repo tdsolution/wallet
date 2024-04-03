@@ -21,10 +21,10 @@ export const ShowBalance: React.FC<{ amount: string }> = ({ amount }) => {
   return (
     <View style={styles.container}>
       {isHidden ? (
-        <View style={styles.starsContainer}>
+        <View style={[styles.starsContainer]}>
           <TouchableComponent
-            style={styles.touchable.static}
-            underlayColor={DarkTheme.colors.backgroundHighlighted}
+            style={[styles.touchable.static]}
+            underlayColor={DarkTheme.colors.primaryColor}
             onPress={handleToggleHideAmounts}
           >
             <Text type="num2" style={styles.stars.static}>
@@ -34,7 +34,7 @@ export const ShowBalance: React.FC<{ amount: string }> = ({ amount }) => {
         </View>
       ) : (
         <TouchableOpacity activeOpacity={0.6} onPress={handleToggleHideAmounts}>
-          <Text type="num2">{amount}</Text>
+          <Text type="num2" style={{fontSize:24, fontWeight:'700'}}>{amount}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -44,9 +44,10 @@ export const ShowBalance: React.FC<{ amount: string }> = ({ amount }) => {
 const styles = Steezy.create(({ colors }) => ({
   container: {
     height: 36,
+    width: '25%',
   },
   starsContainer: {
-    backgroundColor: colors.backgroundSecondary,
+    backgroundColor: '#4871EA',
     borderRadius: 100,
   },
   touchable: {

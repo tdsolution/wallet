@@ -40,7 +40,7 @@ export const AppNavigator: FC = () => {
     >
       <ProvidersWithoutNavigation>
         <StatusBar
-          barStyle={theme.isDark ? 'light-content' : 'dark-content'}
+          barStyle={'light-content'}
           backgroundColor={theme?.colors.constantDark}
         />
         <AppStack />

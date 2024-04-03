@@ -26,12 +26,6 @@ export const ScreenButtonContainer: FC<Props> = memo(
 
     return (
       <View style={styles.container}>
-        <LinearGradient
-          colors={['rgba(21, 28, 41, 0)', theme.backgroundPage]}
-          locations={[0, 1]}
-          style={styles.buttonGradient.static}
-          pointerEvents="none"
-        />
         {keyboardAvoiding ? (
           <KeyboardAvoidingContainer>{childrenView}</KeyboardAvoidingContainer>
         ) : (

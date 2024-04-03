@@ -20,7 +20,7 @@ import { СonfirmRenewAllDomains } from '../tabs/Wallet/components/СonfirmRenew
 
 import { Swap } from '$core/Swap/Swap';
 import { ChooseCountry } from '$core/ChooseCountry/ChooseCountry';
-
+import {SelectNetworkModal} from '@tonkeeper/shared/modals/SelectNetworkModal';
 import { SwitchWalletModal } from '@tonkeeper/shared/modals/SwitchWalletModal';
 import { AddWalletModal } from '@tonkeeper/shared/modals/AddWalletModal';
 import { ProvidersWithNavigation } from './Providers';
@@ -50,6 +50,7 @@ export const ModalStack = React.memo(() => (
       <Stack.Modal component={TokenDetails} path={ModalStackRouteNames.TokenDetails} />
       <Stack.Modal component={RefillBatteryModal} path="/refill-battery" />
       <Stack.Modal component={BackupWarningModal} path="/backup-warning" />
+      <Stack.Modal component={SelectNetworkModal} path="/select-network" />
     </Stack.Group>
     <Stack.Group behavior="modal">
       <Stack.Modal component={ReceiveModal} path="ReceiveModal" />

@@ -35,6 +35,7 @@ export const Security: FC = () => {
     (triggerHaptic: boolean) => () => {
       if (triggerHaptic) {
         Haptics.impactLight();
+        console.log(biometry);
       }
 
       biometry.toggleBiometry();

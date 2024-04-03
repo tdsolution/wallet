@@ -112,7 +112,7 @@ export const WordHintsPopup = React.forwardRef<WordHintsPopupRef, WordHintsPopup
     const wrapStyle = useAnimatedStyle(() => ({
       top: offsetTop.value,
       left: offsetLeft.value,
-      transform: [{ translateY: -scrollY.value }],
+      transform: [{ translateY: - scrollY.value }],
     }));
 
     return (
@@ -132,8 +132,8 @@ export const WordHintsPopup = React.forwardRef<WordHintsPopupRef, WordHintsPopup
                 onPress={() => handleItemPress(item)}
               >
                 <S.WordHintsItem>
-                  <Text variant="label1" numberOfLines={1}>
-                    {item}
+                  <Text variant="label1" numberOfLines={1} style={{color:'#000'}}>
+                    {item}  
                   </Text>
                 </S.WordHintsItem>
               </Highlight>

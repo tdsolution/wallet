@@ -11,7 +11,7 @@ export enum DARK_COLORS {
   foregroundPrimary = '#fff',
   foregroundSecondary = '#8994A3',
   foregroundTertiary = '#556170',
-  backgroundPrimary = '#10161F',
+  backgroundPrimary = '#FAFAFA',
   backgroundPrimaryTrans = 'rgba(16, 22, 31, 0.92)',
   backgroundSecondary = '#1D2633',
   backgroundTertiary = '#2E3847',
@@ -20,6 +20,8 @@ export enum DARK_COLORS {
   backgroundCamera = '#0c121f',
   border = 'rgba(255, 255, 255, 0.08)',
   separatorCommon = 'rgba(79, 90, 112, 0.24)',
+
+  primaryColor = '#4871EA',
 }
 
 export enum CONSTANT_COLORS {

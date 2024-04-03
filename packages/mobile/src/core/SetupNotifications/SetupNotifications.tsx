@@ -29,7 +29,6 @@ export const SetupNotifications: React.FC<Props> = (props) => {
   const handleEnableNotifications = React.useCallback(async () => {
     try {
       setLoading(true);
-
       if (identifiers.length > 1) {
         await Promise.race([tk.enableNotificationsForAll(identifiers), delay(10000)]);
       } else {
@@ -51,7 +50,7 @@ export const SetupNotifications: React.FC<Props> = (props) => {
         rightContent={
           <Button
             size="header"
-            color="secondary"
+            color="primary"
             title={t('later')}
             style={{ marginRight: ns(16) }}
             onPress={handleDone}
@@ -64,7 +63,7 @@ export const SetupNotifications: React.FC<Props> = (props) => {
             <Icon name="ic-notification-128" color="accentBlue" />
           </View>
           <Spacer y={16} />
-          <Text textAlign="center" type="h2">
+          <Text textAlign="center" type="h2" style={{color:'#4871EA'}}>
             {t('setup_notifications_title')}
           </Text>
           <Spacer y={4} />

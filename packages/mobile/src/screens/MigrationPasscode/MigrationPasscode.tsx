@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import {
   MigrationStackParamList,
@@ -11,18 +11,23 @@ import { t } from '@tonkeeper/shared/i18n';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PinCodeRef } from '$uikit/PinCode/PinCode.interface';
 import { tk } from '$wallet';
-import { Alert } from 'react-native';
-import { BlockingLoader, Toast } from '@tonkeeper/uikit';
+import { Alert,View } from 'react-native';
+import { BlockingLoader, Steezy, Toast } from '@tonkeeper/uikit';
 import { useMigration } from '$hooks/useMigration';
-
+import LottieView from 'lottie-react-native';
+import { BiometryType } from '$wallet/Biometry';
+import { useBiometrySettings } from '@tonkeeper/shared/hooks';
+const LottieFaceId = require('$assets/lottie/faceid.json');
+const LottieTouchId = require('$assets/lottie/touchid.json');
 export const MigrationPasscode: FC<{
   route: RouteProp<MigrationStackParamList, MigrationStackRouteNames.Passcode>;
 }> = () => {
+  const biometry = useBiometrySettings();
+  const iconRef = useRef<LottieView>(null);
+  const isFingerprint = biometry.type !== BiometryType.FaceRecognition;
   const [value, setValue] = useState('');
-
   const { bottom: bottomInset } = useSafeAreaInsets();
   const pinRef = useRef<PinCodeRef>(null);
-
   const { getMnemonicWithPasscode, doMigration } = useMigration();
 
   const triggerError = useCallback(() => {
@@ -82,7 +87,6 @@ export const MigrationPasscode: FC<{
       },
     ]);
   }, []);
-
   return (
     <S.Wrap>
       <NavBar
@@ -114,3 +118,9 @@ export const MigrationPasscode: FC<{
     </S.Wrap>
   );
 };
+const styles = Steezy.create({
+  lottieIcon: {
+    width: 160,
+    height: 160,
+  },
+});

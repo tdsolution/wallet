@@ -1,4 +1,7 @@
 {
+   "onboarding_screen": {
+     "get_started":"Iniziare"
+  },
   "about_ton" : "TON è una blockchain di livello 1 completamente decentralizzata progettata da Telegram per integrare miliardi di utenti. Vanta transazioni ultra veloci, commissioni minime, app facili da usare ed è rispettoso dell'ambiente.",
   "access_confirmation_logout" : "Disconnetti",
   "access_confirmation_reset" : "Resetta",

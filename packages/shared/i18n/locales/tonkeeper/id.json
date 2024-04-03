@@ -1,4 +1,7 @@
 {
+   "onboarding_screen": {
+    "get_started":"Memulai"
+  },
   "about_ton": "TON adalah blockchain lapisan-1 yang sepenuhnya terdesentralisasi yang dirancang oleh Telegram untuk melayani miliaran pengguna. Ini menampilkan transaksi ultra-cepat, biaya yang sangat kecil, aplikasi yang mudah digunakan, dan ramah lingkungan.",
   "access_confirmation_logout": "Keluar",
   "access_confirmation_reset": "Setel Ulang",

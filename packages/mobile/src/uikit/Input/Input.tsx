@@ -291,7 +291,7 @@ export const Input: FC<InputProps> = (props) => {
           ref={inputRef}
           allowFontScaling={false}
           selectionColor={isFailed ? colors.accentNegative : colors.accentPrimary}
-          keyboardAppearance={isDark ? 'dark' : 'light'}
+          keyboardAppearance={'light'}
           placeholder={hasLabel ? '' : placeholder}
           placeholderTextColor={colors.foregroundSecondary}
           onFocus={handleFocus}
@@ -315,7 +315,7 @@ export const Input: FC<InputProps> = (props) => {
         >
           {withPasteButton ? (
             <S.RightButton onPress={handlePastePress}>
-              <Text variant="label1" color="accentPrimary">
+              <Text variant="label1" style={{color:'#4871EA'}}>
                 {t('paste')}
               </Text>
             </S.RightButton>

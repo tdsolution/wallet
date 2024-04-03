@@ -9,3 +9,6 @@ export * from './ChangePinBiometry';
 export * from './BackupScreen';
 export * from './BackupPhraseScreen';
 export * from './BackupCheckPhraseScreen';
+// them code
+export * from './OnboardingScreen';
+

@@ -52,8 +52,6 @@ export const Input = styled(TextInput)<{
 
   border-radius: ${({ theme }) => ns(theme.radius.normal)}px;
   font-size: ${ns(16)}px;
-  /* line-height корректно не работает на IOS, поэтому оставляем дефолтное значение и делаем больше padding  */
-
   border-width: 0;
   margin: 0;
   z-index: 3;
@@ -81,7 +79,6 @@ export const InputText = styled.Text`
   font-size: ${ns(16)}px;
   ${({ theme: { font, colors } }) => css`
     font-family: ${font.regular};
-    color: ${colors.foregroundPrimary};
   `}
   padding: 0;
 

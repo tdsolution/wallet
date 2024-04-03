@@ -35,13 +35,21 @@ export const InputNumber = styled.TextInput.attrs({
 
 export const ButtonWrap = styled.View`
   margin-top: ${ns(32)}px;
+  background: ${({ theme }) => theme.colors.primaryColor};
+  border-radius: ${ns(16)}px;
 `;
 
 export const Header = styled.View`
   align-items: center;
   padding-bottom: ${ns(16)}px;
 `;
-
+export const HeaderButton = styled.View`
+  padding-top: ${ns(16)}px;
+  width: 100%
+`;
+export const Title = styled.View`
+  align-items: center;
+`;
 export const HeaderCaptionWrapper = styled.View`
   margin-top: ${ns(4)}px;
 `;
@@ -68,7 +76,7 @@ export const WordHintsWrap = styled(Animated.View)`
 
 export const WordHintsContent = styled.View`
   overflow: hidden;
-  border-radius: ${ns(16)}px;
+  // border-radius: ${ns(16)}px;
 `;
 
 export const WordHintsItem = styled.View`
@@ -76,11 +84,12 @@ export const WordHintsItem = styled.View`
   flex-direction: row;
   padding-horizontal: ${ns(16)}px;
   align-items: center;
+  background: #fff;
 `;
 
 export const HeaderTitle = styled.Text.attrs({ allowFontScaling: false })`
   font-family: ${({ theme }) => theme.font.semiBold};
-  color: ${({ theme }) => theme.colors.foregroundPrimary};
+  color: ${({ theme }) => theme.colors.primaryColor};
   font-size: ${nfs(24)}px;
   line-height: ${nfs(32)}px;
   text-align: center;

@@ -10,7 +10,7 @@ import React, {
   useMemo,
 } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
-
+import { css } from '$styled';
 interface Props {
   innerRef?: RefObject<TextInput>;
   comment: string;
@@ -41,7 +41,7 @@ const CommentInputComponent: FC<Props> = (props) => {
   }, [setCommentEncrypted]);
 
   const commentVisibilityText = isCommentEncrypted
-    ? t('send_screen_steps.comfirm.comment_description_encrypted')
+    ? t('send_screen_steps.comfirm.comment_description_description_encrypted')
     : t('send_screen_steps.comfirm.comment_description');
 
   const commentLabel = useMemo(() => {
@@ -93,6 +93,10 @@ const CommentInputComponent: FC<Props> = (props) => {
   return (
     <FormItem description={commentDescription}>
       <Input
+        wrapperStyle={css`
+          background-color: #f2f2f2;
+        `}
+        style={{color:'#000'}}
         innerRef={innerRef}
         isFailed={commentRequiredError}
         isSuccessful={isCommentEncrypted}

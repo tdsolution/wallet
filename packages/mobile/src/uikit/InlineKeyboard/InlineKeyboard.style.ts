@@ -29,7 +29,7 @@ export const KeyCircle = styled(Animated.View)`
   top: 0;
   left: 0;
   z-index: 1;
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => theme.colors.backgroundHighlighted};
 `;
 
 export const KeyContent = styled.View`

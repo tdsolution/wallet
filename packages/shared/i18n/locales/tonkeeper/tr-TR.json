@@ -1,4 +1,7 @@
 {
+  "onboarding_screen": {
+    "get_started":"Başlamak"
+  },
   "about_ton" : "TON, Telegram tarafından milyarlarca kullanıcıyı bünyesine katmak için tasarlanmış tamamen merkeziyetsiz bir layer-1 blokzinciridir. TON, ultra hızlı işlem hızına, düşük ücretlere, kullanımı kolay uygulamalara sahiptir ve çevre dostudur.",
   "access_confirmation_logout" : "Oturumu kapat",
   "access_confirmation_reset" : "Sıfırla",

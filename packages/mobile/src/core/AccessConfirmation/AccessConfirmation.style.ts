@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 
 export const Wrap = styled.View`
   flex: 1;
+  background: #fff;
 `;
 
 export const Content = styled.View`

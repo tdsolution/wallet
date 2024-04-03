@@ -90,9 +90,12 @@ export const InputItem = forwardRef<InputItemRef, InputItemProps>((props, ref) =
         renderToHardwareTextureAndroid
         wrapperStyle={css`
           padding-left: ${ns(56)}px;
+          background-color: #f2f2f2;
         `}
         style={{
           includeFontPadding: false,
+          color: '#000',
+          fontSize: 16,
         }}
         returnKeyType={index === 23 ? 'done' : 'next'}
         onSubmitEditing={onSubmitEditing}

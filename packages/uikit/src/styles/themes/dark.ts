@@ -1,11 +1,12 @@
 export const DarkTheme = {
+  primaryColor : '#4871EA',
   textPrimary: '#FFFFFF',
   textSecondary: '#8994A3',
   textTertiary: '#556170',
   textAccent: '#45AEF5',
   textPrimaryAlternate: '#10161F',
 
-  backgroundPage: '#10161F',
+  backgroundPage: '#4871EA',
   backgroundTransparent: 'rgba(16, 22, 31, 0.96)',
   backgroundContent: '#1D2633',
   backgroundContentTint: '#2E3847',
@@ -20,7 +21,7 @@ export const DarkTheme = {
   iconTertiary: '#556170',
   iconPrimaryAlternate: '#10161F',
 
-  buttonPrimaryBackground: '#45AEF5',
+  buttonPrimaryBackground: '#4871EA',
   buttonPrimaryForeground: '#FFFFFF',
   buttonSecondaryBackground: '#1D2633',
   buttonSecondaryForeground: '#FFFFFF',
@@ -29,7 +30,7 @@ export const DarkTheme = {
   buttonPrimaryBackgroundDisabled: '#378AC2',
   buttonSecondaryBackgroundDisabled: '#171F29',
   buttonTertiaryBackgroundDisabled: '#28303D',
-  buttonPrimaryBackgroundHighlighted: '#5BB8F6',
+  buttonPrimaryBackgroundHighlighted: '#4871EA',
   buttonSecondaryBackgroundHighlighted: '#222C3B',
   buttonTertiaryBackgroundHighlighted: '#364052',
 
