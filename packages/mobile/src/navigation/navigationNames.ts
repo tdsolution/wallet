@@ -73,6 +73,7 @@ export enum BrowserStackRouteNames {
 export enum WalletStackRouteNames {
   Wallet = "Wallet",
   Account = "Account",
+  TransactionHistory = "TransactionHistory",
 }
 
 export enum SettingsStackRouteNames {

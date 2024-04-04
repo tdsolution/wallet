@@ -21,6 +21,7 @@ import { BackupScreen } from "../../screens";
 import { AddNewAccount } from "../../screens/AddNewAccountScreen";
 // import { WalletScreen } from "../../../tabs/Wallet/WalletScreen";
 import { WalletScreen } from "../../tabs/Wallet/WalletScreen";
+import TransactionHistory from "../../screens/TransactionHistory/TransactionHistory";
 
 const Stack = createNativeStackNavigator<WalletStackParamList>();
 
@@ -29,7 +30,7 @@ export const WalletStack: FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={WalletStackRouteNames.Wallet}
+      initialRouteName={WalletStackRouteNames.TransactionHistory}
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
@@ -46,6 +47,10 @@ export const WalletStack: FC = () => {
       <Stack.Screen
         name={WalletStackRouteNames.Wallet}
         component={WalletScreen}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.TransactionHistory}
+        component={TransactionHistory}
       />
     </Stack.Navigator>
   );
