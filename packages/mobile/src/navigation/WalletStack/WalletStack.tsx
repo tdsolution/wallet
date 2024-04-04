@@ -30,7 +30,7 @@ export const WalletStack: FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={WalletStackRouteNames.TransactionHistory}
+      initialRouteName={WalletStackRouteNames.Wallet}
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,

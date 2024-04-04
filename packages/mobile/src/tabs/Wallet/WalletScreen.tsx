@@ -22,6 +22,7 @@ import {
   RefreshControl,
   useWindowDimensions,
   Image,
+  FlatList,
 } from "react-native";
 import { NFTCardItem } from "./NFTCardItem";
 import { useDispatch } from "react-redux";
@@ -69,6 +70,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { chainActive } from "@tonkeeper/shared/utils/KEY_STORAGE";
 import { DataChains } from "@tonkeeper/shared/utils/network";
 import { WalletStackRouteNames } from "$navigation";
+import ItemWallet from "./Item/ItemWallet";
+import Title from "../../components/Title";
 export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
@@ -510,6 +513,25 @@ export const WalletScreen = memo(({ navigation }: any) => {
             )}
           </IconButtonList>
         </View>
+        <Title title={"Holdings"} />
+        <View>
+          <FlatList
+            // style={{ marginVertical: 25 }}
+            data={DATA}
+            renderItem={({ item }) => (
+              <ItemWallet
+                title={item.title}
+                price={item.price}
+                profit={item.profit}
+                // image={item.imageURL}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            ListFooterComponent={<View style={{ height: 50 }} />}
+            ListHeaderComponent={<View style={{ height: 25 }} />}
+          />
+        </View>
       </ScrollView>
 
       {isPagerView ? (
@@ -627,3 +649,41 @@ const styles = Steezy.create(({ isTablet }) => ({
     alignItems: "center",
   },
 }));
+
+const DATA = [
+  {
+    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba4",
+    title: "TD WALLET",
+    price: "$6,766.45",
+    profit: "+2.75%",
+    // imageURL: require("../../../assets/logo/img_td.png"),
+  },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f635",
+    title: "TWT",
+    price: "$6,766.45",
+    profit: "+2.75%",
+    // imageURL: require("../../../assets/logo/img_twt.png"),
+  },
+  {
+    id: "58694a0f-3da1-471f-bd96-145571e29d726",
+    title: "USDT",
+    price: "$76,766.45",
+    profit: "-0.34%",
+    // imageURL: require("../../../assets/logo/img_td.png"),
+  },
+  {
+    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba7",
+    title: "TD WALLET",
+    price: "$6,766.45",
+    profit: "+2.75%",
+    // imageURL: require("../../../assets/logo/img_td.png"),
+  },
+  {
+    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63i",
+    title: "TWT",
+    price: "$6,766.45",
+    profit: "+2.75%",
+    // imageURL: require("../../../assets/logo/img_twt.png"),
+  },
+];
