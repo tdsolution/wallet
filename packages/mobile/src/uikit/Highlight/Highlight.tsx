@@ -1,18 +1,22 @@
-import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { View, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
+import React, { forwardRef, useCallback, useMemo, useState } from "react";
+import {
+  View,
+  TouchableNativeFeedback,
+  TouchableHighlight,
+} from "react-native";
 
-import { useTheme } from '$hooks/useTheme';
-import { isAndroid, ns } from '$utils';
+import { useTheme } from "$hooks/useTheme";
+import { isAndroid, ns } from "$utils";
 
-import { HighlightProps } from './Highlight.interface';
+import { HighlightProps } from "./Highlight.interface";
 import {
   TouchableHighlight as RNGHTouchableHighlight,
   TouchableNativeFeedback as RNGHTouchableFeedback,
-} from 'react-native-gesture-handler';
+} from "react-native-gesture-handler";
 
 export const Highlight = forwardRef<any, HighlightProps>((props, ref) => {
   const {
-    background = 'backgroundTertiary',
+    background = "backgroundTertiary",
     highlightColor,
     onPress,
     style = {},
@@ -25,11 +29,16 @@ export const Highlight = forwardRef<any, HighlightProps>((props, ref) => {
   } = props;
   const theme = useTheme();
   const [isHighlighted, setHighlighted] = useState(false);
-  const TouchableNativeFeedbackComponent = useMemo(() => useRNGHComponent ? RNGHTouchableFeedback : TouchableNativeFeedback, [useRNGHComponent]);
-  const TouchableHighlightComponent = useMemo(() => useRNGHComponent ? RNGHTouchableHighlight : TouchableHighlight, [useRNGHComponent]);
+  const TouchableNativeFeedbackComponent = useMemo(
+    () => (useRNGHComponent ? RNGHTouchableFeedback : TouchableNativeFeedback),
+    [useRNGHComponent]
+  );
+  const TouchableHighlightComponent = useMemo(
+    () => (useRNGHComponent ? RNGHTouchableHighlight : TouchableHighlight),
+    [useRNGHComponent]
+  );
 
-
-  const preparedStyle = typeof style === 'object' ? [style] : style;
+  const preparedStyle = typeof style === "object" ? [style] : style;
 
   // @ts-ignore
   preparedStyle.push({
@@ -48,7 +57,7 @@ export const Highlight = forwardRef<any, HighlightProps>((props, ref) => {
   }, [onPressOut]);
 
   const content = useMemo(() => {
-    if (typeof children === 'function') {
+    if (typeof children === "function") {
       return children(isHighlighted);
     } else {
       return children;
@@ -65,7 +74,7 @@ export const Highlight = forwardRef<any, HighlightProps>((props, ref) => {
         disabled={isDisabled}
         useForeground
         onPress={onPress}
-        style={{ overflow: 'hidden' }}
+        style={{ overflow: "hidden" }}
         background={TouchableNativeFeedback.Ripple(color, false)}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

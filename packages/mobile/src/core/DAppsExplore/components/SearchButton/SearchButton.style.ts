@@ -1,10 +1,10 @@
-import styled, { RADIUS } from '$styled';
-import { Text } from '$uikit';
-import { ns } from '$utils';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import styled, { RADIUS } from "$styled";
+import { Text } from "$uikit";
+import { ns } from "$utils";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export const Touchable = styled(TouchableWithoutFeedback)`
-  background-color: ${({ theme }) => theme.colors.backgroundSecondary};
+  background-color: ${({ theme }) => theme.colors.primaryColor};
   border-radius: ${ns(RADIUS.normal)}px;
 `;
 
@@ -16,8 +16,8 @@ export const Wrap = styled.View`
 `;
 
 export const Label = styled(Text).attrs({
-  variant: 'body1',
-  color: 'foregroundSecondary',
+  variant: "body1",
+  color: "backgroundPrimary",
 })`
   margin-left: ${ns(12)}px;
 `;

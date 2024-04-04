@@ -1,13 +1,13 @@
-import React, { FC, isValidElement, useMemo } from 'react';
+import React, { FC, isValidElement, useMemo } from "react";
 
-import * as S from './List.style';
-import { ListCellProps, ListProps } from './List.interface';
-import { Separator } from '../../Separator/Separator';
-import { View } from '../../StyledNativeComponents';
+import * as S from "./List.style";
+import { ListCellProps, ListProps } from "./List.interface";
+import { Separator } from "../../Separator/Separator";
+import { View } from "../../StyledNativeComponents";
 
 export const ListCell: FC<ListCellProps> = ({
   label,
-  align = 'right',
+  align = "right",
   children,
   onPress,
 }) => {
@@ -36,7 +36,7 @@ export const ListCell: FC<ListCellProps> = ({
  */
 export const List: FC<ListProps> = ({
   children,
-  align = 'right',
+  align = "right",
   separator = true,
   ...viewProps
 }) => {

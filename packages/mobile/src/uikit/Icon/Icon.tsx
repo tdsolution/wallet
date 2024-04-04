@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Image, ViewStyle, StyleProp, ImageStyle } from 'react-native';
-import { TonThemeColor } from '$styled';
-import { IconSizes, IconNames } from './generated.types';
-import { MobileIconsList } from './IconsMobileList';
-import { useTheme } from '$hooks/useTheme';
-import { ns } from '$utils';
+import React from "react";
+import { View, Image, ViewStyle, StyleProp, ImageStyle } from "react-native";
+import { TonThemeColor } from "$styled";
+import { IconSizes, IconNames } from "./generated.types";
+import { MobileIconsList } from "./IconsMobileList";
+import { useTheme } from "$hooks/useTheme";
+import { ns } from "$utils";
 
 export interface IconProps {
   name: IconNames;
@@ -35,18 +35,21 @@ export const Icon = React.memo((props: IconProps) => {
   const sizeStyle = { width: ns(size), height: ns(size) };
   const imageStyle = !colorless
     ? {
-        tintColor: tintColor ?? theme.colors.foregroundTertiary,
+        tintColor: tintColor ?? theme.colors.foregroundPrimary,
       }
     : {};
 
   if (icon) {
     return (
       <View style={[style, sizeStyle]}>
-        <Image style={[imageStyle, sizeStyle, customImageStyle]} source={icon} />
+        <Image
+          style={[imageStyle, sizeStyle, customImageStyle]}
+          source={icon}
+        />
       </View>
     );
   } else {
     console.warn(`Icon ${name} does not exist`);
-    return <View style={[sizeStyle, { backgroundColor: 'red' }]} />;
+    return <View style={[sizeStyle, { backgroundColor: "red" }]} />;
   }
 });
