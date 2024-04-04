@@ -86,14 +86,14 @@ export const ActivityScreen = memo(() => {
               <Button
                 title={t('activity.buy_toncoin_btn')}
                 onPress={handlePressBuy}
-                color="secondary"
+                color="primary"
                 size="small"
               />
               <Spacer x={12} />
               <Button
                 title={t('activity.receive_btn')}
                 onPress={handlePressRecevie}
-                color="secondary"
+                color="primary"
                 size="small"
               />
             </View>
