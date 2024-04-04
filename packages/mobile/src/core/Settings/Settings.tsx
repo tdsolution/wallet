@@ -684,7 +684,7 @@ const styles = Steezy.create({
   menuIcon: {
     width: 24,
     height: 24,
-    marginRight: 20,
+    marginRight: 10,
     marginVertical: 20,
   },
   menuText: {
