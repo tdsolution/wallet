@@ -101,7 +101,12 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
               navBarTitle={t("browser.title")}
               navBarRight={
                 <S.NavBarButtonContainer>
-                  <Button onPress={goBack} mode="secondary" size="navbar_small">
+                  <Button
+                    style={{ backgroundColor: "#4871EA" }}
+                    onPress={goBack}
+                    mode="secondary"
+                    size="navbar_small"
+                  >
                     {t("cancel")}
                   </Button>
                 </S.NavBarButtonContainer>

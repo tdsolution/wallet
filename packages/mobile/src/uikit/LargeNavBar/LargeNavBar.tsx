@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAnimatedStyle, interpolate } from 'react-native-reanimated';
-import { TouchableOpacity, View } from 'react-native';
+import React, { FC } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAnimatedStyle, interpolate } from "react-native-reanimated";
+import { TouchableOpacity, View } from "react-native";
 
-import * as S from './LargeNavBar.style';
-import { LargeNavBarProps } from './LargeNavBar.interface';
-import { deviceHeight, deviceWidth, hNs } from '$utils';
-import { useTheme } from '$hooks/useTheme';
-import { Text } from '../Text/Text';
+import * as S from "./LargeNavBar.style";
+import { LargeNavBarProps } from "./LargeNavBar.interface";
+import { deviceHeight, deviceWidth, hNs } from "$utils";
+import { useTheme } from "$hooks/useTheme";
+import { Text } from "../Text/Text";
 
 export const LargeNavBarInteractiveDistance = hNs(20);
 
@@ -19,7 +19,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
     bottomComponent,
     onPress,
     hitSlop,
-    position = 'relative',
+    position = "relative",
     safeArea = true,
     border = true,
     opacity,
@@ -29,7 +29,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
 
   const renderRightContent = React.useCallback(() => {
     if (rightContent) {
-      return typeof rightContent === 'function' ? rightContent() : rightContent;
+      return typeof rightContent === "function" ? rightContent() : rightContent;
     }
 
     return null;
@@ -47,7 +47,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
         translateY:
           scrollTop.value > 0
             ? -Math.min(scrollTop.value, LargeNavBarInteractiveDistance)
-            : position === 'absolute'
+            : position === "absolute"
             ? -scrollTop.value
             : 0,
       },
@@ -64,7 +64,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
         scale: interpolate(
           Math.min(0, scrollTop.value),
           [0, -deviceHeight / 2],
-          [1, 1.3],
+          [1, 1.3]
         ),
       },
       {
@@ -74,7 +74,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
     opacity: interpolate(
       Math.max(0, Math.min(scrollTop.value, LargeNavBarInteractiveDistance)),
       [0, LargeNavBarInteractiveDistance * 0.5, LargeNavBarInteractiveDistance],
-      [1, 0, 0],
+      [1, 0, 0]
     ),
   }));
 
@@ -83,17 +83,24 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
       transform: [
         {
           translateY: interpolate(
-            Math.min(Math.max(0, scrollTop.value), LargeNavBarInteractiveDistance),
+            Math.min(
+              Math.max(0, scrollTop.value),
+              LargeNavBarInteractiveDistance
+            ),
             [0, LargeNavBarInteractiveDistance],
-            [LargeNavBarInteractiveDistance, 0],
+            [LargeNavBarInteractiveDistance, 0]
           ),
         },
       ],
       zIndex: scrollTop.value > LargeNavBarInteractiveDistance ? 5 : 1,
       opacity: interpolate(
         Math.max(0, Math.min(scrollTop.value, LargeNavBarInteractiveDistance)),
-        [0, LargeNavBarInteractiveDistance * 0.5, LargeNavBarInteractiveDistance],
-        [0, 0, 1],
+        [
+          0,
+          LargeNavBarInteractiveDistance * 0.5,
+          LargeNavBarInteractiveDistance,
+        ],
+        [0, 0, 1]
       ),
     };
   });
@@ -120,17 +127,25 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
         style={{ paddingTop: safeArea ? topInset : 0, position }}
         pointerEvents="box-none"
       >
-        <S.Background style={[backgroundStyle, { top: safeArea ? topInset : 0 }]} />
+        <S.Background
+          style={[backgroundStyle, { top: safeArea ? topInset : 0 }]}
+        />
         <S.Cont>
           <S.LargeWrap style={largeWrapStyle}>
             <S.LargeTextWrap style={largeTitleStyle}>
-              <TouchableOpacity disabled={!onPress} onPress={onPress} hitSlop={hitSlop}>
+              <TouchableOpacity
+                disabled={!onPress}
+                onPress={onPress}
+                hitSlop={hitSlop}
+              >
                 {bottomComponent ? (
                   <Text variant="h3" color="foregroundPrimary">
                     {children}
                   </Text>
                 ) : (
-                  <Text variant="h1">{children}</Text>
+                  <Text variant="h1" style={{ color: "#4871EA" }}>
+                    {children}
+                  </Text>
                 )}
                 {bottomComponent ? (
                   <S.LargeBottomComponentWrap>
@@ -141,11 +156,17 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
             </S.LargeTextWrap>
           </S.LargeWrap>
           <S.SmallWrap style={smallWrapStyle}>
-            <TouchableOpacity disabled={!onPress} onPress={onPress} hitSlop={hitSlop}>
+            <TouchableOpacity
+              disabled={!onPress}
+              onPress={onPress}
+              hitSlop={hitSlop}
+            >
               <S.TextWrap style={smallTitleStyle}>
                 <Text variant="h3">{children}</Text>
                 {bottomComponent ? (
-                  <S.BottomComponentWrap>{bottomComponent}</S.BottomComponentWrap>
+                  <S.BottomComponentWrap>
+                    {bottomComponent}
+                  </S.BottomComponentWrap>
                 ) : null}
               </S.TextWrap>
             </TouchableOpacity>

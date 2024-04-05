@@ -1,8 +1,8 @@
-import { NavBar } from '$uikit';
-import { tk } from '$wallet';
-import { useNavigation } from '@tonkeeper/router';
-import { useWallet } from '@tonkeeper/shared/hooks';
-import { t } from '@tonkeeper/shared/i18n';
+import { NavBar } from "$uikit";
+import { tk } from "$wallet";
+import { useNavigation } from "@tonkeeper/router";
+import { useWallet } from "@tonkeeper/shared/hooks";
+import { t } from "@tonkeeper/shared/i18n";
 import {
   Button,
   Haptics,
@@ -19,7 +19,7 @@ import {
   ns,
   useReanimatedKeyboardHeight,
   useTheme,
-} from '@tonkeeper/uikit';
+} from "@tonkeeper/uikit";
 import React, {
   FC,
   memo,
@@ -28,16 +28,19 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { Keyboard, LayoutChangeEvent, Text as RNText } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { EmojiPicker } from './EmojiPicker';
-import { BottomButtonWrapHelper } from '$shared/components';
-import LinearGradient from 'react-native-linear-gradient';
-import { RouteProp } from '@react-navigation/native';
-import { AppStackParamList } from '$navigation/AppStack';
-import { AppStackRouteNames } from '$navigation';
+} from "react";
+import { Keyboard, LayoutChangeEvent, Text as RNText } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+import { EmojiPicker } from "./EmojiPicker";
+import { BottomButtonWrapHelper } from "$shared/components";
+import LinearGradient from "react-native-linear-gradient";
+import { RouteProp } from "@react-navigation/native";
+import { AppStackParamList } from "$navigation/AppStack";
+import { AppStackRouteNames } from "$navigation";
 
 const COLORS_LIST = Object.values(WalletColor);
 
@@ -50,7 +53,7 @@ interface Props {
 export const CustomizeWallet: FC<Props> = memo((props) => {
   const identifiers = useMemo(
     () => props.route?.params?.identifiers ?? [tk.wallet.identifier],
-    [props],
+    [props]
   );
 
   const wallet = useWallet();
@@ -58,7 +61,9 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
   const theme = useTheme();
 
   const [name, setName] = useState(
-    identifiers.length > 1 ? wallet.config.name.slice(0, -5) : wallet.config.name,
+    identifiers.length > 1
+      ? wallet.config.name.slice(0, -5)
+      : wallet.config.name
   );
   const [selectedColor, setSelectedColor] = useState(wallet.config.color);
   const [emoji, setEmoji] = useState(wallet.config.emoji);
@@ -70,7 +75,10 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
   const { spacerStyle } = useReanimatedKeyboardHeight();
 
   const handleSave = useCallback(() => {
-    tk.updateWallet({ name: name.trim(), color: selectedColor, emoji }, identifiers);
+    tk.updateWallet(
+      { name: name.trim(), color: selectedColor, emoji },
+      identifiers
+    );
     nav.goBack();
   }, [emoji, identifiers, name, nav, selectedColor]);
 
@@ -92,7 +100,7 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
     () => ({
       opacity: withTiming(keyboardShown ? 0.32 : 1, { duration: 200 }),
     }),
-    [keyboardShown],
+    [keyboardShown]
   );
 
   useEffect(() => {
@@ -112,17 +120,17 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      isAndroid ? 'keyboardDidShow' : 'keyboardWillShow',
+      isAndroid ? "keyboardDidShow" : "keyboardWillShow",
       () => {
         setKeyboardShown(true);
-      },
+      }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      isAndroid ? 'keyboardDidHide' : 'keyboardWillHide',
+      isAndroid ? "keyboardDidHide" : "keyboardWillHide",
       () => {
         setKeyboardShown(false);
-      },
+      }
     );
 
     return () => {
@@ -136,17 +144,17 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
       <NavBar isModal isClosedButton isForceBackIcon hideBackButton />
       <View style={styles.container}>
         <View style={styles.topContainer} onLayout={handleLayout}>
-          <Text type="h2" textAlign="center">
-            {t('customize_modal.title')}
+          <Text style={{ color: "#4871EA" }} type="h2" textAlign="center">
+            {t("customize_modal.title")}
           </Text>
           <Spacer y={4} />
           <Text type="body1" color="textSecondary" textAlign="center">
-            {t('customize_modal.subtitle')}
+            {t("customize_modal.subtitle")}
           </Text>
           <Spacer y={32} />
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer]}>
             <Input
-              label={t('customize_modal.wallet_name')}
+              label={t("customize_modal.wallet_name")}
               defaultValue={name}
               onChangeText={setName}
               autoComplete="off"
@@ -156,7 +164,7 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
               maxLength={24}
               style={styles.inputStyle.static}
             />
-            <View style={styles.rightContent} pointerEvents="none">
+            <View style={[styles.rightContent]} pointerEvents="none">
               <View
                 style={[
                   styles.emojiContainer,
@@ -169,7 +177,9 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
           </View>
         </View>
         <Spacer y={16} />
-        <Animated.View style={[styles.pickersContainer.static, pickersAnimatedStyles]}>
+        <Animated.View
+          style={[styles.pickersContainer.static, pickersAnimatedStyles]}
+        >
           <View>
             <ScrollView
               ref={colorsScrollViewRef}
@@ -206,13 +216,13 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
       </View>
       <View style={styles.buttonContainer}>
         <LinearGradient
-          colors={['rgba(21, 28, 41, 0)', theme.backgroundPage]}
+          colors={["rgba(21, 28, 41, 0)", theme.backgroundPage]}
           locations={[0, 1]}
           style={styles.buttonGradient.static}
           pointerEvents="none"
         />
         <Button
-          title={t('customize_modal.save')}
+          title={t("customize_modal.save")}
           disabled={name.length === 0}
           onPress={handleSave}
         />
@@ -229,24 +239,24 @@ const styles = Steezy.create(({ colors, safeArea, corners }) => ({
     paddingHorizontal: 32,
   },
   inputContainer: {
-    position: 'relative',
+    position: "relative",
   },
   inputStyle: {
     marginRight: 48,
   },
   rightContent: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 8,
     bottom: 0,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   emojiContainer: {
     width: 48,
     height: 48,
     borderRadius: corners.extraSmall,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   emoji: {
     fontSize: isAndroid ? 26 : 28,
@@ -263,8 +273,8 @@ const styles = Steezy.create(({ colors, safeArea, corners }) => ({
     width: 36,
     height: 36,
     borderRadius: 36 / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   selectedColorIndicator: {
     width: 30,
@@ -274,7 +284,7 @@ const styles = Steezy.create(({ colors, safeArea, corners }) => ({
     borderWidth: 5,
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
@@ -283,7 +293,7 @@ const styles = Steezy.create(({ colors, safeArea, corners }) => ({
     marginBottom: safeArea.bottom,
   },
   buttonGradient: {
-    position: 'absolute',
+    position: "absolute",
     top: -16,
     left: 0,
     right: 0,

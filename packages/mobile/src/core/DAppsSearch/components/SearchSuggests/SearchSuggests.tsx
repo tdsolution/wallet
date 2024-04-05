@@ -1,8 +1,8 @@
-import { List } from '$uikit/List/old/List';
-import React, { FC, memo } from 'react';
-import { ISearchSuggest } from '../../types';
-import { SearchSuggestCell } from '../SearchSuggestCell/SearchSuggestCell';
-import * as S from './SearchSuggests.style';
+import { List } from "$uikit/List/old/List";
+import React, { FC, memo } from "react";
+import { ISearchSuggest } from "../../types";
+import { SearchSuggestCell } from "../SearchSuggestCell/SearchSuggestCell";
+import * as S from "./SearchSuggests.style";
 
 interface Props {
   items: ISearchSuggest[];

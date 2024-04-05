@@ -1,7 +1,7 @@
-import { IsTablet } from '$shared/constants';
-import styled, { RADIUS } from '$styled';
-import { ns } from '$utils';
-import { TextInput } from 'react-native';
+import { IsTablet } from "$shared/constants";
+import styled, { RADIUS } from "$styled";
+import { ns } from "$utils";
+import { TextInput } from "react-native";
 
 const INPUT_HEIGHT = 48;
 
@@ -27,6 +27,7 @@ export const Input = styled(TextInput)`
   font-size: ${ns(16)}px;
   padding-right: ${ns(16)}px;
   padding-left: ${ns(44)}px;
+  background: #4871ea;
 `;
 
 export const IconContainer = styled.View`

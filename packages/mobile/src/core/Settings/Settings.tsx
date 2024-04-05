@@ -1,18 +1,19 @@
-import React, { FC, useCallback, useMemo, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import Rate, { AndroidMarket } from 'react-native-rate';
-import { Alert, Linking, Platform, View } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import Animated from 'react-native-reanimated';
-import { TapGestureHandler } from 'react-native-gesture-handler';
+import React, { FC, useCallback, useMemo, useRef } from "react";
+import { Image } from "react-native";
+import { useDispatch } from "react-redux";
+import Rate, { AndroidMarket } from "react-native-rate";
+import { Alert, Linking, Platform, View } from "react-native";
+import DeviceInfo from "react-native-device-info";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import Animated from "react-native-reanimated";
+import { TapGestureHandler } from "react-native-gesture-handler";
 
-import * as S from './Settings.style';
-import { Icon, PopupSelect, ScrollHandler, Spacer, Text } from '$uikit';
-import { Icon as NewIcon } from '@tonkeeper/uikit';
-import { useShouldShowTokensButton } from '$hooks/useShouldShowTokensButton';
-import { useNavigation } from '@tonkeeper/router';
-import { List } from '@tonkeeper/uikit';
+import * as S from "./Settings.style";
+import { Icon, PopupSelect, ScrollHandler, Spacer, Text } from "$uikit";
+import { Icon as NewIcon } from "@tonkeeper/uikit";
+import { useShouldShowTokensButton } from "$hooks/useShouldShowTokensButton";
+import { useNavigation } from "@tonkeeper/router";
+import { List } from "@tonkeeper/uikit";
 import {
   AppStackRouteNames,
   MainStackRouteNames,
@@ -26,47 +27,47 @@ import {
   openSecurity,
   openSelectLanguage,
   openSubscriptions,
-} from '$navigation';
-import { walletActions } from '$store/wallet';
+} from "$navigation";
+import { walletActions } from "$store/wallet";
 import {
   APPLE_STORE_ID,
   GOOGLE_PACKAGE_NAME,
   LargeNavBarHeight,
   IsTablet,
-} from '$shared/constants';
-import { checkIsTonDiamondsNFT, hNs, ns, throttle } from '$utils';
-import { LargeNavBarInteractiveDistance } from '$uikit/LargeNavBar/LargeNavBar';
-import { CellSectionItem } from '$shared/components';
-import { useFlags } from '$utils/flags';
-import { SearchEngine, useBrowserStore } from '$store';
-import AnimatedLottieView from 'lottie-react-native';
-import { Steezy } from '$styles';
-import { i18n, t } from '@tonkeeper/shared/i18n';
-import { trackEvent } from '$utils/stats';
-import { openAppearance } from '$core/ModalContainer/AppearanceModal';
-import { config } from '$config';
+} from "$shared/constants";
+import { checkIsTonDiamondsNFT, hNs, ns, throttle } from "$utils";
+import { LargeNavBarInteractiveDistance } from "$uikit/LargeNavBar/LargeNavBar";
+import { CellSectionItem } from "$shared/components";
+import { useFlags } from "$utils/flags";
+import { SearchEngine, useBrowserStore } from "$store";
+import AnimatedLottieView from "lottie-react-native";
+import { Steezy } from "$styles";
+import { i18n, t } from "@tonkeeper/shared/i18n";
+import { trackEvent } from "$utils/stats";
+import { openAppearance } from "$core/ModalContainer/AppearanceModal";
+import { config } from "$config";
 import {
   useNftsState,
   useWallet,
   useWalletCurrency,
   useWalletSetup,
-} from '@tonkeeper/shared/hooks';
-import { tk } from '$wallet';
-import { mapNewNftToOldNftData } from '$utils/mapNewNftToOldNftData';
-import { WalletListItem } from '@tonkeeper/shared/components';
-import { useSubscriptions } from '@tonkeeper/shared/hooks/useSubscriptions';
-import { nativeLocaleNames } from '@tonkeeper/shared/i18n/translations';
+} from "@tonkeeper/shared/hooks";
+import { tk } from "$wallet";
+import { mapNewNftToOldNftData } from "$utils/mapNewNftToOldNftData";
+import { WalletListItem } from "@tonkeeper/shared/components";
+import { useSubscriptions } from "@tonkeeper/shared/hooks/useSubscriptions";
+import { nativeLocaleNames } from "@tonkeeper/shared/i18n/translations";
 
 export const Settings: FC = () => {
   const animationRef = useRef<AnimatedLottieView>(null);
   const devMenuHandlerRef = useRef(null);
 
   const flags = useFlags([
-    'disable_apperance',
-    'disable_support_button',
-    'disable_feedback_button',
-    'address_style_settings',
-    'address_style_nobounce',
+    "disable_apperance",
+    "disable_support_button",
+    "disable_feedback_button",
+    "address_style_settings",
+    "address_style_nobounce",
   ]);
 
   const nav = useNavigation();
@@ -75,7 +76,7 @@ export const Settings: FC = () => {
   const fiatCurrency = useWalletCurrency();
   const dispatch = useDispatch();
   const hasSubscriptions = useSubscriptions(
-    (state) => Object.values(state.subscriptions).length > 0,
+    (state) => Object.values(state.subscriptions).length > 0
   );
   const wallet = useWallet();
   const shouldShowTokensButton = useShouldShowTokensButton();
@@ -83,17 +84,19 @@ export const Settings: FC = () => {
   const { lastBackupAt } = useWalletSetup();
 
   const isBatteryVisible =
-    !!wallet && !wallet.isWatchOnly && !config.get('disable_battery');
+    !!wallet && !wallet.isWatchOnly && !config.get("disable_battery");
 
   const searchEngine = useBrowserStore((state) => state.searchEngine);
-  const setSearchEngine = useBrowserStore((state) => state.actions.setSearchEngine);
+  const setSearchEngine = useBrowserStore(
+    (state) => state.actions.setSearchEngine
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleAnimateDiamond = useCallback(
     throttle(() => {
       animationRef?.current?.play();
     }, 500),
-    [],
+    []
   );
 
   const handleRateApp = useCallback(() => {
@@ -110,7 +113,7 @@ export const Settings: FC = () => {
   }, []);
 
   const handleFeedback = useCallback(() => {
-    Linking.openURL(config.get('supportLink')).catch((err) => console.log(err));
+    Linking.openURL(config.get("supportLink")).catch((err) => console.log(err));
   }, []);
 
   const handleLegal = useCallback(() => {
@@ -118,38 +121,46 @@ export const Settings: FC = () => {
   }, []);
 
   const handleNews = useCallback(() => {
-    Linking.openURL(config.get('tonkeeperNewsUrl')).catch((err) => console.log(err));
+    Linking.openURL(config.get("tonkeeperNewsUrl")).catch((err) =>
+      console.log(err)
+    );
   }, []);
 
   const handleSupport = useCallback(() => {
-    Linking.openURL(config.get('directSupportUrl')).catch((err) => console.log(err));
+    Linking.openURL(config.get("directSupportUrl")).catch((err) =>
+      console.log(err)
+    );
   }, []);
 
   const handleResetWallet = useCallback(() => {
-    Alert.alert(t('settings_reset_alert_title'), t('settings_reset_alert_caption'), [
-      {
-        text: t('cancel'),
-        style: 'cancel',
-      },
-      {
-        text: t('settings_reset_alert_button'),
-        style: 'destructive',
-        onPress: () => {
-          dispatch(walletActions.cleanWallet());
+    Alert.alert(
+      t("settings_reset_alert_title"),
+      t("settings_reset_alert_caption"),
+      [
+        {
+          text: t("cancel"),
+          style: "cancel",
         },
-      },
-    ]);
+        {
+          text: t("settings_reset_alert_button"),
+          style: "destructive",
+          onPress: () => {
+            dispatch(walletActions.cleanWallet());
+          },
+        },
+      ]
+    );
   }, [dispatch]);
 
   const handleStopWatchWallet = useCallback(() => {
-    Alert.alert(t('settings_delete_watch_account'), undefined, [
+    Alert.alert(t("settings_delete_watch_account"), undefined, [
       {
-        text: t('cancel'),
-        style: 'cancel',
+        text: t("cancel"),
+        style: "cancel",
       },
       {
-        text: t('settings_delete_watch_account_button'),
-        style: 'destructive',
+        text: t("settings_delete_watch_account_button"),
+        style: "destructive",
         onPress: () => {
           dispatch(walletActions.cleanWallet());
         },
@@ -168,17 +179,17 @@ export const Settings: FC = () => {
   const searchEngineVariants = Object.values(SearchEngine);
 
   const handleSwitchLanguage = useCallback(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       return openSelectLanguage();
     }
 
-    Alert.alert(t('language.language_alert.title'), undefined, [
+    Alert.alert(t("language.language_alert.title"), undefined, [
       {
-        text: t('language.language_alert.cancel'),
-        style: 'cancel',
+        text: t("language.language_alert.cancel"),
+        style: "cancel",
       },
       {
-        text: t('language.language_alert.open'),
+        text: t("language.language_alert.open"),
         onPress: () => {
           Linking.openSettings();
         },
@@ -211,25 +222,29 @@ export const Settings: FC = () => {
   }, []);
 
   const handleDeleteAccount = useCallback(() => {
-    Alert.alert(t('settings_delete_alert_title'), t('settings_delete_alert_caption'), [
-      {
-        text: t('cancel'),
-        style: 'cancel',
-      },
-      {
-        text: t('settings_delete_alert_button'),
-        style: 'destructive',
-        onPress: () => {
-          trackEvent('delete_wallet');
-          openDeleteAccountDone();
+    Alert.alert(
+      t("settings_delete_alert_title"),
+      t("settings_delete_alert_caption"),
+      [
+        {
+          text: t("cancel"),
+          style: "cancel",
         },
-      },
-    ]);
+        {
+          text: t("settings_delete_alert_button"),
+          style: "destructive",
+          onPress: () => {
+            trackEvent("delete_wallet");
+            openDeleteAccountDone();
+          },
+        },
+      ]
+    );
   }, []);
 
   const handleCustomizePress = useCallback(
     () => nav.navigate(AppStackRouteNames.CustomizeWallet),
-    [nav],
+    [nav]
   );
 
   const backupIndicator = React.useMemo(() => {
@@ -252,7 +267,9 @@ export const Settings: FC = () => {
     }
 
     return Object.values(accountNfts).find((nft) =>
-      checkIsTonDiamondsNFT(mapNewNftToOldNftData(nft, wallet.address.ton.friendly)),
+      checkIsTonDiamondsNFT(
+        mapNewNftToOldNftData(nft, wallet.address.ton.friendly)
+      )
     );
   }, [wallet, accountNfts]);
 
@@ -262,13 +279,13 @@ export const Settings: FC = () => {
 
   return (
     <S.Wrap>
-      <ScrollHandler navBarTitle={t('settings_title')}>
+      <ScrollHandler navBarTitle={t("settings_title")}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingTop: IsTablet ? ns(8) : hNs(LargeNavBarHeight),
             paddingBottom: tabBarHeight,
-            alignItems: IsTablet ? 'center' : undefined,
+            alignItems: IsTablet ? "center" : undefined,
           }}
           scrollEventThrottle={16}
         >
@@ -278,8 +295,12 @@ export const Settings: FC = () => {
                 <WalletListItem
                   onPress={handleCustomizePress}
                   wallet={wallet}
-                  subtitle={t('customize')}
-                  rightContent={<Icon name="ic-chevron-right-16" />}
+                  subtitle={t("customize")}
+                  rightContent={
+                    <Image
+                      source={require("../../assets/icons/png/ic-chevron-right-12.png")}
+                    />
+                  }
                 />
               </List>
               <Spacer y={16} />
@@ -291,14 +312,19 @@ export const Settings: FC = () => {
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
-                    name={'ic-key-28'}
+                    color="primaryColor"
+                    name={"ic-key-28"}
                   />
                 }
                 title={
                   <View style={styles.backupTextContainer.static}>
-                    <Text variant="label1" numberOfLines={1} ellipsizeMode="tail">
-                      {t('settings_backup_seed')}
+                    <Text
+                      style={{ color: "#2B2D42" }}
+                      variant="label1"
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {t("settings_backup_seed")}
                     </Text>
                     {backupIndicator}
                   </View>
@@ -311,11 +337,11 @@ export const Settings: FC = () => {
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
-                    name={'ic-jetton-28'}
+                    color="primaryColor"
+                    name={"ic-jetton-28"}
                   />
                 }
-                title={t('settings_jettons_list')}
+                title={t("settings_jettons_list")}
                 onPress={handleManageTokens}
               />
             )}
@@ -324,40 +350,46 @@ export const Settings: FC = () => {
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
-                    name={'ic-ticket-28'}
+                    color="primaryColor"
+                    name={"ic-ticket-28"}
                   />
                 }
-                title={t('settings_subscriptions')}
+                title={t("settings_subscriptions")}
                 onPress={handleSubscriptions}
               />
             )}
-            {!!wallet && wallet.notifications.isAvailable && !wallet.isTestnet && (
-              <List.Item
-                value={<Icon color="accentPrimary" name={'ic-notification-28'} />}
-                title={t('settings_notifications')}
-                onPress={handleNotifications}
-              />
-            )}
+            {!!wallet &&
+              wallet.notifications.isAvailable &&
+              !wallet.isTestnet && (
+                <List.Item
+                  value={
+                    <Icon color="primaryColor" name={"ic-notification-28"} />
+                  }
+                  title={t("settings_notifications")}
+                  onPress={handleNotifications}
+                />
+              )}
             {isAppearanceVisible && (
               <List.Item
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
-                    name={'ic-appearance-28'}
+                    color="primaryColor"
+                    name={"ic-appearance-28"}
                   />
                 }
-                title={t('settings_appearance')}
+                title={t("settings_appearance")}
                 onPress={handleAppearance}
               />
             )}
             <List.Item
               value={
-                <S.SelectedCurrency>{fiatCurrency.toUpperCase()}</S.SelectedCurrency>
+                <S.SelectedCurrency>
+                  {fiatCurrency.toUpperCase()}
+                </S.SelectedCurrency>
               }
-              title={t('settings_primary_currency')}
-              onPress={() => nav.navigate('ChooseCurrency')}
+              title={t("settings_primary_currency")}
+              onPress={() => nav.navigate("ChooseCurrency")}
             />
             {isBatteryVisible && (
               <List.Item
@@ -365,26 +397,30 @@ export const Settings: FC = () => {
                   <NewIcon
                     style={styles.icon.static}
                     color="accentBlue"
-                    name={'ic-battery-28'}
+                    name={"ic-battery-28"}
                   />
                 }
-                title={t('battery.settings')}
+                title={t("battery.settings")}
                 onPress={handleBattery}
               />
             )}
-            {!config.get('disable_holders_cards') && !!wallet && !wallet.isWatchOnly && (
-              <List.Item
-                value={
-                  <NewIcon
-                    style={styles.icon.static}
-                    color="accentBlue"
-                    name={'ic-creditcard-28'}
-                  />
-                }
-                title={t('settings_bank_card')}
-                onPress={() => nav.navigate(MainStackRouteNames.HoldersWebView)}
-              />
-            )}
+            {!config.get("disable_holders_cards") &&
+              !!wallet &&
+              !wallet.isWatchOnly && (
+                <List.Item
+                  value={
+                    <NewIcon
+                      style={styles.icon.static}
+                      color="accentBlue"
+                      name={"ic-creditcard-28"}
+                    />
+                  }
+                  title={t("settings_bank_card")}
+                  onPress={() =>
+                    nav.navigate(MainStackRouteNames.HoldersWebView)
+                  }
+                />
+              )}
           </List>
           <Spacer y={16} />
           <List>
@@ -393,11 +429,11 @@ export const Settings: FC = () => {
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
+                    color="primaryColor"
                     name="ic-lock-28"
                   />
                 }
-                title={t('settings_security')}
+                title={t("settings_security")}
                 onPress={handleSecurity}
               />
             )}
@@ -411,31 +447,33 @@ export const Settings: FC = () => {
             >
               <List.Item
                 value={
-                  <Text variant="label1" color="accentPrimary">
+                  <Text variant="label1" color="primaryColor">
                     {searchEngine}
                   </Text>
                 }
-                title={t('settings_search_engine')}
+                title={t("settings_search_engine")}
               />
             </PopupSelect>
             <List.Item
               onPress={handleSwitchLanguage}
               value={
-                <Text variant="label1" color="accentPrimary">
+                <Text variant="label1" color="primaryColor">
                   {nativeLocaleNames[i18n.locale]}
                 </Text>
               }
-              title={t('language.title')}
+              title={t("language.title")}
             />
             {wallet && !wallet.isWatchOnly && flags.address_style_settings ? (
               <List.Item
                 value={
-                  <Text variant="label1" color="accentPrimary">
+                  <Text variant="label1" color="primaryColor">
                     EQ » UQ
                   </Text>
                 }
-                title={t('address_update.title')}
-                onPress={() => nav.navigate(MainStackRouteNames.AddressUpdateInfo)}
+                title={t("address_update.title")}
+                onPress={() =>
+                  nav.navigate(MainStackRouteNames.AddressUpdateInfo)
+                }
               />
             ) : null}
           </List>
@@ -447,11 +485,11 @@ export const Settings: FC = () => {
                 value={
                   <Icon
                     style={styles.icon.static}
-                    color="accentPrimary"
-                    name={'ic-message-bubble-28'}
+                    color="primaryColor"
+                    name={"ic-message-bubble-28"}
                   />
                 }
-                title={t('settings_support')}
+                title={t("settings_support")}
               />
             ) : null}
             <List.Item
@@ -460,10 +498,10 @@ export const Settings: FC = () => {
                 <Icon
                   style={styles.icon.static}
                   color="iconSecondary"
-                  name={'ic-telegram-28'}
+                  name={"ic-telegram-28"}
                 />
               }
-              title={t('settings_news')}
+              title={t("settings_news")}
             />
             {!flags.disable_feedback_button ? (
               <List.Item
@@ -472,10 +510,10 @@ export const Settings: FC = () => {
                   <Icon
                     style={styles.icon.static}
                     color="iconSecondary"
-                    name={'ic-envelope-28'}
+                    name={"ic-envelope-28"}
                   />
                 }
-                title={t('settings_contact_support')}
+                title={t("settings_contact_support")}
               />
             ) : null}
             <List.Item
@@ -484,10 +522,10 @@ export const Settings: FC = () => {
                 <Icon
                   style={styles.icon.static}
                   color="iconSecondary"
-                  name={'ic-star-28'}
+                  name={"ic-star-28"}
                 />
               }
-              title={t('settings_rate')}
+              title={t("settings_rate")}
             />
             {!!wallet && !wallet.isWatchOnly && (
               <List.Item
@@ -496,10 +534,10 @@ export const Settings: FC = () => {
                   <Icon
                     style={styles.icon.static}
                     color="iconSecondary"
-                    name={'ic-trash-bin-28'}
+                    name={"ic-trash-bin-28"}
                   />
                 }
-                title={t('settings_delete_account')}
+                title={t("settings_delete_account")}
               />
             )}
             <List.Item
@@ -508,10 +546,10 @@ export const Settings: FC = () => {
                 <Icon
                   style={styles.icon.static}
                   color="iconSecondary"
-                  name={'ic-doc-28'}
+                  name={"ic-doc-28"}
                 />
               }
-              title={t('settings_legal_documents')}
+              title={t("settings_legal_documents")}
             />
           </List>
           <Spacer y={16} />
@@ -519,12 +557,18 @@ export const Settings: FC = () => {
             <>
               <List>
                 {wallet.isWatchOnly ? (
-                  <CellSectionItem onPress={handleStopWatchWallet} icon="ic-trash-bin-28">
-                    {t('stop_watch')}
+                  <CellSectionItem
+                    onPress={handleStopWatchWallet}
+                    icon="ic-trash-bin-28"
+                  >
+                    {t("stop_watch")}
                   </CellSectionItem>
                 ) : (
-                  <CellSectionItem onPress={handleResetWallet} icon="ic-door-28">
-                    {t('settings_reset')}
+                  <CellSectionItem
+                    onPress={handleResetWallet}
+                    icon="ic-door-28"
+                  >
+                    {t("settings_reset")}
                   </CellSectionItem>
                 )}
               </List>
@@ -546,17 +590,22 @@ export const Settings: FC = () => {
                   <S.AppInfoIcon
                     ref={animationRef}
                     loop={false}
-                    source={require('$assets/lottie/diamond.json')}
+                    source={require("$assets/lottie/diamond.json")}
                   />
 
                   <S.AppInfoTitleWrapper>
-                    <Text fontSize={14} lineHeight={20} fontWeight="700">
+                    <Text
+                      fontSize={14}
+                      lineHeight={20}
+                      fontWeight="700"
+                      color="primaryColor"
+                    >
                       {DeviceInfo.getApplicationName()}
                     </Text>
                   </S.AppInfoTitleWrapper>
                   <S.AppInfoVersionWrapper>
                     <Text variant="label3" color="foregroundSecondary">
-                      {t('settings_version')} {DeviceInfo.getVersion()}
+                      {t("settings_version")} {DeviceInfo.getVersion()}
                     </Text>
                   </S.AppInfoVersionWrapper>
                 </S.AppInfo>
@@ -576,8 +625,8 @@ const styles = Steezy.create({
     marginBottom: -2,
   },
   backupTextContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
   },
   backupIndicatorContainer: {
     height: 24,

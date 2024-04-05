@@ -1,14 +1,14 @@
-import { WithDefault } from 'react-native/Libraries/Types/CodegenTypes';
-import { TextInputRef, TextInput, TextInputProps } from './TextInput';
-import Clipboard from '@react-native-community/clipboard';
-import { TouchableOpacity } from './TouchableOpacity';
-import { corners } from '../styles/constants';
-import { Steezy, useTheme } from '../styles';
-import { Font } from './Text/TextStyles';
-import { isAndroid, isIOS } from '../utils';
-import { Icon } from './Icon';
-import { View } from './View';
-import { Text } from './Text';
+import { WithDefault } from "react-native/Libraries/Types/CodegenTypes";
+import { TextInputRef, TextInput, TextInputProps } from "./TextInput";
+import Clipboard from "@react-native-community/clipboard";
+import { TouchableOpacity } from "./TouchableOpacity";
+import { corners } from "../styles/constants";
+import { Steezy, useTheme } from "../styles";
+import { Font } from "./Text/TextStyles";
+import { isAndroid, isIOS } from "../utils";
+import { Icon } from "./Icon";
+import { View } from "./View";
+import { Text } from "./Text";
 import Animated, {
   useAnimatedStyle,
   interpolateColor,
@@ -16,13 +16,13 @@ import Animated, {
   useSharedValue,
   interpolate,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import {
   TextInputFocusEventData,
   NativeSyntheticEvent,
   LayoutChangeEvent,
   TouchableWithoutFeedback,
-} from 'react-native';
+} from "react-native";
 import {
   useImperativeHandle,
   forwardRef,
@@ -31,8 +31,8 @@ import {
   useState,
   useMemo,
   useRef,
-} from 'react';
-import { t } from '@tonkeeper/shared/i18n';
+} from "react";
+import { t } from "@tonkeeper/shared/i18n";
 
 type FocusEvent = NativeSyntheticEvent<TextInputFocusEventData>;
 
@@ -102,7 +102,7 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
   } = props;
   const state = useSharedValue(InputState.Unfocused);
   const [isFocused, setFocused] = useState(false);
-  const [inputValue, setInputValue] = useState(defaultValue ?? '');
+  const [inputValue, setInputValue] = useState(defaultValue ?? "");
   const [invalid, setInvalid] = useState(false);
   const inputRef = useRef<TextInputRef>(null);
   const hasValueAnim = useSharedValue(0);
@@ -172,7 +172,7 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
         setInvalid(false);
       }
     },
-    [disableAutoMarkValid, invalid],
+    [disableAutoMarkValid, invalid]
   );
 
   const handleFocus = useCallback(
@@ -182,7 +182,7 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
         onFocus(ev);
       }
     },
-    [onFocus, setFocused],
+    [onFocus, setFocused]
   );
   const handleBlur = useCallback(
     (ev: FocusEvent) => {
@@ -191,7 +191,7 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
         onBlur(ev);
       }
     },
-    [onBlur, setFocused],
+    [onBlur, setFocused]
   );
 
   const containerStaticStyle = {
@@ -208,14 +208,14 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
       withClearButton && styles.inputWithClearButton,
       style,
     ],
-    [style, hasLabel, multiline, withClearButton],
+    [style, hasLabel, multiline, withClearButton]
   );
 
   const invalidBgStyle = useAnimatedStyle(() => {
     const bgAlpha = interpolate(
       state.value,
       [InputState.Focused, InputState.Invalid],
-      [0, 0.08],
+      [0, 0.08]
     );
     return { backgroundColor: `rgba(255,71,102, ${bgAlpha})` };
   });
@@ -224,7 +224,11 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
     borderColor: interpolateColor(
       state.value,
       [InputState.Unfocused, InputState.Focused, InputState.Invalid],
-      [colors.fieldBackground, colors.fieldActiveBorder, colors.fieldErrorBorder],
+      [
+        colors.fieldBackground,
+        colors.fieldActiveBorder,
+        colors.fieldErrorBorder,
+      ]
     ),
   }));
 
@@ -240,9 +244,9 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
 
   const handlePressClear = useCallback(() => {
     if (onChangeText) {
-      onChangeText('');
+      onChangeText("");
     }
-    setInputValue('');
+    setInputValue("");
   }, []);
 
   const handlePressInput = useCallback(() => {
@@ -250,13 +254,19 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
   }, [inputRef]);
 
   useEffect(() => {
-    hasValueAnim.value = withTiming(shouldAnimate ? 1 : 0, { duration: ANIM_DURATION });
+    hasValueAnim.value = withTiming(shouldAnimate ? 1 : 0, {
+      duration: ANIM_DURATION,
+    });
   }, [hasValue]);
 
   const labelContainerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: interpolate(hasValueAnim.value, [0, 1], [0, LABEL_TRANSLATE_X_TO]),
+        translateX: interpolate(
+          hasValueAnim.value,
+          [0, 1],
+          [0, LABEL_TRANSLATE_X_TO]
+        ),
       },
       {
         translateY: interpolate(hasValueAnim.value, [0, 1], [0, -13]),
@@ -287,7 +297,10 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
   }, [isFocused]);
 
   return (
-    <TouchableWithoutFeedback onPress={handlePressInput}>
+    <TouchableWithoutFeedback
+      onPress={handlePressInput}
+      style={{ backgroundColor: "red" }}
+    >
       <Animated.View
         onLayout={onLayout}
         style={[
@@ -295,13 +308,18 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
           styles.container.static,
           containerStaticStyle,
           withFocusBorder && focusBorderStyle,
+          { backgroundColor: "#90909014" },
         ]}
       >
         <Animated.View style={[styles.invalidBg.static, invalidBgStyle]} />
         {!!leftContent && <View style={styles.leftContent}>{leftContent}</View>}
         <View style={styles.labelContainer}>
           <Animated.View style={labelContainerStyle}>
-            <Text type="body1" color="textSecondary">
+            <Text
+              style={{ color: "#909090" }}
+              type="body1"
+              color="textSecondary"
+            >
               {label}
             </Text>
           </Animated.View>
@@ -329,12 +347,15 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
         </View>
         <Animated.View
           style={[styles.rightСontent.static, rightContentStyle]}
-          pointerEvents={hasValue ? 'none' : 'auto'}
+          pointerEvents={hasValue ? "none" : "auto"}
         >
           {withPasteButton && (
-            <TouchableOpacity style={styles.rightButton} onPress={handlePastePress}>
+            <TouchableOpacity
+              style={styles.rightButton}
+              onPress={handlePastePress}
+            >
               <Text type="label1" color="textAccent">
-                {pasteButtonTitle ?? t('paste')}
+                {pasteButtonTitle ?? t("paste")}
               </Text>
             </TouchableOpacity>
           )}
@@ -350,7 +371,7 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
         {withClearButton && (
           <Animated.View
             style={[styles.rightСontent.static, clearButtonStyle]}
-            pointerEvents={hasValue && isFocused ? 'auto' : 'none'}
+            pointerEvents={hasValue && isFocused ? "auto" : "none"}
           >
             <TouchableOpacity
               style={[styles.rightButton, styles.clearButton]}
@@ -405,8 +426,8 @@ const styles = Steezy.create(({ colors, corners }) => ({
     backgroundColor: colors.fieldBackground,
     borderRadius: corners.medium,
     borderWidth: InputBorderWidth,
-    flexDirection: 'row',
-    position: 'relative',
+    flexDirection: "row",
+    position: "relative",
   },
   indentBottom: {
     marginBottom: 16,
@@ -419,7 +440,7 @@ const styles = Steezy.create(({ colors, corners }) => ({
     fontFamily: Font.Regular,
     color: colors.textPrimary,
     paddingHorizontal: 16 - InputBorderWidth,
-    textAlignVertical: 'center',
+    textAlignVertical: "center",
     paddingVertical: 0,
     flexGrow: 1,
     margin: 0,
@@ -429,7 +450,7 @@ const styles = Steezy.create(({ colors, corners }) => ({
     marginBottom: 0,
   },
   inputMiltiline: {
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     lineHeight: 24,
     ...inputPaddings.withMultiline.other,
     // ...isAndroid
@@ -449,38 +470,38 @@ const styles = Steezy.create(({ colors, corners }) => ({
     top: 0,
     left: 0,
     bottom: 0,
-    position: 'absolute',
+    position: "absolute",
   },
   invalidBg: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   labelContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     left: 0,
-    justifyContent: 'center',
+    justifyContent: "center",
     height: 63 - InputBorderWidth,
     paddingHorizontal: 16 - InputBorderWidth,
   },
   rightСontent: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     zIndex: 4,
   },
   rightButton: {
     paddingHorizontal: 16 - InputBorderWidth,
-    height: '100%',
-    justifyContent: 'center',
+    height: "100%",
+    justifyContent: "center",
   },
   scanButton: {
     paddingHorizontal: 14 - InputBorderWidth,
