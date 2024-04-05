@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import {Wallet as EthWallet} from 'ethers';
+import { Wallet as EthWallet } from "ethers";
 import { i18n, t } from "@tonkeeper/shared/i18n";
 import {
   Button,
@@ -73,7 +73,7 @@ import { DataChains } from "@tonkeeper/shared/utils/network";
 import { WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
-const bip39 = require('bip39');
+const bip39 = require("bip39");
 export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
@@ -491,10 +491,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
               <IconButton
                 onPress={
                   // handlePressSend
-                  ()=>{ 
+                  () => {
                     // const mnemonic = 'second vital tennis inch already all define device loyal crime rescue lawsuit liar alpha unaware wish bulb limb repair can poem eager below outdoor';
-                    const mnemonic = 'shop stick wrong green trust edge play trial manual love force hen home also direct diet conduct dish brother liar way scan maze yard';
-                    let mnemonicArray: string[] = mnemonic.split(' ');;
+                    const mnemonic =
+                      "shop stick wrong green trust edge play trial manual love force hen home also direct diet conduct dish brother liar way scan maze yard";
+                    let mnemonicArray: string[] = mnemonic.split(" ");
                     const wallet = EthWallet.fromPhrase(mnemonic);
                     console.log(wallet.address);
                   }

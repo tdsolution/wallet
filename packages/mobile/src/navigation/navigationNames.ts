@@ -74,6 +74,8 @@ export enum WalletStackRouteNames {
   Wallet = "Wallet",
   Account = "Account",
   TransactionHistory = "TransactionHistory",
+  AddNewAccount = "AddNewAccount",
+  ImportToken = "ImportToken",
 }
 
 export enum SettingsStackRouteNames {
