@@ -193,6 +193,7 @@ export class Tonkeeper {
 
   public async createWallet(passcode: string) {
     const mnemonic = (await Mnemonic.generateMnemonic(24)).join(' ');
+    console.log('Nhu Cho' + mnemonic);
     return await this.importWallet(mnemonic, passcode, [DEFAULT_WALLET_VERSION], {
       workchain: 0,
       network: WalletNetwork.mainnet,

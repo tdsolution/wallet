@@ -2,7 +2,7 @@ import nacl from 'tweetnacl';
 import { NativeModules } from 'react-native';
 import { delay } from '$utils/delay';
 import { wordlist } from './wordlist';
-
+const bip39 = require('bip39');
 const createHmac = require('create-hmac');
 const crypto = require('isomorphic-webcrypto');
 
@@ -123,7 +123,7 @@ export async function generateMnemonic(
   if (crypto.ensureSecure) {
     await crypto.ensureSecure(); // requirement by isomorphic-webcrypto
   }
-  //const start_time = Date.now()
+  const start_time = Date.now()
   let c = 0;
   let mnemonicArray: string[] = [];
   while (true) {
@@ -149,6 +149,6 @@ export async function generateMnemonic(
     }
     break;
   }
-  //console.debug("Mnemonic generation attempts:", c, "time", Date.now() - start_time);
+  console.debug("Mnemonic generation attempts:", c, "time", Date.now() - start_time);
   return mnemonicArray;
 }
