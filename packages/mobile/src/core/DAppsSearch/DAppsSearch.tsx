@@ -1,20 +1,23 @@
-import { openDAppBrowser } from '$navigation';
-import { IsTablet, NavBarHeight } from '$shared/constants';
-import { Button, ScrollHandler, Text } from '$uikit';
-import { ns } from '$utils';
-import React, { FC, memo, useCallback, useState } from 'react';
-import { LayoutChangeEvent } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { SearchBar, SearchSuggests } from './components';
-import { WebSearchSuggests } from './components/WebSearchSuggests/WebSearchSuggests';
-import * as S from './DAppsSearch.style';
-import { useSearchSuggests } from './hooks/useSearchSuggests';
-import { useWebSearchSuggests } from './hooks/useWebSearchSuggests';
-import { SearchSuggestSource } from './types';
-import { goBack } from '$navigation/imperative';
-import { t } from '@tonkeeper/shared/i18n';
-import { trackEvent } from '$utils/stats';
+import { openDAppBrowser } from "$navigation";
+import { IsTablet, NavBarHeight } from "$shared/constants";
+import { Button, ScrollHandler, Text } from "$uikit";
+import { ns } from "$utils";
+import React, { FC, memo, useCallback, useState } from "react";
+import { LayoutChangeEvent } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SearchBar, SearchSuggests } from "./components";
+import { WebSearchSuggests } from "./components/WebSearchSuggests/WebSearchSuggests";
+import * as S from "./DAppsSearch.style";
+import { useSearchSuggests } from "./hooks/useSearchSuggests";
+import { useWebSearchSuggests } from "./hooks/useWebSearchSuggests";
+import { SearchSuggestSource } from "./types";
+import { goBack } from "$navigation/imperative";
+import { t } from "@tonkeeper/shared/i18n";
+import { trackEvent } from "$utils/stats";
 
 export interface DAppsSearchProps {
   initialQuery?: string;
@@ -24,7 +27,7 @@ export interface DAppsSearchProps {
 const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
   const { initialQuery, onOpenUrl } = props;
 
-  const [query, setQuery] = useState(initialQuery || '');
+  const [query, setQuery] = useState(initialQuery || "");
 
   const { searchSuggests, getFirstSuggest } = useSearchSuggests(query);
   const { webSearchSuggests, getFirstWebSuggest } = useWebSearchSuggests(query);
@@ -42,7 +45,7 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
 
       openDAppBrowser(url);
     },
-    [onOpenUrl],
+    [onOpenUrl]
   );
 
   const handleSearchBarSubmit = useCallback(() => {
@@ -50,9 +53,11 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
 
     if (suggest) {
       if (
-        [SearchSuggestSource.APP, SearchSuggestSource.HISTORY].includes(suggest.source)
+        [SearchSuggestSource.APP, SearchSuggestSource.HISTORY].includes(
+          suggest.source
+        )
       ) {
-        trackEvent('click_dapp', { url: suggest.url, name: suggest.name });
+        trackEvent("click_dapp", { url: suggest.url, name: suggest.name });
       }
 
       openUrl(suggest.url);
@@ -71,7 +76,7 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
     (event: LayoutChangeEvent) => {
       scrollViewHeight.value = event.nativeEvent.layout.height + NavBarHeight;
     },
-    [scrollViewHeight],
+    [scrollViewHeight]
   );
 
   const emptyContainerStyle = useAnimatedStyle(() => ({
@@ -79,10 +84,13 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
   }));
 
   const emptyText =
-    query.trim().length === 0 ? t('browser.start_typing') : t('browser.empty_search');
+    query.trim().length === 0
+      ? t("browser.start_typing")
+      : t("browser.empty_search");
 
   const hasSuggests =
-    query.length > 0 && (searchSuggests.length > 0 || webSearchSuggests.length > 0);
+    query.length > 0 &&
+    (searchSuggests.length > 0 || webSearchSuggests.length > 0);
 
   return (
     <S.Container bottomInset={bottomInset}>
@@ -90,11 +98,11 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
         <S.KeyboardAvoidView>
           <S.Content>
             <ScrollHandler
-              navBarTitle={t('browser.title')}
+              navBarTitle={t("browser.title")}
               navBarRight={
                 <S.NavBarButtonContainer>
                   <Button onPress={goBack} mode="secondary" size="navbar_small">
-                    {t('cancel')}
+                    {t("cancel")}
                   </Button>
                 </S.NavBarButtonContainer>
               }
@@ -115,7 +123,10 @@ const DAppsSearchComponent: FC<DAppsSearchProps> = (props) => {
               >
                 {hasSuggests ? (
                   <>
-                    <SearchSuggests items={searchSuggests} onPressSuggest={openUrl} />
+                    <SearchSuggests
+                      items={searchSuggests}
+                      onPressSuggest={openUrl}
+                    />
                     <WebSearchSuggests
                       items={webSearchSuggests}
                       active={searchSuggests.length === 0}

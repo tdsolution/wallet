@@ -1,7 +1,11 @@
-import { BrowserStackRouteNames, openChooseCountry, openDAppsSearch } from '$navigation';
-import { useAppsListStore, useConnectedAppsList } from '$store';
-import { useFlags } from '$utils/flags';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import {
+  BrowserStackRouteNames,
+  openChooseCountry,
+  openDAppsSearch,
+} from "$navigation";
+import { useAppsListStore, useConnectedAppsList } from "$store";
+import { useFlags } from "$utils/flags";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import React, {
   FC,
   memo,
@@ -10,23 +14,23 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from 'react';
+} from "react";
 import {
   SearchButton,
   AboutDApps,
   FeaturedApps,
   ConnectedApps,
   AppsCategory,
-} from './components';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Screen, SegmentedControl, Steezy, View } from '@tonkeeper/uikit';
-import { shallow } from 'zustand/shallow';
-import { BrowserStackParamList } from '$navigation/BrowserStack/BrowserStack.interface';
-import { t } from '@tonkeeper/shared/i18n';
-import { ScrollPositionContext } from '$uikit';
-import { useFocusEffect, useTabPress } from '@tonkeeper/router';
-import { useSelectedCountry } from '$store/zustand/methodsToBuy/useSelectedCountry';
-import { CountryButton } from '@tonkeeper/shared/components';
+} from "./components";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Screen, SegmentedControl, Steezy, View } from "@tonkeeper/uikit";
+import { shallow } from "zustand/shallow";
+import { BrowserStackParamList } from "$navigation/BrowserStack/BrowserStack.interface";
+import { t } from "@tonkeeper/shared/i18n";
+import { ScrollPositionContext } from "$uikit";
+import { useFocusEffect, useTabPress } from "@tonkeeper/router";
+import { useSelectedCountry } from "$store/zustand/methodsToBuy/useSelectedCountry";
+import { CountryButton } from "@tonkeeper/shared/components";
 
 export type DAppsExploreProps = NativeStackScreenProps<
   BrowserStackParamList,
@@ -34,7 +38,7 @@ export type DAppsExploreProps = NativeStackScreenProps<
 >;
 
 const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
-  const flags = useFlags(['disable_dapps']);
+  const flags = useFlags(["disable_dapps"]);
   const tabBarHeight = useBottomTabBarHeight();
 
   const { changeEnd } = useContext(ScrollPositionContext);
@@ -43,16 +47,23 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
   const selectedCountry = useSelectedCountry();
 
   const featuredApps = useAppsListStore(
-    (s) => s.categories.find((category) => category.id === 'featured')?.apps || [],
-    shallow,
+    (s) =>
+      s.categories.find((category) => category.id === "featured")?.apps || [],
+    shallow
   );
 
   const filteredFeaturedApps = useMemo(() => {
     return featuredApps.filter((app) => {
-      if (app.excludeCountries && app.excludeCountries.includes(selectedCountry)) {
+      if (
+        app.excludeCountries &&
+        app.excludeCountries.includes(selectedCountry)
+      ) {
         return false;
       }
-      if (app.includeCountries && !app.includeCountries.includes(selectedCountry)) {
+      if (
+        app.includeCountries &&
+        !app.includeCountries.includes(selectedCountry)
+      ) {
         return false;
       }
 
@@ -67,17 +78,25 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
       .map((category) => ({
         ...category,
         apps: category.apps.filter((app) => {
-          if (app.excludeCountries && app.excludeCountries.includes(selectedCountry)) {
+          if (
+            app.excludeCountries &&
+            app.excludeCountries.includes(selectedCountry)
+          ) {
             return false;
           }
-          if (app.includeCountries && !app.includeCountries.includes(selectedCountry)) {
+          if (
+            app.includeCountries &&
+            !app.includeCountries.includes(selectedCountry)
+          ) {
             return false;
           }
 
           return true;
         }),
       }))
-      .filter((category) => category.id !== 'featured' && category.apps.length > 0);
+      .filter(
+        (category) => category.id !== "featured" && category.apps.length > 0
+      );
   }, [categories, selectedCountry]);
 
   const {
@@ -99,7 +118,7 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
   useFocusEffect(
     useCallback(() => {
       changeEnd(false);
-    }, [changeEnd]),
+    }, [changeEnd])
   );
 
   useTabPress(() => {
@@ -123,7 +142,7 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
         <SegmentedControl
           onChange={(segment) => setSegmentIndex(segment)}
           index={segmentIndex}
-          items={[t('browser.explore'), t('browser.connected')]}
+          items={[t("browser.explore"), t("browser.connected")]}
           style={styles.segmentedControl}
           indicatorStyle={styles.segmentedControlIndicator}
         />
@@ -163,13 +182,13 @@ const styles = Steezy.create(({ colors }) => ({
   },
   countryButtonContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     minWidth: 64,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     paddingRight: 16,
   },
   segmentedControl: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   segmentedControlIndicator: {
     backgroundColor: colors.buttonSecondaryBackground,
@@ -179,10 +198,10 @@ const styles = Steezy.create(({ colors }) => ({
   },
   hidden: {
     height: 0,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   searchBarContainer: {
     padding: 16,
-    position: 'relative',
+    position: "relative",
   },
 }));

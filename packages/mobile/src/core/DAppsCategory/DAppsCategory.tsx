@@ -1,14 +1,14 @@
-import { BrowserStackRouteNames, openDAppsSearch } from '$navigation';
-import { useAppsListStore } from '$store';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import React, { FC, memo, useCallback } from 'react';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Screen, Steezy, Text, View } from '@tonkeeper/uikit';
-import { shallow } from 'zustand/shallow';
-import { BrowserStackParamList } from '$navigation/BrowserStack/BrowserStack.interface';
-import { SearchButton } from '$core/DAppsExplore/components';
-import { List } from '$uikit/List/old/List';
-import { PopularAppCell } from '$core/DAppsExplore/components/PopularAppCell/PopularAppCell';
+import { BrowserStackRouteNames, openDAppsSearch } from "$navigation";
+import { useAppsListStore } from "$store";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import React, { FC, memo, useCallback } from "react";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Screen, Steezy, Text, View } from "@tonkeeper/uikit";
+import { shallow } from "zustand/shallow";
+import { BrowserStackParamList } from "$navigation/BrowserStack/BrowserStack.interface";
+import { SearchButton } from "$core/DAppsExplore/components";
+import { List } from "$uikit/List/old/List";
+import { PopularAppCell } from "$core/DAppsExplore/components/PopularAppCell/PopularAppCell";
 
 export type DAppsExploreProps = NativeStackScreenProps<
   BrowserStackParamList,
@@ -22,7 +22,7 @@ const DAppsCategoryComponent: FC<DAppsExploreProps> = (props) => {
 
   const category = useAppsListStore(
     (s) => s.categories.find((item) => item.id === categoryId)!,
-    shallow,
+    shallow
   );
 
   const handleSearchPress = useCallback(() => {
@@ -64,6 +64,6 @@ const styles = Steezy.create(() => ({
   },
   searchBarContainer: {
     padding: 16,
-    position: 'relative',
+    position: "relative",
   },
 }));

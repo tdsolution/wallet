@@ -1,10 +1,10 @@
-import { Button, View, isAndroid, ns } from '@tonkeeper/uikit';
-import { ButtonProps } from '@tonkeeper/uikit/src/components/Button';
-import { FC, memo } from 'react';
-import { Text as RNText } from 'react-native';
+import { Button, View, isAndroid, ns } from "@tonkeeper/uikit";
+import { ButtonProps } from "@tonkeeper/uikit/src/components/Button";
+import { FC, memo } from "react";
+import { Text as RNText } from "react-native";
 
 const getSelectedCountryStyle = (selectedCountry: string) => {
-  if (selectedCountry === '*') {
+  if (selectedCountry === "*") {
     return {
       icon: (
         <View
@@ -16,10 +16,10 @@ const getSelectedCountryStyle = (selectedCountry: string) => {
           <RNText style={{ fontSize: ns(16) }}>🌍</RNText>
         </View>
       ),
-      type: 'emoji',
+      type: "emoji",
     };
   }
-  if (selectedCountry === 'NOKYC') {
+  if (selectedCountry === "NOKYC") {
     return {
       icon: (
         <View
@@ -31,11 +31,11 @@ const getSelectedCountryStyle = (selectedCountry: string) => {
           <RNText style={{ fontSize: ns(14) }}>☠️</RNText>
         </View>
       ),
-      type: 'emoji',
+      type: "emoji",
     };
   }
 
-  return { title: selectedCountry, type: 'text' };
+  return { title: selectedCountry, type: "text" };
 };
 
 interface CountryButtonProps extends ButtonProps {
@@ -52,7 +52,7 @@ const CountryButtonComponent: FC<CountryButtonProps> = ({
 
   return (
     <Button
-      size={selectedCountryStyle.type === 'emoji' ? 'icon' : 'header'}
+      size={selectedCountryStyle.type === "emoji" ? "icon" : "header"}
       color="secondary"
       title={selectedCountryStyle.title}
       icon={selectedCountryStyle.icon}

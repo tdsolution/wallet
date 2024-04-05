@@ -1,31 +1,31 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Icon, IconNames } from '../../components/Icon';
-import { ScreenHeaderHeight } from './utils/constants';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback, memo } from 'react';
-import { isString } from '../../utils/strings';
-import { useRouter } from '@tonkeeper/router';
-import { Text } from '../../components/Text';
-import { useScreenScroll } from './hooks';
-import { useTheme } from '../../styles';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Icon, IconNames } from "../../components/Icon";
+import { ScreenHeaderHeight } from "./utils/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useCallback, memo } from "react";
+import { isString } from "../../utils/strings";
+import { useRouter } from "@tonkeeper/router";
+import { Text } from "../../components/Text";
+import { useScreenScroll } from "./hooks";
+import { useTheme } from "../../styles";
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-type BackButtonIcon = 'back' | 'close' | 'down';
+type BackButtonIcon = "back" | "close" | "down";
 
 const backButtonIcons: { [key in BackButtonIcon]: IconNames } = {
-  down: 'ic-chevron-down-16',
-  back: 'ic-chevron-left-16',
-  close: 'ic-close-16',
+  down: "ic-chevron-down-16",
+  back: "ic-chevron-left-16",
+  close: "ic-close-16",
 };
 
 export interface ScreenHeaderProps {
-  backButtonPosition?: 'left' | 'right';
+  backButtonPosition?: "left" | "right";
   backButtonIcon?: BackButtonIcon;
   rightContent?: React.ReactNode;
   hideBackButton?: boolean;
@@ -43,8 +43,8 @@ export interface ScreenHeaderProps {
 export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
   const {
     showCloseButton,
-    backButtonPosition = 'left',
-    backButtonIcon = 'back',
+    backButtonPosition = "left",
+    backButtonIcon = "back",
     hideBackButton,
     rightContent,
     hideTitle,
@@ -70,14 +70,15 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
   const backButtonIconName = backButtonIcons[backButtonIcon];
 
   const borderStyle = useAnimatedStyle(() => ({
-    borderBottomColor: scrollY.value > 0 ? theme.separatorCommon : 'transparent',
+    borderBottomColor:
+      scrollY.value > 0 ? theme.separatorCommon : "transparent",
   }));
 
   const backButtonAnimatedStyle = useAnimatedStyle(
     () => ({
       opacity: withTiming(hideBackButton ? 0 : 1),
     }),
-    [hideBackButton],
+    [hideBackButton]
   );
 
   const hasTitle = !!title;
@@ -85,7 +86,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
     () => ({
       opacity: withTiming(hasTitle && !hideTitle ? 1 : 0),
     }),
-    [hasTitle, hideTitle],
+    [hasTitle, hideTitle]
   );
 
   const ejectionOpacityStyle = useAnimatedStyle(() => {
@@ -95,7 +96,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
         scrollY.value,
         [0, start, start + ScreenHeaderHeight / 3.5],
         [1, 1, 0],
-        Extrapolate.CLAMP,
+        Extrapolate.CLAMP
       );
 
       return { opacity };
@@ -111,7 +112,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
       const y = interpolate(
         Math.max(0, scrollY.value),
         [0, start, start + ScreenHeaderHeight / 3.5],
-        [0, 0, -(ScreenHeaderHeight / 3.5)],
+        [0, 0, -(ScreenHeaderHeight / 3.5)]
       );
 
       return {
@@ -122,7 +123,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
     return {};
   });
 
-  const isSmallTitle = typeof title === 'string' && title.length > 18;
+  const isSmallTitle = typeof title === "string" && title.length > 18;
 
   const backButtonSlot = (
     <TouchableOpacity
@@ -142,7 +143,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
     </TouchableOpacity>
   );
 
-  const isBackButtonRight = backButtonPosition === 'right';
+  const isBackButtonRight = backButtonPosition === "right";
   const rightContentSlot = isBackButtonRight ? backButtonSlot : rightContent;
   const headerHeight = ScreenHeaderHeight + safeArea.top;
 
@@ -161,13 +162,17 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
       >
         {gradient && (
           <LinearGradient
-            colors={[theme.backgroundPage, 'rgba(21, 28, 41, 0)']}
+            colors={[theme.backgroundPage, "rgba(21, 28, 41, 0)"]}
             style={styles.gradient}
             locations={[0, 1]}
           />
         )}
         <Animated.View
-          style={[styles.innerContainer, ejectionOpacityStyle, !gradient && borderStyle]}
+          style={[
+            styles.innerContainer,
+            ejectionOpacityStyle,
+            !gradient && borderStyle,
+          ]}
         >
           <View style={styles.content}>
             {children ?? (
@@ -177,7 +182,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
                   <View style={[styles.titleContainer]}>
                     <Text
                       style={[styles.title, titleAnimatedStyle]}
-                      type={!isSmallTitle ? 'label1' : 'h3'}
+                      type={!isSmallTitle ? "label1" : "h3"}
                       textAlign="center"
                       numberOfLines={1}
                       reanimated
@@ -214,18 +219,18 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
+    position: "relative",
     zIndex: 10,
-    backgroundColor:'#f9f9f9s'
+    backgroundColor: "#f9f9f9s",
   },
   absolute: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
   },
   gradient: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
@@ -235,21 +240,21 @@ const styles = StyleSheet.create({
   innerContainer: {
     height: ScreenHeaderHeight - StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'transparent',
+    borderBottomColor: "transparent",
     zIndex: 2,
   },
   titleContainer: {
     flex: 1,
     marginHorizontal: ScreenHeaderHeight - 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   content: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 16,
-    alignItems: 'center',
-    position: 'relative',
+    alignItems: "center",
+    position: "relative",
   },
   title: {
     zIndex: 1,
@@ -257,9 +262,9 @@ const styles = StyleSheet.create({
   leftContainer: {
     height: ScreenHeaderHeight,
     width: ScreenHeaderHeight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
     top: 0,
     left: 0,
     zIndex: 2,
@@ -267,16 +272,16 @@ const styles = StyleSheet.create({
   rightContent: {
     height: ScreenHeaderHeight,
     minWidth: ScreenHeaderHeight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
     top: 0,
     right: 0,
     zIndex: 2,
   },
   backButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 32 / 2,
     height: 32,
     width: 32,
