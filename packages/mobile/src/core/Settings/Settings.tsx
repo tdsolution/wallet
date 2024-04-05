@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import Rate, { AndroidMarket } from 'react-native-rate';
-import { Alert, Linking, Platform, View } from 'react-native';
+import { Alert, Linking, Platform, View, TouchableOpacity, Image } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import Animated from 'react-native-reanimated';
@@ -262,16 +262,107 @@ export const Settings: FC = () => {
 
   return (
     <S.Wrap>
-      <ScrollHandler navBarTitle={t('settings_title')}>
+      <ScrollHandler navBarTitle={t('settings_title')} isLargeNavBar={false}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingTop: IsTablet ? ns(8) : hNs(LargeNavBarHeight),
+            // paddingTop: IsTablet ? ns(8) : hNs(LargeNavBarHeight),
             paddingBottom: tabBarHeight,
             alignItems: IsTablet ? 'center' : undefined,
           }}
           scrollEventThrottle={16}
         >
+          <S.ContentContainer>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-help.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>
+                Help Center
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-about.png')} 
+                style={styles.menuIcon.static} />
+              <Text style={styles.menuText.static}>
+                About
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-support.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Support</Text>
+            </TouchableOpacity>
+          </S.ContentContainer>
+          <S.Divider/>
+          <S.ContentContainer>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-preferences.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Preferences</Text>
+            </TouchableOpacity>
+          </S.ContentContainer>
+          <S.Divider/>
+          <S.ContentContainer>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-facebook.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Facebook</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-telegram.png')} 
+                style={styles.menuIcon.static} 
+                />
+              <Text style={styles.menuText.static}>Telegram</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-reddit.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Reddit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-youtube.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Youtube</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-instagram.png')} 
+                style={styles.menuIcon.static} 
+              />
+              <Text style={styles.menuText.static}>Instagram</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem.static}>
+              <Image 
+                resizeMode="cover" 
+                source={require('../../assets/icons_v2/ic-logout.png')} 
+                style={styles.menuIcon.static} />
+              <Text style={styles.menuText.static}>Logout</Text>
+            </TouchableOpacity>
+          </S.ContentContainer>
+          <Spacer y={16} />
           {wallet ? (
             <>
               <List>
@@ -285,6 +376,7 @@ export const Settings: FC = () => {
               <Spacer y={16} />
             </>
           ) : null}
+
           <List>
             {!!wallet && !wallet.isWatchOnly && (
               <List.Item
@@ -584,5 +676,20 @@ const styles = Steezy.create({
     paddingTop: 9.5,
     paddingBottom: 6.5,
     marginLeft: 8,
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  menuIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+    marginVertical: 20,
+  },
+  menuText: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: '#2B2D42',
   },
 });

@@ -165,7 +165,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
             disabled={hideBackButton}
           >
             <S.BackButton style={backButtonAnimatedStyle}>
-              <Icon name={iconName} color="backgroundPrimary" />
+              <Icon name={iconName} color="primaryColor" size={20}/>
             </S.BackButton>
           </S.BackButtonContainer>
           <S.CenterContent style={titleAnimatedStyle}>

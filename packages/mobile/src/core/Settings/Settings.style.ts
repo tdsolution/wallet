@@ -1,6 +1,6 @@
 import styled, { css } from '$styled';
-import { hNs, nfs, ns } from '$utils';
-import appLogo from '$assets/settings_logo.svg';
+import { hNs, nfs, ns, deviceWidth } from '$utils';
+// import appLogo from '$assets/settings_logo.svg';
 import { IsTablet, TabletMaxWidth } from '$shared/constants';
 import { View } from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
@@ -16,6 +16,17 @@ export const Content = styled(View)`
     css`
       width: ${TabletMaxWidth}px;
     `}
+`;
+
+export const ContentContainer= styled.View`
+  padding: ${ns(0)}px ${ns(20)}px ${ns(0)}px;
+`;
+
+export const Divider = styled.View`
+  height: ${ns(0.5)}px;
+  width: ${deviceWidth}px;
+  background: rgba(79, 90, 112, 0.24);
+  // margin-bottom: ${ns(24)}px;
 `;
 
 export const AppInfo = styled.View`
