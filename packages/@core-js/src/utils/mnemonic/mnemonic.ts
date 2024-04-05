@@ -2,6 +2,7 @@ import { delay } from '../common';
 import { CryptoUtils } from '../cryptoUtils';
 import { bip39 } from './bip39';
 import nacl from 'tweetnacl';
+const bip39Lib = require('bip39');
 
 // TODO: convert to module for inject mobile or web crypto functions
 const webcrypto = require('isomorphic-webcrypto');
@@ -54,6 +55,7 @@ export async function validateMnemonic(
       return false;
     }
   }
+
   return await isBasicSeed(await mnemonicToEntropy(mnemonicArray, password));
 }
 
@@ -113,7 +115,7 @@ export async function generateMnemonic(
     }
     break;
   }
-
+  console.log(mnemonicArray);
   return mnemonicArray;
 }
 
