@@ -8,6 +8,7 @@ import { LargeNavBarProps } from "./LargeNavBar.interface";
 import { deviceHeight, deviceWidth, hNs } from "$utils";
 import { useTheme } from "$hooks/useTheme";
 import { Text } from "../Text/Text";
+import { colors } from "../../constants/colors";
 
 export const LargeNavBarInteractiveDistance = hNs(20);
 
@@ -107,6 +108,7 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
 
   const smallTitleStyle = useAnimatedStyle(() => ({
     opacity: opacity ? opacity.value : 1,
+    color: colors.Primary,
   }));
 
   const dividerStyle = useAnimatedStyle(() => {
@@ -127,23 +129,24 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
         style={{ paddingTop: safeArea ? topInset : 0, position }}
         pointerEvents="box-none"
       >
+        {/* DDO NE NHA */}
         <S.Background
           style={[backgroundStyle, { top: safeArea ? topInset : 0 }]}
         />
         <S.Cont>
-          <S.LargeWrap style={largeWrapStyle}>
-            <S.LargeTextWrap style={largeTitleStyle}>
+          <S.LargeWrap style={[largeWrapStyle]}>
+            <S.LargeTextWrap style={[largeTitleStyle]}>
               <TouchableOpacity
                 disabled={!onPress}
                 onPress={onPress}
                 hitSlop={hitSlop}
               >
                 {bottomComponent ? (
-                  <Text variant="h3" color="foregroundPrimary">
+                  <Text variant="h3" color="foregroundSecondary">
                     {children}
                   </Text>
                 ) : (
-                  <Text variant="h1" style={{ color: "#4871EA" }}>
+                  <Text variant="h1" style={{ color: colors.Primary }}>
                     {children}
                   </Text>
                 )}
@@ -162,7 +165,9 @@ export const LargeNavBar: FC<LargeNavBarProps> = (props) => {
               hitSlop={hitSlop}
             >
               <S.TextWrap style={smallTitleStyle}>
-                <Text variant="h3">{children}</Text>
+                <Text variant="h3" style={{ color: colors.Primary }}>
+                  {children}
+                </Text>
                 {bottomComponent ? (
                   <S.BottomComponentWrap>
                     {bottomComponent}

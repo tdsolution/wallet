@@ -70,6 +70,7 @@ export const CellSectionItem = forwardRef<any, PropsWithChildren<CellProps>>(
               shadowRadius: 4.65,
 
               elevation: 20,
+              // borderRadius: 15,
             }}
           >
             <S.SectionItemTitleWrap>

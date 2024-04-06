@@ -14,6 +14,9 @@ import { useBiometrySettings, useWallet } from "@tonkeeper/shared/hooks";
 import { useNavigation } from "@tonkeeper/router";
 import { vault } from "$wallet";
 import { Haptics, Switch } from "@tonkeeper/uikit";
+import { Image, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/colors";
+import { StyleSheet } from "react-native";
 
 export const Security: FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -104,7 +107,7 @@ export const Security: FC = () => {
           scrollEventThrottle={16}
         >
           {renderBiometryToggler()}
-          <CellSection>
+          {/* <CellSection>
             <CellSectionItem onPress={handleChangePasscode} icon="ic-lock-28">
               {t("security_change_passcode")}
             </CellSectionItem>
@@ -116,7 +119,17 @@ export const Security: FC = () => {
                 {t("security_reset_passcode")}
               </CellSectionItem>
             ) : null}
-          </CellSection>
+          </CellSection> */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleChangePasscode}
+          >
+            <Text style={styles.textButton}>Change Passcode</Text>
+            <Image
+              source={require("../../assets/icons/png/ic-lock-28.png")}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
           <CellSection>
             {!!wallet && wallet.isLockup && (
               <CellSectionItem
@@ -132,3 +145,28 @@ export const Security: FC = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    height: 50,
+    backgroundColor: colors.Primary,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 15,
+    marginBottom: 10,
+    paddingHorizontal: 25,
+  },
+  textButton: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.White,
+    fontFamily: "Poppins-Medium",
+  },
+  icon: {
+    width: 28,
+    height: 28,
+    tintColor: colors.White,
+    resizeMode: "contain",
+  },
+});

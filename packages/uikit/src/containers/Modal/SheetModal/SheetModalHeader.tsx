@@ -1,12 +1,13 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useSheetInternal } from '@tonkeeper/router';
-import { IconNames } from '../../../components/Icon';
-import { Text } from '../../../components/Text';
-import { Icon } from '../../../components/Icon';
-import { memo, useLayoutEffect } from 'react';
-import { useTheme } from '../../../styles';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSheetInternal } from "@tonkeeper/router";
+import { IconNames } from "../../../components/Icon";
+import { Text } from "../../../components/Text";
+import { Icon } from "../../../components/Icon";
+import { memo, useLayoutEffect } from "react";
+import { useTheme } from "../../../styles";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { colors } from "@tonkeeper/mobile/src/constants/colors";
 
 export interface SheetModalHeaderProps {
   onIconLeftPress?: () => void;
@@ -40,9 +41,11 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
   const borderAnimatedStyle = useAnimatedStyle(
     () => ({
       borderBottomColor:
-        hasTitle && scrollY.value > 0 ? theme.separatorAlternate : 'transparent',
+        hasTitle && scrollY.value > 0
+          ? theme.separatorAlternate
+          : "transparent",
     }),
-    [hasTitle],
+    [hasTitle]
   );
 
   useLayoutEffect(() => {
@@ -75,12 +78,12 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
     >
       {gradient && (
         <LinearGradient
-          colors={[theme.backgroundContent, 'rgba(16, 22, 31, 0)']}
+          colors={[theme.backgroundContent, "rgba(16, 22, 31, 0)"]}
           style={styles.gradient}
           locations={[0, 1]}
         />
       )}
-      <View style={{ flexDirection: 'row', flex: 1 }}>
+      <View style={{ flexDirection: "row", flex: 1 }}>
         {iconLeft ? (
           <TouchableOpacity
             style={[styles.closeButton, styles.leftButton]}
@@ -89,7 +92,12 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
               onIconLeftPress?.();
             }}
           >
-            <View style={[styles.close, { backgroundColor: theme.backgroundContent }]}>
+            <View
+              style={[
+                styles.close,
+                { backgroundColor: theme.backgroundContent },
+              ]}
+            >
               <Icon name={iconLeft} color="constantWhite" />
             </View>
           </TouchableOpacity>
@@ -99,11 +107,11 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
 
         {hasTitle && (
           <View style={[styles.headerTitle, center && styles.titleByCenter]}>
-            {typeof title === 'string' ? (
+            {typeof title === "string" ? (
               <Text
                 numberOfLines={props.numberOfLines}
                 type="h3"
-                textAlign={center ? 'center' : 'left'}
+                textAlign={center ? "center" : "left"}
               >
                 {title}
               </Text>
@@ -111,7 +119,7 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
               title
             )}
             {hasSubtitle &&
-              (typeof subtitle === 'string' ? (
+              (typeof subtitle === "string" ? (
                 <Text type="body2" color="textSecondary">
                   {subtitle}
                 </Text>
@@ -129,7 +137,7 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
             onClose?.();
           }}
         >
-          <View style={[styles.close, { backgroundColor: theme.backgroundContent }]}>
+          <View style={[styles.close, { backgroundColor: colors.Primary }]}>
             <Icon name="ic-close-16" color="constantWhite" />
           </View>
         </TouchableOpacity>
@@ -147,7 +155,7 @@ const styles = StyleSheet.create({
     height: 84,
   },
   absolute: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
     left: 0,
@@ -155,17 +163,17 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     paddingHorizontal: 16,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   titleByCenter: {
     flex: 1,
     marginHorizontal: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   gradient: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    width: '100%',
+    width: "100%",
     height: 46,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -173,10 +181,10 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 64,
     height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
 
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     zIndex: 2,
   },
@@ -187,19 +195,19 @@ const styles = StyleSheet.create({
     left: 0,
   },
   leftContent: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     zIndex: 2,
     height: 64,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingLeft: 16,
   },
   close: {
     width: 32,
     height: 32,
     borderRadius: 32 / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

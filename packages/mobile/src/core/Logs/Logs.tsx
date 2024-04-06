@@ -1,15 +1,15 @@
-import React, { FC, useCallback, useMemo } from 'react';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useDispatch, useSelector } from 'react-redux';
-import Clipboard from '@react-native-community/clipboard';
+import React, { FC, useCallback, useMemo } from "react";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useDispatch, useSelector } from "react-redux";
+import Clipboard from "@react-native-community/clipboard";
 
-import * as S from './Logs.style';
-import { NavBar, RoundedSectionList, Text } from '$uikit';
-import { mainSelector } from '$store/main';
-import { format, ns } from '$utils';
+import * as S from "./Logs.style";
+import { NavBar, RoundedSectionList, Text } from "$uikit";
+import { mainSelector } from "$store/main";
+import { format, ns } from "$utils";
 
-import { Toast } from '$store';
-import { t } from '@tonkeeper/shared/i18n';
+import { Toast } from "$store";
+import { t } from "@tonkeeper/shared/i18n";
 
 export const Logs: FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -20,7 +20,7 @@ export const Logs: FC = () => {
   const data = useMemo(() => {
     const items = logs.map((log, i) => ({
       key: `${i}`,
-      time: format(log.ts, 'hh:mm:ss dd MMMM yyyy'),
+      time: format(log.ts, "hh:mm:ss dd MMMM yyyy"),
       message: JSON.stringify(log.payload),
       trace: log.trace,
       screen: log.screen,
@@ -40,12 +40,12 @@ export const Logs: FC = () => {
         `Time: ${item.time}`,
         `Message: ${item.message}`,
         `Stack: ${item.trace}`,
-      ].join('\n');
+      ].join("\n");
 
       Clipboard.setString(payload);
-      Toast.success(t('copied'));
+      Toast.success(t("copied"));
     },
-    [t, dispatch],
+    [t, dispatch]
   );
 
   return (

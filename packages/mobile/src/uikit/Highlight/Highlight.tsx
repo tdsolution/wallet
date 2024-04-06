@@ -16,7 +16,7 @@ import {
 
 export const Highlight = forwardRef<any, HighlightProps>((props, ref) => {
   const {
-    background = "backgroundTertiary",
+    background = "buttonTertiaryForeground",
     highlightColor,
     onPress,
     style = {},

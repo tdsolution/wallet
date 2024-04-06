@@ -1,17 +1,18 @@
-import { copyText } from '$hooks/useCopyText';
-import { Spacer } from '$uikit';
-import { Address } from '@tonkeeper/core';
-import { t } from '@tonkeeper/shared/i18n';
-import { tk } from '$wallet';
-import { Pressable, Screen, Steezy, Text, View } from '@tonkeeper/uikit';
-import { DarkTheme } from '@tonkeeper/uikit/src/styles/themes/dark';
-import React, { FC } from 'react';
-import { Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { copyText } from "$hooks/useCopyText";
+import { Spacer } from "$uikit";
+import { Address } from "@tonkeeper/core";
+import { t } from "@tonkeeper/shared/i18n";
+import { tk } from "$wallet";
+import { Pressable, Screen, Steezy, Text, View } from "@tonkeeper/uikit";
+import { DarkTheme } from "@tonkeeper/uikit/src/styles/themes/dark";
+import React, { FC } from "react";
+import { Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "../../constants/colors";
 
 const fontFamily = Platform.select({
-  ios: 'SFMono-Medium',
-  android: 'RobotoMono-Medium',
+  ios: "SFMono-Medium",
+  android: "RobotoMono-Medium",
 });
 
 const splitAddress = (address: string) => {
@@ -36,19 +37,21 @@ export const AddressUpdateInfo: FC = () => {
 
   return (
     <Screen>
-      <Screen.Header title={t('address_update.title')} />
+      <View style={{ backgroundColor: "white" }}>
+        <Screen.Header title={t("address_update.title")} />
+      </View>
       <Screen.ScrollView>
-        <View style={styles.content}>
+        <View style={[styles.content, { backgroundColor: colors.White }]}>
           <Text type="body2" color="textSecondary">
-            {t('address_update.post_published_date')}
+            {t("address_update.post_published_date")}
           </Text>
           <Spacer y={12} />
           <Text type="body2" color="textSecondary">
-            {t('address_update.post_top')}
+            {t("address_update.post_top")}
           </Text>
           <Spacer y={16} />
           <View style={styles.labelContainer}>
-            <Text type="label1">{t('address_update.your_wallet')}</Text>
+            <Text type="label1">{t("address_update.your_wallet")}</Text>
           </View>
           <Pressable
             underlayColor={DarkTheme.backgroundContentTint}
@@ -57,9 +60,13 @@ export const AddressUpdateInfo: FC = () => {
             onPress={() => copyText(oldAddress)}
           >
             <Text type="body3" color="textSecondary">
-              {t('address_update.old_style')}
+              {t("address_update.old_style")}
             </Text>
-            <Text numberOfLines={1} ellipsizeMode="middle" style={{ fontFamily }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              style={{ fontFamily }}
+            >
               <Text color="textAccent" style={{ fontFamily }}>
                 {oldStyle.start}
               </Text>
@@ -77,9 +84,13 @@ export const AddressUpdateInfo: FC = () => {
             onPress={() => copyText(newAddress)}
           >
             <Text type="body3" color="textSecondary">
-              {t('address_update.new_style')}
+              {t("address_update.new_style")}
             </Text>
-            <Text numberOfLines={1} ellipsizeMode="middle" style={{ fontFamily }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="middle"
+              style={{ fontFamily }}
+            >
               <Text color="textAccent" style={{ fontFamily }}>
                 {newStyle.start}
               </Text>
@@ -91,36 +102,36 @@ export const AddressUpdateInfo: FC = () => {
           </Pressable>
           <Spacer y={16} />
           <View style={styles.labelContainer}>
-            <Text type="label1">{t('address_update.why_change')}</Text>
+            <Text type="label1">{t("address_update.why_change")}</Text>
           </View>
           <Text type="body2" color="textSecondary">
-            {t('address_update.post_rest')}
+            {t("address_update.post_rest")}
           </Text>
           <View style={styles.option}>
             <View style={styles.optionNum}>
               <Text type="body2" color="textSecondary">
-                {'1. '}
+                {"1. "}
               </Text>
             </View>
             <Text type="body2" color="textSecondary">
-              {t('address_update.first_option')}
+              {t("address_update.first_option")}
             </Text>
           </View>
           <View style={styles.option}>
             <View style={styles.optionNum}>
               <Text type="body2" color="textSecondary">
-                {'2. '}
+                {"2. "}
               </Text>
             </View>
             <Text type="body2" color="textSecondary">
-              {t('address_update.second_option')}
+              {t("address_update.second_option")}
             </Text>
           </View>
           <Text type="body2" color="textSecondary">
-            {t('address_update.post_dates')}
+            {t("address_update.post_dates")}
           </Text>
         </View>
-        <SafeAreaView edges={['bottom']} />
+        <SafeAreaView edges={["bottom"]} />
       </Screen.ScrollView>
     </Screen>
   );
@@ -140,10 +151,10 @@ const styles = Steezy.create(({ colors, corners }) => ({
   },
   option: {
     paddingLeft: 22,
-    position: 'relative',
+    position: "relative",
   },
   optionNum: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 5,
   },

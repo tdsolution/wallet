@@ -1,6 +1,13 @@
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Easing,
   interpolate,
@@ -9,15 +16,16 @@ import {
   useSharedValue,
   withDelay,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import * as S from './CreatePinForm.style';
-import { InlineKeyboard, PinCode } from '$uikit';
-import { PinCodeRef } from '$uikit/PinCode/PinCode.interface';
-import { deviceWidth } from '$utils';
-import { CreatePinFormProps } from './CreatePinForm.interface';
-import { t } from '@tonkeeper/shared/i18n';
-import { tk, vault } from '$wallet';
+import * as S from "./CreatePinForm.style";
+import { InlineKeyboard, PinCode } from "$uikit";
+import { PinCodeRef } from "$uikit/PinCode/PinCode.interface";
+import { deviceWidth } from "$utils";
+import { CreatePinFormProps } from "./CreatePinForm.interface";
+import { t } from "@tonkeeper/shared/i18n";
+import { tk, vault } from "$wallet";
+import { colors } from "../../../constants/colors";
 
 export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
   const { onPinCreated, validateOldPin = false, onOldPinValidated } = props;
@@ -26,9 +34,9 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
   const pinRef = useRef<PinCodeRef>(null);
   const oldPinRef = useRef<PinCodeRef>(null);
   const [step, setStep] = useState(validateOldPin ? 0 : 1);
-  const [value0, setValue0] = useState('');
-  const [value1, setValue1] = useState('');
-  const [value2, setValue2] = useState('');
+  const [value0, setValue0] = useState("");
+  const [value1, setValue1] = useState("");
+  const [value2, setValue2] = useState("");
   const [isAnimating, setAnimation] = useState(false);
 
   const stepsValue = useSharedValue(validateOldPin ? -1 : 0);
@@ -36,16 +44,16 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
   useFocusEffect(
     useCallback(() => {
       setStep(validateOldPin ? 0 : 1);
-      setValue0('');
-      setValue1('');
-      setValue2('');
+      setValue0("");
+      setValue1("");
+      setValue2("");
       pinRef.current?.clearState();
       oldPinRef.current?.clearState;
-    }, [validateOldPin]),
+    }, [validateOldPin])
   );
 
   const onStepAnimationCompleted = useCallback(() => {
-    setValue2('');
+    setValue2("");
     setAnimation(false);
   }, []);
 
@@ -71,8 +79,8 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
           if (finished) {
             runOnJS(onStepAnimationCompleted)();
           }
-        },
-      ),
+        }
+      )
     );
   }, [onStepAnimationCompleted, step, stepsValue]);
 
@@ -99,7 +107,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         }, 350);
       }, 500);
     },
-    [onPinCreated],
+    [onPinCreated]
   );
 
   const handleKeyboard = useCallback(
@@ -111,7 +119,10 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         if (pin.length === 4) {
           setTimeout(async () => {
             try {
-              await vault.exportWithPasscode(tk.walletForUnlock.identifier, pin);
+              await vault.exportWithPasscode(
+                tk.walletForUnlock.identifier,
+                pin
+              );
 
               oldPinRef.current?.triggerSuccess();
               onOldPinValidated && onOldPinValidated(pin);
@@ -121,7 +132,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
               }, 500);
             } catch {
               oldPinRef.current?.triggerError();
-              setValue0('');
+              setValue0("");
             }
           }, 300);
         }
@@ -137,8 +148,8 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
             handlePinCreated(pin);
           } else {
             setTimeout(() => {
-              setValue1('');
-              setValue2('');
+              setValue1("");
+              setValue2("");
               pinRef.current?.triggerError();
               setTimeout(() => {
                 setStep(1);
@@ -148,7 +159,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         }
       }
     },
-    [onOldPinValidated, handlePinCreated, step, value1],
+    [onOldPinValidated, handlePinCreated, step, value1]
   );
 
   const stepsStyle = useAnimatedStyle(() => {
@@ -158,7 +169,7 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
           translateX: interpolate(
             stepsValue.value,
             [-1, 0, 1],
-            [0, -deviceWidth, -deviceWidth * 2],
+            [0, -deviceWidth, -deviceWidth * 2]
           ),
         },
       ],
@@ -176,11 +187,15 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
   }, [step, value0, value1, value2]);
 
   return (
-    <S.Content style={{ paddingBottom: bottomInset }}>
+    <S.Content
+      style={{ paddingBottom: bottomInset, backgroundColor: colors.White }}
+    >
       <S.Steps style={stepsStyle}>
         <S.Step>
           <S.PinWrap>
-            <S.Title style={{color:'#4871EA'}}>{t('create_pin_current_title')}</S.Title>
+            <S.Title style={{ color: "#4871EA" }}>
+              {t("create_pin_current_title")}
+            </S.Title>
             <S.Pin>
               <PinCode value={value0} ref={oldPinRef} />
             </S.Pin>
@@ -188,7 +203,9 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         </S.Step>
         <S.Step>
           <S.PinWrap>
-            <S.Title style={{color:'#4871EA'}}>{t('create_pin_new_title')}</S.Title>
+            <S.Title style={{ color: "#4871EA" }}>
+              {t("create_pin_new_title")}
+            </S.Title>
             <S.Pin>
               <PinCode value={value1} />
             </S.Pin>
@@ -196,14 +213,20 @@ export const CreatePinForm: FC<CreatePinFormProps> = (props) => {
         </S.Step>
         <S.Step>
           <S.PinWrap>
-            <S.Title style={{color:'#4871EA'}}>{t('create_pin_repeat_title')}</S.Title>
+            <S.Title style={{ color: "#4871EA" }}>
+              {t("create_pin_repeat_title")}
+            </S.Title>
             <S.Pin>
               <PinCode value={value2} ref={pinRef} />
             </S.Pin>
           </S.PinWrap>
         </S.Step>
       </S.Steps>
-      <InlineKeyboard onChange={handleKeyboard} value={value} disabled={isAnimating} />
+      <InlineKeyboard
+        onChange={handleKeyboard}
+        value={value}
+        disabled={isAnimating}
+      />
     </S.Content>
   );
 };
