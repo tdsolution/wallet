@@ -7,7 +7,6 @@ import { DataChains } from '../utils/network';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { chainActive } from '../utils/KEY_STORAGE';
 import { useChain } from '../hooks';
-
 interface Props {
     selected? : string;
     onSelect? : (identifier: string) => void;

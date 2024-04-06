@@ -68,13 +68,14 @@ import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { chainActive } from "@tonkeeper/shared/utils/KEY_STORAGE";
-import { DataChains } from "@tonkeeper/shared/utils/network";
 import { WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
-const bip39 = require('bip39');
+import { addressEVMString, shortenWalletAddress } from "$libs/EVM/createWallet";
 export const WalletScreen = memo(({ navigation }: any) => {
+  //
+  const [addressEvm, setAddressEVM] = useState('');
+  //
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -98,6 +99,18 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const notifications = useInternalNotifications();
   const { isConnected } = useNetInfo();
 
+ const loadDataEVM = useCallback(async () => {
+  try {
+    const address = await AsyncStorage.getItem('EVMAddress') ?? '';
+    return address;
+  } catch (error) {
+    console.error('Error loading EVM address:', error);
+    throw error;
+  }
+}, [])
+  useEffect(() => {
+    loadDataEVM().then((address) => setAddressEVM(address));
+  }, [loadDataEVM]);
   // TODO: rewrite
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -336,6 +349,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       </Screen>
     );
   }
+
   return (
     <Screen>
       <Screen.Header
@@ -417,7 +431,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               </View>
               <View style={{ marginTop: 1, marginBottom: 2 }}>
-                <ShowBalance amount={balance.total.fiat} />
+                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : `0`} />
               </View>
               <View
                 style={{
@@ -437,11 +451,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
                     type="body2"
                     style={{ color: "#fff" }}
                   >
-                    {wallet.address.ton.short}
+                   {chain.chainId == '1100' ? wallet.address.ton.short : shortenWalletAddress(addressEvm)}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={copyText(wallet.address.ton.friendly)}
+                  onPress={copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))}
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
                 >
@@ -489,16 +503,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <IconButtonList style={styles.actionButtons}>
             {!isWatchOnly ? (
               <IconButton
-                onPress={
-                  // handlePressSend
-                  ()=>{ 
-                    // const mnemonic = 'second vital tennis inch already all define device loyal crime rescue lawsuit liar alpha unaware wish bulb limb repair can poem eager below outdoor';
-                    const mnemonic = 'shop stick wrong green trust edge play trial manual love force hen home also direct diet conduct dish brother liar way scan maze yard';
-                    let mnemonicArray: string[] = mnemonic.split(' ');;
-                    const wallet = EthWallet.fromPhrase(mnemonic);
-                    console.log(wallet.address);
-                  }
-                }
+                onPress={handlePressSend}
                 iconName="ic-arrow-up-28"
                 title={t("wallet.send_btn")}
               />

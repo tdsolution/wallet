@@ -32,6 +32,7 @@ export enum AppStackRouteNames {
 export enum MainStackRouteNames {
   Onboarding = "Onboarding",
   Start = "Start",
+  GenerateMnemonicEVM = "GenerateMnemonicEVM",
   CreateWalletStack = "CreateWalletStack",
   ImportWalletStack = "ImportWalletStack",
   AddWatchOnlyStack = "AddWatchOnlyStack",

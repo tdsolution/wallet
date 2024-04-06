@@ -44,11 +44,11 @@ export const ShowBalance: React.FC<{ amount: string }> = ({ amount }) => {
 const styles = Steezy.create(({ colors }) => ({
   container: {
     height: 36,
-    width: '25%',
   },
   starsContainer: {
     backgroundColor: '#4871EA',
     borderRadius: 100,
+    width:'20%'
   },
   touchable: {
     paddingHorizontal: 16,

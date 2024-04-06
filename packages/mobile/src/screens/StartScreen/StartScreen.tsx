@@ -22,6 +22,9 @@ import { FontWeights } from '@tonkeeper/uikit/src/components/Text/TextStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { chainActive } from '@tonkeeper/shared/utils/KEY_STORAGE';
 import { DataChains } from '@tonkeeper/shared/utils/network';
+import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
+import { CreateWalletStackRouteNames } from '$navigation/CreateWalletStack/types';
+const bip39 = require('bip39')
 const HEIGHT_RATIO = deviceHeight / 844;
 const  WIDTH_RATIO = deviceWidth / 844;
 export const StartScreen = memo(() => {
@@ -37,8 +40,10 @@ export const StartScreen = memo(() => {
   const logoShapesPosY =
     origShapesHeight / 2 - (origShapesHeight * ratioHeight) / 2;
 
-  const handleCreatePress = useCallback(() => {
+  const handleCreatePress = useCallback(async () => {
     dispatch(walletActions.generateVault());
+    const mnemonic  = await generateMnemonic();
+    createWalletFromMnemonic(mnemonic);
     nav.navigate(MainStackRouteNames.CreateWalletStack);
   }, [dispatch, nav]);
   const handleImportPress = useCallback(() => {

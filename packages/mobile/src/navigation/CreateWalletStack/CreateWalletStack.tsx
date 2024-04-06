@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { CreateWalletStackParamList, CreateWalletStackRouteNames } from './types';
 import { CreatePin } from '$core';
 import { SetupNotifications } from '$core/SetupNotifications/SetupNotifications';
+import { GenerateMnemonicEVM } from '../../screens/GenerateMnemonicEVM/GenerateMnemoicEVM';
 
 const Stack = createNativeStackNavigator<CreateWalletStackParamList>();
 
@@ -26,6 +27,7 @@ export const CreateWalletStack = memo(() => {
         name={CreateWalletStackRouteNames.CreatePasscode}
         component={CreatePin}
       />
+      
       <Stack.Screen
         name={CreateWalletStackRouteNames.Notifications}
         component={SetupNotifications}

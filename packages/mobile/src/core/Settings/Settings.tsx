@@ -354,7 +354,7 @@ export const Settings: FC = () => {
               />
               <Text style={styles.menuText.static}>Instagram</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem.static}>
+            <TouchableOpacity style={styles.menuItem.static} onPress={handleResetWallet}>
               <Image 
                 resizeMode="cover" 
                 source={require('../../assets/icons_v2/ic-logout.png')} 
