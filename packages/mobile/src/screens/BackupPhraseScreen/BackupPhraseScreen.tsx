@@ -1,12 +1,13 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Screen, Spacer, Text, copyText } from '@tonkeeper/uikit';
-import { useParams } from '@tonkeeper/router/src/imperative';
-import { View, StyleSheet } from 'react-native';
-import { memo, useCallback, useMemo } from 'react';
-import { useNavigation } from '@tonkeeper/router';
-import { t } from '@tonkeeper/shared/i18n';
-import { useWalletSetup } from '@tonkeeper/shared/hooks';
-import { MainStackRouteNames } from '$navigation';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button, Screen, Spacer, Text, copyText } from "@tonkeeper/uikit";
+import { useParams } from "@tonkeeper/router/src/imperative";
+import { View, StyleSheet } from "react-native";
+import { memo, useCallback, useMemo } from "react";
+import { useNavigation } from "@tonkeeper/router";
+import { t } from "@tonkeeper/shared/i18n";
+import { useWalletSetup } from "@tonkeeper/shared/hooks";
+import { MainStackRouteNames } from "$navigation";
+import { colors } from "../../constants/colors";
 
 function getRandIndexes(length: number, indexes: number[] = []) {
   if (indexes.length === length) {
@@ -30,7 +31,7 @@ export const BackupPhraseScreen = memo(() => {
 
   const { lastBackupAt } = useWalletSetup();
 
-  const phrase = useMemo(() => mnemonic.split(' '), [mnemonic]);
+  const phrase = useMemo(() => mnemonic.split(" "), [mnemonic]);
   const leftColumn = useMemo(() => phrase.slice(0, 12), [phrase]);
   const rightColumn = useMemo(() => phrase.slice(12, 24), [phrase]);
 
@@ -40,15 +41,17 @@ export const BackupPhraseScreen = memo(() => {
 
   return (
     <Screen>
-      <Screen.Header />
+      <View style={{ backgroundColor: colors.White }}>
+        <Screen.Header />
+      </View>
       <Screen.ScrollView>
         <View style={styles.container}>
-          <Text type="h2" textAlign="center">
-            {t('recovery_phrase.title')}
+          <Text type="h2" textAlign="center" style={{ color: colors.Primary }}>
+            {t("recovery_phrase.title")}
           </Text>
           <Spacer y={4} />
           <Text type="body1" color="textSecondary" textAlign="center">
-            {t('recovery_phrase.caption')}
+            {t("recovery_phrase.caption")}
           </Text>
           <Spacer y={16} />
 
@@ -57,10 +60,16 @@ export const BackupPhraseScreen = memo(() => {
               <View style={styles.leftColumn}>
                 {leftColumn.map((word, index) => (
                   <View style={styles.line} key={`${word}-${index}`}>
-                    <Text type="body2" color="textSecondary" style={styles.num}>
+                    <Text
+                      type="body2"
+                      color="textSecondary"
+                      style={[styles.num, {}]}
+                    >
                       {index + 1}.
                     </Text>
-                    <Text type="body1">{word}</Text>
+                    <Text type="body1" style={{ color: colors.Black }}>
+                      {word}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -70,7 +79,9 @@ export const BackupPhraseScreen = memo(() => {
                     <Text type="body2" color="textSecondary" style={styles.num}>
                       {index + 1 + 12}.
                     </Text>
-                    <Text type="body1">{word}</Text>
+                    <Text type="body1" style={{ color: colors.Black }}>
+                      {word}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -82,13 +93,13 @@ export const BackupPhraseScreen = memo(() => {
       <Screen.ButtonContainer>
         {lastBackupAt !== null && !params.isBackupAgain ? (
           <Button
-            title={t('recovery_phrase.copy_button')}
+            title={t("recovery_phrase.copy_button")}
             onPress={copyText(mnemonic)}
             color="secondary"
           />
         ) : (
           <Button
-            title={t('recovery_phrase.check_button')}
+            title={t("recovery_phrase.check_button")}
             onPress={() =>
               nav.navigate(MainStackRouteNames.BackupCheckPhrase, {
                 words: getRandomWords(),
@@ -103,20 +114,22 @@ export const BackupPhraseScreen = memo(() => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 16,
+    backgroundColor: colors.White,
   },
   centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   columns: {
-    flexDirection: 'row',
+    flexDirection: "row",
     maxWidth: 310,
     paddingVertical: 16,
   },
   line: {
     width: 151,
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 8,
     height: 24,
   },
@@ -127,7 +140,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 23,
     marginRight: 4,
-    position: 'relative',
+    position: "relative",
     top: 3,
   },
 });

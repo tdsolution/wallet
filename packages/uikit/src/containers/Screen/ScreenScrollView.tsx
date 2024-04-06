@@ -1,11 +1,12 @@
-import { ScrollViewProps, View, StyleSheet } from 'react-native';
-import { ScreenBottomSeparator } from './ScreenBottomSeparator';
-import { forwardRef, memo, useEffect, useMemo } from 'react';
-import { useBottomTabBarHeight } from '@tonkeeper/router';
-import { useScrollToTop } from '@react-navigation/native';
-import { ns, useMergeRefs } from '../../utils';
-import Animated from 'react-native-reanimated';
-import { useScreenScroll } from './hooks';
+import { ScrollViewProps, View, StyleSheet } from "react-native";
+import { ScreenBottomSeparator } from "./ScreenBottomSeparator";
+import { forwardRef, memo, useEffect, useMemo } from "react";
+import { useBottomTabBarHeight } from "@tonkeeper/router";
+import { useScrollToTop } from "@react-navigation/native";
+import { ns, useMergeRefs } from "../../utils";
+import Animated from "react-native-reanimated";
+import { useScreenScroll } from "./hooks";
+import { colors } from "@tonkeeper/mobile/src/constants/colors";
 
 interface ScreenScrollView extends ScrollViewProps {
   hideBottomSeparator?: boolean;
@@ -16,7 +17,8 @@ export type ScreenScrollViewRef = Animated.ScrollView;
 
 export const ScreenScrollView = memo(
   forwardRef<ScreenScrollViewRef, ScreenScrollView>((props, ref) => {
-    const { indent, hideBottomSeparator, contentContainerStyle, ...other } = props;
+    const { indent, hideBottomSeparator, contentContainerStyle, ...other } =
+      props;
     const {
       detectContentSize,
       detectLayoutSize,
@@ -35,7 +37,7 @@ export const ScreenScrollView = memo(
       headerEjectionPoint.value = 0;
       return () => {
         scrollY.value = 0;
-      }
+      };
     }, []);
 
     const contentStyle = useMemo(() => {
@@ -64,12 +66,13 @@ export const ScreenScrollView = memo(
         {!hideBottomSeparator && <ScreenBottomSeparator />}
       </View>
     );
-  }),
+  })
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.White,
   },
   indent: {
     paddingHorizontal: ns(16),

@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   Dimensions,
   LayoutChangeEvent,
@@ -15,25 +15,28 @@ import {
   StyleProp,
   View,
   ViewStyle,
-} from 'react-native';
-import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
+} from "react-native";
+import { BottomTabBarHeightContext } from "@react-navigation/bottom-tabs";
 import {
   PopupSelectItemProps,
   PopupSelectProps,
-} from '../PopupSelect/PopupSelect.interface';
-import { Separator } from '../Separator/Separator';
-import { Highlight } from '../Highlight/Highlight';
-import { Icon } from '../Icon/Icon';
-import { deviceHeight, isAndroid, Memo, ns, triggerSelection } from '$utils';
-import { usePopupAnimation } from './usePopupAnimation';
-import * as S from './PopupSelect.style';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { FullWindowOverlay } from 'react-native-screens';
-import { useDimensions } from '$hooks/useDimensions';
-import { PortalOrigin } from '@alexzunik/rn-native-portals-reborn';
-import { FlatList } from 'react-native-gesture-handler';
+} from "../PopupSelect/PopupSelect.interface";
+import { Separator } from "../Separator/Separator";
+import { Highlight } from "../Highlight/Highlight";
+import { Icon } from "../Icon/Icon";
+import { deviceHeight, isAndroid, Memo, ns, triggerSelection } from "$utils";
+import { usePopupAnimation } from "./usePopupAnimation";
+import * as S from "./PopupSelect.style";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { FullWindowOverlay } from "react-native-screens";
+import { useDimensions } from "$hooks/useDimensions";
+import { PortalOrigin } from "@alexzunik/rn-native-portals-reborn";
+import { FlatList } from "react-native-gesture-handler";
 
-const ScreenWidth = Dimensions.get('window').width;
+const ScreenWidth = Dimensions.get("window").width;
 // We should add extra-width for iPhone mini and SE
 const SMALL_DEVICES_WIDTH = 375;
 
@@ -57,10 +60,10 @@ export const PopupSelectItem = Memo(
           e.nativeEvent.layout.width +
             ns(isAndroid ? 14 : ScreenWidth <= SMALL_DEVICES_WIDTH ? 6 : 0) +
             ns(checked ? 32 : 0) +
-            ns(icon ? 32 : 0),
+            ns(icon ? 32 : 0)
         );
       },
-      [autoWidth, checked, icon, onChangeWidth],
+      [autoWidth, checked, icon, onChangeWidth]
     );
 
     const contentContainerStyle = useMemo(
@@ -68,11 +71,11 @@ export const PopupSelectItem = Memo(
         autoWidth
           ? {
               width: 1000,
-              overflow: 'visible',
-              alignItems: 'flex-start',
+              overflow: "visible",
+              alignItems: "flex-start",
             }
           : {},
-      [autoWidth],
+      [autoWidth]
     );
 
     return (
@@ -81,7 +84,7 @@ export const PopupSelectItem = Memo(
         background="backgroundQuaternary"
       >
         <S.Item>
-          <View style={contentContainerStyle}>
+          <View style={[contentContainerStyle]}>
             <S.ItemCont onLayout={onLayout}>{children}</S.ItemCont>
           </View>
           <S.ItemIconWrap>
@@ -91,7 +94,7 @@ export const PopupSelectItem = Memo(
         </S.Item>
       </Highlight>
     );
-  },
+  }
 );
 
 const PopupContainer: FC<{
@@ -103,10 +106,14 @@ const PopupContainer: FC<{
 
   if (asFullWindowOverlay) {
     return isAndroid ? (
-      <PortalOrigin destination={visible ? 'popupPortal' : null}>
+      <PortalOrigin destination={visible ? "popupPortal" : null}>
         <View
-          style={{ width: window.width, height: window.height, position: 'absolute' }}
-          pointerEvents={visible ? 'auto' : 'none'}
+          style={{
+            width: window.width,
+            height: window.height,
+            position: "absolute",
+          }}
+          pointerEvents={visible ? "auto" : "none"}
         >
           {children}
         </View>
@@ -115,7 +122,7 @@ const PopupContainer: FC<{
       <FullWindowOverlay>
         <View
           style={{ width: window.width, height: window.height }}
-          pointerEvents={visible ? 'auto' : 'none'}
+          pointerEvents={visible ? "auto" : "none"}
         >
           {children}
         </View>
@@ -143,7 +150,7 @@ export function PopupSelectComponent<T>(props: PopupSelectProps<T>) {
     minWidth,
     maxHeight,
     scrollY,
-    anchor = 'top-right',
+    anchor = "top-right",
     top = 0,
     asFullWindowOverlay,
   } = props;
@@ -229,7 +236,7 @@ export function PopupSelectComponent<T>(props: PopupSelectProps<T>) {
 
       setWidth((s) => Math.max(s, w, min));
     },
-    [autoWidth, minWidth],
+    [autoWidth, minWidth]
   );
 
   const scrollCompensationStyle = useAnimatedStyle(() => ({
@@ -245,12 +252,32 @@ export function PopupSelectComponent<T>(props: PopupSelectProps<T>) {
       >
         {childrenPrepared}
       </View>
-      <PopupContainer asFullWindowOverlay={asFullWindowOverlay} visible={visible}>
+      <PopupContainer
+        asFullWindowOverlay={asFullWindowOverlay}
+        visible={visible}
+      >
         <S.Overlay onPress={() => handleClose()}>
           <Animated.View style={scrollCompensationStyle}>
             <S.Wrap
               anchor={anchor}
-              style={[{ top: offsetTop.current, width: ns(width) }, popupAnimation.style]}
+              style={[
+                {
+                  top: offsetTop.current,
+                  width: ns(width),
+                  backgroundColor: "white",
+                  // borderWidth: 0.5,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 5,
+                  },
+                  shadowOpacity: 0.34,
+                  shadowRadius: 6.27,
+
+                  elevation: 10,
+                },
+                popupAnimation.style,
+              ]}
             >
               <S.Content>
                 <FlatList

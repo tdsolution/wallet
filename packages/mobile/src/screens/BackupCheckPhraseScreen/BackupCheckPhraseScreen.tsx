@@ -1,11 +1,19 @@
-import { useRecoveryPhraseInputs } from '@tonkeeper/shared/hooks/useRecoveryPhraseInputs';
-import { InputNumberPrefix } from '@tonkeeper/shared/components/InputNumberPrefix';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from '@tonkeeper/router/src/imperative';
-import { useNavigation } from '@tonkeeper/router';
-import { t } from '@tonkeeper/shared/i18n';
-import { Screen, Steezy, View, Text, Input, Spacer, Button } from '@tonkeeper/uikit';
-import { tk } from '$wallet';
+import { useRecoveryPhraseInputs } from "@tonkeeper/shared/hooks/useRecoveryPhraseInputs";
+import { InputNumberPrefix } from "@tonkeeper/shared/components/InputNumberPrefix";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "@tonkeeper/router/src/imperative";
+import { useNavigation } from "@tonkeeper/router";
+import { t } from "@tonkeeper/shared/i18n";
+import {
+  Screen,
+  Steezy,
+  View,
+  Text,
+  Input,
+  Spacer,
+  Button,
+} from "@tonkeeper/uikit";
+import { tk } from "$wallet";
 
 export const BackupCheckPhraseScreen = memo(() => {
   const { words } = useParams<{ words: { index: number; word: string }[] }>();
@@ -14,11 +22,15 @@ export const BackupCheckPhraseScreen = memo(() => {
   const nav = useNavigation();
 
   const isValid = useMemo(() => {
-    const word1 = values['0'];
-    const word2 = values['1'];
-    const word3 = values['2'];
+    const word1 = values["0"];
+    const word2 = values["1"];
+    const word3 = values["2"];
 
-    return word1 === words[0].word && word2 === words[1].word && word3 === words[2].word;
+    return (
+      word1 === words[0].word &&
+      word2 === words[1].word &&
+      word3 === words[2].word
+    );
   }, [values, words]);
 
   const handleSubmit = useCallback(() => {
@@ -36,7 +48,7 @@ export const BackupCheckPhraseScreen = memo(() => {
         inputs.getRef(index + 1)?.focus();
       }
     },
-    [handleSubmit, inputs],
+    [handleSubmit, inputs]
   );
 
   useEffect(() => {
@@ -57,7 +69,7 @@ export const BackupCheckPhraseScreen = memo(() => {
 
       setValues((state) => ({ ...state, [`${index}`]: value }));
     },
-    [inputs, words, setValues],
+    [inputs, words, setValues]
   );
 
   const onBlur = useCallback(
@@ -68,7 +80,7 @@ export const BackupCheckPhraseScreen = memo(() => {
         input.markAsInvalid();
       }
     },
-    [inputs, words],
+    [inputs, words]
   );
 
   return (
@@ -82,11 +94,11 @@ export const BackupCheckPhraseScreen = memo(() => {
       >
         <Screen.HeaderIndent />
         <Text type="h2" textAlign="center">
-          {t('backup_check.title')}
+          {t("backup_check.title")}
         </Text>
         <Spacer y={4} />
         <Text type="body1" color="textSecondary" textAlign="center">
-          {t('backup_check.caption', {
+          {t("backup_check.caption", {
             one: words[0].index + 1,
             two: words[1].index + 1,
             three: words[2].index + 1,
@@ -95,12 +107,15 @@ export const BackupCheckPhraseScreen = memo(() => {
         <Spacer y={16} />
         <View style={styles.inputsContainer}>
           {words.map((item, index) => (
-            <View key={`${item.word}-${index}`} onLayout={inputs.setPosition(index)}>
+            <View
+              key={`${item.word}-${index}`}
+              onLayout={inputs.setPosition(index)}
+            >
               <Input
                 key={`input-${index}`}
                 renderToHardwareTextureAndroid
                 leftContent={<InputNumberPrefix index={item.index} />}
-                returnKeyType={index === 2 ? 'done' : 'next'}
+                returnKeyType={index === 2 ? "done" : "next"}
                 onChangeText={handleChange(index)}
                 onSubmitEditing={handleSubmitEditing(index)}
                 onFocus={inputs.onFocus(index)}
@@ -122,7 +137,7 @@ export const BackupCheckPhraseScreen = memo(() => {
       </Screen.ScrollView>
       <Screen.ButtonContainer>
         <Button
-          title={t('backup_check.done_button')}
+          title={t("backup_check.done_button")}
           onPress={handleSubmit}
           disabled={!isValid}
         />

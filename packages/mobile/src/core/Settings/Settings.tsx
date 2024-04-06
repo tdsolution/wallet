@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useMemo, useRef } from "react";
-import { Image } from "react-native";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import Rate, { AndroidMarket } from "react-native-rate";
 import { Alert, Linking, Platform, View } from "react-native";
@@ -57,10 +57,17 @@ import { mapNewNftToOldNftData } from "$utils/mapNewNftToOldNftData";
 import { WalletListItem } from "@tonkeeper/shared/components";
 import { useSubscriptions } from "@tonkeeper/shared/hooks/useSubscriptions";
 import { nativeLocaleNames } from "@tonkeeper/shared/i18n/translations";
+import { colors } from "../../constants/colors";
+import ModalSignOut from "./Item/ModalSignOut";
+import ModalDeleteAccount from "./Item/ModalDeleteAccount";
 
 export const Settings: FC = () => {
   const animationRef = useRef<AnimatedLottieView>(null);
   const devMenuHandlerRef = useRef(null);
+  const [modalVisibleSignOut, setModalVisibleSignOut] =
+    useState<boolean>(false);
+  const [modalVisibleDeleteAccount, setModalVisibleDeleteAccount] =
+    useState<boolean>(false);
 
   const flags = useFlags([
     "disable_apperance",
@@ -133,23 +140,25 @@ export const Settings: FC = () => {
   }, []);
 
   const handleResetWallet = useCallback(() => {
-    Alert.alert(
-      t("settings_reset_alert_title"),
-      t("settings_reset_alert_caption"),
-      [
-        {
-          text: t("cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("settings_reset_alert_button"),
-          style: "destructive",
-          onPress: () => {
-            dispatch(walletActions.cleanWallet());
-          },
-        },
-      ]
-    );
+    // Alert.alert(
+    //   t("settings_reset_alert_title"),
+    //   t("settings_reset_alert_caption"),
+    //   [
+    //     {
+    //       text: t("cancel"),
+    //       style: "cancel",
+    //     },
+    //     {
+    //       text: t("settings_reset_alert_button"),
+    //       style: "destructive",
+    //       onPress: () => {
+    //         dispatch(walletActions.cleanWallet());
+    //       },
+    //     },
+    //   ]
+    // );
+    dispatch(walletActions.cleanWallet());
+    setModalVisibleSignOut(false);
   }, [dispatch]);
 
   const handleStopWatchWallet = useCallback(() => {
@@ -222,24 +231,27 @@ export const Settings: FC = () => {
   }, []);
 
   const handleDeleteAccount = useCallback(() => {
-    Alert.alert(
-      t("settings_delete_alert_title"),
-      t("settings_delete_alert_caption"),
-      [
-        {
-          text: t("cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("settings_delete_alert_button"),
-          style: "destructive",
-          onPress: () => {
-            trackEvent("delete_wallet");
-            openDeleteAccountDone();
-          },
-        },
-      ]
-    );
+    //Alert.alert(
+    //   t("settings_delete_alert_title"),
+    //   t("settings_delete_alert_caption"),
+    //   [
+    //     {
+    //       text: t("cancel"),
+    //       style: "cancel",
+    //     },
+    //     {
+    //       text: t("settings_delete_alert_button"),
+    //       style: "destructive",
+    //       onPress: () => {
+    //         trackEvent("delete_wallet");
+    //         openDeleteAccountDone();
+    //       },
+    //     },
+    //   ]
+    // );
+    trackEvent("delete_wallet");
+    openDeleteAccountDone();
+    setModalVisibleSignOut(false);
   }, []);
 
   const handleCustomizePress = useCallback(
@@ -443,7 +455,11 @@ export const Settings: FC = () => {
               onChange={setSearchEngine}
               keyExtractor={(item) => item}
               width={176}
-              renderItem={(item) => <Text variant="label1">{item}</Text>}
+              renderItem={(item) => (
+                <Text style={{ color: colors.Black }} variant="label1">
+                  {item}
+                </Text>
+              )}
             >
               <List.Item
                 value={
@@ -528,17 +544,24 @@ export const Settings: FC = () => {
               title={t("settings_rate")}
             />
             {!!wallet && !wallet.isWatchOnly && (
-              <List.Item
-                onPress={handleDeleteAccount}
-                value={
-                  <Icon
-                    style={styles.icon.static}
-                    color="iconSecondary"
-                    name={"ic-trash-bin-28"}
-                  />
-                }
-                title={t("settings_delete_account")}
-              />
+              <View>
+                <List.Item
+                  onPress={() => setModalVisibleDeleteAccount(true)}
+                  value={
+                    <Icon
+                      style={styles.icon.static}
+                      color="iconSecondary"
+                      name={"ic-trash-bin-28"}
+                    />
+                  }
+                  title={t("settings_delete_account")}
+                />
+                <ModalDeleteAccount
+                  visible={modalVisibleDeleteAccount}
+                  onClose={() => setModalVisibleDeleteAccount(false)}
+                  onDeleteAccount={handleDeleteAccount}
+                />
+              </View>
             )}
             <List.Item
               onPress={handleLegal}
@@ -564,12 +587,29 @@ export const Settings: FC = () => {
                     {t("stop_watch")}
                   </CellSectionItem>
                 ) : (
-                  <CellSectionItem
-                    onPress={handleResetWallet}
-                    icon="ic-door-28"
-                  >
-                    {t("settings_reset")}
-                  </CellSectionItem>
+                  // <CellSectionItem
+                  //   onPress={handleResetWallet}
+                  //   icon="ic-door-28"
+                  // >
+                  //   {t("settings_reset")}
+                  // </CellSectionItem>
+                  <View>
+                    <TouchableOpacity
+                      style={stylesButton.button}
+                      onPress={() => setModalVisibleSignOut(true)}
+                    >
+                      <Text style={stylesButton.textButton}>Sign Out</Text>
+                      <Image
+                        style={stylesButton.iconClose}
+                        source={require("../../assets/icons/png/ic-door-28.png")}
+                      />
+                    </TouchableOpacity>
+                    <ModalSignOut
+                      visible={modalVisibleSignOut}
+                      onClose={() => setModalVisibleSignOut(false)}
+                      onSignOut={handleResetWallet}
+                    />
+                  </View>
                 )}
               </List>
               <Spacer y={16} />
@@ -587,10 +627,15 @@ export const Settings: FC = () => {
                 onActivated={handleDevMenu}
               >
                 <S.AppInfo>
-                  <S.AppInfoIcon
+                  {/* <S.AppInfoIcon
                     ref={animationRef}
                     loop={false}
                     source={require("$assets/lottie/diamond.json")}
+                  /> */}
+
+                  <Image
+                    source={require("../../assets/logo/logo_app.png")}
+                    style={stylesButton.logo}
                   />
 
                   <S.AppInfoTitleWrapper>
@@ -633,5 +678,34 @@ const styles = Steezy.create({
     paddingTop: 9.5,
     paddingBottom: 6.5,
     marginLeft: 8,
+  },
+});
+const stylesButton = StyleSheet.create({
+  button: {
+    height: 48,
+    borderRadius: 15,
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: colors.Primary,
+    flexDirection: "row",
+    paddingHorizontal: 15,
+  },
+  textButton: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.White,
+    fontFamily: "Poppins-Medium",
+  },
+  iconClose: {
+    width: 28,
+    height: 28,
+    tintColor: colors.White,
+    resizeMode: "contain",
+  },
+  logo: {
+    width: 54,
+    height: 54,
+    borderRadius: 30,
+    resizeMode: "contain",
   },
 });

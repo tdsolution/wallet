@@ -1,12 +1,13 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import LottieView from 'lottie-react-native';
+import React, { useCallback, useMemo, useRef } from "react";
+import LottieView from "lottie-react-native";
 
-import { Text } from '$uikit';
-import * as S from './DeleteAccountDone.style';
-import { t } from '@tonkeeper/shared/i18n';
-import { useDispatch } from 'react-redux';
-import { walletActions } from '$store/wallet';
-import { Steezy, View } from '@tonkeeper/uikit';
+import { Text } from "$uikit";
+import * as S from "./DeleteAccountDone.style";
+import { t } from "@tonkeeper/shared/i18n";
+import { useDispatch } from "react-redux";
+import { walletActions } from "$store/wallet";
+import { Steezy, View } from "@tonkeeper/uikit";
+import { colors } from "../../constants/colors";
 
 export const DeleteAccountDone: React.FC = () => {
   const dispatch = useDispatch();
@@ -30,14 +31,14 @@ export const DeleteAccountDone: React.FC = () => {
       <S.LottieIcon
         ref={checkIconRef}
         onAnimationFinish={handleAnimationEnd}
-        source={require('$assets/lottie/check480.json')}
+        source={require("$assets/lottie/check480.json")}
         loop={false}
         autoPlay={false}
         autoSize={false}
       />
       <S.TitleWrapper>
-        <Text variant="h2" textAlign="center">
-          {t('account_deleted')}
+        <Text variant="h2" textAlign="center" style={{ color: colors.Primary }}>
+          {t("account_deleted")}
         </Text>
       </S.TitleWrapper>
     </View>
@@ -47,9 +48,10 @@ export const DeleteAccountDone: React.FC = () => {
 const styles = Steezy.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 32,
     marginTop: -16,
+    backgroundColor: colors.White,
   },
 });
