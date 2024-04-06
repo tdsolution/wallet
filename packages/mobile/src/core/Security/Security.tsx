@@ -1,19 +1,19 @@
-import React, { FC, useCallback } from 'react';
-import Animated from 'react-native-reanimated';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import Clipboard from '@react-native-community/clipboard';
+import React, { FC, useCallback } from "react";
+import Animated from "react-native-reanimated";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import Clipboard from "@react-native-community/clipboard";
 
-import * as S from './Security.style';
-import { NavBar, ScrollHandler, Text } from '$uikit';
-import { CellSection, CellSectionItem } from '$shared/components';
-import { MainStackRouteNames, openChangePin } from '$navigation';
-import { getBiometryName, ns } from '$utils';
-import { Toast } from '$store';
-import { t } from '@tonkeeper/shared/i18n';
-import { useBiometrySettings, useWallet } from '@tonkeeper/shared/hooks';
-import { useNavigation } from '@tonkeeper/router';
-import { vault } from '$wallet';
-import { Haptics, Switch } from '@tonkeeper/uikit';
+import * as S from "./Security.style";
+import { NavBar, ScrollHandler, Text } from "$uikit";
+import { CellSection, CellSectionItem } from "$shared/components";
+import { MainStackRouteNames, openChangePin } from "$navigation";
+import { getBiometryName, ns } from "$utils";
+import { Toast } from "$store";
+import { t } from "@tonkeeper/shared/i18n";
+import { useBiometrySettings, useWallet } from "@tonkeeper/shared/hooks";
+import { useNavigation } from "@tonkeeper/router";
+import { vault } from "$wallet";
+import { Haptics, Switch } from "@tonkeeper/uikit";
 
 export const Security: FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -25,7 +25,7 @@ export const Security: FC = () => {
   const handleCopyLockupConfig = useCallback(() => {
     try {
       Clipboard.setString(JSON.stringify(wallet.getLockupConfig()));
-      Toast.success(t('copied'));
+      Toast.success(t("copied"));
     } catch (e) {
       Toast.fail(e.message);
     }
@@ -40,7 +40,7 @@ export const Security: FC = () => {
 
       biometry.toggleBiometry();
     },
-    [biometry],
+    [biometry]
   );
 
   const handleChangePasscode = useCallback(() => {
@@ -69,17 +69,22 @@ export const Security: FC = () => {
           <CellSectionItem
             onPress={handleBiometry(true)}
             indicator={
-              <Switch value={biometry.isEnabledSwitch} onChange={handleBiometry(false)} />
+              <Switch
+                value={biometry.isEnabledSwitch}
+                onChange={handleBiometry(false)}
+              />
             }
           >
-            {t('security_use_biometry_switch', {
-              biometryType: getBiometryName(biometry.type, { accusative: true }),
+            {t("security_use_biometry_switch", {
+              biometryType: getBiometryName(biometry.type, {
+                accusative: true,
+              }),
             })}
           </CellSectionItem>
         </CellSection>
         <S.BiometryTip>
           <Text variant="body2" color="foregroundSecondary">
-            {t('security_use_biometry_tip')}
+            {t("security_use_biometry_tip")}
           </Text>
         </S.BiometryTip>
       </>
@@ -88,7 +93,7 @@ export const Security: FC = () => {
 
   return (
     <>
-      <NavBar>{t('security_title')}</NavBar>
+      <NavBar>{t("security_title")}</NavBar>
       <ScrollHandler>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
@@ -101,20 +106,23 @@ export const Security: FC = () => {
           {renderBiometryToggler()}
           <CellSection>
             <CellSectionItem onPress={handleChangePasscode} icon="ic-lock-28">
-              {t('security_change_passcode')}
+              {t("security_change_passcode")}
             </CellSectionItem>
             {biometry.isEnabled ? (
               <CellSectionItem
                 onPress={handleResetPasscode}
                 icon="ic-arrow-2-circlepath-28"
               >
-                {t('security_reset_passcode')}
+                {t("security_reset_passcode")}
               </CellSectionItem>
             ) : null}
           </CellSection>
           <CellSection>
             {!!wallet && wallet.isLockup && (
-              <CellSectionItem onPress={handleCopyLockupConfig} icon="ic-key-28">
+              <CellSectionItem
+                onPress={handleCopyLockupConfig}
+                icon="ic-key-28"
+              >
                 Copy lockup config
               </CellSectionItem>
             )}

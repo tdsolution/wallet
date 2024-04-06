@@ -1,10 +1,10 @@
-import { useUnlockVault } from '@tonkeeper/mobile/src/core/ModalContainer/NFTOperations/useUnlockVault';
-import { useNavigation } from '@tonkeeper/router';
-import { Button, Modal, Spacer, Steezy, Text, View } from '@tonkeeper/uikit';
-import { memo, useCallback } from 'react';
-import { MainStackRouteNames } from '$navigation';
-import { t } from '@tonkeeper/shared/i18n';
-import { delay } from '$utils';
+import { useUnlockVault } from "@tonkeeper/mobile/src/core/ModalContainer/NFTOperations/useUnlockVault";
+import { useNavigation } from "@tonkeeper/router";
+import { Button, Modal, Spacer, Steezy, Text, View } from "@tonkeeper/uikit";
+import { memo, useCallback } from "react";
+import { MainStackRouteNames } from "$navigation";
+import { t } from "@tonkeeper/shared/i18n";
+import { delay } from "$utils";
 
 interface BackupWarningModalProps {
   isBackupAgain?: boolean;
@@ -36,7 +36,7 @@ export const BackupWarningModal = memo<BackupWarningModalProps>((props) => {
       <Modal.Content safeArea>
         <View style={styles.container}>
           <Text type="h2" textAlign="center">
-            {t('backup_warning.title')}
+            {t("backup_warning.title")}
           </Text>
           <Spacer y={4} />
           <Text
@@ -45,32 +45,35 @@ export const BackupWarningModal = memo<BackupWarningModalProps>((props) => {
             color="textSecondary"
             textAlign="center"
           >
-            {t('backup_warning.caption')}
+            {t("backup_warning.caption")}
           </Text>
           <View style={styles.content}>
             <View style={styles.paragraph}>
               <View style={styles.dot} />
               <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p1')}
+                {t("backup_warning.p1")}
               </Text>
             </View>
             <View style={styles.paragraph}>
               <View style={styles.dot} />
               <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p2')}
+                {t("backup_warning.p2")}
               </Text>
             </View>
             <View style={styles.paragraph}>
               <View style={styles.dot} />
               <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p3')}
+                {t("backup_warning.p3")}
               </Text>
             </View>
           </View>
-          <Button title={t('backup_warning.continue_button')} onPress={handleContinue} />
+          <Button
+            title={t("backup_warning.continue_button")}
+            onPress={handleContinue}
+          />
           <Spacer y={16} />
           <Button
-            title={t('backup_warning.cancel_button')}
+            title={t("backup_warning.cancel_button")}
             color="secondary"
             onPress={nav.goBack}
           />
@@ -96,7 +99,7 @@ const styles = Steezy.create(({ colors }) => ({
   paragraph: {
     marginLeft: 21,
     marginVertical: 8,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   desk: {
     paddingHorizontal: 16,

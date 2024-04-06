@@ -10,6 +10,7 @@ import * as S from "./CellSection.style";
 import { CellProps } from "./CellSection.interface";
 import { Icon, Separator, Text } from "$uikit";
 import { StyleProp, ViewStyle } from "react-native";
+import { colors } from "../../../constants/colors";
 
 export interface CellSectionProps {
   sectionStyle?: StyleProp<ViewStyle>;
@@ -57,7 +58,20 @@ export const CellSectionItem = forwardRef<any, PropsWithChildren<CellProps>>(
             flex: 1,
           }}
         >
-          <S.SectionItemInner style={{ backgroundColor: "#4871EA" }}>
+          <S.SectionItemInner
+            style={{
+              backgroundColor: "#ffffff",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+              shadowOpacity: 0.29,
+              shadowRadius: 4.65,
+
+              elevation: 20,
+            }}
+          >
             <S.SectionItemTitleWrap>
               {content ? (
                 content
