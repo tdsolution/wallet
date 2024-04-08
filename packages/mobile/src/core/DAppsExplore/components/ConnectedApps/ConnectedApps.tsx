@@ -8,6 +8,7 @@ import { ScreenHeaderHeight } from '@tonkeeper/uikit/src/containers/Screen/utils
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Spacer, Steezy, Text, View, ns } from '@tonkeeper/uikit';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { colors } from '../../../../constants/colors';
 
 interface Props {
   connectedApps: IConnectedApp[];
@@ -26,7 +27,7 @@ const ConnectedAppsComponent: FC<Props> = (props) => {
   if (connectedApps.length === 0) {
     return (
       <View style={[styles.emptyContainer, { height }]}>
-        <Text type="h2" textAlign="center">
+        <Text type="h2" textAlign="center" style={{color: colors.Primary}}>
           {t('browser.connected_empty_title')}
         </Text>
         <Spacer y={4} />

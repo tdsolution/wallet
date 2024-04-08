@@ -94,7 +94,7 @@ const styles = Steezy.create(({ colors, corners }) => ({
     borderRadius: corners.large,
     alignSelf: "center",
     flexDirection: "row",
-    shadowColor: "#C7C8CC",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
