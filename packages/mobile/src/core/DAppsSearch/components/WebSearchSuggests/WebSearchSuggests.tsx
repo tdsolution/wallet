@@ -1,10 +1,10 @@
-import { useBrowserStore } from '$store';
-import { List } from '$uikit/List/old/List';
-import React, { FC, memo } from 'react';
-import { IWebSearchSuggest } from '../../types';
-import { SectionLabel } from '../SectionLabel/SectionLabel';
-import { WebSearchSuggestCell } from '../WebSearchSuggestCell/WebSearchSuggestCell';
-import { t } from '@tonkeeper/shared/i18n';
+import { useBrowserStore } from "$store";
+import { List } from "$uikit/List/old/List";
+import React, { FC, memo } from "react";
+import { IWebSearchSuggest } from "../../types";
+import { SectionLabel } from "../SectionLabel/SectionLabel";
+import { WebSearchSuggestCell } from "../WebSearchSuggestCell/WebSearchSuggestCell";
+import { t } from "@tonkeeper/shared/i18n";
 
 interface Props {
   items: IWebSearchSuggest[];
@@ -19,7 +19,9 @@ export const WebSearchSuggestsComponent: FC<Props> = (props) => {
 
   return (
     <>
-      <SectionLabel>{t('browser.web_search_title', { searchEngine })}</SectionLabel>
+      <SectionLabel>
+        {t("browser.web_search_title", { searchEngine })}
+      </SectionLabel>
       <List separator={false}>
         {items.map((item, index) => (
           <WebSearchSuggestCell

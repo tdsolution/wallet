@@ -1,13 +1,13 @@
-import React, { FC, useMemo } from 'react';
-import { LargeNavBar } from '../LargeNavBar/LargeNavBar';
+import React, { FC, useMemo } from "react";
+import { LargeNavBar } from "../LargeNavBar/LargeNavBar";
 
-import { ScrollHandlerProps } from '../ScrollHandler/ScrollHandler.interface';
-import { NavBar } from '../NavBar/NavBar';
-import { Dimensions } from 'react-native';
-import { TabletMaxWidth } from '$shared/constants';
-import { useScrollHandler } from './useScrollHandler';
+import { ScrollHandlerProps } from "../ScrollHandler/ScrollHandler.interface";
+import { NavBar } from "../NavBar/NavBar";
+import { Dimensions } from "react-native";
+import { TabletMaxWidth } from "$shared/constants";
+import { useScrollHandler } from "./useScrollHandler";
 
-const { width: deviceWidth } = Dimensions.get('window');
+const { width: deviceWidth } = Dimensions.get("window");
 
 export const ScrollHandler: FC<ScrollHandlerProps> = (props) => {
   const {

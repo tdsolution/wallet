@@ -1,13 +1,13 @@
-import { FC, useCallback } from 'react';
-import { NavBar } from '$uikit';
-import { Steezy, Toast, View } from '@tonkeeper/uikit';
-import { CreatePinForm } from '$shared/components';
-import { t } from '@tonkeeper/shared/i18n';
-import { useParams } from '@tonkeeper/router/src/imperative';
-import { useBiometrySettings } from '@tonkeeper/shared/hooks';
-import { vault } from '$wallet';
-import { useNavigation } from '@tonkeeper/router';
-import { MainStackRouteNames } from '$navigation';
+import { FC, useCallback } from "react";
+import { NavBar } from "$uikit";
+import { Steezy, Toast, View } from "@tonkeeper/uikit";
+import { CreatePinForm } from "$shared/components";
+import { t } from "@tonkeeper/shared/i18n";
+import { useParams } from "@tonkeeper/router/src/imperative";
+import { useBiometrySettings } from "@tonkeeper/shared/hooks";
+import { vault } from "$wallet";
+import { useNavigation } from "@tonkeeper/router";
+import { MainStackRouteNames } from "$navigation";
 
 export const ResetPin: FC = () => {
   const { passcode: oldPasscode } = useParams<{ passcode: string }>();
@@ -23,7 +23,7 @@ export const ResetPin: FC = () => {
       try {
         await vault.changePasscode(oldPasscode, passcode);
 
-        Toast.success(t('passcode_changed'));
+        Toast.success(t("passcode_changed"));
 
         if (biometry.isEnabled) {
           await biometry.disableBiometry();
@@ -37,7 +37,7 @@ export const ResetPin: FC = () => {
         nav.goBack();
       }
     },
-    [biometry, nav, oldPasscode],
+    [biometry, nav, oldPasscode]
   );
 
   return (

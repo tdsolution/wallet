@@ -128,14 +128,14 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
   const backButtonSlot = (
     <TouchableOpacity
       onPress={onBackPress ?? handleBack}
-      style={styles.leftContainer}
+      style={[styles.leftContainer]}
       disabled={hideBackButton}
     >
       <Animated.View
         style={[
           styles.backButton,
           backButtonAnimatedStyle,
-          { backgroundColor: theme.backgroundContent },
+          { backgroundColor: theme.primaryColor },
         ]}
       >
         <Icon name={backButtonIconName} />
@@ -257,7 +257,10 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   title: {
+    fontSize: 20,
     zIndex: 1,
+    color: "#4871EA",
+    fontFamily: "Poppins-Bold",
   },
   leftContainer: {
     height: ScreenHeaderHeight,

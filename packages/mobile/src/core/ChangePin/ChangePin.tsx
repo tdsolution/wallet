@@ -1,14 +1,16 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from "react";
 
-import { NavBar } from '$uikit';
-import { CreatePinForm } from '$shared/components';
-import { Toast } from '$store';
-import { t } from '@tonkeeper/shared/i18n';
-import { goBack } from '$navigation/imperative';
-import { vault } from '$wallet';
-import { useBiometrySettings } from '@tonkeeper/shared/hooks';
-import { MainStackRouteNames } from '$navigation';
-import { useNavigation } from '@tonkeeper/router';
+import { NavBar } from "$uikit";
+import { CreatePinForm } from "$shared/components";
+import { Toast } from "$store";
+import { t } from "@tonkeeper/shared/i18n";
+import { goBack } from "$navigation/imperative";
+import { vault } from "$wallet";
+import { useBiometrySettings } from "@tonkeeper/shared/hooks";
+import { MainStackRouteNames } from "$navigation";
+import { useNavigation } from "@tonkeeper/router";
+import { View } from "react-native";
+import { colors } from "../../constants/colors";
 
 export const ChangePin: FC = () => {
   const [oldPasscode, setOldPasscode] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export const ChangePin: FC = () => {
       try {
         await vault.changePasscode(oldPasscode, passcode);
 
-        Toast.success(t('passcode_changed'));
+        Toast.success(t("passcode_changed"));
 
         if (biometry.isEnabled) {
           await biometry.disableBiometry();
@@ -42,12 +44,14 @@ export const ChangePin: FC = () => {
         goBack();
       }
     },
-    [biometry, nav, oldPasscode],
+    [biometry, nav, oldPasscode]
   );
 
   return (
     <>
-      <NavBar isCancelButton />
+      <View style={{ backgroundColor: colors.White }}>
+        <NavBar isCancelButton />
+      </View>
       <CreatePinForm
         validateOldPin
         onPinCreated={handleCreated}

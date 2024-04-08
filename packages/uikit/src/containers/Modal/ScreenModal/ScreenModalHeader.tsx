@@ -1,11 +1,11 @@
-import { Text } from '../../../components/Text';
-import { Icon } from '../../../components/Icon';
-import { TouchableOpacity } from '../../../components/TouchableOpacity';
-import { View } from '../../../components/View';
-import { Steezy } from '../../../styles';
-import { memo } from 'react';
-import { isString } from '../../../utils/strings';
-import { useNavigation } from '@tonkeeper/router';
+import { Text } from "../../../components/Text";
+import { Icon } from "../../../components/Icon";
+import { TouchableOpacity } from "../../../components/TouchableOpacity";
+import { View } from "../../../components/View";
+import { Steezy } from "../../../styles";
+import { memo } from "react";
+import { isString } from "../../../utils/strings";
+import { useNavigation } from "@tonkeeper/router";
 
 export interface ScreenModalHeaderProps {
   children?: React.ReactNode;
@@ -43,20 +43,20 @@ export const ScreenModalHeader = memo<ScreenModalHeaderProps>((props) => {
 const styles = Steezy.create(({ colors }) => ({
   container: {
     height: 64,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
     flex: 1,
     marginHorizontal: 24,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   closeButton: {
     width: 64,
     height: 64,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
     top: 0,
     zIndex: 2,
   },
@@ -67,8 +67,8 @@ const styles = Steezy.create(({ colors }) => ({
     width: 32,
     height: 32,
     borderRadius: 32 / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.backgroundContent,
   },
 }));

@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import {Wallet as EthWallet} from 'ethers';
+import { Wallet as EthWallet } from "ethers";
 import { i18n, t } from "@tonkeeper/shared/i18n";
 import {
   Button,
@@ -72,11 +72,14 @@ import { WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
 import { addressEVMString, shortenWalletAddress } from "$libs/EVM/createWallet";
+import { useBalanceEVM } from "$libs/EVM/useBalanceEVM";
 export const WalletScreen = memo(({ navigation }: any) => {
   //
   const [addressEvm, setAddressEVM] = useState('');
   //
   const chain = useChain()?.chain;
+  const balanceEvm = useBalanceEVM();
+  const balanceEvmString = balanceEvm?.balanceEVM.toString() ?? '';
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -431,7 +434,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               </View>
               <View style={{ marginTop: 1, marginBottom: 2 }}>
-                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : `0`} />
+                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : balanceEvmString} />
               </View>
               <View
                 style={{
@@ -443,7 +446,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 <TouchableOpacity
                   hitSlop={{ top: 8, bottom: 8, left: 18, right: 18 }}
                   style={{ zIndex: 3, marginVertical: 8 }}
-                  onPress={copyText(wallet.address.ton.friendly)}
+                  onPress={copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))}
                   activeOpacity={0.6}
                 >
                   <Text
@@ -455,7 +458,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))}
+                  onPress={
+                    // copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))
+                    () => {console.log(balanceEvm?.balanceEVM)}
+                  }
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
                 >

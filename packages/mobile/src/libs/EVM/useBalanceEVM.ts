@@ -1,6 +1,6 @@
-// import { useContext } from 'react';
-// import { BalanceEVMContext } from './BalanceEVMContext';
+import { useContext } from 'react';
+import { BalanceEVMContext } from './BalanceEVMContext';
 
-// export const useChain = () => {
-//   return useContext(BalanceEVMContext);
-// };
+export const useBalanceEVM = () => {
+  return useContext(BalanceEVMContext);
+};

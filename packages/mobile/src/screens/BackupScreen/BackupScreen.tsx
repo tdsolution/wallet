@@ -1,10 +1,20 @@
-import { Button, Icon, List, Screen, Spacer, Steezy, Text, View } from '@tonkeeper/uikit';
-import { useNavigation } from '@tonkeeper/router';
-import { memo } from 'react';
-import { format } from 'date-fns';
-import { getLocale } from '$utils/date';
-import { i18n, t } from '@tonkeeper/shared/i18n';
-import { useWalletSetup } from '@tonkeeper/shared/hooks';
+import {
+  Button,
+  Icon,
+  List,
+  Screen,
+  Spacer,
+  Steezy,
+  Text,
+  View,
+} from "@tonkeeper/uikit";
+import { useNavigation } from "@tonkeeper/router";
+import { memo } from "react";
+import { format } from "date-fns";
+import { getLocale } from "$utils/date";
+import { i18n, t } from "@tonkeeper/shared/i18n";
+import { useWalletSetup } from "@tonkeeper/shared/hooks";
+import { colors } from "../../constants/colors";
 
 export const BackupScreen = memo(() => {
   const { lastBackupAt } = useWalletSetup();
@@ -12,21 +22,23 @@ export const BackupScreen = memo(() => {
 
   return (
     <Screen>
-      <Screen.Header title={t('backup_screen.title')} />
+      <Screen.Header title={t("backup_screen.title")} />
       <Screen.ScrollView>
         <View style={styles.info}>
-          <Text type="h3">{t('backup_screen.manual_title')}</Text>
+          <Text style={{ color: colors.Primary }} type="h3">
+            {t("backup_screen.manual_title")}
+          </Text>
           <Spacer y={4} />
           <Text type="body2" color="textSecondary">
-            {t('backup_screen.manual_caption')}
+            {t("backup_screen.manual_caption")}
           </Text>
         </View>
 
         {lastBackupAt === null ? (
           <View style={styles.indentHorizontal}>
             <Button
-              onPress={() => nav.navigate('/backup-warning')}
-              title={t('backup_screen.manual_button')}
+              onPress={() => nav.navigate("/backup-warning")}
+              title={t("backup_screen.manual_button")}
               color="secondary"
             />
           </View>
@@ -35,15 +47,19 @@ export const BackupScreen = memo(() => {
             <List>
               <List.Item
                 chevron
-                title={t('backup_screen.manual_backup_on')}
-                onPress={() => nav.navigate('/backup-warning', { isBackupAgain: true })}
-                subtitle={t('backup_screen.last_backup_time', {
+                title={t("backup_screen.manual_backup_on")}
+                onPress={() =>
+                  nav.navigate("/backup-warning", { isBackupAgain: true })
+                }
+                subtitle={t("backup_screen.last_backup_time", {
                   time: format(
                     lastBackupAt,
-                    i18n.locale === 'ru' ? 'd MMM yyyy, HH:mm' : 'MMM d yyyy, HH:mm',
+                    i18n.locale === "ru"
+                      ? "d MMM yyyy, HH:mm"
+                      : "MMM d yyyy, HH:mm",
                     {
                       locale: getLocale(),
-                    },
+                    }
                   ),
                 })}
                 leftContent={
@@ -55,13 +71,13 @@ export const BackupScreen = memo(() => {
             </List>
             <List>
               <List.Item
-                title={t('backup_screen.show_recovery_phrase')}
+                title={t("backup_screen.show_recovery_phrase")}
                 rightContent={
                   <View style={styles.keyIcon}>
                     <Icon name="ic-key-28" color="accentBlue" />
                   </View>
                 }
-                onPress={() => nav.navigate('/backup-warning')}
+                onPress={() => nav.navigate("/backup-warning")}
               />
             </List>
           </>
@@ -85,11 +101,11 @@ const styles = Steezy.create(({ colors }) => ({
     width: 44,
     height: 44,
     borderRadius: 44 / 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   keyIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: 16,
   },
 }));

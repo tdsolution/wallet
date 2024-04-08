@@ -1,19 +1,19 @@
-import { TouchableHighlight as TouchableGestureHighlight } from 'react-native-gesture-handler';
-import { TextStyle, ViewStyle, TouchableHighlight } from 'react-native';
-import { ListItemPressedContext } from './ListItemPressedContext';
-import { Steezy, StyleProp, useTheme } from '../../styles';
-import { useSharedValue } from 'react-native-reanimated';
-import React, { memo, useCallback } from 'react';
-import FastImage from 'react-native-fast-image';
-import { useRouter } from '@tonkeeper/router';
-import { Pressable } from '../Pressable';
-import { isAndroid } from '../../utils';
-import { SText as Text } from '../Text';
-import { Icon } from '../Icon';
-import { View } from '../View';
+import { TouchableHighlight as TouchableGestureHighlight } from "react-native-gesture-handler";
+import { TextStyle, ViewStyle, TouchableHighlight } from "react-native";
+import { ListItemPressedContext } from "./ListItemPressedContext";
+import { Steezy, StyleProp, useTheme } from "../../styles";
+import { useSharedValue } from "react-native-reanimated";
+import React, { memo, useCallback } from "react";
+import FastImage from "react-native-fast-image";
+import { useRouter } from "@tonkeeper/router";
+import { Pressable } from "../Pressable";
+import { isAndroid } from "../../utils";
+import { SText as Text } from "../Text";
+import { Icon } from "../Icon";
+import { View } from "../View";
 
 export interface ListItemProps {
-  titleType?: 'primary' | 'secondary';
+  titleType?: "primary" | "secondary";
   title?: string | React.ReactNode;
   titleTextType?: TTextTypes;
   subtitle?: string | React.ReactNode;
@@ -24,9 +24,9 @@ export interface ListItemProps {
   valueContainerStyle?: StyleProp<ViewStyle>;
   picture?: string;
   pictureStyle?: StyleProp<ViewStyle>;
-  pictureCorner?: 'full' | 'small';
+  pictureCorner?: "full" | "small";
   chevron?: boolean;
-  chevronColor?: 'iconTertiary' | 'iconSecondary';
+  chevronColor?: "iconTertiary" | "iconSecondary";
   leftContentStyle?: StyleProp<ViewStyle>;
   leftContent?: React.ReactNode;
   navigate?: string;
@@ -40,20 +40,20 @@ export interface ListItemProps {
 }
 
 function isString<T>(str: T) {
-  return typeof str === 'string';
+  return typeof str === "string";
 }
 
 export const ListItem = memo<ListItemProps>((props) => {
   const {
     onPress,
     navigate,
-    chevronColor = 'iconTertiary',
-    pictureCorner = 'full',
+    chevronColor = "iconTertiary",
+    pictureCorner = "full",
     titleTextType,
     titleNumberOfLines = 1,
     subtitleNumberOfLines = 1,
     valueMultiline,
-    titleType = 'primary',
+    titleType = "primary",
     leftContentStyle,
     gestureHandler,
     rightContent,
@@ -94,7 +94,7 @@ export const ListItem = memo<ListItemProps>((props) => {
       onPress={handlePress}
     >
       <ListItemPressedContext.Provider value={isPressed}>
-        <View style={styles.container.static}>
+        <View style={[styles.container.static, { backgroundColor: "#ffffff" }]}>
           {hasLeftContent && (
             <View style={[styles.leftContent, leftContentStyle]}>
               {props.leftContent}
@@ -106,7 +106,10 @@ export const ListItem = memo<ListItemProps>((props) => {
                     props.pictureStyle,
                   ]}
                 >
-                  <FastImage style={styles.picture.static} source={pictureSource} />
+                  <FastImage
+                    style={styles.picture.static}
+                    source={pictureSource}
+                  />
                 </View>
               )}
             </View>
@@ -116,12 +119,13 @@ export const ListItem = memo<ListItemProps>((props) => {
               <View style={styles.titleContainer}>
                 {isString(props.title) ? (
                   <Text
+                    style={{ color: "#2B2D42" }}
                     type={
                       titleTextType
                         ? titleTextType
-                        : titleType === 'primary'
-                        ? 'label1'
-                        : 'body1'
+                        : titleType === "primary"
+                        ? "label1"
+                        : "body1"
                     }
                     numberOfLines={titleNumberOfLines}
                     ellipsizeMode="tail"
@@ -174,7 +178,9 @@ export const ListItem = memo<ListItemProps>((props) => {
             {children}
           </View>
           {rightContent}
-          {props.chevron && <Icon name="ic-chevron-right-16" color={chevronColor} />}
+          {props.chevron && (
+            <Icon name="ic-chevron-right-16" color={chevronColor} />
+          )}
         </View>
       </ListItemPressedContext.Provider>
     </TouchableComponent>
@@ -183,22 +189,22 @@ export const ListItem = memo<ListItemProps>((props) => {
 
 const styles = Steezy.create(({ colors }) => ({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 16,
     minHeight: 56,
   },
   leftContent: {
     paddingRight: 16,
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignSelf: "flex-start",
+    alignItems: "center",
   },
   pictureContainer: {
     width: 44,
     height: 44,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: colors.backgroundContentTint,
   },
   pictureFullCorner: {
@@ -215,10 +221,10 @@ const styles = Steezy.create(({ colors }) => ({
     flex: 1,
   },
   topLine: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   bottomLine: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   titleContainer: {
     marginRight: 6,
@@ -227,15 +233,15 @@ const styles = Steezy.create(({ colors }) => ({
     flex: 1,
   },
   titleWithLable: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   valueContainer: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   subvalueText: {
     color: colors.textSecondary,
-    textAlign: 'right',
+    textAlign: "right",
   },
 }));
 

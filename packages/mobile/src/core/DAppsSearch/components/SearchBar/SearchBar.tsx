@@ -1,14 +1,14 @@
-import { useTheme } from '$hooks/useTheme';
-import { Icon } from '$uikit';
-import { isIOS, isValidUrl } from '$utils';
-import React, { FC, memo, useCallback, useRef } from 'react';
+import { useTheme } from "$hooks/useTheme";
+import { Icon } from "$uikit";
+import { isIOS, isValidUrl } from "$utils";
+import React, { FC, memo, useCallback, useRef } from "react";
 import {
   NativeSyntheticEvent,
   TextInput,
   TextInputSubmitEditingEventData,
-} from 'react-native';
-import * as S from './SearchBar.style';
-import { t } from '@tonkeeper/shared/i18n';
+} from "react-native";
+import * as S from "./SearchBar.style";
+import { t } from "@tonkeeper/shared/i18n";
 
 interface Props {
   query: string;
@@ -31,7 +31,7 @@ const SearchBarComponent: FC<Props> = (props) => {
 
       onSubmit(text);
     },
-    [onSubmit],
+    [onSubmit]
   );
 
   return (
@@ -41,10 +41,10 @@ const SearchBarComponent: FC<Props> = (props) => {
           ref={textInputRef}
           value={query}
           onChangeText={setQuery}
-          placeholder={t('browser.search_label')}
-          placeholderTextColor={theme.colors.foregroundSecondary}
+          placeholder={t("browser.search_label")}
+          placeholderTextColor={theme.colors.foregroundPrimary}
           autoFocus={true}
-          keyboardType={isIOS ? 'web-search' : 'url'}
+          keyboardType={isIOS ? "web-search" : "url"}
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="go"
@@ -53,7 +53,7 @@ const SearchBarComponent: FC<Props> = (props) => {
           selectionColor={theme.colors.accentPrimary}
         />
         <S.IconContainer>
-          <Icon name={isUrl ? 'ic-globe-16' : 'ic-magnifying-glass-16'} />
+          <Icon name={isUrl ? "ic-globe-16" : "ic-magnifying-glass-16"} />
         </S.IconContainer>
       </S.InputContainer>
     </S.Container>

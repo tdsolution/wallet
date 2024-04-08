@@ -8,7 +8,6 @@ interface ChainContextType {
   chain: any;
   setChain: React.Dispatch<React.SetStateAction<any>>; // Define the type explicitly
 }
-
 export const ChainContext = createContext<ChainContextType | undefined>(undefined);
 
 // Define the provider

@@ -1,9 +1,9 @@
-import Animated from 'react-native-reanimated';
+import Animated from "react-native-reanimated";
 
-import styled from '$styled';
-import { hNs, ns } from '$utils';
-import { LargeNavBarHeight, NavBarHeight } from '$shared/constants';
-import { Text } from '$uikit/Text/Text';
+import styled from "$styled";
+import { hNs, ns } from "$utils";
+import { LargeNavBarHeight, NavBarHeight } from "$shared/constants";
+import { Text } from "$uikit/Text/Text";
 
 export const Wrap = styled.View`
   position: absolute;
@@ -32,8 +32,8 @@ export const Cont = styled.View`
 `;
 
 export const TitleMini = styled(Text).attrs({
-  variant: 'h3',
-  color: 'foregroundPrimary',
+  variant: "h3",
+  color: "foregroundPrimary",
 })``;
 
 export const LargeTextWrap = styled(Animated.View)`

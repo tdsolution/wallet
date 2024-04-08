@@ -1,12 +1,13 @@
-import React from 'react';
-import { Icon, Screen, Text } from '$uikit';
-import { StyleSheet, View } from 'react-native';
-import { ns } from '$utils';
-import { t } from '@tonkeeper/shared/i18n';
-import { CellSection, CellSectionItem } from '$shared/components';
-import { FiatCurrencySymbolsConfig, WalletCurrency } from '@tonkeeper/core';
-import { tk } from '$wallet';
-import { useWalletCurrency, useWallets } from '@tonkeeper/shared/hooks';
+import React from "react";
+import { Icon, Screen, Text } from "$uikit";
+import { StyleSheet, View } from "react-native";
+import { ns } from "$utils";
+import { t } from "@tonkeeper/shared/i18n";
+import { CellSection, CellSectionItem } from "$shared/components";
+import { FiatCurrencySymbolsConfig, WalletCurrency } from "@tonkeeper/core";
+import { tk } from "$wallet";
+import { useWalletCurrency, useWallets } from "@tonkeeper/shared/hooks";
+import { colors } from "../constants/colors";
 
 export const ChooseCurrencyScreen: React.FC = () => {
   const fiatCurrency = useWalletCurrency();
@@ -24,12 +25,12 @@ export const ChooseCurrencyScreen: React.FC = () => {
         wallet.jettons.reload();
       });
     },
-    [wallets],
+    [wallets]
   );
 
   return (
     <Screen>
-      <Screen.Header title={t('choose_currency.header_title')} />
+      <Screen.Header title={t("choose_currency.header_title")} />
       <Screen.ScrollView>
         <CellSection>
           {currencies.map((currency) => (
@@ -44,8 +45,10 @@ export const ChooseCurrencyScreen: React.FC = () => {
                 </>
               }
               content={
-                <View style={styles.item}>
-                  <Text variant="label1">{currency.toUpperCase()}</Text>
+                <View style={[styles.item]}>
+                  <Text style={{ color: colors.Black }} variant="label1">
+                    {currency.toUpperCase()}
+                  </Text>
                   <Text
                     style={styles.currencyCaptionText}
                     color="foregroundSecondary"
@@ -66,7 +69,7 @@ export const ChooseCurrencyScreen: React.FC = () => {
 const styles = StyleSheet.create({
   item: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   currencyCaptionText: {
     paddingLeft: ns(8),

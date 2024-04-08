@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   InternalNotification,
   Screen,
@@ -7,15 +7,15 @@ import {
   SwitchItem,
   Text,
   View,
-} from '$uikit';
-import { ns } from '$utils';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { CellSection } from '$shared/components';
-import { t } from '@tonkeeper/shared/i18n';
-import { useConnectedAppsList } from '$store';
-import { Steezy } from '$styles';
-import { SwitchDAppNotifications } from '$core/Notifications/SwitchDAppNotifications';
-import { useNotificationsSwitch } from '$hooks/useNotificationsSwitch';
+} from "$uikit";
+import { ns } from "$utils";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { CellSection } from "$shared/components";
+import { t } from "@tonkeeper/shared/i18n";
+import { useConnectedAppsList } from "$store";
+import { Steezy } from "$styles";
+import { SwitchDAppNotifications } from "$core/Notifications/SwitchDAppNotifications";
+import { useNotificationsSwitch } from "$hooks/useNotificationsSwitch";
 
 export const Notifications: React.FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -25,7 +25,7 @@ export const Notifications: React.FC = () => {
 
   return (
     <Screen>
-      <Screen.Header title={t('notifications_title')} />
+      <Screen.Header title={t("notifications_title")} />
       <Screen.ScrollView
         contentContainerStyle={{
           paddingHorizontal: ns(16),
@@ -35,18 +35,18 @@ export const Notifications: React.FC = () => {
         {isDenied && (
           <View style={{ marginBottom: 16 }}>
             <InternalNotification
-              title={t('notifications_disabled_title')}
-              caption={t('notifications_disabled_description')}
-              action={t('notifications_disabled_action')}
-              mode={'warning'}
+              title={t("notifications_disabled_title")}
+              caption={t("notifications_disabled_description")}
+              action={t("notifications_disabled_action")}
+              mode={"warning"}
               onPress={openSettings}
             />
           </View>
         )}
         <CellSection sectionStyle={styles.notificationsSection.static}>
           <SwitchItem
-            title={t('notifications_switch_title')}
-            subtitle={t('notification_switch_description')}
+            title={t("notifications_switch_title")}
+            subtitle={t("notification_switch_description")}
             disabled={isDenied}
             onChange={toggleNotifications}
             value={isSubscribed}
@@ -55,10 +55,10 @@ export const Notifications: React.FC = () => {
         {connectedApps.length ? (
           <>
             <View style={styles.title}>
-              <Text variant="h3">{t('notifications.apps')}</Text>
+              <Text variant="h3">{t("notifications.apps")}</Text>
               <Spacer y={4} />
               <Text color="textSecondary" variant="body2">
-                {t('notifications.apps_description')}
+                {t("notifications.apps_description")}
               </Text>
             </View>
             <CellSection>

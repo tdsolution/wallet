@@ -1,16 +1,26 @@
-import React, { FC, forwardRef, PropsWithChildren, ReactNode, useMemo } from 'react';
+import React, {
+  FC,
+  forwardRef,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+} from "react";
 
-import * as S from './CellSection.style';
-import { CellProps } from './CellSection.interface';
-import { Icon, Separator, Text } from '$uikit';
-import { StyleProp, ViewStyle } from 'react-native';
+import * as S from "./CellSection.style";
+import { CellProps } from "./CellSection.interface";
+import { Icon, Separator, Text } from "$uikit";
+import { StyleProp, ViewStyle } from "react-native";
+import { colors } from "../../../constants/colors";
 
 export interface CellSectionProps {
   sectionStyle?: StyleProp<ViewStyle>;
   children: ReactNode;
 }
 
-export const CellSection: FC<CellSectionProps> = ({ children, sectionStyle }) => {
+export const CellSection: FC<CellSectionProps> = ({
+  children,
+  sectionStyle,
+}) => {
   const items = useMemo(() => {
     return React.Children.map(children, (node, i) => {
       if (!React.isValidElement(node)) {
@@ -48,7 +58,21 @@ export const CellSectionItem = forwardRef<any, PropsWithChildren<CellProps>>(
             flex: 1,
           }}
         >
-          <S.SectionItemInner>
+          <S.SectionItemInner
+            style={{
+              backgroundColor: "#ffffff",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+              shadowOpacity: 0.29,
+              shadowRadius: 4.65,
+
+              elevation: 20,
+              // borderRadius: 15,
+            }}
+          >
             <S.SectionItemTitleWrap>
               {content ? (
                 content
@@ -59,11 +83,13 @@ export const CellSectionItem = forwardRef<any, PropsWithChildren<CellProps>>(
               )}
               {inlineContent}
             </S.SectionItemTitleWrap>
-            {!!indicator && <S.SectionItemIndicator>{indicator}</S.SectionItemIndicator>}
-            {!!icon && <Icon name={icon} color="accentPrimary" />}
+            {!!indicator && (
+              <S.SectionItemIndicator>{indicator}</S.SectionItemIndicator>
+            )}
+            {!!icon && <Icon name={icon} color="iconPrimary" />}
           </S.SectionItemInner>
         </S.SectionItem>
       </>
     );
-  },
+  }
 );

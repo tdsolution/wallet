@@ -1,21 +1,21 @@
-import React, { FC, useCallback, useMemo } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LayoutChangeEvent, View } from 'react-native';
+import React, { FC, useCallback, useMemo } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LayoutChangeEvent, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import * as S from './NavBar.style';
-import { NavBarProps } from './NavBar.interface';
-import { goBack } from '$navigation/imperative';
-import { Icon } from '../Icon/Icon';
-import { useTheme } from '$hooks/useTheme';
-import { NavBarHeight } from '$shared/constants';
-import { hNs } from '$utils';
-import { Text } from '../Text/Text';
-import { Steezy } from '@tonkeeper/uikit';
+import * as S from "./NavBar.style";
+import { NavBarProps } from "./NavBar.interface";
+import { goBack } from "$navigation/imperative";
+import { Icon } from "../Icon/Icon";
+import { useTheme } from "$hooks/useTheme";
+import { NavBarHeight } from "$shared/constants";
+import { hNs } from "$utils";
+import { Text } from "../Text/Text";
+import { Steezy } from "@tonkeeper/uikit";
 
 export const NavBarHelper: FC = () => {
   const { top } = useSafeAreaInsets();
@@ -71,19 +71,21 @@ export const NavBar: FC<NavBarProps> = (props) => {
 
   const iconName = useMemo(() => {
     if (isCancelButton) {
-      return 'ic-close-16';
+      return "ic-close-16";
     } else if ((isModal && !isForceBackIcon) || isBottomButton) {
-      return 'ic-chevron-down-16';
+      return "ic-chevron-down-16";
     } else {
-      return 'ic-chevron-left-16';
+      return "ic-chevron-left-16";
     }
   }, [isModal, isForceBackIcon, isBottomButton, isCancelButton]);
 
   const borderStyle = useAnimatedStyle(() => {
     return {
       borderBottomColor:
-        scrollTop && scrollTop.value > 0 ? theme.colors.border : 'transparent',
-      backgroundColor: withBackground ? theme.colors.backgroundPrimary : undefined,
+        scrollTop && scrollTop.value > 0 ? theme.colors.border : "transparent",
+      backgroundColor: withBackground
+        ? theme.colors.backgroundPrimary
+        : undefined,
     };
   });
 
@@ -91,7 +93,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
     if (rightContent) {
       return (
         <S.RightContent>
-          {typeof rightContent === 'function' ? rightContent() : rightContent}
+          {typeof rightContent === "function" ? rightContent() : rightContent}
         </S.RightContent>
       );
     }
@@ -115,14 +117,14 @@ export const NavBar: FC<NavBarProps> = (props) => {
     () => ({
       opacity: withTiming(hideBackButton ? 0 : 1),
     }),
-    [hideBackButton],
+    [hideBackButton]
   );
 
   const titleAnimatedStyle = useAnimatedStyle(
     () => ({
       opacity: withTiming(children && !hideTitle ? 1 : 0),
     }),
-    [children, hideTitle],
+    [children, hideTitle]
   );
 
   const subtitleHeight = useSharedValue(0);
@@ -135,16 +137,16 @@ export const NavBar: FC<NavBarProps> = (props) => {
 
   const subtitleAnimatedStyle = useAnimatedStyle(
     () => ({
-      position: 'relative',
+      position: "relative",
       height: hasSubtitle
         ? withTiming(subtitleHeight.value, { duration: 100 })
         : withTiming(0, { duration: 100 }),
     }),
-    [hasSubtitle],
+    [hasSubtitle]
   );
 
   const isSmallTitle =
-    !forceBigTitle && typeof children === 'string' && children.length > 18;
+    !forceBigTitle && typeof children === "string" && children.length > 18;
 
   return (
     <S.Wrap
@@ -154,7 +156,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
     >
       {isTransparent && (
         <S.Gradient
-          colors={[theme.colors.backgroundPrimary, 'rgba(21, 28, 41, 0)']}
+          colors={[theme.colors.backgroundPrimary, "rgba(21, 28, 41, 0)"]}
           locations={[0, 1]}
         />
       )}
@@ -169,12 +171,12 @@ export const NavBar: FC<NavBarProps> = (props) => {
             </S.BackButton>
           </S.BackButtonContainer>
           <S.CenterContent style={titleAnimatedStyle}>
-            {typeof children === 'string' ? (
+            {typeof children === "string" ? (
               <Text
                 textAlign="center"
-                variant={isSmallTitle ? 'label1' : 'h3'}
+                variant={isSmallTitle ? "label1" : "h3"}
                 numberOfLines={1}
-                style={{color:'#4871EA'}}
+                style={{ color: "#4871EA" }}
                 {...titleProps}
               >
                 {children}
@@ -207,7 +209,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
 
 const styles = Steezy.create({
   subtitle: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
   },
 });

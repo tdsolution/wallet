@@ -1,10 +1,11 @@
-import { useUnlockVault } from '@tonkeeper/mobile/src/core/ModalContainer/NFTOperations/useUnlockVault';
-import { useNavigation } from '@tonkeeper/router';
-import { Button, Modal, Spacer, Steezy, Text, View } from '@tonkeeper/uikit';
-import { memo, useCallback } from 'react';
-import { MainStackRouteNames } from '$navigation';
-import { t } from '@tonkeeper/shared/i18n';
-import { delay } from '$utils';
+import { useUnlockVault } from "@tonkeeper/mobile/src/core/ModalContainer/NFTOperations/useUnlockVault";
+import { useNavigation } from "@tonkeeper/router";
+import { Button, Modal, Spacer, Steezy, Text, View } from "@tonkeeper/uikit";
+import { memo, useCallback } from "react";
+import { MainStackRouteNames } from "$navigation";
+import { t } from "@tonkeeper/shared/i18n";
+import { delay } from "$utils";
+import { colors } from "../constants/colors";
 
 interface BackupWarningModalProps {
   isBackupAgain?: boolean;
@@ -33,50 +34,68 @@ export const BackupWarningModal = memo<BackupWarningModalProps>((props) => {
   return (
     <Modal>
       <Modal.Header />
-      <Modal.Content safeArea>
-        <View style={styles.container}>
-          <Text type="h2" textAlign="center">
-            {t('backup_warning.title')}
-          </Text>
-          <Spacer y={4} />
-          <Text
-            style={styles.desk.static}
-            type="body1"
-            color="textSecondary"
-            textAlign="center"
-          >
-            {t('backup_warning.caption')}
-          </Text>
-          <View style={styles.content}>
-            <View style={styles.paragraph}>
-              <View style={styles.dot} />
-              <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p1')}
-              </Text>
+      <View style={{ backgroundColor: colors.White }}>
+        <Modal.Content safeArea>
+          <View style={styles.container}>
+            <Text
+              type="h2"
+              textAlign="center"
+              style={{ color: colors.Primary }}
+            >
+              {t("backup_warning.title")}
+            </Text>
+            <Spacer y={4} />
+            <Text
+              style={styles.desk.static}
+              type="body1"
+              color="textSecondary"
+              textAlign="center"
+            >
+              {t("backup_warning.caption")}
+            </Text>
+            <View style={styles.content}>
+              <View style={styles.paragraph}>
+                <View style={[styles.dot, { backgroundColor: colors.Black }]} />
+                <Text
+                  type="body2"
+                  style={[styles.text.static, { color: colors.Black }]}
+                >
+                  {t("backup_warning.p1")}
+                </Text>
+              </View>
+              <View style={styles.paragraph}>
+                <View style={[styles.dot, { backgroundColor: colors.Black }]} />
+                <Text
+                  type="body2"
+                  style={[styles.text.static, { color: colors.Black }]}
+                >
+                  {t("backup_warning.p2")}
+                </Text>
+              </View>
+              <View style={styles.paragraph}>
+                <View style={[styles.dot, { backgroundColor: colors.Black }]} />
+                <Text
+                  type="body2"
+                  style={[styles.text.static, { color: colors.Black }]}
+                >
+                  {t("backup_warning.p3")}
+                </Text>
+              </View>
             </View>
-            <View style={styles.paragraph}>
-              <View style={styles.dot} />
-              <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p2')}
-              </Text>
-            </View>
-            <View style={styles.paragraph}>
-              <View style={styles.dot} />
-              <Text type="body2" style={styles.text.static}>
-                {t('backup_warning.p3')}
-              </Text>
-            </View>
+            <Button
+              title={t("backup_warning.continue_button")}
+              onPress={handleContinue}
+            />
+            <Spacer y={16} />
+            <Button
+              title={t("backup_warning.cancel_button")}
+              color="secondary"
+              onPress={nav.goBack}
+            />
+            <Spacer y={16} />
           </View>
-          <Button title={t('backup_warning.continue_button')} onPress={handleContinue} />
-          <Spacer y={16} />
-          <Button
-            title={t('backup_warning.cancel_button')}
-            color="secondary"
-            onPress={nav.goBack}
-          />
-          <Spacer y={16} />
-        </View>
-      </Modal.Content>
+        </Modal.Content>
+      </View>
     </Modal>
   );
 });
@@ -89,14 +108,24 @@ const styles = Steezy.create(({ colors }) => ({
   content: {
     marginTop: 32,
     marginVertical: 32,
-    backgroundColor: colors.backgroundContent,
+    // backgroundColor: colors.backgroundContent,
+    backgroundColor: "#ffffff",
     borderRadius: 16,
     paddingVertical: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.51,
+    shadowRadius: 13.16,
+
+    elevation: 20,
   },
   paragraph: {
     marginLeft: 21,
     marginVertical: 8,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   desk: {
     paddingHorizontal: 16,
