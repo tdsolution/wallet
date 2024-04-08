@@ -14,6 +14,7 @@ import {
   Button,
 } from "@tonkeeper/uikit";
 import { tk } from "$wallet";
+import { colors } from "../../constants/colors";
 
 export const BackupCheckPhraseScreen = memo(() => {
   const { words } = useParams<{ words: { index: number; word: string }[] }>();
@@ -93,7 +94,7 @@ export const BackupCheckPhraseScreen = memo(() => {
         keyboardDismissMode="none"
       >
         <Screen.HeaderIndent />
-        <Text type="h2" textAlign="center">
+        <Text type="h2" textAlign="center" style={{color: colors.Primary}}>
           {t("backup_check.title")}
         </Text>
         <Spacer y={4} />

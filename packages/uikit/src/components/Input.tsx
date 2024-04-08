@@ -438,7 +438,7 @@ const styles = Steezy.create(({ colors, corners }) => ({
   input: {
     fontSize: 16,
     fontFamily: Font.Regular,
-    color: colors.textPrimary,
+    color: "black",
     paddingHorizontal: 16 - InputBorderWidth,
     textAlignVertical: "center",
     paddingVertical: 0,

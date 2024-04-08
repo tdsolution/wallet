@@ -160,13 +160,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
           styles.absolute,
         ]}
       >
-        {gradient && (
-          <LinearGradient
-            colors={[theme.backgroundPage, "rgba(21, 28, 41, 0)"]}
-            style={styles.gradient}
-            locations={[0, 1]}
-          />
-        )}
+        
         <Animated.View
           style={[
             styles.innerContainer,
