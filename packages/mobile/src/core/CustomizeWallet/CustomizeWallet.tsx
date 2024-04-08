@@ -215,17 +215,18 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
         <BottomButtonWrapHelper />
       </View>
       <View style={styles.buttonContainer}>
-        <LinearGradient
-          colors={["rgba(21, 28, 41, 0)", theme.backgroundPage]}
-          locations={[0, 1]}
-          style={styles.buttonGradient.static}
-          pointerEvents="none"
-        />
         <Button
           title={t("customize_modal.save")}
           disabled={name.length === 0}
           onPress={handleSave}
         />
+        {/* <LinearGradient
+          colors={["rgba(21, 28, 41, 0)", theme.backgroundPage]}
+          locations={[0, 1]}
+          style={styles.buttonGradient.static}
+          pointerEvents="none"
+        /> */}
+
         <Animated.View style={spacerStyle} />
       </View>
     </Modal>
@@ -233,7 +234,7 @@ export const CustomizeWallet: FC<Props> = memo((props) => {
 });
 
 const styles = Steezy.create(({ colors, safeArea, corners }) => ({
-  container: { flex: 1 },
+  container: { flex: 1,},
   topContainer: {
     paddingTop: 16,
     paddingHorizontal: 32,
@@ -287,10 +288,11 @@ const styles = Steezy.create(({ colors, safeArea, corners }) => ({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: -20,
     paddingHorizontal: 32,
     paddingBottom: 32,
     marginBottom: safeArea.bottom,
+
   },
   buttonGradient: {
     position: "absolute",
