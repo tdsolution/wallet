@@ -1,18 +1,28 @@
-import { openRequireWalletModal } from '$core/ModalContainer/RequireWallet/RequireWallet';
-import { Screen, Text, Button, Icon, List, Spacer, Steezy, View } from '@tonkeeper/uikit';
-import { getNewNotificationsCount } from '$core/Notifications/NotificationsActivity';
-import { useActivityList } from '@tonkeeper/shared/query/hooks';
-import { Notification } from '$core/Notifications/Notification';
-import { openNotificationsScreen } from '$navigation/helper';
-import { ActivityList } from '@tonkeeper/shared/components';
-import { useIsFocused } from '@react-navigation/native';
-import { memo, useCallback, useEffect } from 'react';
-import { useNavigation } from '@tonkeeper/router';
-import { LayoutAnimation } from 'react-native';
-import { t } from '@tonkeeper/shared/i18n';
-import { useWallet } from '@tonkeeper/shared/hooks';
-import { tk } from '$wallet';
-import { useDAppsNotifications } from '$store';
+import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
+import {
+  Screen,
+  Text,
+  Button,
+  Icon,
+  List,
+  Spacer,
+  Steezy,
+  View,
+} from "@tonkeeper/uikit";
+import { getNewNotificationsCount } from "$core/Notifications/NotificationsActivity";
+import { useActivityList } from "@tonkeeper/shared/query/hooks";
+import { Notification } from "$core/Notifications/Notification";
+import { openNotificationsScreen } from "$navigation/helper";
+import { ActivityList } from "@tonkeeper/shared/components";
+import { useIsFocused } from "@react-navigation/native";
+import { memo, useCallback, useEffect } from "react";
+import { useNavigation } from "@tonkeeper/router";
+import { LayoutAnimation } from "react-native";
+import { t } from "@tonkeeper/shared/i18n";
+import { useWallet } from "@tonkeeper/shared/hooks";
+import { tk } from "$wallet";
+import { useDAppsNotifications } from "$store";
+import { colors } from "../../constants/colors";
 
 export const ActivityScreen = memo(() => {
   const activityList = useActivityList();
@@ -20,12 +30,15 @@ export const ActivityScreen = memo(() => {
   const nav = useNavigation();
   const wallet = useWallet();
 
-  const { notifications, lastSeenActivityScreenAt, updateLastSeenActivityScreen } =
-    useDAppsNotifications();
+  const {
+    notifications,
+    lastSeenActivityScreenAt,
+    updateLastSeenActivityScreen,
+  } = useDAppsNotifications();
 
   const handlePressRecevie = useCallback(() => {
     if (wallet) {
-      nav.go('ReceiveModal');
+      nav.go("ReceiveModal");
     } else {
       openRequireWalletModal();
     }
@@ -33,7 +46,7 @@ export const ActivityScreen = memo(() => {
 
   const handlePressBuy = useCallback(() => {
     if (wallet) {
-      nav.openModal('Exchange', { category: 'buy' });
+      nav.openModal("Exchange", { category: "buy" });
     } else {
       openRequireWalletModal();
     }
@@ -74,24 +87,24 @@ export const ActivityScreen = memo(() => {
     return (
       <Screen>
         <View style={styles.emptyContainer}>
-          <Text type="h2" textAlign="center">
-            {t('activity.empty_transaction_title')}
+          <Text type="h2" textAlign="center" style={{ color: colors.Primary }}>
+            {t("activity.empty_transaction_title")}
           </Text>
           <Spacer y={4} />
           <Text type="body1" color="textSecondary">
-            {t('activity.empty_transaction_caption')}
+            {t("activity.empty_transaction_caption")}
           </Text>
           {!isWatchOnly ? (
             <View style={styles.emptyButtons}>
               <Button
-                title={t('activity.buy_toncoin_btn')}
+                title={t("activity.buy_toncoin_btn")}
                 onPress={handlePressBuy}
                 color="secondary"
                 size="small"
               />
               <Spacer x={12} />
               <Button
-                title={t('activity.receive_btn')}
+                title={t("activity.receive_btn")}
                 onPress={handlePressRecevie}
                 color="secondary"
                 size="small"
@@ -105,24 +118,26 @@ export const ActivityScreen = memo(() => {
 
   const newNotificationsCount = getNewNotificationsCount(
     notifications,
-    lastSeenActivityScreenAt,
+    lastSeenActivityScreenAt
   );
 
   const renderNotificationsHeader = notifications.length ? (
     <View>
       <Spacer y={12} />
-      {notifications.slice(0, Math.min(newNotificationsCount, 2)).map((notification) => (
-        <Notification
-          onRemove={onRemoveNotification}
-          notification={notification}
-          key={notification.received_at}
-        />
-      ))}
+      {notifications
+        .slice(0, Math.min(newNotificationsCount, 2))
+        .map((notification) => (
+          <Notification
+            onRemove={onRemoveNotification}
+            notification={notification}
+            key={notification.received_at}
+          />
+        ))}
       <List style={styles.listStyle.static}>
         <List.Item
           leftContent={
             <View style={styles.iconContainer}>
-              <Icon name={'ic-bell-28'} color={'iconSecondary'} />
+              <Icon name={"ic-bell-28"} color={"iconSecondary"} />
             </View>
           }
           rightContent={
@@ -133,8 +148,8 @@ export const ActivityScreen = memo(() => {
             ) : null
           }
           onPress={handleOpenNotificationsScreen}
-          title={t('notifications.notifications')}
-          subtitle={t('notifications.from_connected')}
+          title={t("notifications.notifications")}
+          subtitle={t("notifications.from_connected")}
           chevron
         />
       </List>
@@ -143,7 +158,7 @@ export const ActivityScreen = memo(() => {
 
   return (
     <Screen>
-      <Screen.LargeHeader title={t('activity.screen_title')} />
+      <Screen.LargeHeader title={t("activity.screen_title")} />
       <ActivityList
         key={wallet.identifier}
         ListHeaderComponent={renderNotificationsHeader}
@@ -162,16 +177,16 @@ export const ActivityScreen = memo(() => {
 const styles = Steezy.create(({ colors }) => ({
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 16,
   },
   emptyButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 24,
   },
   emptyTitleText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 4,
   },
   iconContainer: {
@@ -179,8 +194,8 @@ const styles = Steezy.create(({ colors }) => ({
     height: 44,
     borderRadius: 22,
     backgroundColor: colors.backgroundContentTint,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   notificationsHeader: {},
   notificationsCount: {
@@ -189,8 +204,8 @@ const styles = Steezy.create(({ colors }) => ({
     paddingHorizontal: 7,
     height: 24,
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 8,
   },
   listStyle: {

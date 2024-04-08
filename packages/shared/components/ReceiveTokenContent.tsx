@@ -16,6 +16,7 @@ import {
 } from '@tonkeeper/uikit';
 import { Tag } from '@tonkeeper/mobile/src/uikit';
 import { tk } from '@tonkeeper/mobile/src/wallet';
+import { colors } from '@tonkeeper/mobile/src/constants/colors';
 
 interface ReceiveTokenContentProps {
   address: string;
@@ -63,11 +64,11 @@ export const ReceiveTokenContent = memo<ReceiveTokenContentProps>((props) => {
   return (
     <View>
       <View style={styles.description}>
-        <Text type="h3" textAlign="center">
+        <Text type="h3" textAlign="center" style={{color: colors.Primary}}>
           {title}
         </Text>
         <Spacer y={4} />
-        <Text type="body1" color="textSecondary" textAlign="center">
+        <Text type="body1" color="textSecondary" textAlign="center" style={{color: colors.Gray}}>
           {description}
         </Text>
       </View>

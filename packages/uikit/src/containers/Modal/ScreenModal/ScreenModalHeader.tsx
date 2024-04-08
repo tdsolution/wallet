@@ -69,6 +69,6 @@ const styles = Steezy.create(({ colors }) => ({
     borderRadius: 32 / 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.backgroundContent,
+    backgroundColor: "#4871EA",
   },
 }));

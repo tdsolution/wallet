@@ -5,11 +5,12 @@ import * as S from './ExchangeItem.style';
 import { useExchangeMethodInfo } from '$hooks/useExchangeMethodInfo';
 import { useTheme } from '$hooks/useTheme';
 import { Icon, Text } from '$uikit';
-import { Linking } from 'react-native';
+import { Linking, View } from 'react-native';
 import { t } from '@tonkeeper/shared/i18n';
 import { openExchangeMethodModal } from '$core/ModalContainer/ExchangeMethod/ExchangeMethod';
 import { getCryptoAssetIconSource } from '@tonkeeper/uikit/assets/cryptoAssets';
 import { Pressable, Steezy } from '@tonkeeper/uikit';
+import { colors } from '../../../constants/colors';
 
 export const ExchangeItem: FC<ExchangeItemProps> = ({
   methodId,
@@ -60,8 +61,9 @@ export const ExchangeItem: FC<ExchangeItemProps> = ({
 
   return (
     <S.Wrap>
+      <View style={{backgroundColor: "white"}}>
       <Pressable
-        underlayColor={theme.colors.backgroundTertiary}
+        underlayColor={colors.Gray_Light}
         style={[
           styles.cardPressable,
           topRadius && styles.topBorderRadius,
@@ -74,7 +76,7 @@ export const ExchangeItem: FC<ExchangeItemProps> = ({
           <S.Icon source={{ uri: method.icon_url }} />
           <S.Contain>
             <S.LabelContainer>
-              <Text variant="label1">{method.title}</Text>
+              <Text variant="label1" style={{color: colors.Black}}>{method.title}</Text>
               {isBot ? <S.LabelBadge>{t('exchange_telegram_bot')}</S.LabelBadge> : null}
             </S.LabelContainer>
             {method.assets ? (
@@ -86,7 +88,7 @@ export const ExchangeItem: FC<ExchangeItemProps> = ({
                 ))}
                 {method.assets.length > 3 ? (
                   <S.AssetsCount>
-                    <Text variant="label3" color="textSecondary">
+                    <Text variant="label3" color="textSecondary" style={{color: colors.Gray}}>
                       + {method.assets.length}
                     </Text>
                   </S.AssetsCount>
@@ -109,8 +111,11 @@ export const ExchangeItem: FC<ExchangeItemProps> = ({
           </S.IconContain>
         </S.CardIn>
       </Pressable>
+      </View>
+
       {renderBadge()}
       {!bottomRadius ? <S.Divider /> : null}
+      
     </S.Wrap>
   );
 };

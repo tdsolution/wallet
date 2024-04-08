@@ -1,15 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { List, Screen, View } from '$uikit';
-import { getCountries } from '$utils/countries/getCountries';
-import { ListSeparator } from '$uikit/List/ListSeparator';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useMethodsToBuyStore } from '$store/zustand/methodsToBuy/useMethodsToBuyStore';
-import { goBack } from '$navigation/imperative';
-import { SearchNavBar } from '$core/ChooseCountry/components/SearchNavBar';
-import { SText, Spacer, Steezy, Text, isAndroid } from '@tonkeeper/uikit';
-import { t } from '@tonkeeper/shared/i18n';
-import { Text as RNText } from 'react-native';
-import { getCountry } from 'react-native-localize';
+import React, { useCallback, useMemo, useState } from "react";
+import { List, Screen, View } from "$uikit";
+import { getCountries } from "$utils/countries/getCountries";
+import { ListSeparator } from "$uikit/List/ListSeparator";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useMethodsToBuyStore } from "$store/zustand/methodsToBuy/useMethodsToBuyStore";
+import { goBack } from "$navigation/imperative";
+import { SearchNavBar } from "$core/ChooseCountry/components/SearchNavBar";
+import { SText, Spacer, Steezy, Text, isAndroid } from "@tonkeeper/uikit";
+import { t } from "@tonkeeper/shared/i18n";
+import { Text as RNText } from "react-native";
+import { getCountry } from "react-native-localize";
 
 const CELL_SIZE = 56;
 
@@ -23,13 +23,13 @@ const countriesList = getCountries();
 
 const AUTO_COUNTRY = {
   ...countriesList.find((item) => item.code === getCountry())!,
-  code: 'AUTO',
+  code: "AUTO",
 };
 
 const ALL_REGIONS = {
-  code: '*',
-  name: t('all_regions'),
-  flag: '🌍',
+  code: "*",
+  name: t("all_regions"),
+  flag: "🌍",
 };
 
 const RenderItem = ({
@@ -42,9 +42,11 @@ const RenderItem = ({
   isLast?: boolean;
 }) => {
   const setSelectedCountry = useMethodsToBuyStore(
-    (state) => state.actions.setSelectedCountry,
+    (state) => state.actions.setSelectedCountry
   );
-  const selectedCountry = useMethodsToBuyStore((state) => state.selectedCountry);
+  const selectedCountry = useMethodsToBuyStore(
+    (state) => state.selectedCountry
+  );
   const handleSelectCountry = useCallback(() => {
     setSelectedCountry(item.code);
     goBack();
@@ -56,14 +58,14 @@ const RenderItem = ({
     styles.containerListItem,
   ];
 
-  const title = item.code === 'AUTO' ? t('choose_country.auto') : item.name;
+  const title = item.code === "AUTO" ? t("choose_country.auto") : item.name;
   let label: string | undefined;
 
-  if (item.code === 'NOKYC') {
-    label = t('nokyc');
+  if (item.code === "NOKYC") {
+    label = t("nokyc");
   }
 
-  if (item.code === 'AUTO') {
+  if (item.code === "AUTO") {
     label = item.name;
   }
 
@@ -81,7 +83,11 @@ const RenderItem = ({
         label={
           label ? (
             <View style={styles.labelContainer}>
-              <SText style={styles.labelText} color="textTertiary" numberOfLines={1}>
+              <SText
+                style={styles.labelText}
+                color="textTertiary"
+                numberOfLines={1}
+              >
                 {label}
               </SText>
             </View>
@@ -94,22 +100,24 @@ const RenderItem = ({
 
 export const ChooseCountry: React.FC = () => {
   const { bottom: bottomInset } = useSafeAreaInsets();
-  const [searchValue, setSearchValue] = React.useState('');
+  const [searchValue, setSearchValue] = React.useState("");
 
-  const lastUsedCountriesCodes = useMethodsToBuyStore((state) => state.lastUsedCountries);
+  const lastUsedCountriesCodes = useMethodsToBuyStore(
+    (state) => state.lastUsedCountries
+  );
 
   const lastUsedCountries = useMemo(
     () =>
       lastUsedCountriesCodes.map(
-        (code) => countriesList.find((country) => country.code === code)!,
+        (code) => countriesList.find((country) => country.code === code)!
       ),
-    [lastUsedCountriesCodes],
+    [lastUsedCountriesCodes]
   );
 
   const filteredListBySearch = useMemo(() => {
     if (searchValue) {
       return countriesList.filter((country) => {
-        const regex = new RegExp(`(?:^|\\\\s|\\b)${searchValue}`, 'gi');
+        const regex = new RegExp(`(?:^|\\\\s|\\b)${searchValue}`, "gi");
         return country.name.match(regex);
       });
     }
@@ -130,7 +138,7 @@ export const ChooseCountry: React.FC = () => {
         setSearchFocused={setSearchFocused}
       />
     ),
-    [searchActive, searchValue],
+    [searchActive, searchValue]
   );
 
   return (
@@ -140,7 +148,7 @@ export const ChooseCountry: React.FC = () => {
         ListEmptyComponent={
           <View style={styles.emptyPlaceholder}>
             <Text color="textTertiary" type="body1" textAlign="center">
-              {t('choose_country.empty_placeholder')}
+              {t("choose_country.empty_placeholder")}
             </Text>
           </View>
         }
@@ -149,7 +157,10 @@ export const ChooseCountry: React.FC = () => {
             <>
               <RenderItem item={AUTO_COUNTRY} isFirst />
               <ListSeparatorItem />
-              <RenderItem item={ALL_REGIONS} isLast={lastUsedCountries.length === 0} />
+              <RenderItem
+                item={ALL_REGIONS}
+                isLast={lastUsedCountries.length === 0}
+              />
               {lastUsedCountries.map((item, index) => (
                 <React.Fragment key={item.code}>
                   <ListSeparatorItem />
@@ -185,7 +196,7 @@ export const ChooseCountry: React.FC = () => {
 const styles = Steezy.create(({ corners, colors }) => ({
   emptyPlaceholder: {
     marginHorizontal: 32,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 56,
   },
   firstListItem: {
@@ -197,7 +208,7 @@ const styles = Steezy.create(({ corners, colors }) => ({
     borderBottomRightRadius: corners.medium,
   },
   containerListItem: {
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: colors.backgroundContent,
     marginHorizontal: 16,
   },
@@ -207,15 +218,15 @@ const styles = Steezy.create(({ corners, colors }) => ({
   flagContainer: {
     width: 28,
     height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: isAndroid ? -2 : -4,
-    position: 'relative',
+    position: "relative",
   },
   flag: {
     top: 0,
     fontSize: isAndroid ? 22 : 28,
-    position: 'absolute',
+    position: "absolute",
   },
   labelContainer: {
     flex: 1,

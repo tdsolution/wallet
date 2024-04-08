@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
-import { ViewStyle } from 'react-native';
-import Animated, { SharedValue } from 'react-native-reanimated';
-import { useMaybeTabCtx } from '../../tabs/Wallet/components/Tabs/TabsContainer';
-import { NavBar } from '../NavBar/NavBar';
-import { useScreenScroll } from './context/ScreenScrollContext';
-import { ScreenLargeHeader } from './ScreenLagreHeader';
+import React, { memo } from "react";
+import { ViewStyle } from "react-native";
+import Animated, { SharedValue } from "react-native-reanimated";
+import { useMaybeTabCtx } from "../../tabs/Wallet/components/Tabs/TabsContainer";
+import { NavBar } from "../NavBar/NavBar";
+import { useScreenScroll } from "./context/ScreenScrollContext";
+import { ScreenLargeHeader } from "./ScreenLagreHeader";
 
 interface ScreenHeaderProps {
   title?: string | React.ReactNode;
@@ -12,7 +12,7 @@ interface ScreenHeaderProps {
   backButton?: boolean;
   large?: boolean;
   customNavBar?: (
-    opacityMainHeaderStyle: SharedValue<number> | undefined,
+    opacityMainHeaderStyle: SharedValue<number> | undefined
   ) => React.ReactNode;
 }
 
