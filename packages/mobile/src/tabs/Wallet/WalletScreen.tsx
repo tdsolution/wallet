@@ -74,12 +74,8 @@ import Title from "../../components/Title";
 import { addressEVMString, shortenWalletAddress } from "$libs/EVM/createWallet";
 import { useBalanceEVM } from "$libs/EVM/useBalanceEVM";
 export const WalletScreen = memo(({ navigation }: any) => {
-  //
   const [addressEvm, setAddressEVM] = useState('');
-  //
   const chain = useChain()?.chain;
-  const balanceEvm = useBalanceEVM();
-  const balanceEvmString = balanceEvm?.balanceEVM.toString() ?? '';
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -92,6 +88,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const shouldUpdate =
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
+  const { balanceEVM, loading } = useBalanceEVM();
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -434,7 +431,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               </View>
               <View style={{ marginTop: 1, marginBottom: 2 }}>
-                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : balanceEvmString} />
+                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : balanceEVM} />
               </View>
               <View
                 style={{
@@ -459,8 +456,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={
-                    // copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))
-                    () => {console.log(balanceEvm?.balanceEVM)}
+                    copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))
                   }
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}

@@ -1,9 +1,9 @@
-import styled, { css } from '$styled';
-import { hNs, nfs, ns, deviceWidth } from '$utils';
-// import appLogo from '$assets/settings_logo.svg';
-import { IsTablet, TabletMaxWidth } from '$shared/constants';
-import { View } from 'react-native';
-import AnimatedLottieView from 'lottie-react-native';
+import styled, { css } from "$styled";
+import { hNs, nfs, ns } from "$utils";
+// import appLogo from "$assets/settings_logo.svg";
+import { IsTablet, TabletMaxWidth } from "$shared/constants";
+import { View } from "react-native";
+import AnimatedLottieView from "lottie-react-native";
 
 export const Wrap = styled.View`
   flex: 1;
@@ -18,17 +18,6 @@ export const Content = styled(View)`
     `}
 `;
 
-export const ContentContainer= styled.View`
-  padding: ${ns(0)}px ${ns(20)}px ${ns(0)}px;
-`;
-
-export const Divider = styled.View`
-  height: ${ns(0.5)}px;
-  width: ${deviceWidth}px;
-  background: rgba(79, 90, 112, 0.24);
-  // margin-bottom: ${ns(24)}px;
-`;
-
 export const AppInfo = styled.View`
   padding: ${ns(0)}px ${ns(32)}px ${ns(8)}px;
   align-items: center;
@@ -39,6 +28,8 @@ export const AppInfoIcon = styled(AnimatedLottieView)`
   width: ${ns(54)}px;
   height: ${ns(54)}px;
   margin-bottom: ${ns(-11)}px;
+  border-radius: ${ns(30)}px;
+  zindex: ${ns(1)}px;
 `;
 
 export const AppInfoTitleWrapper = styled.View`

@@ -1,17 +1,18 @@
-import React from 'react';
-import Animated from 'react-native-reanimated';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import {NavBar, ScrollHandler, Text} from '$uikit';
-import { ns } from '$utils';
-import * as S from './LegalDocuments.style';
-import { t } from '@tonkeeper/shared/i18n';
+import React from "react";
+import Animated from "react-native-reanimated";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { NavBar, ScrollHandler, Text } from "$uikit";
+import { ns } from "$utils";
+import * as S from "./LegalDocuments.style";
+import { t } from "@tonkeeper/shared/i18n";
+import { colors } from "../../constants/colors";
 
 export const FontLicense: React.FC = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
     <S.Wrap>
-      <NavBar>{t('legal_font_license')}</NavBar>
+      <NavBar>{t("legal_font_license")}</NavBar>
       <ScrollHandler>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
@@ -21,7 +22,12 @@ export const FontLicense: React.FC = () => {
           }}
           scrollEventThrottle={16}
         >
-          <Text variant="body2" fontSize={14} lineHeight={24}>
+          <Text
+            variant="body2"
+            fontSize={14}
+            lineHeight={24}
+            style={{ color: colors.Black }}
+          >
             {license.trim()}
           </Text>
         </Animated.ScrollView>

@@ -1,18 +1,18 @@
-import Animated from 'react-native-reanimated';
+import Animated from "react-native-reanimated";
 
-import styled from '$styled';
-import { ns } from '$utils';
-import { AnchorPosition } from './usePopupAnimation';
+import styled from "$styled";
+import { ns } from "$utils";
+import { AnchorPosition } from "./usePopupAnimation";
 
 const getWrapperAlign = (anchor: AnchorPosition) => {
-  if (anchor === 'top-center') {
-    return 'center';
+  if (anchor === "top-center") {
+    return "center";
   }
-  if (anchor === 'top-left') {
-    return 'flex-start';
+  if (anchor === "top-left") {
+    return "flex-start";
   }
 
-  return 'flex-end';
+  return "flex-end";
 };
 
 export const Overlay = styled.TouchableOpacity.attrs({
@@ -40,6 +40,7 @@ export const Item = styled.View`
   height: ${ns(48)}px;
   flex-direction: row;
   align-items: center;
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
 `;
 
 export const ItemCont = styled.View`
