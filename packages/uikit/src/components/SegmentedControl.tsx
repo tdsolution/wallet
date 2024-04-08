@@ -1,15 +1,15 @@
-import { LayoutChangeEvent, LayoutRectangle } from 'react-native';
-import { TouchableOpacity } from './TouchableOpacity';
-import { memo, useCallback, useState } from 'react';
-import { Steezy, StyleProp, useTheme } from '../styles';
-import { Text } from './Text';
-import { View } from './View';
+import { LayoutChangeEvent, LayoutRectangle } from "react-native";
+import { TouchableOpacity } from "./TouchableOpacity";
+import { memo, useCallback, useState } from "react";
+import { Steezy, StyleProp, useTheme } from "../styles";
+import { Text } from "./Text";
+import { View } from "./View";
 import Animated, {
   withTiming,
   useAnimatedStyle,
   withSpring,
-} from 'react-native-reanimated';
-import { StaticStyles } from '@bogoslavskiy/react-native-steezy/dist/types';
+} from "react-native-reanimated";
+import { StaticStyles } from "@bogoslavskiy/react-native-steezy/dist/types";
 
 interface SegmentedControlProps {
   onChange?: (index: number) => void;
@@ -25,7 +25,9 @@ export const SegmentedControl = memo<SegmentedControlProps>((props) => {
 
   const handleItemPress = (index: number) => () => onChange?.(index);
 
-  const [tabsLayouts, setTabsLayouts] = useState<{ [key: string]: LayoutRectangle }>({});
+  const [tabsLayouts, setTabsLayouts] = useState<{
+    [key: string]: LayoutRectangle;
+  }>({});
   const handleLayout = useCallback(
     (index: number) => (event: LayoutChangeEvent) => {
       const layout = event?.nativeEvent?.layout;
@@ -34,7 +36,7 @@ export const SegmentedControl = memo<SegmentedControlProps>((props) => {
         setTabsLayouts((s) => ({ ...s, [`item-${index}`]: layout }));
       }
     },
-    [],
+    []
   );
 
   const indicatorAnimatedStyle = useAnimatedStyle(() => {
@@ -87,19 +89,28 @@ export const SegmentedControl = memo<SegmentedControlProps>((props) => {
 
 const styles = Steezy.create(({ colors, corners }) => ({
   container: {
-    backgroundColor: colors.backgroundContent,
+    backgroundColor: "#C7C8CC",
     padding: 4,
     borderRadius: corners.large,
-    alignSelf: 'center',
-    flexDirection: 'row',
+    alignSelf: "center",
+    flexDirection: "row",
+    shadowColor: "#C7C8CC",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
   item: {
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   indicator: {
-    backgroundColor: colors.buttonTertiaryBackground,
-    position: 'absolute',
+    backgroundColor: colors.primaryColor,
+    position: "absolute",
     top: 4,
     borderRadius: 20,
   },

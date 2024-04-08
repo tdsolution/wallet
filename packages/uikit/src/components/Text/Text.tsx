@@ -2,25 +2,25 @@ import {
   Text as NativeText,
   TextProps as NativeTextProps,
   TextStyle,
-} from 'react-native';
-import Animated, { AnimateProps } from 'react-native-reanimated';
-import { FontWeights, TTextTypes, TextTypes } from './TextStyles';
-import { pickBy, identity } from 'lodash';
-import { Steezy, useTheme } from '../../styles';
-import { memo, useMemo } from 'react';
-import { nfs } from '../../utils';
+} from "react-native";
+import Animated, { AnimateProps } from "react-native-reanimated";
+import { FontWeights, TTextTypes, TextTypes } from "./TextStyles";
+import { pickBy, identity } from "lodash";
+import { Steezy, useTheme } from "../../styles";
+import { memo, useMemo } from "react";
+import { nfs } from "../../utils";
 
 export type TextColors =
-  | 'textPrimary'
-  | 'textSecondary'
-  | 'textTertiary'
-  | 'textAccent'
-  | 'textPrimaryAlternate'
-  | 'accentOrange'
-  | 'accentGreen'
-  | 'accentBlue'
-  | 'constantWhite'
-  | 'constantBlack';
+  | "textPrimary"
+  | "textSecondary"
+  | "textTertiary"
+  | "textAccent"
+  | "textPrimaryAlternate"
+  | "accentOrange"
+  | "accentGreen"
+  | "accentBlue"
+  | "constantWhite"
+  | "constantBlack";
 
 export interface TextProps extends AnimateProps<NativeTextProps> {
   type?: TTextTypes;
@@ -29,7 +29,7 @@ export interface TextProps extends AnimateProps<NativeTextProps> {
   fontWeight?: keyof typeof FontWeights;
   lineHeight?: number;
   reanimated?: boolean;
-  textAlign?: TextStyle['textAlign'];
+  textAlign?: TextStyle["textAlign"];
 }
 
 export const Text = memo<TextProps>((props) => {
@@ -41,8 +41,8 @@ export const Text = memo<TextProps>((props) => {
     lineHeight,
     textAlign,
     reanimated,
-    color: textColor = 'textPrimary',
-    type = 'body1',
+    color: textColor = "textPrimary",
+    type = "body1",
     ...textProps
   } = props;
 
@@ -51,7 +51,7 @@ export const Text = memo<TextProps>((props) => {
   const color = theme[textColor];
   const TextComponent: any = useMemo(
     () => (reanimated ? Animated.Text : NativeText),
-    [reanimated],
+    [reanimated]
   );
 
   const internalStyle = useMemo(() => {
@@ -63,7 +63,7 @@ export const Text = memo<TextProps>((props) => {
         textAlign,
         fontSize: fontSize && nfs(fontSize),
       },
-      identity,
+      identity
     );
   }, [textAlign, color, fontSize, fontWeight, lineHeight, color]);
 

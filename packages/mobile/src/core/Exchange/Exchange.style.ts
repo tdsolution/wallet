@@ -12,6 +12,7 @@ export const Contain = styled.View`
   background: ${({ theme }) => theme.colors.backgroundSecondary};
   margin: 0 ${hNs(16)}px;
   border-radius: ${({ theme }) => ns(theme.radius.normal)}px;
+  overflow: hidden;
 `;
 
 export const HeaderContainer = styled.View`
