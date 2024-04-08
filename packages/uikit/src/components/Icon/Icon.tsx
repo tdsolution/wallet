@@ -44,7 +44,7 @@ export const Icon = memo((props: IconProps) => {
   const sizeStyle = { width: ns(size), height: ns(size) };
   const imageStyle = !colorless
     ? {
-        tintColor: tintColor ?? theme.iconTertiary,
+        tintColor: "white" ?? theme.iconTertiary,
       }
     : undefined;
 
