@@ -1,9 +1,9 @@
-import { Image } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { Image } from "react-native";
+import { BlurView } from "expo-blur";
 
-import styled, { css } from '$styled';
-import { deviceWidth, ns } from '$utils';
-import { IsTablet, Opacity, TabletMaxWidth } from '$shared/constants';
+import styled, { css } from "$styled";
+import { deviceWidth, ns } from "$utils";
+import { IsTablet, Opacity, TabletMaxWidth } from "$shared/constants";
 
 const BorderHorizontalWidth = ns(48);
 const RectSize =
@@ -26,7 +26,7 @@ export const OverlayContainer = styled.View`
 
 export const MaskOverlay = styled.View`
   flex: 1;
-  background-color: #000;
+  background-color: #fff;
   opacity: 0.72;
 `;
 
@@ -77,7 +77,7 @@ const Corner = styled.View`
 `;
 
 export const CornerImage = styled(Image).attrs({
-  source: require('$assets/qr_corner.png'),
+  source: require("$assets/qr_corner.png"),
 })`
   position: absolute;
   top: ${ns(-14)}px;
@@ -85,6 +85,7 @@ export const CornerImage = styled(Image).attrs({
   width: ${ns(60)}px;
   height: ${ns(60)}px;
   z-index: 2;
+  tint-color: #4871ea;
 `;
 
 export const CornerHelper = styled.View`
@@ -95,7 +96,7 @@ export const CornerHelper = styled.View`
   left: 0;
   background: transparent;
   z-index: 1;
-  border-color: rgba(0, 0, 0, 0.72);
+  border-color: rgba(225, 225, 225, 0.72);
   border-top-width: ${ns(3)}px;
   border-left-width: ${ns(3)}px;
 `;
@@ -149,11 +150,11 @@ const FlashlightButtonContStyle = css`
 
 export const FlashlightButtonContBlur = styled.View`
   ${FlashlightButtonContStyle};
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(72, 113, 234, 0.5);
 `;
 
 export const BlurNode = styled(BlurView).attrs({
-  tint: 'dark',
+  tint: "dark",
   intensity: 100,
 })`
   position: absolute;
@@ -166,7 +167,7 @@ export const BlurNode = styled(BlurView).attrs({
 
 export const FlashlightButtonCont = styled.View`
   ${FlashlightButtonContStyle};
-  background: #fff;
+  background: rgba(72, 113, 234, 1);
 `;
 
 export const CloseButtonWrap = styled.TouchableOpacity.attrs({
@@ -182,7 +183,7 @@ export const CloseButtonWrap = styled.TouchableOpacity.attrs({
 `;
 
 export const CloseButton = styled.View`
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(72, 113, 234, 1);
   width: ${ns(32)}px;
   height: ${ns(32)}px;
   border-radius: ${ns(32 / 2)}px;

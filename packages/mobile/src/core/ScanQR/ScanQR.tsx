@@ -1,17 +1,17 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import QRCodeScanner from "react-native-qrcode-scanner";
+import { RNCamera } from "react-native-camera";
 import {
   check,
   PERMISSIONS,
   RESULTS,
   request,
   openSettings,
-} from 'react-native-permissions';
-import { Platform } from 'react-native';
-import { ScanQRProps } from './ScanQR.interface';
-import * as S from './ScanQR.style';
-import { Button, Icon, NavBar, Text } from '$uikit';
+} from "react-native-permissions";
+import { Platform, View } from "react-native";
+import { ScanQRProps } from "./ScanQR.interface";
+import * as S from "./ScanQR.style";
+import { Button, Icon, NavBar, Text } from "$uikit";
 import {
   delay,
   deviceHeight,
@@ -20,11 +20,12 @@ import {
   triggerImpactLight,
   triggerNotificationSuccess,
   triggerSelection,
-} from '$utils';
-import { BottomButtonWrap, BottomButtonWrapHelper } from '$shared/components';
-import { useTheme } from '$hooks/useTheme';
-import { useNavigation } from '@tonkeeper/router';
-import { t } from '@tonkeeper/shared/i18n';
+} from "$utils";
+import { BottomButtonWrap, BottomButtonWrapHelper } from "$shared/components";
+import { useTheme } from "$hooks/useTheme";
+import { useNavigation } from "@tonkeeper/router";
+import { t } from "@tonkeeper/shared/i18n";
+import { colors } from "../../constants/colors";
 
 export const ScanQR: FC<ScanQRProps> = ({ route }) => {
   const nav = useNavigation();
@@ -32,7 +33,6 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
   const scannerRef = useRef<QRCodeScanner>(null);
 
   const theme = useTheme();
-  
 
   const [isFlashlightOn, setFlashlightOn] = useState(false);
   const [isCameraBlocked, setCameraBlocked] = useState(false);
@@ -106,14 +106,17 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
             <Icon name="ic-camera-84" color="accentPrimary" />
             <S.ErrorTextWrapper>
               <Text variant="h2" textAlign="center">
-                {t('scan_qr_permission_error')}
+                {t("scan_qr_permission_error")}
               </Text>
             </S.ErrorTextWrapper>
           </S.ErrorContent>
           <BottomButtonWrapHelper />
           <BottomButtonWrap>
-            <Button onPress={handleOpenSettings} style={{ marginHorizontal: ns(16) }}>
-              {t('scan_qr_open_settings')}
+            <Button
+              onPress={handleOpenSettings}
+              style={{ marginHorizontal: ns(16) }}
+            >
+              {t("scan_qr_open_settings")}
             </Button>
           </BottomButtonWrap>
         </S.ErrorWrap>
@@ -162,8 +165,9 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
               allowFontScaling={false}
               color="foregroundPrimary"
               variant="h2"
+              style={{ color: colors.Primary }}
             >
-              {t('scan_qr_title')}
+              {t("scan_qr_title")}
             </Text>
           </S.TitleWrapper>
 
@@ -200,7 +204,7 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
           <S.FlashlightButton onPress={toggleLanternHandle}>
             {isFlashlightOn ? (
               <S.FlashlightButtonCont>
-                <Icon name="ic-flashlight-off-56" color="constantDark" />
+                <Icon name="ic-flashlight-off-56" color="foregroundPrimary" />
               </S.FlashlightButtonCont>
             ) : (
               <S.FlashlightButtonContBlur>
