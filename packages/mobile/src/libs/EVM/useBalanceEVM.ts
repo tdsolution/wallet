@@ -12,7 +12,6 @@ const fetchBalance = async () => {
         const storedChainActive = await AsyncStorage.getItem(chainActive) ?? '';
         const addressWallet = await AsyncStorage.getItem('EVMAddress') ?? '';
         const storedChain = JSON.parse(storedChainActive);
-        console.log(storedChain.rpc);
         const rpc = storedChain.rpc;
         const provider = new JsonRpcProvider(rpc);
         const balanceResponse = await provider.getBalance(addressEVMString(addressWallet));
