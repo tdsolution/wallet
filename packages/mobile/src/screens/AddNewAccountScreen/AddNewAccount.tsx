@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 // import * as S from "../AccessConfirmation/AccessConfirmation.style";
@@ -28,8 +28,18 @@ import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
+import SaveListWallet from "$libs/EVM/SaveWallet";
 
 export const AddNewAccount: FC = () => {
+  const [data2,setdata2] = useState(null);
+  useEffect(() => {
+    async function getdata() {
+        const data = await SaveListWallet.getData();
+        setdata2(data);
+    }
+    getdata();
+ }, []);
+  console.log(data2);
   const params = useParams<{ isImport?: boolean }>();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -94,7 +104,7 @@ export const AddNewAccount: FC = () => {
         <Text style={styles.textBody}>Multi-coin wallets</Text>
 
         <FlatList
-          data={data}
+          data={data2}
           renderItem={renderItem}
           keyExtractor={(item) => item.privateKey.toString()}
           ListFooterComponent={<View style={{ height: 150 }} />}
