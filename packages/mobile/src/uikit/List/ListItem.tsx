@@ -217,6 +217,7 @@ const styles = Steezy.create(({ colors }) => ({
   },
   titleText: {
     flexShrink: 1,
+    color: 'black'
   },
   titleTextContainer: {
     flexDirection: 'row',

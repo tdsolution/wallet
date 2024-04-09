@@ -1,5 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { t } from '@tonkeeper/shared/i18n';
+import React, { useCallback, useRef } from "react";
+import { t } from "@tonkeeper/shared/i18n";
 import {
   SearchInput,
   Spacer,
@@ -7,11 +7,14 @@ import {
   Text,
   TextInputRef,
   TouchableOpacity,
-} from '@tonkeeper/uikit';
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
-import { useTheme } from '$hooks/useTheme';
-import { LayoutAnimation, StyleSheet } from 'react-native';
-import { NavBar } from '$uikit';
+} from "@tonkeeper/uikit";
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { useTheme } from "$hooks/useTheme";
+import { LayoutAnimation, StyleSheet } from "react-native";
+import { NavBar } from "$uikit";
 
 export interface SearchNavBarProps {
   value: string;
@@ -26,7 +29,9 @@ export const SearchNavBar: React.FC<SearchNavBarProps> = (props) => {
   const borderStyle = useAnimatedStyle(() => {
     return {
       borderBottomColor:
-        props.scrollY && props.scrollY.value > 0 ? theme.colors.border : 'transparent',
+        props.scrollY && props.scrollY.value > 0
+          ? theme.colors.border
+          : "transparent",
     };
   });
 
@@ -51,7 +56,7 @@ export const SearchNavBar: React.FC<SearchNavBarProps> = (props) => {
   }, [setSearchFocused]);
 
   const handleCancelPress = useCallback(() => {
-    onChangeText('');
+    onChangeText("");
     inputRef.current?.blur();
   }, [onChangeText]);
 
@@ -59,7 +64,7 @@ export const SearchNavBar: React.FC<SearchNavBarProps> = (props) => {
     <Animated.View style={[styles.borderContainer.static, borderStyle]}>
       {!searchActive ? (
         <NavBar isModal isClosedButton hideBackButton forceBigTitle>
-          {t('choose_country.title')}
+          {t("choose_country.title")}
         </NavBar>
       ) : (
         <Spacer y={16} />
@@ -75,9 +80,12 @@ export const SearchNavBar: React.FC<SearchNavBarProps> = (props) => {
         {searchActive ? (
           <>
             <Spacer x={16} />
-            <TouchableOpacity onPress={handleCancelPress} style={styles.cancelContainer}>
+            <TouchableOpacity
+              onPress={handleCancelPress}
+              style={styles.cancelContainer}
+            >
               <Text color="accentBlue" type="label1">
-                {t('choose_country.cancel')}
+                {t("choose_country.cancel")}
               </Text>
             </TouchableOpacity>
           </>
@@ -89,9 +97,9 @@ export const SearchNavBar: React.FC<SearchNavBarProps> = (props) => {
 
 const styles = Steezy.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
     top: 0,
     bottom: 0,
     left: 0,
@@ -102,7 +110,7 @@ const styles = Steezy.create({
   borderContainer: {
     zIndex: 2,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'transparent',
+    borderBottomColor: "transparent",
   },
   cancelContainer: {
     padding: 16,

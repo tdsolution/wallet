@@ -209,8 +209,18 @@ const styles = Steezy.create(({ corners, colors }) => ({
   },
   containerListItem: {
     overflow: "hidden",
-    backgroundColor: colors.backgroundContent,
+    backgroundColor: "white",
     marginHorizontal: 16,
+    gap: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
   separatorContainer: {
     marginHorizontal: 16,
@@ -233,5 +243,6 @@ const styles = Steezy.create(({ corners, colors }) => ({
   },
   labelText: {
     marginLeft: 8,
+    color: "gray",
   },
 }));
