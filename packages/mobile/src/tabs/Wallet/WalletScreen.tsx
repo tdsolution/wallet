@@ -71,8 +71,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
-import { addressEVMString, shortenWalletAddress } from "$libs/EVM/createWallet";
-import { useBalanceEVM } from "$libs/EVM/useBalanceEVM";
+import { addressEVMString, getInfoToken, shortenWalletAddress } from "$libs/EVM/createWallet";
+import { useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState('');
   const chain = useChain()?.chain;
@@ -88,7 +88,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const shouldUpdate =
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
-  const { balanceEVM, loading } = useBalanceEVM();
+  const balanceEVM = useBalanceEVMDemo('0xEa5007831646fa01C7079B15cFa4c62748905b04', chain.rpc);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
