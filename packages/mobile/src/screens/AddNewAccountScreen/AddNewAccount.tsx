@@ -29,6 +29,7 @@ import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import SaveListWallet from "$libs/EVM/SaveWallet";
+import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
 
 export const AddNewAccount: FC = () => {
   const [data2,setdata2] = useState(null);
@@ -40,6 +41,7 @@ export const AddNewAccount: FC = () => {
     getdata();
  }, []);
   console.log(data2);
+  const [text, onChangeText] = React.useState('');
   const params = useParams<{ isImport?: boolean }>();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -71,7 +73,6 @@ export const AddNewAccount: FC = () => {
     },
     [dispatch, isImport]
   );
-
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAddAccount, setModalAddAccount] = useState(false);
@@ -320,7 +321,8 @@ export const AddNewAccount: FC = () => {
               wallet.
             </Text>
             <View style={{ width: "100%" }}>
-              <TextInput style={styles.input} placeholder="Your private key" />
+              <TextInput style={styles.input} placeholder="Your private key" onChangeText={onChangeText}
+        value={text}/>
               <TouchableOpacity
                 style={{ position: "absolute", right: 10, top: 10 }}
               >
@@ -330,7 +332,7 @@ export const AddNewAccount: FC = () => {
                 />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.buttonAdd}>
+            <TouchableOpacity style={styles.buttonAdd} onPress={() => createWalletFromPrivateKey(text)}>
               <Text style={styles.textButtonAdd}>Add</Text>
             </TouchableOpacity>
           </View>
