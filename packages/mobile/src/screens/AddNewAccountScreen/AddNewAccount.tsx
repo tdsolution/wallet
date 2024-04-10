@@ -28,43 +28,28 @@ import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
+import ModalChooseAddWallet from "./Item/ModalChooseAddWallet";
+import ModalConnectWallet from "./Item/ModalConnectWallet";
+import ModalAddAccount from "./Item/ModalAddAccount";
 
 export const AddNewAccount: FC = () => {
-  const params = useParams<{ isImport?: boolean }>();
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const isImport = !!params.isImport;
-
-  const handlePinCreated = useCallback(
-    async (pin: string) => {
-      BlockingLoader.show();
-      dispatch(
-        walletActions.createWallet({
-          pin,
-          onDone: (identifiers) => {
-            if (isImport) {
-              tk.saveLastBackupTimestampAll(identifiers);
-            }
-            if (tk.wallet.notifications.isAvailable) {
-              openSetupNotifications(identifiers);
-            } else {
-              openSetupWalletDone(identifiers);
-            }
-            BlockingLoader.hide();
-          },
-          onFail: () => {
-            BlockingLoader.hide();
-          },
-        })
-      );
-    },
-    [dispatch, isImport]
-  );
-
-  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAddAccount, setModalAddAccount] = useState(false);
+
+  const handleCloseChooseWallet = () => {
+    setModalVisible(false);
+  };
+
+  const handleCloseConnectWallet = () => {
+    setPopupVisible(false);
+  };
+
+  const handleCloseAddAccount = () => {
+    setModalAddAccount(false);
+  };
 
   const renderItem = ({ item }) => (
     <ItemAccount item={item} onPress={() => setPopupVisible(true)} />
@@ -90,7 +75,7 @@ export const AddNewAccount: FC = () => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{ paddingHorizontal: 25 }}>
+      <View style={{ paddingHorizontal: 25, marginTop: 37 }}>
         <Text style={styles.textBody}>Multi-coin wallets</Text>
 
         <FlatList
@@ -102,230 +87,15 @@ export const AddNewAccount: FC = () => {
         />
       </View>
       {/* Modal Connect Wallet Start */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isPopupVisible}
-        onRequestClose={() => setPopupVisible(false)}
-      >
-        <Pressable
-          // onPress={() => setPopupVisible(false)}
-          style={{
-            position: "absolute",
-            backgroundColor: "#ffffff",
-            opacity: 0.5,
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        ></Pressable>
-        <View
-          style={{
-            position: "absolute",
-            backgroundColor: "#ffffff",
-            height: 450,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1,
-          }}
-        >
-          <View style={{ padding: 25 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity onPress={() => setPopupVisible(false)}>
-                <Image
-                  source={require("../../assets/icons/png/ic_cancel_connect.png")}
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-              <Text style={styles.textHeader}>Connect Wallet</Text>
-              <Text></Text>
-            </View>
-            <View style={{ alignItems: "center", marginTop: 27 }}>
-              <Image
-                source={require("../../assets/logo/img_connect_wallet.png")}
-                style={styles.image}
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.box}
-              // onPress={() => navigation.navigate(CreateWalletStackRouteNames.Backup)}
-            >
-              <Image
-                source={require("../../assets/logo/img_create.png")}
-                style={styles.iconPlus}
-              />
-              <View style={{ width: "80%" }}>
-                <Text style={styles.title}>Create new wallet</Text>
-                <Text style={styles.body}>Secret phrase or swift wallet</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.box}
-              // onPress={() => navigation.navigate(CreateWalletStackRouteNames.Backup)}
-            >
-              <Image
-                source={require("../../assets/logo/img_create.png")}
-                style={styles.iconPlus}
-              />
-              <View style={{ width: "80%" }}>
-                <Text style={styles.title}>Add existing wallet</Text>
-                <Text style={styles.body}>Import, restore or view-only</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <ModalConnectWallet modalVisible={popupVisible} onClose={handleCloseConnectWallet} />
       {/* Modal Connect Wallet End */}
 
       {/* Modal Add A Secondary Wallet Start */}
-      <Modal
-        animationType="slide" // Loại animation khi mở/closed modal
-        transparent={true} // Cho phép modal trở nên trong suốt
-        visible={modalVisible} // Trạng thái của modal (true: hiển thị, false: ẩn)
-        onRequestClose={() => {
-          setModalVisible(false); // Xử lý khi người dùng ấn nút back hoặc click bên ngoài modal
-        }}
-      >
-        <Pressable
-          style={styles.modalContainer}
-          // onPress={() => setModalVisible(false)}
-        >
-          <View style={styles.modaleHeader}>
-            <View style={styles.rowHeader}>
-              <View></View>
-              <Text
-                style={[
-                  globalStyles.textHeader,
-                  { color: colors.White, fontSize: 16 },
-                ]}
-              >
-                Add a secondary wallet
-              </Text>
-              <TouchableOpacity
-                style={styles.boxClose}
-                onPress={() => setModalVisible(false)}
-              >
-                <Image
-                  style={styles.iconCancel}
-                  source={require("../../assets/icons/png/ic_cancel.png")}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                onPress={() => setModalAddAccount(true)}
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 10,
-                }}
-              >
-                <View style={styles.boxImageModal}>
-                  <Image
-                    style={styles.iconAdd}
-                    source={require("../../assets/icons/png/ic-key-28.png")}
-                  />
-                </View>
-                <Text style={styles.textButton}>
-                  Add wallet with private key
-                </Text>
-              </TouchableOpacity>
-              <View
-                style={{ borderBottomWidth: 0.5, borderColor: colors.Gray }}
-              ></View>
-              <TouchableOpacity
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 10,
-                }}
-              >
-                <View
-                  style={[styles.boxImageModal, { backgroundColor: "#0F6292" }]}
-                >
-                  <Image
-                    style={styles.iconAdd}
-                    source={require("../../assets/icons/png/ic-plus-28.png")}
-                  />
-                </View>
-                <Text style={styles.textButton}>Add a new wallet</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Pressable>
-      </Modal>
+      <ModalChooseAddWallet modalVisible={modalVisible} onClose={handleCloseChooseWallet}/>
       {/* Modal Add A Secondary Wallet End */}
 
       {/* Modal Add Accont Start */}
-      <Modal
-        animationType="slide" // Loại animation khi mở/closed modal
-        transparent={true} // Cho phép modal trở nên trong suốt
-        visible={modalAddAccount} // Trạng thái của modal (true: hiển thị, false: ẩn)
-        onRequestClose={() => {
-          setModalAddAccount(false); // Xử lý khi người dùng ấn nút back hoặc click bên ngoài modal
-        }}
-      >
-        <Pressable
-          style={styles.modalContainerAdd}
-          // onPress={() => setModalAddAccount(false)}
-        >
-          <View style={styles.modalContentAdd}>
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <View></View>
-              <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
-                Add account
-              </Text>
-              <TouchableOpacity onPress={() => setModalAddAccount(false)}>
-                <Image
-                  style={[
-                    styles.iconCancel,
-                    { tintColor: colors.Black, width: 30, height: 30 },
-                  ]}
-                  source={require("../../assets/icons/png/ic_cancel.png")}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.subtitle}>
-              TD Wallet cannot recover your password. To validate your
-              ownership, restore your wallet and set up a new password. First,
-              enter the Private Key that you were given where you created your
-              wallet.
-            </Text>
-            <View style={{ width: "100%" }}>
-              <TextInput style={styles.input} placeholder="Your private key" />
-              <TouchableOpacity
-                style={{ position: "absolute", right: 10, top: 10 }}
-              >
-                <Image
-                  style={[styles.iconInput]}
-                  source={require("../../assets/icons/png/ic_cancel.png")}
-                />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.buttonAdd}>
-              <Text style={styles.textButtonAdd}>Add</Text>
-            </TouchableOpacity>
-          </View>
-        </Pressable>
-      </Modal>
+      <ModalAddAccount modalVisible={modalAddAccount} onClose={handleCloseAddAccount} />
       {/* Modal Add Accont Start */}
     </SafeAreaView>
   );
@@ -405,138 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     resizeMode: "contain",
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
-  },
-  modalContent: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#fff",
-    padding: 20,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-  },
-  modaleHeader: {
-    width: "100%",
-    height: "50%",
-    marginHorizontal: 25,
-    backgroundColor: colors.Primary,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    alignItems: "center",
-  },
-  boxClose: {
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    backgroundColor: colors.White,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-  },
-  iconCancel: {
-    width: 45,
-    height: 45,
-    resizeMode: "contain",
-    tintColor: colors.Primary,
-  },
-  rowHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 25,
-    paddingVertical: 10,
-  },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    lineHeight: 26,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginLeft: 10,
-  },
-  boxImageModal: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#68B984",
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-  },
-  iconAdd: {
-    width: 24,
-    height: 24,
-    resizeMode: "contain",
-    tintColor: colors.White,
-  },
-  modalContainerAdd: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
-  },
-  modalContentAdd: {
-    width: 350,
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 25,
-    alignItems: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.White,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    paddingRight: 45,
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    lineHeight: 26,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: colors.Gray_Light,
-  },
-  iconInput: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain",
-    tintColor: colors.Primary,
-  },
-  buttonAdd: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.Primary,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  textButtonAdd: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-  },
+  
 });
 
 const data = [

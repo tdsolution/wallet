@@ -19,7 +19,7 @@ const Title = (props: Props) => {
       }}
     >
       <Text style={styles.title}>{title}</Text>
-      <TouchableOpacity
+      <TouchableOpacity style={{ borderBottomWidth: 1, borderBottomColor: colors.Green }}
         onPress={() => (onPress ? onPress : console.log("See All"))}
       >
         <Text style={styles.textSeeAll}>See All</Text>
@@ -44,7 +44,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     textAlign: "right",
     fontFamily: "Poppins-Medium",
-    borderBottomWidth: 1,
-    borderBottomColor: colors.Green,
   },
 });
