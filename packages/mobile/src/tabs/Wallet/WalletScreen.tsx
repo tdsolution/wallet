@@ -24,6 +24,7 @@ import {
   useWindowDimensions,
   Image,
   FlatList,
+  Platform
 } from "react-native";
 import { NFTCardItem } from "./NFTCardItem";
 import { useDispatch } from "react-redux";
@@ -457,7 +458,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
         </View>
 
         <View
-          style={{ alignItems: "flex-end", marginRight: 20, paddingTop: 10 }}
+          style={{ alignItems: "flex-end", marginRight: 20, paddingTop: Platform.OS === "ios" ? 20 : 10 }}
         >
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
