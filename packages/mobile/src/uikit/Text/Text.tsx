@@ -25,7 +25,7 @@ export const Text: React.FC<TextProps> = ({
   lineHeight,
   textAlign,
   reanimated,
-  color = 'foregroundPrimary',
+  color = 'green',
   variant = 'body1',
   ...textProps
 }) => {

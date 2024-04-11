@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red", // Màu nền của modal
     position: "absolute",
     borderRadius: 25,
 
