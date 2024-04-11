@@ -2,6 +2,7 @@ import { Opacity } from '$shared/constants';
 import styled from '$styled';
 import { Icon, Skeleton, Text } from '$uikit';
 import { ns } from '$utils';
+import { colors } from '../../../../constants/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const NAVBAR_HEIGHT = 64;
@@ -76,7 +77,7 @@ export const ActionsContainer = styled.View`
   flex-direction: row;
   flex: 1;
   height: ${ns(32)}px;
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => colors.Primary};
   border-radius: ${ns(16)}px;
   overflow: hidden;
 `;

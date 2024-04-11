@@ -1,5 +1,5 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon, IconNames } from "../../components/Icon";
 import { ScreenHeaderHeight } from "./utils/constants";
 import { LinearGradient } from "expo-linear-gradient";
@@ -175,7 +175,7 @@ export const ScreenHeader = memo<ScreenHeaderProps>((props) => {
                 {isString(title) ? (
                   <View style={[styles.titleContainer]}>
                     <Text
-                      style={[styles.title, titleAnimatedStyle]}
+                      style={[styles.title, titleAnimatedStyle,]}
                       type={!isSmallTitle ? "label1" : "h3"}
                       textAlign="center"
                       numberOfLines={1}
@@ -251,10 +251,11 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     zIndex: 1,
     color: "#4871EA",
     fontFamily: "Poppins-Bold",
+    fontWeight: 'bold'
   },
   leftContainer: {
     height: ScreenHeaderHeight,

@@ -11,7 +11,7 @@ export const Container = styled.View`
 
 export const Browser = styled(WebView)`
   flex: 1;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  background: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 export const Overlay = styled.View`
@@ -30,7 +30,7 @@ export const BackButtonContainer = styled.TouchableOpacity.attrs({
 })``;
 
 export const BackButton = styled.View`
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => theme.colors.primaryColor};
   height: ${hNs(32)}px;
   width: ${ns(32)}px;
   border-radius: ${ns(32 / 2)}px;

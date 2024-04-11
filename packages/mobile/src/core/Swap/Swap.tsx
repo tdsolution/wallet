@@ -13,7 +13,7 @@ import { useWallet } from '@tonkeeper/shared/hooks';
 import { config } from '$config';
 import { tk } from '$wallet';
 import { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
-import { Linking } from 'react-native';
+import { Linking, View } from 'react-native';
 import { useDeeplinking } from '$libs/deeplinking';
 import DeviceInfo from 'react-native-device-info';
 

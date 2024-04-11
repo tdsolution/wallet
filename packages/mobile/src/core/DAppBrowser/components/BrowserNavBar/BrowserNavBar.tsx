@@ -1,16 +1,16 @@
-import { useCopyText } from '$hooks/useCopyText';
-import { Icon, PopupSelect, Text } from '$uikit';
-import { getDomainFromURL } from '$utils';
-import React, { FC, memo, useCallback, useMemo } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Share from 'react-native-share';
-import * as S from './BrowserNavBar.style';
-import { PopupSelectItemProps } from '$uikit/PopupSelect/PopupSelect.interface';
-import { Toast } from '$store';
-import { goBack } from '$navigation/imperative';
-import { t } from '@tonkeeper/shared/i18n';
-import { Address } from '@tonkeeper/core';
-import { getFlag } from '$utils/flags';
+import { useCopyText } from "$hooks/useCopyText";
+import { Icon, PopupSelect, Text } from "$uikit";
+import { getDomainFromURL } from "$utils";
+import React, { FC, memo, useCallback, useMemo } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Share from "react-native-share";
+import * as S from "./BrowserNavBar.style";
+import { PopupSelectItemProps } from "$uikit/PopupSelect/PopupSelect.interface";
+import { Toast } from "$store";
+import { goBack } from "$navigation/imperative";
+import { t } from "@tonkeeper/shared/i18n";
+import { Address } from "@tonkeeper/core";
+import { getFlag } from "$utils/flags";
 
 enum PopupActionType {
   REFRESH,
@@ -23,7 +23,7 @@ enum PopupActionType {
 interface PopupAction {
   type: PopupActionType;
   label: string;
-  icon?: PopupSelectItemProps['icon'];
+  icon?: PopupSelectItemProps["icon"];
 }
 
 interface Props {
@@ -59,14 +59,14 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
 
   const { top: topInset } = useSafeAreaInsets();
 
-  const isHTTPS = url.startsWith('https');
+  const isHTTPS = url.startsWith("https");
 
   const domain = getDomainFromURL(url);
 
   const shortAddress =
     walletAddress &&
     Address.parse(walletAddress, {
-      bounceable: !getFlag('address_style_nobounce'),
+      bounceable: !getFlag("address_style_nobounce"),
       testOnly: Address.isTestnet(walletAddress),
     }).toShort();
 
@@ -74,37 +74,37 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
     const items: PopupAction[] = [
       {
         type: PopupActionType.REFRESH,
-        label: t('browser.actions.refresh'),
-        icon: 'ic-refresh-16',
+        label: t("browser.actions.refresh"),
+        icon: "ic-refresh-16",
       },
     ];
 
     if (isNotificationsEnabled) {
       items.push({
         type: PopupActionType.MUTE,
-        label: t('browser.actions.mute'),
-        icon: 'ic-bell-disable-16',
+        label: t("browser.actions.mute"),
+        icon: "ic-bell-disable-16",
       });
     }
 
     items.push(
       {
         type: PopupActionType.SHARE,
-        label: t('browser.actions.share'),
-        icon: 'ic-share-16',
+        label: t("browser.actions.share"),
+        icon: "ic-share-16",
       },
       {
         type: PopupActionType.COPY_LINK,
-        label: t('browser.actions.copy_link'),
-        icon: 'ic-copy-16',
-      },
+        label: t("browser.actions.copy_link"),
+        icon: "ic-copy-16",
+      }
     );
 
     if (isConnected) {
       items.push({
         type: PopupActionType.DISCONNECT,
-        label: t('browser.actions.disconnect'),
-        icon: 'ic-disconnect-16',
+        label: t("browser.actions.disconnect"),
+        icon: "ic-disconnect-16",
       });
     }
 
@@ -119,7 +119,7 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
         case PopupActionType.SHARE:
           setTimeout(() => {
             Share.open({ failOnCancel: false, url }).catch((err) => {
-              console.log('cant share', err);
+              console.log("cant share", err);
             });
           }, 300);
           return;
@@ -128,12 +128,12 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
         case PopupActionType.DISCONNECT:
           return disconnect();
         case PopupActionType.MUTE:
-          Toast.success(t('notifications.muted'));
+          Toast.success(t("notifications.muted"));
           unsubscribeFromNotifications();
           return;
       }
     },
-    [copyText, disconnect, onRefreshPress, unsubscribeFromNotifications, url],
+    [copyText, disconnect, onRefreshPress, unsubscribeFromNotifications, url]
   );
 
   return (

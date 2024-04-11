@@ -1,13 +1,13 @@
-import React, { FC, useCallback, useRef, useState } from 'react';
-import WebviewComponent from 'react-native-webview';
+import React, { FC, useCallback, useRef, useState } from "react";
+import WebviewComponent from "react-native-webview";
 
-import { Loader, NavBar } from '$uikit';
-import * as S from './WebView.style';
-import { useTheme } from '$hooks/useTheme';
-import { deviceWidth, isAndroid } from '$utils';
-import { WebViewProps } from './WebView.interface';
-import { useDeeplinking } from '$libs/deeplinking';
-import { config } from '$config';
+import { Loader, NavBar } from "$uikit";
+import * as S from "./WebView.style";
+import { useTheme } from "$hooks/useTheme";
+import { deviceWidth, isAndroid } from "$utils";
+import { WebViewProps } from "./WebView.interface";
+import { useDeeplinking } from "$libs/deeplinking";
+import { config } from "$config";
 
 export const WebView: FC<WebViewProps> = ({ route }) => {
   const webviewRef = useRef<WebviewComponent>(null);
@@ -31,7 +31,11 @@ export const WebView: FC<WebViewProps> = ({ route }) => {
 
   function renderHeader() {
     return (
-      <NavBar isClosedButton hideBackButton={!isBackShown} onBackPress={handleBack} />
+      <NavBar
+        isClosedButton
+        hideBackButton={!isBackShown}
+        onBackPress={handleBack}
+      />
     );
   }
 
@@ -43,8 +47,8 @@ export const WebView: FC<WebViewProps> = ({ route }) => {
 
   const handleOpenExternalLink = useCallback((req) => {
     const isHTTPS =
-      !req.url.startsWith('https://app.tonkeeper.com') &&
-      req.url.search('https://') !== -1;
+      !req.url.startsWith("https://app.tonkeeper.com") &&
+      req.url.search("https://") !== -1;
 
     if (isHTTPS) {
       return true;
@@ -93,7 +97,7 @@ export const WebView: FC<WebViewProps> = ({ route }) => {
           onHttpError={handleHttpError}
           onError={handleError}
           startInLoadingState={true}
-          originWhitelist={['*']}
+          originWhitelist={["*"]}
           decelerationRate="normal"
           javaScriptCanOpenWindowsAutomatically
           mixedContentMode="always"
@@ -105,7 +109,7 @@ export const WebView: FC<WebViewProps> = ({ route }) => {
           allowsFullscreenVideo
           keyboardDisplayRequiresUserAction={false}
           mediaPlaybackRequiresUserAction={false}
-          webviewDebuggingEnabled={config.get('devmode_enabled')}
+          webviewDebuggingEnabled={config.get("devmode_enabled")}
         />
       </S.Wrap>
     </>

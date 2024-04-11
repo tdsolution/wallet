@@ -24,6 +24,7 @@ import {
   useWindowDimensions,
   Image,
   FlatList,
+  Platform
 } from "react-native";
 import { NFTCardItem } from "./NFTCardItem";
 import { useDispatch } from "react-redux";
