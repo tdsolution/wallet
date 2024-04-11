@@ -43,7 +43,7 @@ class SaveListWallet {
     console.error('Error saving data:', error);
     throw error;
   }
-}  
+  }  
   static async saveData(list:ListWalletModel[]) {
     try {
       await AsyncStorage.setItem(this._key,JSON.stringify(list));
@@ -68,15 +68,15 @@ class SaveListWallet {
         console.error('Error getting data:', error);
         throw error;
     }
-}
-    static async clearData() {
-       try {
-        await AsyncStorage.removeItem(this._key);
-        console.log('Cleared data successfully');
-        } catch (error) {
-        console.error('Error clearing data:', error);
-        throw error;
-        }
+  }
+  static async clearData() {
+      try {
+      await AsyncStorage.removeItem(this._key);
+      console.log('Cleared data successfully');
+      } catch (error) {
+      console.error('Error clearing data:', error);
+      throw error;
       }
+    }
 }
 export default SaveListWallet;
