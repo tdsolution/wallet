@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import {Keyboard} from 'react-native';
 
 // import * as S from "../AccessConfirmation/AccessConfirmation.style";
 import { NavBar } from "$uikit";
@@ -32,22 +33,60 @@ import SaveListWallet from "$libs/EVM/SaveWallet";
 import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
 
 export const AddNewAccount: FC = () => {
+  const params = useParams<{ isImport?: boolean }>();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const isImport = !!params.isImport; 
+
+  const [modalNotification, setModdalNotification] = useState(false);
   const [data2,setdata2] = useState(null);
+  const [text, onChangeText] = React.useState('');
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalAddAccount, setModalAddAccount] = useState(false);
+  const [title, setTile] = useState('');
+  const[description, setDescription] = useState('');
+
   useEffect(() => {
     async function getdata() {
         const data = await SaveListWallet.getData();
         setdata2(data);
     }
     getdata();
- }, []);
+  }, []);
   console.log(data2);
-  const [text, onChangeText] = React.useState('');
-  const params = useParams<{ isImport?: boolean }>();
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
 
-  const isImport = !!params.isImport;
-
+  const handleCreateWallet = useCallback(() => {
+    if (text === '') {
+      setModdalNotification(true);
+      setTile('Private key is none!');
+      setDescription('Please enter the private key.');
+    }
+    else {
+      async function noti() {
+        const a = await createWalletFromPrivateKey(text);
+        if (a) {
+          if (a==1) {
+            setModdalNotification(true);
+            setTile('Wallet added successfully!');
+            setDescription('');
+          }
+          else {
+            setModdalNotification(true);
+            setTile('Wallet already exists!');
+            setDescription('Please enter another private key.');
+          }
+        } 
+        else {
+          setModdalNotification(true);
+            setTile('Wallet does not exist!');
+            setDescription('You may have entered the wrong private key, please check again.');
+        }
+      }
+      noti();
+  }
+  }, [text]);
+  
   const handlePinCreated = useCallback(
     async (pin: string) => {
       BlockingLoader.show();
@@ -73,13 +112,58 @@ export const AddNewAccount: FC = () => {
     },
     [dispatch, isImport]
   );
-  const [isPopupVisible, setPopupVisible] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalAddAccount, setModalAddAccount] = useState(false);
 
   const renderItem = ({ item }) => (
     <ItemAccount item={item} onPress={() => setPopupVisible(true)} />
   );
+
+  const Notification = () => (
+    <Modal
+    // animationType="slide" // Loại animation khi mở/closed modal
+    transparent={true} // Cho phép modal trở nên trong suốt
+    visible={modalNotification} // Trạng thái của modal (true: hiển thị, false: ẩn)
+    onRequestClose={() => {
+      setModdalNotification(false); // Xử lý khi người dùng ấn nút back hoặc click bên ngoài modal
+    }}
+  >
+    <Pressable
+      style={styles.modalContainerAdd}
+      // onPress={() => setModalAddAccount(false)}
+    >
+      <View style={styles.modalContentAdd}>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View></View>
+          <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
+            {title}
+          </Text>
+          <TouchableOpacity onPress={() => setModdalNotification(false)}>
+            <Image
+              style={[
+                styles.iconCancel,
+                { tintColor: colors.Black, width: 30, height: 30 },
+              ]}
+              source={require("../../assets/icons/png/ic_cancel.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.subtitle}>
+          {description}
+        </Text>
+        <TouchableOpacity style={styles.buttonOk} onPress={() => setModdalNotification(false)}>
+          <Text style={styles.textButtonAdd}>OK</Text>
+        </TouchableOpacity>
+      </View>
+    </Pressable>
+  </Modal>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -289,6 +373,7 @@ export const AddNewAccount: FC = () => {
         <Pressable
           style={styles.modalContainerAdd}
           // onPress={() => setModalAddAccount(false)}
+          onPress={Keyboard.dismiss}
         >
           <View style={styles.modalContentAdd}>
             <View
@@ -303,7 +388,7 @@ export const AddNewAccount: FC = () => {
               <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
                 Add account
               </Text>
-              <TouchableOpacity onPress={() => setModalAddAccount(false)}>
+              <TouchableOpacity onPress={() => {setModalAddAccount(false); onChangeText('');}}>
                 <Image
                   style={[
                     styles.iconCancel,
@@ -321,10 +406,9 @@ export const AddNewAccount: FC = () => {
               wallet.
             </Text>
             <View style={{ width: "100%" }}>
-              <TextInput style={styles.input} placeholder="Your private key" onChangeText={onChangeText}
-        value={text}/>
+              <TextInput style={styles.input} placeholder="Your private key" onChangeText={text => onChangeText(text)} value={text}/>
               <TouchableOpacity
-                style={{ position: "absolute", right: 10, top: 10 }}
+                style={{ position: "absolute", right: 10, top: 10 }} onPress={() => onChangeText('')}
               >
                 <Image
                   style={[styles.iconInput]}
@@ -332,13 +416,14 @@ export const AddNewAccount: FC = () => {
                 />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.buttonAdd} onPress={() => createWalletFromPrivateKey(text)}>
+            <TouchableOpacity style={styles.buttonAdd} onPress={() => handleCreateWallet()}>
               <Text style={styles.textButtonAdd}>Add</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
       </Modal>
       {/* Modal Add Accont Start */}
+      <Notification/>
     </SafeAreaView>
   );
 };
@@ -441,17 +526,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   boxClose: {
-    width: 40,
-    height: 40,
-    borderRadius: 25,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: colors.White,
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
+    // padding: 5,
   },
   iconCancel: {
-    width: 45,
-    height: 45,
+    width: 24,
+    height: 24,
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
@@ -548,6 +633,15 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.White,
     fontFamily: "Poppins-Medium",
+  },
+  buttonOk: {
+    width: "25%",
+    height: 40,
+    backgroundColor: colors.Primary,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
   },
 });
 

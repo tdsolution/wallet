@@ -49,9 +49,9 @@ export async function createWalletFromPrivateKey(privateKey: string){
       }
     }
     if (!isDuplicate) {
-      n=n+list.length;
+      n = n + list.length;
       const wallet = new WalletETH(privateKey);
-      const address : string = wallet.address;
+      const address: string = wallet.address;
       const walletModel: ListWalletModel = {
       name: 'Account' + n,
       addressWallet: address, // Thêm giá trị của addressWallet tại đây
@@ -64,12 +64,13 @@ export async function createWalletFromPrivateKey(privateKey: string){
     }
     else {
       console.log('Wallet is exit');
-      return 0;
+      return 2;
     }
   }
   catch (error) {
-    console.error('Error saving data:', error);
-    throw error;
+    // console.error('Error saving data:', error);
+    // throw error;
+    return;
   }
 }
 export function shortenWalletAddress(walletAddress: string, prefixLength: number = 8, suffixLength: number = 5): string {
