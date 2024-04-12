@@ -5,11 +5,9 @@ import { JsonRpcProvider, Contract } from 'ethers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
  export async function generateMnemonic(): Promise<string> {
   try {
-    // Generate the mnemonic phrase
     const mnemonic = await bip39.generateMnemonic();
     return mnemonic;
   } catch (error) {
-    // Handle any errors that occur during mnemonic generation
     console.error('Error generating mnemonic:', error);
     throw error;
   }
@@ -68,8 +66,6 @@ export async function createWalletFromPrivateKey(privateKey: string){
     }
   }
   catch (error) {
-    // console.error('Error saving data:', error);
-    // throw error;
     return;
   }
 }

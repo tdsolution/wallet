@@ -74,7 +74,6 @@ import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
 import { addressEVMString, getInfoToken, shortenWalletAddress } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
-import SaveListCoinRate,{coinRateModelFromJson}from "$libs/EVM/api/get_exchange_rate";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState('');
   const chain = useChain()?.chain;
@@ -143,10 +142,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     } else {
       openRequireWalletModal();
     }
-    const jsonString = '{"arbitrum":{"usd":1.47,"usd_24h_change":-0.19833533389838595},"avalanche-2":{"usd":47.22,"usd_24h_change":-0.5706123816717467},"berachain-bera":{},"binancecoin":{"usd":604.78,"usd_24h_change":2.7441893157278057},"celo":{"usd":1.089,"usd_24h_change":2.4102942290773726},"coredaoorg":{"usd":2.27,"usd_24h_change":0.4696918187941956},"crypto-com-chain":{"usd":0.148141,"usd_24h_change":1.83748766225539},"ethereum":{"usd":3597.04,"usd_24h_change":2.233338914298573},"fantom":{"usd":0.972737,"usd_24h_change":-1.5546891414622928},"matic-network":{"usd":0.892801,"usd_24h_change":0.4669331633744876},"metis-token":{"usd":90.18,"usd_24h_change":-0.4571254214057642},"optimism":{"usd":3.07,"usd_24h_change":1.5711610834652803},"orbit-bridge-klaytn-usdc":{"usd":0.265464,"usd_24h_change":0.6788390501561417},"shiba-inu":{"usd":0.00002799,"usd_24h_change":1.932994880009881},"tether":{"usd":1,"usd_24h_change":-0.00809735397590789},"the-open-network":{"usd":7.45,"usd_24h_change":8.851160460358075},"tron":{"usd":0.120187,"usd_24h_change":-1.9585264986979645},"usd-coin":{"usd":1,"usd_24h_change":0.10863338449118468},"wbnb":{"usd":603.77,"usd_24h_change":2.969052007016803},"weth":{"usd":3570.6,"usd_24h_change":1.7539572690494807},"wmatic":{"usd":0.885421,"usd_24h_change":-0.18355188769379455},"wrapped-core":{"usd":2.27,"usd_24h_change":-1.7345815835319474}}';
-
-   const coinRates: any[] = coinRateModelFromJson(jsonString);
-   console.log(coinRates.length);
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {
