@@ -6,18 +6,14 @@ import {
     Pressable,
     Image,
     TouchableOpacity,
-    Dimensions,
     Platform,
   } from "react-native";
-  import React, { useCallback, useState } from "react";
+  import React from "react";
   import { WalletStackRouteNames } from "$navigation";
   import { colors } from "../../../constants/colors";
   import { globalStyles } from "$styles/globalStyles";
-  import { TextInput } from "react-native-gesture-handler";
   import { on } from "process";
-import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
-  const { width, height } = Dimensions.get("window");
-  
+  import { navigation } from "@tonkeeper/router";
   interface Props {
     modalVisible: boolean;
     onClose: () => void;
@@ -27,7 +23,6 @@ import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
   
   const ModalNotification = (props: Props) => {
     const { modalVisible, onClose, title, description} = props;
-    const heigthModal = Platform.OS === "ios" ? 300 : 320;
 
     return (
         <Modal
@@ -53,7 +48,7 @@ import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
               <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
                 {title}
               </Text>
-              <TouchableOpacity onPress={onClose}>
+              <TouchableOpacity onPress={() => (onClose(), description == "" ? navigation.navigate(WalletStackRouteNames.Account) : '')}>
                 <Image
                   style={[
                     styles.iconCancel,
@@ -66,7 +61,7 @@ import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
             <Text style={styles.subtitle}>
               {description}
             </Text>
-            <TouchableOpacity style={styles.buttonOk} onPress={onClose}>
+            <TouchableOpacity style={styles.buttonOk} onPress={() => (onClose(), description == "" ? navigation.navigate(WalletStackRouteNames.Account) : '')}>
               <Text style={styles.textButton}>OK</Text>
             </TouchableOpacity>
           </View>
@@ -104,41 +99,6 @@ import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
         textAlign: "left",
         fontFamily: "Poppins-Medium",
         marginVertical: 10,
-      },
-      input: {
-        width: "100%",
-        height: 50,
-        backgroundColor: colors.White,
-        borderRadius: 10,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        paddingRight: 45,
-        fontSize: 14,
-        fontWeight: "500",
-        color: colors.Black,
-        lineHeight: 26,
-        textAlign: "left",
-        fontFamily: "Poppins-Medium",
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: colors.Gray_Light,
-      },
-      iconInput: {
-        width: 30,
-        height: 30,
-        resizeMode: "contain",
-        tintColor: colors.Primary,
-      },
-      buttonAdd: {
-        width: "100%",
-        height: 50,
-        backgroundColor: colors.Primary,
-        borderRadius: 25,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 10,
       },
       textButton: {
         fontSize: 16,

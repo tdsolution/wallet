@@ -19,7 +19,7 @@ const ItemAccount = ({ item, onPress }) => {
           </View>
           <View>
             <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.body}>{item.mnemonic}</Text>
+            <Text style={styles.body}>Muti-coin wallet</Text>
           </View>
         </View>
         <TouchableOpacity>
