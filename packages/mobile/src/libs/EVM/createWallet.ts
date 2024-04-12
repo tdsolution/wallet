@@ -35,6 +35,44 @@ export async function createWalletFromMnemonic(mnemonic: string){
   SaveListWallet.fullFlowSaveData({wallet:walletModel});
   console.log('Save Wallet');
 }
+export async function createWalletFromPrivateKey(privateKey: string){
+  //Tạo lần đầu tiên
+  try {
+    let n = 1;
+    const list = await SaveListWallet.getData();
+    let isDuplicate = false;
+    if (list.length > 0) {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].privateKey === privateKey) {
+          isDuplicate = true;
+        }
+      }
+    }
+    if (!isDuplicate) {
+      n = n + list.length;
+      const wallet = new WalletETH(privateKey);
+      const address: string = wallet.address;
+      const walletModel: ListWalletModel = {
+      name: 'Account' + n,
+      addressWallet: address, // Thêm giá trị của addressWallet tại đây
+      privateKey: privateKey, // Thêm giá trị của privateKey tại đây
+      mnemonic: '', // Thêm giá trị của mnemonic tại đây
+      };
+      SaveListWallet.fullFlowSaveData({wallet:walletModel});
+      console.log('Save Wallet');
+      return 1;
+    }
+    else {
+      console.log('Wallet is exit');
+      return 2;
+    }
+  }
+  catch (error) {
+    // console.error('Error saving data:', error);
+    // throw error;
+    return;
+  }
+}
 export function shortenWalletAddress(walletAddress: string, prefixLength: number = 8, suffixLength: number = 5): string {
   walletAddress = walletAddress.replace(/"/g, '');
   if (walletAddress.length <= prefixLength + suffixLength) {
