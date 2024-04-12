@@ -11,7 +11,7 @@ const TabListActivities = () => {
       }}
     >
       <View>
-        <FlatList
+        {/* <FlatList
           // style={{ marginVertical: 25 }}
           data={DATA}
           renderItem={({ item }) => (
@@ -26,7 +26,7 @@ const TabListActivities = () => {
           scrollEnabled={false}
           ListFooterComponent={<View style={{ height: 50 }} />}
           ListHeaderComponent={<View style={{ height: 25 }} />}
-        />
+        /> */}
       </View>
     </View>
   );
