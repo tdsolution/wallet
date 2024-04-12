@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   boxClose: {
-    width: 40,
-    height: 40,
+    width: 26,
+    height: 26,
     borderRadius: 25,
     backgroundColor: colors.White,
     justifyContent: "center",
@@ -162,8 +162,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   iconCancel: {
-    width: 45,
-    height: 45,
+    width: 24,
+    height: 24,
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
