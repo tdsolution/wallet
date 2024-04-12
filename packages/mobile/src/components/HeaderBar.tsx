@@ -1,19 +1,21 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { ReactNode } from "react";
 import { globalStyles } from "$styles/globalStyles";
+import { useNavigation } from "@tonkeeper/router";
 
 interface Props {
   title: string;
-  onPress?: void;
+  onBack?:() => void;
 }
 
 const HeaderBar = (props: Props) => {
-  const { title, onPress } = props;
+  const { title, onBack } = props;
+  const navigation = useNavigation();
   return (
     <View style={globalStyles.header}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity
-          onPress={() => (onPress ? onPress : console.log("Back Screen"))}
+          onPress={onBack ? onBack : () => console.log("Go back")}
         >
           <Image
             style={[globalStyles.iconBack]}

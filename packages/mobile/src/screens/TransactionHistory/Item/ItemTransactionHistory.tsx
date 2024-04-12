@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
+import ModalTrasactionHistory from "./ModalTransactionHistory";
 
 interface Props {
   isUp: boolean;
@@ -19,8 +20,13 @@ const ItemTransactionHistory = (props: Props) => {
     ? require(`../../../assets/icons/png/ic_prime_arrow_up.png`)
     : require(`../../../assets/icons/png/ic_prime_arrow_down.png`);
   let backgroundColor = !isUp ? colors.White : colors.Primary;
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const onClose = () => {
+    setModalVisible(false);
+  };
   return (
-    <View
+    <Pressable
+      onPress={() => setModalVisible(true)}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -62,7 +68,8 @@ const ItemTransactionHistory = (props: Props) => {
         </Text>
         <Text style={[styles.bodyRight]}>Successful</Text>
       </View>
-    </View>
+      <ModalTrasactionHistory modalVisible={modalVisible} onClose={onClose} />
+    </Pressable>
   );
 };
 
@@ -114,12 +121,12 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
 
-    elevation: 5,
+    elevation: 2,
     marginRight: 12,
   },
   bodyRight: {

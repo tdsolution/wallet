@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity , Image} from "react-native";
 import React, { useEffect } from "react";
 import ItemWallet from "./ItemWallet";
-import { DATA } from "./Data";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { useChain } from "@tonkeeper/shared/hooks";
 
@@ -14,6 +13,7 @@ const TabListToken = ({tokens, rpc, address}) => {
       }}
     >
       <View>
+        
         <FlatList
           data={tokens}
           renderItem={({ item }) => (
@@ -46,4 +46,5 @@ const TabListToken = ({tokens, rpc, address}) => {
 
 export default TabListToken;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+});
