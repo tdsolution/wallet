@@ -24,7 +24,7 @@ import {
   useWindowDimensions,
   Image,
   FlatList,
-  Platform
+  Platform,
 } from "react-native";
 import { NFTCardItem } from "./NFTCardItem";
 import { useDispatch } from "react-redux";
@@ -72,11 +72,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
-import { addressEVMString, getInfoToken, shortenWalletAddress } from "$libs/EVM/createWallet";
+import {
+  addressEVMString,
+  getInfoToken,
+  shortenWalletAddress,
+} from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
-import SaveListCoinRate,{coinRateModelFromJson}from "$libs/EVM/api/get_exchange_rate";
+import SaveListCoinRate, {
+  coinRateModelFromJson,
+} from "$libs/EVM/api/get_exchange_rate";
+import TabTop from "./items/TabTop";
+import TabListToken from "./items/TabListToken";
+import TabActivities from "./items/TabListActivities";
+import TabListActivities from "./items/TabListActivities";
 export const WalletScreen = memo(({ navigation }: any) => {
-  const [addressEvm, setAddressEVM] = useState('');
+  const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -90,7 +100,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const shouldUpdate =
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
-  const balanceEVM = useBalanceEVMDemo(addressEVMString(addressEvm), chain.rpc, chain.id);
+  const balanceEVM = useBalanceEVMDemo(
+    addressEVMString(addressEvm),
+    chain.rpc,
+    chain.id
+  );
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -100,16 +114,20 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const tronBalances = undefined;
   const notifications = useInternalNotifications();
   const { isConnected } = useNetInfo();
+  const [activeTab, setActiveTab] = useState("Tokens");
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
- const loadDataEVM = useCallback(async () => {
-  try {
-    const address = await AsyncStorage.getItem('EVMAddress') ?? '';
-    return address;
-  } catch (error) {
-    console.error('Error loading EVM address:', error);
-    throw error;
-  }
-}, [])
+  const loadDataEVM = useCallback(async () => {
+    try {
+      const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
+      return address;
+    } catch (error) {
+      console.error("Error loading EVM address:", error);
+      throw error;
+    }
+  }, []);
   useEffect(() => {
     loadDataEVM().then((address) => setAddressEVM(address));
   }, [loadDataEVM]);
@@ -136,17 +154,18 @@ export const WalletScreen = memo(({ navigation }: any) => {
     }
   }, [nav, wallet]);
 
-  const handlePressSend = useCallback( async ()  =>  {
+  const handlePressSend = useCallback(async () => {
     if (wallet) {
       trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
       nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
     } else {
       openRequireWalletModal();
     }
-    const jsonString = '{"arbitrum":{"usd":1.47,"usd_24h_change":-0.19833533389838595},"avalanche-2":{"usd":47.22,"usd_24h_change":-0.5706123816717467},"berachain-bera":{},"binancecoin":{"usd":604.78,"usd_24h_change":2.7441893157278057},"celo":{"usd":1.089,"usd_24h_change":2.4102942290773726},"coredaoorg":{"usd":2.27,"usd_24h_change":0.4696918187941956},"crypto-com-chain":{"usd":0.148141,"usd_24h_change":1.83748766225539},"ethereum":{"usd":3597.04,"usd_24h_change":2.233338914298573},"fantom":{"usd":0.972737,"usd_24h_change":-1.5546891414622928},"matic-network":{"usd":0.892801,"usd_24h_change":0.4669331633744876},"metis-token":{"usd":90.18,"usd_24h_change":-0.4571254214057642},"optimism":{"usd":3.07,"usd_24h_change":1.5711610834652803},"orbit-bridge-klaytn-usdc":{"usd":0.265464,"usd_24h_change":0.6788390501561417},"shiba-inu":{"usd":0.00002799,"usd_24h_change":1.932994880009881},"tether":{"usd":1,"usd_24h_change":-0.00809735397590789},"the-open-network":{"usd":7.45,"usd_24h_change":8.851160460358075},"tron":{"usd":0.120187,"usd_24h_change":-1.9585264986979645},"usd-coin":{"usd":1,"usd_24h_change":0.10863338449118468},"wbnb":{"usd":603.77,"usd_24h_change":2.969052007016803},"weth":{"usd":3570.6,"usd_24h_change":1.7539572690494807},"wmatic":{"usd":0.885421,"usd_24h_change":-0.18355188769379455},"wrapped-core":{"usd":2.27,"usd_24h_change":-1.7345815835319474}}';
+    const jsonString =
+      '{"arbitrum":{"usd":1.47,"usd_24h_change":-0.19833533389838595},"avalanche-2":{"usd":47.22,"usd_24h_change":-0.5706123816717467},"berachain-bera":{},"binancecoin":{"usd":604.78,"usd_24h_change":2.7441893157278057},"celo":{"usd":1.089,"usd_24h_change":2.4102942290773726},"coredaoorg":{"usd":2.27,"usd_24h_change":0.4696918187941956},"crypto-com-chain":{"usd":0.148141,"usd_24h_change":1.83748766225539},"ethereum":{"usd":3597.04,"usd_24h_change":2.233338914298573},"fantom":{"usd":0.972737,"usd_24h_change":-1.5546891414622928},"matic-network":{"usd":0.892801,"usd_24h_change":0.4669331633744876},"metis-token":{"usd":90.18,"usd_24h_change":-0.4571254214057642},"optimism":{"usd":3.07,"usd_24h_change":1.5711610834652803},"orbit-bridge-klaytn-usdc":{"usd":0.265464,"usd_24h_change":0.6788390501561417},"shiba-inu":{"usd":0.00002799,"usd_24h_change":1.932994880009881},"tether":{"usd":1,"usd_24h_change":-0.00809735397590789},"the-open-network":{"usd":7.45,"usd_24h_change":8.851160460358075},"tron":{"usd":0.120187,"usd_24h_change":-1.9585264986979645},"usd-coin":{"usd":1,"usd_24h_change":0.10863338449118468},"wbnb":{"usd":603.77,"usd_24h_change":2.969052007016803},"weth":{"usd":3570.6,"usd_24h_change":1.7539572690494807},"wmatic":{"usd":0.885421,"usd_24h_change":-0.18355188769379455},"wrapped-core":{"usd":2.27,"usd_24h_change":-1.7345815835319474}}';
 
-   const coinRates: any[] = coinRateModelFromJson(jsonString);
-   console.log(coinRates.length);
+    const coinRates: any[] = coinRateModelFromJson(jsonString);
+    console.log(coinRates.length);
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {
@@ -437,7 +456,13 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               </View>
               <View style={{ marginTop: 1, marginBottom: 2 }}>
-                <ShowBalance amount={chain.chainId == '1100' ? balance.total.fiat : formatCurrency(balanceEVM)} />
+                <ShowBalance
+                  amount={
+                    chain.chainId == "1100"
+                      ? balance.total.fiat
+                      : formatCurrency(balanceEVM)
+                  }
+                />
               </View>
               <View
                 style={{
@@ -449,7 +474,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 <TouchableOpacity
                   hitSlop={{ top: 8, bottom: 8, left: 18, right: 18 }}
                   style={{ zIndex: 3, marginVertical: 8 }}
-                  onPress={copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))}
+                  onPress={copyText(
+                    chain.chainId == "1100"
+                      ? wallet.address.ton.friendly
+                      : addressEVMString(addressEvm)
+                  )}
                   activeOpacity={0.6}
                 >
                   <Text
@@ -457,13 +486,17 @@ export const WalletScreen = memo(({ navigation }: any) => {
                     type="body2"
                     style={{ color: "#fff" }}
                   >
-                   {chain.chainId == '1100' ? wallet.address.ton.short : shortenWalletAddress(addressEvm)}
+                    {chain.chainId == "1100"
+                      ? wallet.address.ton.short
+                      : shortenWalletAddress(addressEvm)}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={
-                    copyText(chain.chainId == '1100' ? wallet.address.ton.friendly :addressEVMString(addressEvm))
-                  }
+                  onPress={copyText(
+                    chain.chainId == "1100"
+                      ? wallet.address.ton.friendly
+                      : addressEVMString(addressEvm)
+                  )}
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
                 >
@@ -537,25 +570,29 @@ export const WalletScreen = memo(({ navigation }: any) => {
             )}
           </IconButtonList>
         </View>
-        <Title title={"Holdings"} />
-        <View>
-          <FlatList
-            // style={{ marginVertical: 25 }}
-            data={DATA}
-            renderItem={({ item }) => (
-              <ItemWallet
-                title={item.title}
-                price={item.price}
-                profit={item.profit}
-                // image={item.imageURL}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            scrollEnabled={false}
-            ListFooterComponent={<View style={{ height: 50 }} />}
-            ListHeaderComponent={<View style={{ height: 25 }} />}
+        <View style={{ flex: 1,}}>
+          <TabTop
+            tabs={["Tokens", "Activities"]}
+            initialTab="Tokens"
+            onTabChange={handleTabChange}
           />
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {/* <Text>{activeTab}</Text> */}
+            {
+              activeTab === "Tokens" ? (
+                <TabListToken />
+              ) : (<TabListActivities />)
+            }
+          </View>
         </View>
+       
       </ScrollView>
 
       {isPagerView ? (
@@ -674,40 +711,4 @@ const styles = Steezy.create(({ isTablet }) => ({
   },
 }));
 
-const DATA = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba4",
-    title: "TD WALLET",
-    price: "$6,766.45",
-    profit: "+2.75%",
-    // imageURL: require("../../../assets/logo/img_td.png"),
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f635",
-    title: "TWT",
-    price: "$6,766.45",
-    profit: "+2.75%",
-    // imageURL: require("../../../assets/logo/img_twt.png"),
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d726",
-    title: "USDT",
-    price: "$76,766.45",
-    profit: "-0.34%",
-    // imageURL: require("../../../assets/logo/img_td.png"),
-  },
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba7",
-    title: "TD WALLET",
-    price: "$6,766.45",
-    profit: "+2.75%",
-    // imageURL: require("../../../assets/logo/img_td.png"),
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63i",
-    title: "TWT",
-    price: "$6,766.45",
-    profit: "+2.75%",
-    // imageURL: require("../../../assets/logo/img_twt.png"),
-  },
-];
+
