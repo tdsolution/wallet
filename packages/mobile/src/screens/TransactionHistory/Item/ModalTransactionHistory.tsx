@@ -280,8 +280,10 @@ const styles = StyleSheet.create({
   line: {
     width: "100%",
     height: 1,
-    backgroundColor: colors.Gray_Light,
+    borderColor: colors.Gray,
+    borderBottomWidth: 0.2,
     marginVertical: 10,
+    opacity: 0.5
   },
   buttonStatus: {
     width: 150,

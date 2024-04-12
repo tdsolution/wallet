@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import ModalTrasactionHistory from "./ModalTransactionHistory";
 
@@ -23,10 +23,10 @@ const ItemTransactionHistory = (props: Props) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const onClose = () => {
     setModalVisible(false);
-  }
+  };
   return (
     <Pressable
-    onPress={()=> setModalVisible(true)}
+      onPress={() => setModalVisible(true)}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -68,7 +68,7 @@ const ItemTransactionHistory = (props: Props) => {
         </Text>
         <Text style={[styles.bodyRight]}>Successful</Text>
       </View>
-      <ModalTrasactionHistory modalVisible={modalVisible} onClose={onClose}/>
+      <ModalTrasactionHistory modalVisible={modalVisible} onClose={onClose} />
     </Pressable>
   );
 };
@@ -121,12 +121,12 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
 
-    elevation: 5,
+    elevation: 2,
     marginRight: 12,
   },
   bodyRight: {
