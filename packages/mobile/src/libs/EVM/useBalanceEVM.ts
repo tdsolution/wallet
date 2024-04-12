@@ -18,7 +18,6 @@ async function fetchBalaceEvm(walletAddress : string, rpc: string) {
       return balancePrice;
     }
   } catch (error) {
-    // console.error(error);
     return '0.0';
   }
 }
