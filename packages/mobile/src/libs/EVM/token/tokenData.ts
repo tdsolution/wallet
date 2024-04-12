@@ -57,7 +57,7 @@ export const DataTokens : any[] = [
          {
             id:"wrapped-core", 
             tokenAddress : "0x40375C92d9FAf44d2f9db9Bd9ba41a3317a2404f",
-            symbol : "USDT",
+            symbol : "WCORE",
             decimals: 18,
             logo: "https://assets.coingecko.com/coins/images/29276/large/wcore.png?1696528228",
         },
@@ -95,7 +95,7 @@ export const DataTokens : any[] = [
             logo: "https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png",
         },
         {
-            id:"usd-coin", 
+            id:"trend", 
             tokenAddress : "0x12016b4E07866c962e29b7597eCd66B3B89a3a58",
             symbol : "TREND",
             decimals: 6,

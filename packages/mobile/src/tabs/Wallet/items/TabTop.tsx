@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: colors.White,
-    paddingVertical: 10,
+    paddingVertical: 1,
   },
   tabItem: {
     flex: 1,
@@ -61,12 +61,12 @@ const styles = StyleSheet.create({
     color: colors.Primary,
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: "Poppins-Medium",
   },
   text: {
-    color: colors.Gray,
-    fontWeight: "bold",
+    color: '#7c7c7c',
+    fontWeight: "500",
     textAlign: "center",
   },
 });

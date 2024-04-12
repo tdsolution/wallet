@@ -57,6 +57,43 @@ export function formatCurrency(balance: number): string {
         return '';
     }
 }
+export function formatCurrencyNoCrc(balance: number): string {
+    console.log(balance);
+    try {
+        const f = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+        const numberAfterParse = f.format(balance);
+        const finalNumber: string[] = [];
+
+        // Xử lý trường hợp nhỏ hơn 1 và lớn hơn 0
+        if (balance < 1 && balance > 0) {
+            const formattedBalance = balance.toFixed(3);
+            return formattedBalance;
+        } else {
+            for (let i = 0; i < numberAfterParse.length; i++) {
+                if (numberAfterParse[i] !== ',' && numberAfterParse[i] !== '.') {
+                    finalNumber.push(numberAfterParse[i]);
+                }
+
+                if (numberAfterParse[i] === ',') {
+                    finalNumber.push('.');
+                }
+
+                if (numberAfterParse[i] === '.') {
+                    finalNumber.push(',');
+                }
+            }
+        }
+
+        return balance === 0.0
+            ? finalNumber.join('').replace(/,/g, '.')
+            : finalNumber.join('').replace(/,00/g, '');
+    } catch (e) {
+        return '';
+    }
+}
 export function useBalanceEVMDemo(walletAddress: string, rpc: string, coinId: string){
  const [balanceEVM, setBalanceEVM] = useState<number>(0);
  useEffect(()=>{

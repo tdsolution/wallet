@@ -88,7 +88,6 @@ export const MainStack: FC = () => {
         />
       );
     }
-    // return <Stack.Screen name={MainStackRouteNames.Start} component={StartScreen} />;
     return <Stack.Screen name={MainStackRouteNames.Onboarding} component={OnboardingScreen} />
   }, [hasWallet, isMigrated, showLockScreen]);
 

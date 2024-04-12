@@ -7,6 +7,7 @@ import { getBiometryName } from '$utils';
 import { useNavigation } from '@tonkeeper/router';
 import { MigrationStackRouteNames } from '$navigation/MigrationStack/types';
 import { useMigration } from '$hooks/useMigration';
+import SaveListCoinRate from '$libs/EVM/api/get_exchange_rate';
 
 export const MigrationStartScreen = memo(() => {
   const nav = useNavigation();
@@ -35,8 +36,8 @@ export const MigrationStartScreen = memo(() => {
   const handleBiometryPress = useCallback(async () => {
     try {
       const mnemonic = await getMnemonicWithBiometry();
-
       nav.navigate(MigrationStackRouteNames.CreatePasscode, { mnemonic });
+      await SaveListCoinRate.fullFlowSaveData();
     } catch {}
   }, [getMnemonicWithBiometry, nav]);
 

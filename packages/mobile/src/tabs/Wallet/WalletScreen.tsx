@@ -85,6 +85,7 @@ import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
+import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
@@ -105,6 +106,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
     chain.rpc,
     chain.id
   );
+  const tokensEVM = getTokenListByChainID(
+    chain.chainId
+  );
+  console.log('tokensEVM '+tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -579,10 +584,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
               alignItems: "center",
             }}
           >
-            {/* <Text>{activeTab}</Text> */}
             {
               activeTab === "Tokens" ? (
-                <TabListToken />
+                <TabListToken tokens={tokensEVM} rpc={chain.rpc} address={addressEVMString(addressEvm)}/>
               ) : (<TabListActivities />)
             }
           </View>

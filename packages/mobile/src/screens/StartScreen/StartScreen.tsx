@@ -24,6 +24,7 @@ import { chainActive } from '@tonkeeper/shared/utils/KEY_STORAGE';
 import { DataChains } from '@tonkeeper/shared/utils/network';
 import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
 import { CreateWalletStackRouteNames } from '$navigation/CreateWalletStack/types';
+import SaveListCoinRate from '$libs/EVM/api/get_exchange_rate';
 const bip39 = require('bip39')
 const HEIGHT_RATIO = deviceHeight / 844;
 const  WIDTH_RATIO = deviceWidth / 844;
@@ -53,6 +54,7 @@ export const StartScreen = memo(() => {
     fetchChainActive();
   }, []);
     const fetchChainActive = async () => {
+        await SaveListCoinRate.fullFlowSaveData();
         const storedChainActive = await AsyncStorage.getItem(chainActive);
         if(storedChainActive == null){
          await AsyncStorage.setItem(chainActive, JSON.stringify(DataChains[0]));

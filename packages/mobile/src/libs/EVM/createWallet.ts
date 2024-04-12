@@ -96,9 +96,6 @@ export async function getInfoToken  ()  {
       const balance =  await tokenContract.balanceOf('0xEa5007831646fa01C7079B15cFa4c62748905b04');
       const decimal = await tokenContract.decimals();
       const symbol = await tokenContract.symbol();
-      console.log(balance);
-      console.log(decimal);
-      console.log(symbol);
     } catch (error) {
       console.error('Error fetching token info:', error);
     }

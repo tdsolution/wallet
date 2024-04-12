@@ -1,57 +1,89 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
+import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
+import {  formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 
 interface Props {
-  title: string;
-  onPress?: void;
-  image?: string;
-  price: string;
-  profit: string;
+  id:string;
+  symbol: string;
+  image: string;
+  address : string;
+  addressToken : string;
+  rpc : string;
 }
 
 const ItemWallet = (props: Props) => {
-  const { title, onPress, image, profit, price } = props;
-  let imageURL = require("../../../assets/logo/img_twt.png");
-  if (title === "TWT") {
-    imageURL = require("../../../assets/logo/img_twt.png");
-  } else if (title === "TD WALLET") {
-    imageURL = require("../../../assets/logo/img_td.png");
-  } else {
-    imageURL = require("../../../assets/logo/img_usdt.png");
+  const {id, symbol, image,address ,addressToken,rpc} = props;
+  let profitColor = symbol === "USDT" ? colors.Red : colors.Green;
+   const [price, setPrice] = useState('0');
+   const [priceUsd, setPriceUsd] = useState(0);
+   const [coinUsd, setCoinUsd] = useState(0);
+   const [coinUsd24, setCoinUsd24] = useState(0);
+   const [isCheckLevel, setIsCheckLevel] = useState(false);
+   const handlePress = useCallback(async () => {
+     console.log(price);
+  }, []);
+   async function fetchBalance() {
+            const balance = await getBalanceToken(rpc, addressToken, address);
+            const coinRate = await SaveListCoinRate.getCoinRateById(id);
+            const rateUsd = coinRate?.usd ?? '0';
+            const coinUsd24 = coinRate?.usdChange ?? '0';
+            const checkLevel = parseFloat(coinUsd24);
+            setIsCheckLevel(checkLevel >= 0 ? true : false);
+            const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
+            console.log(balance);
+            setPrice(balance);
+            setPriceUsd(balanceUsd);
+            setCoinUsd24(parseFloat(coinUsd24));
+            setCoinUsd(parseFloat(rateUsd));
   }
-  let profitColor = title === "USDT" ? colors.Red : colors.Green;
+   useEffect(() => {
+        fetchBalance();
+    }, [address]);
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Image style={styles.logo} source={imageURL} />
-        <View>
-          <Text style={styles.title}>{title}</Text>
+    <TouchableOpacity onPress={handlePress}>
+      <View style={styles.container}>
           <View style={styles.row}>
-            <Text style={styles.body}>{price}</Text>
-            <Text style={[styles.body, { marginLeft: 8, color: profitColor }]}>
-              {profit}
-            </Text>
+            <View style={styles.bgLogo}>
+             <Image style={styles.logo} source={{ uri: image }} />
+            </View>
+            <View>
+              <Text style={styles.title}>{symbol}</Text>
+              <View style={styles.row}>
+                <Text style={styles.body}>{'$'+formatCurrencyNoCrc(coinUsd)}</Text>
+                <View style={{width:4, height:4, backgroundColor:'#D9D9D9', borderRadius:20, marginLeft:2}}></View>
+                <Text style={[styles.body, { marginLeft: 8, color: isCheckLevel ? colors.Green : colors.Red }]}>
+                  {coinUsd24}%
+                </Text>
+
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={[styles.title, { textAlign: "right" }]}>{formatCurrencyNoCrc(parseFloat(price))}</Text>
+            <Text style={[styles.body, { textAlign: "right" }]}>${formatCurrencyNoCrc(priceUsd)}</Text>
           </View>
         </View>
-      </View>
-      <View>
-        <Text style={[styles.title, { textAlign: "right" }]}>0</Text>
-        <Text style={[styles.body, { textAlign: "right" }]}>$0.00</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 export default ItemWallet;
 
 const styles = StyleSheet.create({
+  bgLogo:{
+     borderRadius: 25,
+     backgroundColor:'#ffffff',
+     alignItems:'center',
+     marginRight: 12,
+  },
   logo: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
     borderRadius: 24,
     resizeMode: "contain",
-    marginRight: 12,
   },
   title: {
     fontSize: 16,
