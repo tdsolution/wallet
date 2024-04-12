@@ -10,11 +10,16 @@ import Container from "../../components/Container";
 import HeaderBar from "../../components/HeaderBar";
 import { colors } from "../../constants/colors";
 import ItemTransactionHistory from "./Item/ItemTransactionHistory";
+import { useNavigation } from "@tonkeeper/router";
 
 const TransactionHistory = () => {
+  const navigation = useNavigation();
+  const handleBack = () => {
+    navigation.goBack();
+  };
   return (
     <Container>
-      <HeaderBar title={"Transactions"} />
+      <HeaderBar title={"Transactions"} onBack={handleBack} />
       <View style={{ paddingHorizontal: 25 }}>
         <Text style={styles.title}>
           Summary of transactions in your wallet, click to see their details
