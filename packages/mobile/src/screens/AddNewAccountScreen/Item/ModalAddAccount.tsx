@@ -8,13 +8,16 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { on } from "process";
+import ModalNotification from "./ModalNotification";
+import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
 const { width, height } = Dimensions.get("window");
 
 interface Props {
@@ -26,10 +29,48 @@ const ModalAddAccount = (props: Props) => {
   const { modalVisible, onClose } = props;
   const [textInput, setTextInput] = useState("");
   const heigthModal = Platform.OS === "ios" ? 300 : 320;
+  const [titleNoti, setTileNoti] = useState('');
+  const[descriptionNoti, setDescriptionNoti] = useState('');
+  const [modalNotification, setModdalNotification] = useState(false);
 
   const onCleanTextInput = () => {
     setTextInput("");
   };
+
+  const handleCloseNotification = () => {
+    setModdalNotification(false);
+  };
+
+  const handleCreateWallet = useCallback(() => {
+    if (textInput === '') {
+      setModdalNotification(true);
+      setTileNoti('Private key is none!');
+      setDescriptionNoti('Please enter the private key.');
+    }
+    else {
+      async function noti() {
+        const a = await createWalletFromPrivateKey(textInput);
+        if (a) {
+          if (a==1) {
+            setModdalNotification(true);
+            setTileNoti('Wallet added successfully!');
+            setDescriptionNoti('');
+          }
+          else {
+            setModdalNotification(true);
+            setTileNoti('Wallet already exists!');
+            setDescriptionNoti('Please enter another private key.');
+          }
+        } 
+        else {
+          setModdalNotification(true);
+            setTileNoti('Wallet does not exist!');
+            setDescriptionNoti('You may have entered the wrong private key, please check again.');
+        }
+      }
+      noti();
+  }
+  }, [textInput]);
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -38,24 +79,12 @@ const ModalAddAccount = (props: Props) => {
       onRequestClose={onClose}
     >
       <Pressable
-        onPress={onClose}
-        style={{
-          flex: 1,
-          position: "absolute",
-          backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
-      ></Pressable>
-      <View
-        style={[
-          styles.modalContainerAdd,
-          { left: (width - 350) / 2, top: (height - heigthModal) / 2 },
-        ]}
+        onPress={Keyboard.dismiss}
+        style={styles.modalContainerAdd}
       >
-        <View style={[styles.modalContentAdd, { height: heigthModal }]}>
+        <View style={[styles.modalContentAdd, 
+          // { height: heigthModal }
+          ]}>
           <View
             style={{
               width: "100%",
@@ -73,7 +102,7 @@ const ModalAddAccount = (props: Props) => {
             >
               Add account
             </Text>
-            <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity onPress={() => {onClose(); onCleanTextInput()}}>
               <Image
                 style={[
                   styles.iconCancel,
@@ -107,11 +136,17 @@ const ModalAddAccount = (props: Props) => {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.buttonAdd}>
+          <TouchableOpacity style={styles.buttonAdd} onPress={() => handleCreateWallet()}>
             <Text style={styles.textButtonAdd}>Add</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Pressable>
+      <ModalNotification
+        modalVisible={modalNotification}
+        onClose={handleCloseNotification}
+        title={titleNoti}
+        description={descriptionNoti}
+      />
     </Modal>
   );
 };
@@ -120,22 +155,19 @@ export default ModalAddAccount;
 
 const styles = StyleSheet.create({
   iconCancel: {
-    width: 45,
-    height: 45,
+    width: 24,
+    height: 24,
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
-  modalContainerAdd: {
-    width: 350,
+modalContainerAdd: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
-    borderRadius: 25,
-
+    backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
   },
   modalContentAdd: {
     width: 350,
-    height: 320,
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 25,
