@@ -6,19 +6,17 @@ import {
     Pressable,
     Image,
     TouchableOpacity,
-    Platform,
   } from "react-native";
   import React from "react";
   import { WalletStackRouteNames } from "$navigation";
   import { colors } from "../../../constants/colors";
   import { globalStyles } from "$styles/globalStyles";
-  import { on } from "process";
   import { navigation } from "@tonkeeper/router";
   interface Props {
     modalVisible: boolean;
     onClose: () => void;
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
   }
   
   const ModalNotification = (props: Props) => {
@@ -48,7 +46,7 @@ import {
               <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
                 {title}
               </Text>
-              <TouchableOpacity onPress={() => (onClose(), description == "" ? navigation.navigate(WalletStackRouteNames.Account) : '')}>
+              <TouchableOpacity onPress={() => (!title || !description ) ? navigation.push(WalletStackRouteNames.Account) : onClose()}>
                 <Image
                   style={[
                     styles.iconCancel,
@@ -61,7 +59,7 @@ import {
             <Text style={styles.subtitle}>
               {description}
             </Text>
-            <TouchableOpacity style={styles.buttonOk} onPress={() => (onClose(), description == "" ? navigation.navigate(WalletStackRouteNames.Account) : '')}>
+            <TouchableOpacity style={styles.buttonOk} onPress={() => (!title || !description ) ? navigation.push(WalletStackRouteNames.Account) : onClose()}>
               <Text style={styles.textButton}>OK</Text>
             </TouchableOpacity>
           </View>
