@@ -1,8 +1,15 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
+import ModalAccount from "./ModalAccount";
 // name, mnemonic, privateKey
 const ItemAccount = ({ item, onPress }) => {
   const [isCheck, setIsCheck] = useState(false);
+  const [modalAccountVisible, setModalAccountVisible] = useState(false);
+
+  const handleCloseModalAccount = () => {
+    setModalAccountVisible(false);
+  };
+  
   return (
     <View style={{ marginBottom: 11 }}>
       <View style={styles.headerItem}>
@@ -22,7 +29,7 @@ const ItemAccount = ({ item, onPress }) => {
             <Text style={styles.body}>Multi-coin wallet</Text>
           </View>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setModalAccountVisible(true)}>
           <Image
             source={require("../../../assets/icons/png/ic_menu_dot.png")}
             style={styles.icon}
@@ -32,6 +39,7 @@ const ItemAccount = ({ item, onPress }) => {
       <TouchableOpacity onPress={onPress}>
         <Text style={styles.textbutton}>Backup to iCloud</Text>
       </TouchableOpacity>
+      <ModalAccount modalVisible={modalAccountVisible} onClose={handleCloseModalAccount} item={item}/>
     </View>
   );
 };
