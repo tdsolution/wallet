@@ -6,4 +6,5 @@ export type WalletStackParamList = {
   [WalletStackRouteNames.TransactionHistory]: {};
   [WalletStackRouteNames.AddNewAccount]: {};
   [WalletStackRouteNames.ImportToken]: {};
+  [WalletStackRouteNames.Notification]: {};
 };

@@ -30,49 +30,6 @@ const TransactionHistory = () => {
             <Text style={styles.textButton}>Download</Text>
           </TouchableOpacity>
         </View>
-
-        {/* <ItemTransactionHistory isUp={false} />
-        <ItemTransactionHistory
-          isUp={false}
-          title="Send"
-          date="18 Dec"
-          time="11:27"
-          privateKey="0x832...45667"
-          amount="-0.000200 BNB"
-        />
-        <ItemTransactionHistory
-          isUp={true}
-          title="Send"
-          date="18 Dec"
-          time="11:27"
-          privateKey="0x012...8b667"
-          amount="-0.000200 BNB"
-        />
-        <ItemTransactionHistory
-          isUp={true}
-          title="Send"
-          date="18 Dec"
-          time="11:27"
-          privateKey="0x342...75643"
-          amount="-0.000200 BNB"
-        />
-        <ItemTransactionHistory isUp={false} />
-        <ItemTransactionHistory
-          isUp={true}
-          title="Send"
-          date="18 Dec"
-          time="11:27"
-          privateKey="0x832...45667"
-          amount="-0.000200 BNB"
-        />
-        <ItemTransactionHistory
-          isUp={true}
-          title="Send"
-          date="18 Dec"
-          time="11:27"
-          privateKey="0x832...45667"
-          amount="-0.000200 BNB"
-        /> */}
       </View>
       <FlatList
         data={data}

@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
 import { colors } from "../../constants/colors";
@@ -14,7 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const ImportToken = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View
         style={[
           globalStyles.row,
@@ -110,7 +111,7 @@ const ImportToken = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
