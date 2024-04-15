@@ -78,5 +78,16 @@ class SaveListWallet {
       throw error;
       }
     }
+    static async deleteWallet(privateKey:string) {
+      try {
+        let list = await this.getData();
+        list = list.filter(item => item.privateKey !== privateKey)
+        await this.saveData(list);
+        console.log('Wallet deleted successfully');
+      } catch (error) {
+        console.error('Error delete wallet:', error);
+        throw error;
+      }
+    }  
 }
 export default SaveListWallet;

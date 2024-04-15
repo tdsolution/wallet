@@ -38,6 +38,7 @@ export enum COMMON_COLORS {
   accentBlue = "#45AEF5",
   accentOrange = "#F2A73D",
   accentOrangeActive = "#F2B155",
+  accentRed= "#f54949",
 }
 
 export const colors = {

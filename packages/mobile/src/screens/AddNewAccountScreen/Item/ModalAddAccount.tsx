@@ -53,8 +53,8 @@ const ModalAddAccount = (props: Props) => {
         if (a) {
           if (a==1) {
             setModdalNotification(true);
-            setTileNoti('Wallet added successfully!');
-            setDescriptionNoti('');
+            setTileNoti('');
+            setDescriptionNoti('Wallet added successfully!');
           }
           else {
             setModdalNotification(true);
@@ -97,7 +97,7 @@ const ModalAddAccount = (props: Props) => {
             <Text
               style={[
                 globalStyles.textHeader,
-                { fontSize: 16, fontWeight: "bold" },
+                { fontSize: 16},
               ]}
             >
               Add account
