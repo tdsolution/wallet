@@ -13,6 +13,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { Icon } from "$uikit";
 import ModalViewPrivateKey from "./ModalViewPirivateKey";
 import ModalDeleteAccount from "./ModalDeleteAccount";
+import ModalEditName from "./ModalEditName";
   
 interface Props {
   modalVisible: boolean;
@@ -23,10 +24,15 @@ interface Props {
 const ModalAccount = (props: Props) => {
   const { modalVisible, onClose, item } = props;
   const [modalAddAccount, setModalAddAccount] = useState(false);
+  const [modalEditName, setModalEditName] = useState(false);
   const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
 
   const handleCloseAddAccount = () => {
     setModalAddAccount(false);
+  };
+
+  const handleCloseEditName = () => {
+    setModalEditName(false);
   };
 
   const handleCloseDeleteAccount = () => {
@@ -47,7 +53,7 @@ const ModalAccount = (props: Props) => {
       <View
         style={styles.modalContainer}
       >
-        <View style={styles.modaleHeader}>
+        <View style={styles.modalHeader}>
           <View style={styles.rowHeader}>
             <View></View>
             <Text
@@ -82,7 +88,7 @@ const ModalAccount = (props: Props) => {
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => setModalAddAccount(true)}
+              onPress={() => setModalEditName(true)}
               style={styles.menuContainer}
             >
               <View style={styles.menu}>
@@ -119,10 +125,15 @@ const ModalAccount = (props: Props) => {
         onClose={handleCloseAddAccount}
         item={item}
       />
+      <ModalEditName
+        modalVisible={modalEditName}
+        onClose={handleCloseEditName}
+        item={item}
+      />
       <ModalDeleteAccount
-      modalVisible={modalDeleteAccount}
-      onClose={handleCloseDeleteAccount}
-      item={item}
+        modalVisible={modalDeleteAccount}
+        onClose={handleCloseDeleteAccount}
+        item={item}
       />
     </Modal>
   );
@@ -164,7 +175,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  modaleHeader: {
+  modalHeader: {
     width: "100%",
     marginHorizontal: 25,
     backgroundColor: colors.Primary,

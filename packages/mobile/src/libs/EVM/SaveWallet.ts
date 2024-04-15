@@ -89,5 +89,18 @@ class SaveListWallet {
         throw error;
       }
     }  
+    static async editNameWallet(wallet, newName: string) {
+      try {
+        let list = await this.getData();
+        const indexToModify: number = list.findIndex(item => item.privateKey === wallet.privateKey);
+        wallet.name = newName;
+        list[indexToModify] = wallet; // gán giá trị mới cho phần tử tại indexToModify
+        await this.saveData(list);
+        console.log('Wallet edited successfully');
+      } catch (error) {
+        console.error('Error edited wallet:', error);
+        throw error;
+      }
+    }  
 }
 export default SaveListWallet;
