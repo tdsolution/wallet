@@ -10,9 +10,10 @@ import {
 import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
-import ModalAddAccount from "./ModalAddAccount";
 import { Icon } from "$uikit";
 import ModalViewPrivateKey from "./ModalViewPirivateKey";
+import ModalDeleteAccount from "./ModalDeleteAccount";
+import ModalEditName from "./ModalEditName";
   
 interface Props {
   modalVisible: boolean;
@@ -23,9 +24,19 @@ interface Props {
 const ModalAccount = (props: Props) => {
   const { modalVisible, onClose, item } = props;
   const [modalAddAccount, setModalAddAccount] = useState(false);
+  const [modalEditName, setModalEditName] = useState(false);
+  const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
 
   const handleCloseAddAccount = () => {
     setModalAddAccount(false);
+  };
+
+  const handleCloseEditName = () => {
+    setModalEditName(false);
+  };
+
+  const handleCloseDeleteAccount = () => {
+    setModalDeleteAccount(false);
   };
 
   return (
@@ -42,7 +53,7 @@ const ModalAccount = (props: Props) => {
       <View
         style={styles.modalContainer}
       >
-        <View style={styles.modaleHeader}>
+        <View style={styles.modalHeader}>
           <View style={styles.rowHeader}>
             <View></View>
             <Text
@@ -65,10 +76,7 @@ const ModalAccount = (props: Props) => {
               onPress={() => setModalAddAccount(true)}
               style={styles.menuContainer}
             >
-              <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}>
+              <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#2b6099"}]}>
                 <Image
                   style={styles.iconAdd}
@@ -80,13 +88,10 @@ const ModalAccount = (props: Props) => {
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => setModalAddAccount(true)}
+              onPress={() => setModalEditName(true)}
               style={styles.menuContainer}
             >
-              <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}>
+              <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#ffe063"}]}>
                 <Image
                   style={styles.iconAdd}
@@ -98,13 +103,10 @@ const ModalAccount = (props: Props) => {
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
             <TouchableOpacity
-              // onPress={() => setModalAddAccount(true)}
+              onPress={() => setModalDeleteAccount(true)}
               style={styles.menuContainer}
             >
-              <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}>
+              <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Image
                   style={styles.iconAdd}
@@ -118,13 +120,21 @@ const ModalAccount = (props: Props) => {
           </View>
         </View>
       </View>
-      {/* Modal Add Accont Start */}
       <ModalViewPrivateKey
         modalVisible={modalAddAccount}
         onClose={handleCloseAddAccount}
         item={item}
       />
-      {/* Modal Add Accont Start */}
+      <ModalEditName
+        modalVisible={modalEditName}
+        onClose={handleCloseEditName}
+        item={item}
+      />
+      <ModalDeleteAccount
+        modalVisible={modalDeleteAccount}
+        onClose={handleCloseDeleteAccount}
+        item={item}
+      />
     </Modal>
   );
 };
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  modaleHeader: {
+  modalHeader: {
     width: "100%",
     marginHorizontal: 25,
     backgroundColor: colors.Primary,
@@ -202,6 +212,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 10,
+  },
+  menu: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   textButton: {
     fontSize: 14,
