@@ -20,6 +20,26 @@ const { width, height } = Dimensions.get("window");
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
+  blockNumber?: string;
+  timeStamp?: string;
+  hash?: string;
+  nonce?: string;
+  blockHash?: string;
+  transactionIndex?: string;
+  from?: string;
+  to?: string;
+  value?: string;
+  gas?: string;
+  gasPrice?: string;
+  isError?: string;
+  txReceiptStatus?: string;
+  input?: string;
+  contractAddress?: string;
+  cumulativeGasUsed?: string;
+  gasUsed?: string;
+  confirmations?: string;
+  methodId?: string;
+  functionName?: string;
 }
 
 const TruncateString = ({ string, maxLength }) => {
@@ -34,15 +54,28 @@ const TruncateString = ({ string, maxLength }) => {
 };
 
 const ModalTrasactionHistory = (props: Props) => {
-  const { modalVisible, onClose } = props;
-  const [textInput, setTextInput] = useState("");
-  // const heigthModal = Platform.OS === "ios" ? 470 : 530;
-  const token = "0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805";
-  const truncatedString = TruncateString({ string: token, maxLength: 7 });
-
-  const onCleanTextInput = () => {
-    setTextInput("");
-  };
+  const {
+    modalVisible,
+    onClose,
+    timeStamp,
+    blockHash,
+    from,
+    to,
+    gasPrice,
+    isError,
+    transactionIndex,
+    gasUsed,
+  } = props;
+  const truncatedFromString = TruncateString({ string: from, maxLength: 7 });
+  const truncatedToString = TruncateString({ string: to, maxLength: 7 });
+  const status = isError === "0" ? "Successful" : "Failed";
+  const backgroundColorStatus = isError === "0" ? "#90D26D" : "#E72929";
+  const divided = Number(gasPrice) / Math.pow(10, 18);
+  const decimalNumber = Number(divided).toFixed(9);
+  const gasfee = Number(gasPrice) * Number(gasUsed);
+  const dividedGasfee = Number(gasfee) / Math.pow(10, 18);
+  const decimalNumberGasFee = Number(dividedGasfee).toFixed(9);
+  const totalAmount = Number(decimalNumber) + Number(decimalNumberGasFee);
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -112,8 +145,13 @@ const ModalTrasactionHistory = (props: Props) => {
 
           <View style={[styles.row, { marginTop: 20 }]}>
             <Text style={styles.title}>Status</Text>
-            <View style={styles.buttonStatus}>
-              <Text style={styles.textStatus}>Successful</Text>
+            <View
+              style={[
+                styles.buttonStatus,
+                { backgroundColor: backgroundColorStatus },
+              ]}
+            >
+              <Text style={styles.textStatus}>{status}</Text>
             </View>
           </View>
           <View style={styles.line}></View>
@@ -131,7 +169,7 @@ const ModalTrasactionHistory = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>{truncatedString}</Text>
+              <Text style={styles.subtitle}>{truncatedFromString}</Text>
             </View>
             <Image
               style={[
@@ -153,13 +191,13 @@ const ModalTrasactionHistory = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>{truncatedString}</Text>
+              <Text style={styles.subtitle}>{truncatedToString}</Text>
             </View>
           </View>
           <View style={styles.line}></View>
           <View style={{ width: "100%" }}>
             <Text style={styles.title}>NONCE</Text>
-            <Text style={styles.subtitle}>#98</Text>
+            <Text style={styles.subtitle}>#{transactionIndex}</Text>
           </View>
           <View style={styles.line}></View>
           <View style={{ width: "100%" }}>
@@ -167,12 +205,12 @@ const ModalTrasactionHistory = (props: Props) => {
             <View style={styles.payment}>
               <View style={[styles.row]}>
                 <Text style={styles.title}>Money amount</Text>
-                <Text style={styles.subtitle}>0.71234 MATIC</Text>
+                <Text style={styles.subtitle}>{decimalNumber} MATIC</Text>
               </View>
               <View style={[styles.row, { marginTop: 5 }]}>
                 <Text style={styles.title}>Estiated gas fees</Text>
                 <Text numberOfLines={2} style={styles.subtitle}>
-                  0.712344366724356
+                  {decimalNumberGasFee}
                 </Text>
               </View>
               <View
@@ -184,7 +222,7 @@ const ModalTrasactionHistory = (props: Props) => {
               <View style={styles.row}>
                 <Text style={styles.title}>Total amount</Text>
                 <Text numberOfLines={2} style={styles.subtitle}>
-                  0.71234639469396334523
+                  {totalAmount}
                 </Text>
               </View>
             </View>
@@ -224,7 +262,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     paddingRight: 45,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
     color: colors.Black,
     textAlign: "left",
@@ -270,8 +308,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   subtitle: {
-    maxWidth: 120,
-    fontSize: 14,
+    // maxWidth: 120,
+    fontSize: 13,
     fontWeight: "500",
     color: colors.Black,
     textAlign: "left",
@@ -283,18 +321,19 @@ const styles = StyleSheet.create({
     borderColor: colors.Gray,
     borderBottomWidth: 0.2,
     marginVertical: 10,
-    opacity: 0.5
+    opacity: 0.5,
   },
   buttonStatus: {
-    width: 150,
+    // width: 150,
     backgroundColor: "#90D26D",
-    padding: 5,
+    paddingHorizontal: 50,
+    paddingVertical: 5,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
   },
   textStatus: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
     color: colors.White,
     textAlign: "left",

@@ -6,17 +6,61 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  ActivityIndicator
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemWallet from "./ItemWallet";
 import { DATA_ACTIVITIES } from "./Data";
 import ItemTransactionHistory from "../../../screens/TransactionHistory/Item/ItemTransactionHistory";
 import { colors } from "../../../constants/colors";
 import { useNavigation } from "@tonkeeper/router";
+import {
+  fetchDataTokens,
+  createBSTransactionFromJson,
+  TransactionModel,
+  fetchTransactions,
+} from "$libs/EVM/HistoryEVM/DataHistory";
 
 const TabListActivities = () => {
-  const dataToShow = DATA_ACTIVITIES.slice(-3);
+  const [transactions, setTransactions] = useState<TransactionModel[]>([]);
+  const dataToShow = transactions.slice(-3);
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchTransactions('0xEa5007831646fa01C7079B15cFa4c62748905b04', '97');
+        const transactionsData: TransactionModel[] = data.result.map(
+          (item: any) => createBSTransactionFromJson(item)
+        );
+        // console.log("Data: ", transactionsData);
+        setTransactions(transactionsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }finally {
+        setIsLoading(false);
+      }
+    };
+    
+
+
+    fetchData();
+  }, []);
+
+  const FooterComponent = ({ isLoading }) => (
+    <View
+      style={{
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {isLoading && <ActivityIndicator animating size="small" />}
+    </View>
+  );
   return (
     <View
       style={{
@@ -24,7 +68,7 @@ const TabListActivities = () => {
       }}
     >
       <View>
-        <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop:10 }}>
+        <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop: 10 }}>
           <TouchableOpacity style={styles.buttonBrower}>
             <Image
               style={styles.image}
@@ -37,9 +81,9 @@ const TabListActivities = () => {
             />
           </TouchableOpacity>
         </View>
-        {
-          DATA_ACTIVITIES.length !== 0 ? (<View>
-            <FlatList
+        {DATA_ACTIVITIES.length !== 0 ? (
+          <View>
+            {/* <FlatList
               data={dataToShow}
               renderItem={({ item }) => (
                 <ItemTransactionHistory
@@ -55,6 +99,27 @@ const TabListActivities = () => {
               ListHeaderComponent={<View style={{ height: 25 }} />}
               showsVerticalScrollIndicator={false}
               scrollEnabled={false}
+            /> */}
+            <FlatList
+              data={dataToShow}
+              renderItem={({ item }) => (
+                <ItemTransactionHistory
+                  timeStamp={item.timeStamp}
+                  blockHash={item.blockHash}
+                  from={item.from}
+                  to={item.to}
+                  gasPrice={item.gasPrice}
+                  isError={item.isError}
+                  transactionIndex={item.transactionIndex}
+                  gasUsed={item.gasUsed}
+                />
+              )}
+              // keyExtractor={(item, index) => index.toString()}
+              // ListFooterComponent={<View style={{ height: 150 }} />}
+              ListHeaderComponent={<View style={{ height: 5 }} />}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
+              ListFooterComponent={<FooterComponent isLoading={isLoading} />}
             />
             <View
               style={{
@@ -74,24 +139,29 @@ const TabListActivities = () => {
                 />
               </TouchableOpacity>
             </View>
-          </View> ): (
-            <View style={{ padding: 25 }}>
-          <View style={[styles.container, {marginBottom: Platform.OS === "android" ? 50 : 0}]}>
-            <Image
-              style={styles.imageNotFound}
-              source={require("../../../assets/logo/logo_app.png")}
-            />
-            <Text style={styles.title}>You have no activities</Text>
-            <Text style={styles.subtitle}>Make your transactions</Text>
-            <TouchableOpacity style={[styles.buttonGoHead]}>
-              <Text style={[styles.textButton,{color: colors.White}]}>Go Ahead</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-          )
-        }
-        
-        
+        ) : (
+          <View style={{ padding: 25 }}>
+            <View
+              style={[
+                styles.container,
+                { marginBottom: Platform.OS === "android" ? 50 : 0 },
+              ]}
+            >
+              <Image
+                style={styles.imageNotFound}
+                source={require("../../../assets/logo/logo_app.png")}
+              />
+              <Text style={styles.title}>You have no activities</Text>
+              <Text style={styles.subtitle}>Make your transactions</Text>
+              <TouchableOpacity style={[styles.buttonGoHead]}>
+                <Text style={[styles.textButton, { color: colors.White }]}>
+                  Go Ahead
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -121,8 +191,8 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   buttonBrower: {
-    paddingHorizontal:10,
-    paddingVertical:8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     backgroundColor: colors.White,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -179,13 +249,13 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   buttonGoHead: {
-    width: '100%',
+    width: "100%",
     height: 50,
     padding: 10,
     backgroundColor: colors.Primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 100,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

@@ -587,7 +587,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
             {
               activeTab === "Tokens" ? (
                 <TabListToken tokens={tokensEVM} rpc={chain.rpc} address={addressEVMString(addressEvm)}/>
-              ) : (<TabListActivities />)
+              ) : (
+              <TabListActivities  />
+              )
             }
           </View>
         </View>
