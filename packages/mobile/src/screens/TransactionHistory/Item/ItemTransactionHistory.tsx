@@ -2,24 +2,72 @@ import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import ModalTrasactionHistory from "./ModalTransactionHistory";
+import { TransactionModel } from "$libs/EVM/HistoryEVM/DataHistory";
+import { format } from "date-fns";
 
 interface Props {
-  isUp: boolean;
-  title?: string;
-  time?: string;
-  date?: string;
-  amount?: string;
-  privateKey?: string;
+  blockNumber?: string;
+  timeStamp?: string;
+  hash?: string;
+  nonce?: string;
+  blockHash?: string;
+  transactionIndex?: string;
+  from?: string;
+  to?: string;
+  value?: string;
+  gas?: string;
+  gasPrice?: string;
+  isError?: string;
+  txReceiptStatus?: string;
+  input?: string;
+  contractAddress?: string;
+  cumulativeGasUsed?: string;
+  gasUsed?: string;
+  confirmations?: string;
+  methodId?: string;
+  functionName?: string;
 }
 
+const TruncateString = ({ string, maxLength }) => {
+  if (string.length <= maxLength) {
+    return <Text>{string}</Text>;
+  }
+  return (
+    <Text>{`${string.substring(0, maxLength)}...${string.substring(
+      string.length - 5
+    )}`}</Text>
+  );
+};
+
 const ItemTransactionHistory = (props: Props) => {
-  const { isUp, title, time, date, amount, privateKey } = props;
+  const {
+    timeStamp,
+    blockHash,
+    from,
+    to,
+    gasPrice,
+    isError,
+    transactionIndex,
+    gasUsed,
+  } = props;
   const image = "../../../assets/icons/png/";
-  let colorsAmount = !isUp ? colors.Green : colors.Red;
-  let imagePath = isUp
-    ? require(`../../../assets/icons/png/ic_prime_arrow_up.png`)
-    : require(`../../../assets/icons/png/ic_prime_arrow_down.png`);
-  let backgroundColor = !isUp ? colors.White : colors.Primary;
+  let colorsAmount = isError === "0" ? colors.Green : colors.Red;
+  let colorsStatus = isError === "0" ? colors.Green : colors.Red;
+  let imagePath =
+    isError === "0"
+      ? require(`../../../assets/icons/png/ic_prime_arrow_up.png`)
+      : require(`../../../assets/icons/png/ic_prime_arrow_down.png`);
+  let backgroundColor = isError === "0" ? colors.Primary : colors.White;
+  const truncatedString = TruncateString({ string: to, maxLength: 5 });
+  const status = isError === "0" ? "Successful" : "Failed";
+  const divided = Number(gasPrice) / Math.pow(10, 18);
+  const decimalNumber = Number(divided).toFixed(9); // Làm tròn đến 3 chữ số thập phân
+  const formatDatestamp = (timestamp) => {
+    return format(new Date(parseInt(timestamp) * 1000), "dd MMM");
+  };
+  const formatTimestamp = (timestamp) => {
+    return format(new Date(parseInt(timestamp) * 1000), "HH:mm");
+  };
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const onClose = () => {
     setModalVisible(false);
@@ -41,9 +89,9 @@ const ItemTransactionHistory = (props: Props) => {
         </View>
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>{title ? title : "Receive"}</Text>
+            <Text style={styles.title}>Receive</Text>
             <View style={styles.dot}></View>
-            <Text style={styles.body}>{date ? date : "23 Dec"}</Text>
+            <Text style={styles.body}>{formatDatestamp(timeStamp)}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
@@ -51,24 +99,35 @@ const ItemTransactionHistory = (props: Props) => {
               source={require(`${image}/ic_clock.png`)}
             />
             <Text style={[styles.body, { color: colors.Gray_Light }]}>
-              {time ? time : "17:37"}
+              {formatTimestamp(timeStamp)}
             </Text>
             <View
               style={[styles.dot, { backgroundColor: colors.Gray_Light }]}
             ></View>
-            <Text style={styles.body}>
-              {privateKey ? privateKey : "0x342...75643"}
-            </Text>
+            <Text style={styles.body}>{truncatedString}</Text>
           </View>
         </View>
       </View>
       <View>
         <Text style={[styles.bodyRight, { color: colorsAmount }]}>
-          {amount ? amount : "+0.000400 BNB"}
+          +{decimalNumber} BNB
         </Text>
-        <Text style={[styles.bodyRight]}>Successful</Text>
+        <Text style={[styles.bodyRight, { color: colorsStatus }]}>
+          {status}
+        </Text>
       </View>
-      <ModalTrasactionHistory modalVisible={modalVisible} onClose={onClose} />
+      <ModalTrasactionHistory
+        modalVisible={modalVisible}
+        onClose={onClose}
+        timeStamp={timeStamp}
+        blockHash={blockHash}
+        from={from}
+        to={to}
+        gasPrice={gasPrice}
+        isError={isError}
+        transactionIndex={transactionIndex}
+        gasUsed={gasUsed}
+      />
     </Pressable>
   );
 };
@@ -84,7 +143,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   title: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "600",
     textAlign: "left",
     lineHeight: 25,
@@ -92,7 +151,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   body: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
     textAlign: "left",
     lineHeight: 21,
@@ -130,7 +189,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   bodyRight: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
     textAlign: "right",
     lineHeight: 21,
