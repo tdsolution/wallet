@@ -324,23 +324,23 @@ export const WalletContentList = memo<BalancesListProps>(
         })),
       );
 
-      if (inscriptions?.length > 0) {
-        content.push(
-          ...inscriptions.map((item) => ({
-            key: 'inscriptions' + item.ticker,
-            onPress: () => openTonInscription({ ticker: item.ticker, type: item.type }),
-            type: ContentType.Token,
-            tag: item.type,
-            picture: DEFAULT_TOKEN_LOGO,
-            title: item.ticker,
-            value: formatter.formatNano(item.balance, { decimals: item.decimals }),
-            subvalue: formatter.format('0', { currency, currencySeparator: 'wide' }),
-            rate: {
-              price: formatter.format('0', { currency, currencySeparator: 'wide' }),
-            },
-          })),
-        );
-      }
+      // if (inscriptions?.length > 0) {
+      //   content.push(
+      //     ...inscriptions.map((item) => ({
+      //       key: 'inscriptions' + item.ticker,
+      //       onPress: () => openTonInscription({ ticker: item.ticker, type: item.type }),
+      //       type: ContentType.Token,
+      //       tag: item.type,
+      //       picture: DEFAULT_TOKEN_LOGO,
+      //       title: item.ticker,
+      //       value: formatter.formatNano(item.balance, { decimals: item.decimals }),
+      //       subvalue: formatter.format('0', { currency, currencySeparator: 'wide' }),
+      //       rate: {
+      //         price: formatter.format('0', { currency, currencySeparator: 'wide' }),
+      //       },
+      //     })),
+      //   );
+      // }
 
       const firstTonkenElement = content[0] as TokenItem;
       const lastTokenElement = content[content.length - 1] as TokenItem;

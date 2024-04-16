@@ -4,7 +4,7 @@ import ItemWallet from "./ItemWallet";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { useChain } from "@tonkeeper/shared/hooks";
 
-const TabListToken = ({tokens, rpc, address}) => {
+const TabListToken = ({tokens, chainActive, address}) => {
   return (
     <View
       style={{
@@ -13,7 +13,8 @@ const TabListToken = ({tokens, rpc, address}) => {
       }}
     >
       <View>
-        
+        <View style= {{marginTop:10}}>
+          </View>
         <FlatList
           data={tokens}
           renderItem={({ item }) => (
@@ -21,7 +22,7 @@ const TabListToken = ({tokens, rpc, address}) => {
               id={item.id} 
               symbol={item.symbol}
               image={item.logo}
-              rpc = {rpc}
+              rpc = {chainActive.rpc}
               addressToken = {item.tokenAddress} 
               address = {address}
             />
@@ -37,7 +38,10 @@ const TabListToken = ({tokens, rpc, address}) => {
               </View>
             </TouchableOpacity>
           </View>}
-          ListHeaderComponent={<View style={{ height: 10 }} />}
+          ListHeaderComponent={ 
+          <View style= {{marginTop:0}}>
+          </View>
+       }
         />
       </View>
     </View>

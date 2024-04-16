@@ -2,6 +2,13 @@ export const DataTokens : any[] = [
     {
        chainId :'1',
        tokens: [
+         {
+            id:"ethereum", 
+            tokenAddress : "coin",
+            symbol : "ETH",
+            decimals: 18,
+            logo: "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
+        },
         {
             id:"weth", 
             tokenAddress : "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
@@ -35,6 +42,13 @@ export const DataTokens : any[] = [
      {
        chainId :'324',
        tokens: [
+         {
+            id:"ethereum", 
+            tokenAddress : "coin",
+            symbol : "ETH",
+            decimals: 18,
+            logo: "https://static.okx.com/cdn/assets/imgs/233/304C4440A1D87D83.png",
+        },
         {
             id:"tether", 
             tokenAddress : "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
@@ -54,6 +68,13 @@ export const DataTokens : any[] = [
     {
        chainId :'1116',
        tokens: [
+        {
+            id:"coredaoorg", 
+            tokenAddress : "coin",
+            symbol : "CORE",
+            decimals: 18,
+            logo: "https://i.imgur.com/MRyPUEL.png",
+        },
          {
             id:"wrapped-core", 
             tokenAddress : "0x40375C92d9FAf44d2f9db9Bd9ba41a3317a2404f",
@@ -62,7 +83,7 @@ export const DataTokens : any[] = [
             logo: "https://assets.coingecko.com/coins/images/29276/large/wcore.png?1696528228",
         },
         {
-            id:"coredaoorg", 
+            id:"cst", 
             tokenAddress : "0xc24b642357d7dd1bbe33f3d8aa0101dfa2cf6eb9",
             symbol : "CST",
             decimals: 18,
@@ -73,6 +94,13 @@ export const DataTokens : any[] = [
     {
        chainId :'137',
        tokens: [
+        {
+            id:"matic-network", 
+            tokenAddress : "coin",
+            symbol : "MATIC",
+            decimals: 18,
+            logo: "https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png",
+        },
         {
             id:"wmatic", 
             tokenAddress : "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
@@ -107,6 +135,13 @@ export const DataTokens : any[] = [
        chainId :'10',
        tokens: [
          {
+            id:"optimism", 
+            tokenAddress : "coin",
+            symbol : "ETH",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385",
+        },
+         {
             id:"tether", 
             tokenAddress : "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
             symbol : "USDT",
@@ -126,6 +161,13 @@ export const DataTokens : any[] = [
        chainId :'42161',
        tokens: [
          {
+            id:"arbitrum", 
+            tokenAddress : "coin",
+            symbol : "ETH",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg?1696516109",
+        },
+         {
             id:"tether", 
             tokenAddress : "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
             symbol : "USDT",
@@ -144,6 +186,13 @@ export const DataTokens : any[] = [
      {
        chainId :'43114',
        tokens: [
+        {
+            id:"avalanche-2", 
+            tokenAddress : "coin",
+            symbol : "AVAX",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png?1696512369",
+        },
          {
             id:"tether", 
             tokenAddress : "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
@@ -164,6 +213,13 @@ export const DataTokens : any[] = [
        chainId :'38',
        tokens: [
         {
+            id:"binancecoin", 
+            tokenAddress : "coin",
+            symbol : "BNB",
+            decimals: 18,
+            logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
+        },
+        {
             id:"wbnb", 
             tokenAddress : "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
             symbol : "WBNB",
@@ -182,6 +238,13 @@ export const DataTokens : any[] = [
     {
        chainId :'97',
        tokens: [
+         {
+            id:"binancecoin", 
+            tokenAddress : "coin",
+            symbol : "BNB",
+            decimals: 18,
+            logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
+        },
          {
             id:"wbnb", 
             tokenAddress : "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
@@ -203,6 +266,93 @@ export const DataTokens : any[] = [
             decimals: 6,
             logo: "https://s2.coinmarketcap.com/static/img/coins/200x200/825.png",
         },
+        
      ]
     },
+     {
+       chainId :'250',
+       tokens: [
+         {
+            id:"fantom", 
+            tokenAddress : "coin",
+            symbol : "FTM",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/4001/large/Fantom_round.png?169650464",
+        },
+        {
+            id:"usd-coin", 
+            tokenAddress : "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
+            symbol : "USDC",
+            decimals: 6,
+            logo: "https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png",
+        }
+     ]
+    },
+     {
+       chainId :'1088',
+       tokens: [
+         {
+            id:"metis-token", 
+            tokenAddress : "coin",
+            symbol : "METIS",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/15595/large/Metis_Black_Bg.png?1702968192",
+        },
+        {
+            id:"usd-coin", 
+            tokenAddress : "0xEA32A96608495e54156Ae48931A7c20f0dcc1a21",
+            symbol : "m.USDC",
+            decimals: 6,
+            logo: "https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png",
+        },
+         {
+            id:"tether", 
+            tokenAddress : "0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC",
+            symbol : "m.USDT",
+            decimals: 6,
+            logo: "https://s2.coinmarketcap.com/static/img/coins/200x200/825.png",
+        },
+        
+     ]
+    },
+      {
+       chainId :'42220',
+       tokens: [
+         {
+            id:"celo", 
+            tokenAddress : "coin",
+            symbol : "CELO",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/11090/large/InjXBNx9_400x400.jpg?1696511031",
+        },
+        {
+            id:"usd-coin", 
+            tokenAddress : "0xef4229c8c3250C675F21BCefa42f58EfbfF6002a",
+            symbol : "USDC",
+            decimals: 6,
+            logo: "https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png",
+        },
+         {
+            id:"tether", 
+            tokenAddress : "0x617f3112bf5397D0467D315cC709EF968D9ba546",
+            symbol : "USDT",
+            decimals: 6,
+            logo: "https://s2.coinmarketcap.com/static/img/coins/200x200/825.png",
+        },
+        
+     ]
+    }
+    ,
+      {
+       chainId :'25',
+       tokens: [
+         {
+            id:"crypto-com-chain", 
+            tokenAddress : "coin",
+            symbol : "CRO",
+            decimals: 18,
+            logo: "https://cronoscan.com/images/brandassets/logo.jpg?v=24.2.3.0",
+        },
+     ]
+    }
 ]

@@ -83,7 +83,7 @@ const StakingListCellComponent: FC<Props> = (props) => {
         underlayColor={theme.backgroundContentTint}
       >
         <View>
-          <S.Container>
+          <S.Container style={{backgroundColor:'#ffffff'}}>
             {icon}
             {!icon ? (
               <View
@@ -105,13 +105,13 @@ const StakingListCellComponent: FC<Props> = (props) => {
             ) : null}
             <Spacer x={16} />
             <S.Content>
-              <S.Row>
-                <S.Title>{name}</S.Title>
+              <S.Row >
+                <S.Title style={{color:'#4871EA', fontSize:14}}>{name}</S.Title>
                 {highestApy ? (
                   <Tag type="positive">{t('staking.highest_apy')}</Tag>
                 ) : null}
               </S.Row>
-              <S.SubTitle numberOfLines={numberOfLines ?? 2}>{description}</S.SubTitle>
+              <S.SubTitle numberOfLines={numberOfLines ?? 2} style={{ fontSize:12}}>{description}</S.SubTitle>
             </S.Content>
             <S.RightContainer>
               {balanceValue ? (
@@ -130,7 +130,7 @@ const StakingListCellComponent: FC<Props> = (props) => {
                   </HideableAmount>
                 </>
               ) : (
-                <Icon name="ic-chevron-right-16" />
+                <Icon name="ic-chevron-right-16" colorHex="#4871EA" />
               )}
             </S.RightContainer>
           </S.Container>
@@ -160,9 +160,9 @@ export const StakingListCell = memo(StakingListCellComponent);
 
 const styles = Steezy.create(({ colors }) => ({
   iconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 44 / 2,
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.backgroundContentTint,

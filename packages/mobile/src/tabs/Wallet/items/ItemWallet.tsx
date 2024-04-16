@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
-import {  formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import {  fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 
 interface Props {
@@ -16,7 +16,6 @@ interface Props {
 
 const ItemWallet = (props: Props) => {
   const {id, symbol, image,address ,addressToken,rpc} = props;
-  let profitColor = symbol === "USDT" ? colors.Red : colors.Green;
    const [price, setPrice] = useState('0');
    const [priceUsd, setPriceUsd] = useState(0);
    const [coinUsd, setCoinUsd] = useState(0);
@@ -26,6 +25,7 @@ const ItemWallet = (props: Props) => {
      console.log(price);
   }, []);
    async function fetchBalance() {
+            if(addressToken != 'coin'){
             const balance = await getBalanceToken(rpc, addressToken, address);
             const coinRate = await SaveListCoinRate.getCoinRateById(id);
             const rateUsd = coinRate?.usd ?? '0';
@@ -38,6 +38,21 @@ const ItemWallet = (props: Props) => {
             setPriceUsd(balanceUsd);
             setCoinUsd24(parseFloat(coinUsd24));
             setCoinUsd(parseFloat(rateUsd));
+            }else{
+               const balance = await fetchBalaceEvm(rpc, '0xEa5007831646fa01C7079B15cFa4c62748905b04' );
+              const coinRate = await SaveListCoinRate.getCoinRateById(id);
+              const rateUsd = coinRate?.usd ?? '0';
+              const coinUsd24 = coinRate?.usdChange ?? '0';
+              const checkLevel = parseFloat(coinUsd24);
+              setIsCheckLevel(checkLevel >= 0 ? true : false);
+              const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
+              console.log(balance);
+              setPrice(balance);
+              setPriceUsd(balanceUsd);
+              setCoinUsd24(parseFloat(coinUsd24));
+              setCoinUsd(parseFloat(rateUsd));
+            }
+          
   }
    useEffect(() => {
         fetchBalance();

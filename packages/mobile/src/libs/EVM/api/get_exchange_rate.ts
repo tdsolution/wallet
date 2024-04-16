@@ -1,5 +1,51 @@
 import axios from 'axios';
-
+export async function getTokenTrend(){
+    try {
+        const url = 'https://api.dextools.io/v1/token?chain=polygon&address=0x12016b4E07866c962e29b7597eCd66B3B89a3a58';
+        const response = await axios.get(url, 
+            {
+            headers: {
+            'accept': 'application/json',
+            'X-API-Key': '01e54e9712d16936f7a4a333fc6c789f',
+          },
+            }
+        );
+        if(response.status === 200){
+            const data = JSON.stringify(response.data);
+           console.log(data['data']['reprPair']['price']);
+            return data['data']['reprPair']['price'];
+        }else{
+             return '0.0';
+        }
+    } catch (error) {
+        console.error(error);
+        return '0.0';
+    }
+}
+export async function getTokenCST(){
+    try {
+        const url = 'https://api.dextools.io/v1/token?chain=coredao&address=0xc24b642357d7dd1bbe33f3d8aa0101dfa2cf6eb9';
+        const response = await axios.get(url, 
+            {
+            headers: {
+            'accept': 'application/json',
+            'X-API-Key': '01e54e9712d16936f7a4a333fc6c789f',
+          },
+            }
+        );
+        if(response.status === 200){
+            const data = JSON.parse(response.data);
+            console.log(data.data);
+            // const price = data1.data.reprPair.price;
+            // console.log(price);
+            return 'price';
+        }else{
+             return '0.0';
+        }
+    } catch (error) {
+        return 'error';
+    }
+}
 export async function fetchExchangeRate (){
     try {
         const toCurrency = 'usd'; // Loại tiền tệ cần chuyển đổi
