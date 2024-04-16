@@ -61,7 +61,7 @@ const ModalAddAccount = (props: Props) => {
           }
         } 
         else {
-          setModalNotification(true);
+            setModalNotification(true);
             setTileNoti('Wallet does not exist!');
             setDescriptionNoti('You may have entered the wrong private key, please check again.');
         }

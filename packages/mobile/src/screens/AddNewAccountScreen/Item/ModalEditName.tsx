@@ -43,9 +43,10 @@ const ModalEditName = (props: Props) => {
       setDescriptionNoti('Please enter new wallet name.');
     }
     else {
+      setTileNoti('');
+      setDescriptionNoti('The walet has been renamed!');
       SaveListWallet.editNameWallet(item, textInput);
       setModalNotification(true);
-      setDescriptionNoti('The walet has been renamed!');
       }
   }, [textInput]);
     

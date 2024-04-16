@@ -46,7 +46,7 @@ import {
               <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
                 {title}
               </Text>
-              <TouchableOpacity onPress={() => (!title || !description ) ? navigation.push(WalletStackRouteNames.Account) : onClose()}>
+              <TouchableOpacity onPress={onClose}>
                 <Image
                   style={[
                     styles.iconCancel,
@@ -59,7 +59,7 @@ import {
             <Text style={styles.subtitle}>
               {description}
             </Text>
-            <TouchableOpacity style={styles.buttonOk} onPress={() => (!title || !description ) ? navigation.push(WalletStackRouteNames.Account) : onClose()}>
+            <TouchableOpacity style={styles.buttonOk} onPress={onClose}>
               <Text style={styles.textButton}>OK</Text>
             </TouchableOpacity>
           </View>
