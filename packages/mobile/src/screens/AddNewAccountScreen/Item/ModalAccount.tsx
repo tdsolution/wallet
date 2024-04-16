@@ -14,6 +14,7 @@ import { Icon } from "$uikit";
 import ModalViewPrivateKey from "./ModalViewPirivateKey";
 import ModalDeleteAccount from "./ModalDeleteAccount";
 import ModalEditName from "./ModalEditName";
+import { navigation } from "@tonkeeper/router";
   
 interface Props {
   modalVisible: boolean;

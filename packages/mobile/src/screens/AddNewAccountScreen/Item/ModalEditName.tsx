@@ -14,6 +14,8 @@ import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import ModalNotification from "./ModalNotification";
 import SaveListWallet from "$libs/EVM/SaveWallet";
+import { navigation } from "@tonkeeper/router";
+import { WalletStackRouteNames } from "$navigation";
 
 interface Props {
   modalVisible: boolean;
