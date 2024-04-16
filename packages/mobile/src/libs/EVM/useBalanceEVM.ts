@@ -6,7 +6,7 @@ import SaveListCoinRate from './api/get_exchange_rate';
 interface BalanceEVMData {
   balanceEVM : number;
 }
-async function fetchBalaceEvm(walletAddress : string, rpc: string) {
+export async function fetchBalaceEvm(walletAddress : string, rpc: string) {
   try {
     const provider = new JsonRpcProvider(rpc);
     const balanceResponse = await provider.getBalance(walletAddress);

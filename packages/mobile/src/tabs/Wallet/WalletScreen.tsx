@@ -80,6 +80,8 @@ import {
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate, {
   coinRateModelFromJson,
+  getTokenCST,
+  getTokenTrend,
 } from "$libs/EVM/api/get_exchange_rate";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
@@ -544,7 +546,13 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <IconButtonList style={styles.actionButtons}>
             {!isWatchOnly ? (
               <IconButton
-                onPress={handlePressSend}
+                onPress={
+                  handlePressSend
+                  // async ()=>{
+                  //  let coinRates = await getTokenCST();
+                  //  console.log(coinRates);
+                  // }
+                }
                 iconName="ic-arrow-up-28"
                 title={t("wallet.send_btn")}
               />
@@ -570,6 +578,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
             )}
           </IconButtonList>
         </View>
+       
         <View style={{ flex: 1,}}>
           <TabTop
             tabs={["Tokens", "Activities"]}
@@ -586,14 +595,32 @@ export const WalletScreen = memo(({ navigation }: any) => {
           >
             {
               activeTab === "Tokens" ? (
-                <TabListToken tokens={tokensEVM} rpc={chain.rpc} address={addressEVMString(addressEvm)}/>
+              chain.chainId != '1100' ? 
+              <TabListToken tokens={tokensEVM} chainActive={chain} address={addressEVMString(addressEvm)}/> 
+              :  <View
+                  style={{
+                    width: "100%",
+                    paddingBottom:80,
+                  }}
+                >
+                <WalletContentList
+                  inscriptions={inscriptions}
+                  currency={currency}
+                  tronBalances={tronBalances}
+                  handleRefresh={handleRefresh}
+                  isRefreshing={isRefreshing}
+                  isFocused={isFocused}
+                  balance={balance}
+                  tokens={tokens}
+                  tonPrice={tonPrice}
+                  nfts={nfts}
+                /></View>
               ) : (<TabListActivities />)
             }
           </View>
         </View>
-       
+         
       </ScrollView>
-
       {isPagerView ? (
         <PagerView estimatedHeaderHeight={288}>
           <PagerView.Header>
