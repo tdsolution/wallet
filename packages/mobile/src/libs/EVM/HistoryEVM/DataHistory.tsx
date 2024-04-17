@@ -61,7 +61,7 @@ export function createBSTransactionFromJson(json: any): TransactionModel {
     gasUsed: json["gasUsed"],
     confirmations: json["confirmations"],
     methodId: json["methodId"],
-    functionName: json["functionName"],
+    functionName: json["functionName"] ?? '',
   };
 }
 
@@ -146,7 +146,6 @@ export const fetchTransactions = async (
         `https://tronscan.org/#/address/${address}`
       );
       if (response.status == 200) {
-        console.log(response.data);
         return response.data;
       } else {
         console.log("Failed to fetch transaction");
@@ -156,19 +155,18 @@ export const fetchTransactions = async (
       const apiKeyparams = getApiKey(blockChainType);
       const requestUrl =
         blockChainType == "1116"
-          ? "https://openapi.coredao.org/api?module=account&action=txlist&address=$address&startblock=0&endblock=99999999&page=1&offset=5&sort=asc&apikey=215812fe7d774d8993b51fa4c3b128cc"
+          ? `https://openapi.coredao.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=asc&apikey=215812fe7d774d8993b51fa4c3b128cc`
           : blockChainType == '43114'
-                ? 'https://avascan.info/blockchain/all/address/$address/transactions'
+                ? `https://avascan.info/blockchain/all/address/${address}/transactions`
                 : blockChainType == '42161'
-                    ? 'https://arbiscan.io/address/$address'
+                    ? `https://arbiscan.io/address/${address}`
                     : _buildRequestUrl(apiURL, address, apiKeyparams);
       console.log(requestUrl);
       let response = await axios.get(requestUrl);
       if (response.status == 200) {
-        console.log(response.data);
         return response.data;
       } else {
-        blockChainType == "1116" ? 'https://openapi.coredao.org/api?module=account&action=txlist&address=$address&startblock=0&endblock=99999999&page=1&offset=5&sort=asc&apikey=215812fe7d774d8993b51fa4c3b128cc' : "";
+        blockChainType == "1116" ? `https://openapi.coredao.org/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=5&sort=asc&apikey=215812fe7d774d8993b51fa4c3b128cc` : "";
         console.log("Failed to fetch transaction");
       }
     }

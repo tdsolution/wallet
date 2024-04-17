@@ -20,36 +20,35 @@ import {
   TransactionModel,
   fetchTransactions,
 } from "$libs/EVM/HistoryEVM/DataHistory";
-
-const TabListActivities = () => {
+import moment from 'moment';
+const TabListActivities = ({ chainActive, address}) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const dataToShow = transactions.slice(-3);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await fetchTransactions('0xEa5007831646fa01C7079B15cFa4c62748905b04', '97');
+        const data = await fetchTransactions(address, chainActive.chainId);
         const transactionsData: TransactionModel[] = data.result.map(
           (item: any) => createBSTransactionFromJson(item)
         );
-        // console.log("Data: ", transactionsData);
         setTransactions(transactionsData);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }finally {
         setIsLoading(false);
       }
     };
-    
-
-
     fetchData();
-  }, []);
-
+  }, [chainActive]);
+  function convertToTimestampString(timeString: string): string {
+    const timestamp: number = moment(timeString, "ddd MMM DD HH:mm:ss [UTC] YYYY").valueOf();
+    return timestamp.toString();
+}
   const FooterComponent = ({ isLoading }) => (
     <View
       style={{
@@ -81,41 +80,25 @@ const TabListActivities = () => {
             />
           </TouchableOpacity>
         </View>
-        {DATA_ACTIVITIES.length !== 0 ? (
+        {dataToShow.length > 0 ? (
           <View>
-            {/* <FlatList
-              data={dataToShow}
-              renderItem={({ item }) => (
-                <ItemTransactionHistory
-                  title={item.title}
-                  time={item.time}
-                  amount={item.amount}
-                  privateKey={item.privateKey}
-                  date={item.date}
-                  isUp={item.isUp}
-                />
-              )}
-              keyExtractor={(item) => item.privateKey.toString()}
-              ListHeaderComponent={<View style={{ height: 25 }} />}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={false}
-            /> */}
             <FlatList
               data={dataToShow}
               renderItem={({ item }) => (
                 <ItemTransactionHistory
-                  timeStamp={item.timeStamp}
+                  timeStamp= {chainActive.chainId != '1116' ?  item.timeStamp : convertToTimestampString(item.timeStamp ?? '')}
                   blockHash={item.blockHash}
                   from={item.from}
                   to={item.to}
-                  gasPrice={item.gasPrice}
+                  value={item.value}
                   isError={item.isError}
                   transactionIndex={item.transactionIndex}
                   gasUsed={item.gasUsed}
+                  chainSymbol={chainActive.currency}
+                  isSend = {item.from?.toLocaleLowerCase() === address.toLocaleLowerCase()}
                 />
               )}
-              // keyExtractor={(item, index) => index.toString()}
-              // ListFooterComponent={<View style={{ height: 150 }} />}
+              keyExtractor={(item, index) => index.toString()}
               ListHeaderComponent={<View style={{ height: 5 }} />}
               showsVerticalScrollIndicator={false}
               scrollEnabled={false}
@@ -130,7 +113,7 @@ const TabListActivities = () => {
             >
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("TransactionHistory")}
+                onPress={() => navigation.navigate("TransactionHistory", {chainActive, address})}
               >
                 <Text style={styles.textButton}>See all transactions</Text>
                 <Image

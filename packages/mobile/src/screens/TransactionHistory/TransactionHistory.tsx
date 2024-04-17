@@ -19,7 +19,7 @@ import {
   TransactionModel,
   fetchTransactions,
 } from "$libs/EVM/HistoryEVM/DataHistory";
-
+import { useRoute } from '@react-navigation/native';
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,10 +35,7 @@ const TransactionHistory = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const data = await fetchTransactions(
-        "0xEa5007831646fa01C7079B15cFa4c62748905b04",
-        "97"
-      );
+     const data = await fetchTransactions('0xEa5007831646fa01C7079B15cFa4c62748905b04','97');
       const transactionsData: TransactionModel[] = data.result.map(
         (item: any) => createBSTransactionFromJson(item)
       );
@@ -98,7 +95,6 @@ const TransactionHistory = () => {
       {isLoading && <ActivityIndicator animating size="small" />}
     </View>
   );
-
   return (
     <Container>
       <HeaderBar title={"Transactions"} onBack={handleBack} />
@@ -122,10 +118,12 @@ const TransactionHistory = () => {
             blockHash={item.blockHash}
             from={item.from}
             to={item.to}
-            gasPrice={item.gasPrice}
+            value={item.value}
             isError={item.isError}
             transactionIndex={item.transactionIndex}
             gasUsed={item.gasUsed}
+            chainSymbol="BNB"
+            isSend={false}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -169,3 +167,5 @@ const styles = StyleSheet.create({
 });
 
 export default TransactionHistory;
+
+

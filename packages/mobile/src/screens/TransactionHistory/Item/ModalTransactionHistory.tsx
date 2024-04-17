@@ -40,6 +40,7 @@ interface Props {
   confirmations?: string;
   methodId?: string;
   functionName?: string;
+  chainSymbol: string;
 }
 
 const TruncateString = ({ string, maxLength }) => {
@@ -61,18 +62,19 @@ const ModalTrasactionHistory = (props: Props) => {
     blockHash,
     from,
     to,
-    gasPrice,
+    value,
     isError,
     transactionIndex,
     gasUsed,
+    chainSymbol,
   } = props;
   const truncatedFromString = TruncateString({ string: from, maxLength: 7 });
   const truncatedToString = TruncateString({ string: to, maxLength: 7 });
   const status = isError === "0" ? "Successful" : "Failed";
   const backgroundColorStatus = isError === "0" ? "#90D26D" : "#E72929";
-  const divided = Number(gasPrice) / Math.pow(10, 18);
+  const divided = Number(value) / Math.pow(10, 18);
   const decimalNumber = Number(divided).toFixed(9);
-  const gasfee = Number(gasPrice) * Number(gasUsed);
+  const gasfee = Number(value) * Number(gasUsed);
   const dividedGasfee = Number(gasfee) / Math.pow(10, 18);
   const decimalNumberGasFee = Number(dividedGasfee).toFixed(9);
   const totalAmount = Number(decimalNumber) + Number(decimalNumberGasFee);
@@ -205,7 +207,7 @@ const ModalTrasactionHistory = (props: Props) => {
             <View style={styles.payment}>
               <View style={[styles.row]}>
                 <Text style={styles.title}>Money amount</Text>
-                <Text style={styles.subtitle}>{decimalNumber} MATIC</Text>
+                <Text style={styles.subtitle}>{decimalNumber} {chainSymbol}</Text>
               </View>
               <View style={[styles.row, { marginTop: 5 }]}>
                 <Text style={styles.title}>Estiated gas fees</Text>

@@ -615,7 +615,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   tonPrice={tonPrice}
                   nfts={nfts}
                 /></View>
-              ) : (<TabListActivities />)
+              ) : (<TabListActivities chainActive={chain}  address={addressEVMString(addressEvm)}/>)
             }
           </View>
         </View>

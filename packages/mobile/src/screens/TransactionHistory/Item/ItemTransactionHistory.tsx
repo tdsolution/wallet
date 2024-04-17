@@ -4,6 +4,8 @@ import { colors } from "../../../constants/colors";
 import ModalTrasactionHistory from "./ModalTransactionHistory";
 import { TransactionModel } from "$libs/EVM/HistoryEVM/DataHistory";
 import { format } from "date-fns";
+import { formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import moment from "moment";
 
 interface Props {
   blockNumber?: string;
@@ -26,6 +28,8 @@ interface Props {
   confirmations?: string;
   methodId?: string;
   functionName?: string;
+  chainSymbol: string;
+  isSend: boolean;
 }
 
 const TruncateString = ({ string, maxLength }) => {
@@ -45,29 +49,32 @@ const ItemTransactionHistory = (props: Props) => {
     blockHash,
     from,
     to,
-    gasPrice,
+    value,
     isError,
     transactionIndex,
     gasUsed,
+    chainSymbol,
+    isSend,
   } = props;
   const image = "../../../assets/icons/png/";
-  let colorsAmount = isError === "0" ? colors.Green : colors.Red;
+  let colorsAmount = isSend  ? colors.Red : colors.Green;
   let colorsStatus = isError === "0" ? colors.Green : colors.Red;
   let imagePath =
-    isError === "0"
+   isSend
       ? require(`../../../assets/icons/png/ic_prime_arrow_up.png`)
       : require(`../../../assets/icons/png/ic_prime_arrow_down.png`);
-  let backgroundColor = isError === "0" ? colors.Primary : colors.White;
-  const truncatedString = TruncateString({ string: to, maxLength: 5 });
+  let backgroundColor = isSend ? colors.Primary : colors.White;
+  const truncatedString = TruncateString({ string: isSend  ? from : to, maxLength: 5 });
   const status = isError === "0" ? "Successful" : "Failed";
-  const divided = Number(gasPrice) / Math.pow(10, 18);
+  const divided = Number(value) / Math.pow(10, 18);
   const decimalNumber = Number(divided).toFixed(9); // Làm tròn đến 3 chữ số thập phân
-  const formatDatestamp = (timestamp) => {
-    return format(new Date(parseInt(timestamp) * 1000), "dd MMM");
-  };
-  const formatTimestamp = (timestamp) => {
-    return format(new Date(parseInt(timestamp) * 1000), "HH:mm");
-  };
+  const formatDatestamp = (timestamp: string): string => {
+    return moment.unix(parseInt(timestamp)).format("DD MMM");
+};
+
+const formatTimestamp = (timestamp: string): string => {
+    return moment.unix(parseInt(timestamp)).format("HH:mm");
+};
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const onClose = () => {
     setModalVisible(false);
@@ -89,9 +96,9 @@ const ItemTransactionHistory = (props: Props) => {
         </View>
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>Receive</Text>
+            <Text style={styles.title}>{isSend ? 'Send' : 'Receive'}</Text>
             <View style={styles.dot}></View>
-            <Text style={styles.body}>{formatDatestamp(timeStamp)}</Text>
+            <Text style={styles.body}>{formatDatestamp(timeStamp ?? '')}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
@@ -99,7 +106,7 @@ const ItemTransactionHistory = (props: Props) => {
               source={require(`${image}/ic_clock.png`)}
             />
             <Text style={[styles.body, { color: colors.Gray_Light }]}>
-              {formatTimestamp(timeStamp)}
+              {formatTimestamp(timeStamp ?? '')}
             </Text>
             <View
               style={[styles.dot, { backgroundColor: colors.Gray_Light }]}
@@ -110,7 +117,7 @@ const ItemTransactionHistory = (props: Props) => {
       </View>
       <View>
         <Text style={[styles.bodyRight, { color: colorsAmount }]}>
-          +{decimalNumber} BNB
+          {isSend ? '-' :'+'} {decimalNumber} {chainSymbol}
         </Text>
         <Text style={[styles.bodyRight, { color: colorsStatus }]}>
           {status}
@@ -123,10 +130,11 @@ const ItemTransactionHistory = (props: Props) => {
         blockHash={blockHash}
         from={from}
         to={to}
-        gasPrice={gasPrice}
+        value={value}
         isError={isError}
         transactionIndex={transactionIndex}
         gasUsed={gasUsed}
+        chainSymbol={chainSymbol}
       />
     </Pressable>
   );
