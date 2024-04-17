@@ -1,14 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {Keyboard} from 'react-native';
 
 // import * as S from "../AccessConfirmation/AccessConfirmation.style";
-import { NavBar } from "$uikit";
 import { openSetupNotifications, openSetupWalletDone } from "$navigation";
 import { walletActions } from "$store/wallet";
-import { CreatePinForm } from "$shared/components";
 import { tk } from "$wallet";
-import { popToTop } from "$navigation/imperative";
 import { useParams } from "@tonkeeper/router/src/imperative";
 import { BlockingLoader } from "@tonkeeper/uikit";
 import {
@@ -23,15 +19,12 @@ import {
   Pressable,
 } from "react-native";
 import { useNavigation } from "@tonkeeper/router";
-import { CreateWalletStackRouteNames } from "../../navigation/CreateWalletStack/types";
 import ItemAccount from "./Item/ItemAccount";
 import { WalletStackRouteNames } from "$navigation";
-import { colors } from "../../constants/colors";
-import { globalStyles } from "$styles/globalStyles";
 import ModalChooseAddWallet from "./Item/ModalChooseAddWallet";
 import ModalConnectWallet from "./Item/ModalConnectWallet";
-import ModalAddAccount from "./Item/ModalAddAccount";
 import SaveListWallet from "$libs/EVM/SaveWallet";
+import { ListWalletModel } from "$libs/EVM/SaveWallet";
 
 export const AddNewAccount: FC = () => {
   const params = useParams<{ isImport?: boolean }>();
@@ -41,7 +34,7 @@ export const AddNewAccount: FC = () => {
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [data2,setdata2] = useState(null);
+  const [data2, setdata2] = useState<ListWalletModel[]>();
 
   const handleCloseChooseWallet = () => {
     setModalVisible(false);
@@ -50,7 +43,6 @@ export const AddNewAccount: FC = () => {
   const handleCloseConnectWallet = () => {
     setPopupVisible(false);
   };
-  
 
   useEffect(() => {
     async function getdata() {
@@ -58,8 +50,7 @@ export const AddNewAccount: FC = () => {
         setdata2(data);
     }
     getdata();
-  }, []);
-  console.log(data2);
+  }, [data2]);
 
   const handlePinCreated = useCallback(
     async (pin: string) => {

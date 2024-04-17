@@ -36,6 +36,7 @@ const ModalEditName = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModalNotification(false);
+    onClose();
   };
 
   const handleEditName = useCallback(() =>  {

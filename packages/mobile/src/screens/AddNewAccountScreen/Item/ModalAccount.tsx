@@ -24,12 +24,12 @@ interface Props {
   
 const ModalAccount = (props: Props) => {
   const { modalVisible, onClose, item } = props;
-  const [modalAddAccount, setModalAddAccount] = useState(false);
+  const [modalViewPrivateKey, setModalViewPrivateKey] = useState(false);
   const [modalEditName, setModalEditName] = useState(false);
   const [modalDeleteAccount, setModalDeleteAccount] = useState(false);
 
-  const handleCloseAddAccount = () => {
-    setModalAddAccount(false);
+  const handleCloseViewPrivateKey= () => {
+    setModalViewPrivateKey(false);
   };
 
   const handleCloseEditName = () => {
@@ -74,13 +74,13 @@ const ModalAccount = (props: Props) => {
           </View>
           <View style={styles.modalContent}>
             <TouchableOpacity
-              onPress={() => setModalAddAccount(true)}
+              onPress={() => setModalViewPrivateKey(true)}
               style={styles.menuContainer}
             >
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#2b6099"}]}>
                 <Image
-                  style={styles.iconAdd}
+                  style={styles.icon}
                   source={require("../../../assets/icons/png/ic-key-28.png")}
                 />
               </View>
@@ -95,7 +95,7 @@ const ModalAccount = (props: Props) => {
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#ffe063"}]}>
                 <Image
-                  style={styles.iconAdd}
+                  style={styles.icon}
                   source={require("../../../assets/icons/png/ic-key-28.png")}
                 />
               </View>
@@ -110,7 +110,7 @@ const ModalAccount = (props: Props) => {
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Image
-                  style={styles.iconAdd}
+                  style={styles.icon}
                   source={require("../../../assets/icons/png/ic-key-28.png")}
                 />
               </View>
@@ -122,8 +122,8 @@ const ModalAccount = (props: Props) => {
         </View>
       </View>
       <ModalViewPrivateKey
-        modalVisible={modalAddAccount}
-        onClose={handleCloseAddAccount}
+        modalVisible={modalViewPrivateKey}
+        onClose={handleCloseViewPrivateKey}
         item={item}
       />
       <ModalEditName
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
   },
-  iconAdd: {
+  icon: {
     width: 24,
     height: 24,
     resizeMode: "contain",
