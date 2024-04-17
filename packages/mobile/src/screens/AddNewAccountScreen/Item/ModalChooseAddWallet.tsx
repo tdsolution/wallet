@@ -13,6 +13,8 @@ import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import ModalAddAccount from "./ModalAddAccount";
+import { Icon } from "$uikit";
+import ModalAddMnemonic from "./ModalAddMnemonic";
 
 interface Props {
   modalVisible: boolean;
@@ -22,9 +24,17 @@ interface Props {
 const ModalChooseAddWallet = (props: Props) => {
   const { modalVisible, onClose } = props;
   const [modalAddAccount, setModalAddAccount] = useState(false);
+  const [modalAddMnemonic, setmodalAddMnemonic] = useState(false);
+
   const handleCloseAddAccount = () => {
     setModalAddAccount(false);
+    onClose();
   };
+
+  const handleCloseAddMnemonic= () => {
+    setmodalAddMnemonic(false);
+  };
+
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -34,20 +44,12 @@ const ModalChooseAddWallet = (props: Props) => {
     >
       <Pressable
           onPress={onClose}
-          style={{
-            flex: 1,
-            position: "absolute",
-            backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
+          style={styles.pressable}
         ></Pressable>
       <View
         style={styles.modalContainer}
       >
-        <View style={styles.modaleHeader}>
+        <View style={styles.modalHeader}>
           <View style={styles.rowHeader}>
             <View></View>
             <Text
@@ -56,7 +58,7 @@ const ModalChooseAddWallet = (props: Props) => {
                 { color: colors.White, fontSize: 16 },
               ]}
             >
-              Add a secondary wallet
+             Add a secondary wallet
             </Text>
             <TouchableOpacity style={styles.boxClose} onPress={onClose}>
               <Image
@@ -68,51 +70,60 @@ const ModalChooseAddWallet = (props: Props) => {
           <View style={styles.modalContent}>
             <TouchableOpacity
               onPress={() => setModalAddAccount(true)}
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center",
-                paddingVertical: 10,
-              }}
+              style={styles.menuContainer}
             >
-              <View style={styles.boxImageModal}>
+              <View style={styles.menu}>
+              <View style={[styles.boxImageModal, {backgroundColor: "#68B984"}]}>
                 <Image
-                  style={styles.iconAdd}
+                  style={styles.icon}
                   source={require("../../../assets/icons/png/ic-key-28.png")}
                 />
               </View>
               <Text style={styles.textButton}>Add wallet with private key</Text>
+              </View>
+              <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
-            <View
-              style={{ borderBottomWidth: 0.5, borderColor: colors.Gray }}
-            ></View>
             <TouchableOpacity
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center",
-                paddingVertical: 10,
-              }}
+              onPress={() => setmodalAddMnemonic(true)}
+              style={styles.menuContainer}
             >
-              <View
-                style={[styles.boxImageModal, { backgroundColor: "#0F6292" }]}
-              >
+              <View style={styles.menu}>
+              <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Image
-                  style={styles.iconAdd}
+                  style={styles.icon}
+                  source={require("../../../assets/icons/png/ic-key-28.png")}
+                />
+              </View>
+              <Text style={styles.textButton}>Add wallet with mnemonic</Text>
+              </View>
+              <Icon name="ic-chevron-right-16" color="constantDark"/>
+            </TouchableOpacity>
+            <TouchableOpacity
+              //onPress={() => setModalDeleteAccount(true)}
+              style={styles.menuContainer}
+            >
+              <View style={styles.menu}>
+              <View style={[styles.boxImageModal, {backgroundColor: "#0F6292"}]}>
+                <Image
+                  style={styles.icon}
                   source={require("../../../assets/icons/png/ic-plus-28.png")}
                 />
               </View>
               <Text style={styles.textButton}>Add a new wallet</Text>
+              </View>
+              <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      {/* Modal Add Accont Start */}
       <ModalAddAccount
         modalVisible={modalAddAccount}
         onClose={handleCloseAddAccount}
       />
-      {/* Modal Add Accont Start */}
+      <ModalAddMnemonic
+      modalVisible={modalAddMnemonic}
+      onClose={handleCloseAddMnemonic}
+    />
     </Modal>
   );
 };
@@ -144,7 +155,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
   },
-  modaleHeader: {
+  pressable: {
+    flex: 1,
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modalHeader: {
     width: "100%",
     marginHorizontal: 25,
     backgroundColor: colors.Primary,
@@ -175,6 +195,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 10,
   },
+  menuContainer:{
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+  },
+  menu: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   textButton: {
     fontSize: 14,
     fontWeight: "500",
@@ -187,13 +218,12 @@ const styles = StyleSheet.create({
   boxImageModal: {
     width: 40,
     height: 40,
-    backgroundColor: "#68B984",
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
   },
-  iconAdd: {
+  icon: {
     width: 24,
     height: 24,
     resizeMode: "contain",

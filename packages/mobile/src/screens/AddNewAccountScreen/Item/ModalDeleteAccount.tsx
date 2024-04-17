@@ -32,6 +32,7 @@ const ModalDeleteAccount = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModdalNotification(false);
+    onClose();
   };
 
   return (

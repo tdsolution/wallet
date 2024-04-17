@@ -37,6 +37,7 @@ const ModalAddAccount = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModalNotification(false);
+    onClose();
   };
 
   const handleCreateWallet = useCallback(() => {
