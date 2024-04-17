@@ -7,13 +7,104 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import InputItem from "./Item/InputItem";
 import { ScrollView } from "react-native-gesture-handler";
+import { navigation } from "@tonkeeper/router";
+import { JsonRpcProvider, formatUnits, Contract } from "ethers";
+import { abi } from "./Item/Data";
+import { Alert } from "react-native";
+import { useNavigation } from "@tonkeeper/router";
+import {
+  useChain,
+  useWallet,
+  useWalletCurrency,
+  useWalletStatus,
+} from "@tonkeeper/shared/hooks";
 
 const ImportToken = () => {
+  const nav = useNavigation();
+  const chain = useChain()?.chain;
+  const [tokenInfo, setTokenInfo] = useState<object>({});
+  const [symbol, setSymbol] = useState("");
+  const [decimals, setDecimals] = useState("");
+  const [tokenAddress, setTokenAddress] = useState("");
+  const [result, setResult] = useState(false);
+  const networkUrl = "https://bsc-testnet.publicnode.com";
+  const walletAddress = "0xEa5007831646fa01C7079B15cFa4c62748905b04";
+  const disabled = () => {
+    if (
+      result &&
+      tokenAddress.length >= 40 &&
+      symbol.length != 0 &&
+      decimals.length != 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  let timeOut: ReturnType<typeof setTimeout> | null = null; // Khai báo kiểu dữ liệu của timeOut
+
+  const handleInputChange = (value: string) => {
+    setTokenAddress(value);
+
+    // Nếu đã có một timeout đang chạy, hủy nó
+    if (timeOut) {
+      clearTimeout(timeOut);
+    }
+
+    // Thiết lập một timeout mới, gọi hàm countDownSearch sau 3 giây
+    if (value.length >= 40) {
+      timeOut = setTimeout(() => {
+        handleDataEntered(value);
+      }, 500);
+    }
+  };
+
+  const onClearTokenAddress = () => {
+    setTokenAddress("");
+    setSymbol("");
+    setDecimals("");
+  };
+
+  const handleDataEntered = async (tokenAddress: string) => {
+    try {
+      const provider = new JsonRpcProvider(networkUrl);
+      // const tokenContractAddress = '0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805'; // Thay YOUR_TOKEN_CONTRACT_ADDRESS bằng địa chỉ smart contract của token
+      const tokenContract = new Contract(tokenAddress, abi, provider);
+
+      // Gọi hàm symbol() từ smart contract để lấy symbol
+      const symbol = await tokenContract.symbol();
+      // Gọi hàm decimals() từ smart contract để lấy số lượng số thập phân (decimals)
+      const decimals = await tokenContract.decimals();
+
+      let result = {
+        tokenAddress: tokenAddress,
+        symbol: symbol,
+        decimals: decimals.toString(),
+      };
+      setTokenInfo({
+        tokenAddress: tokenAddress,
+        symbol: symbol,
+        decimals: decimals.toString(), // Convert decimals to string
+      });
+      setSymbol(symbol);
+      setDecimals(decimals.toString());
+      setTokenAddress(tokenAddress);
+      setResult(true);
+    } catch (error) {
+      // Alert.alert("Token address not found");
+      console.log("Error fetching token info:", error);
+      setResult(false);
+    }
+  };
+  useEffect(() => {
+    // handleDataEntered("0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805");
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -27,6 +118,7 @@ const ImportToken = () => {
         ]}
       >
         <TouchableOpacity
+          onPress={() => navigation.goBack()}
           style={{ flexDirection: "row", alignItems: "center" }}
         >
           <Image
@@ -50,7 +142,11 @@ const ImportToken = () => {
             </Text>
             <View style={{ marginTop: 25 }}>
               <Text style={styles.textXChoose}>Choose your network</Text>
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  nav.openModal("/select-network");
+                }}
+                activeOpacity={0.6}
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
@@ -59,54 +155,197 @@ const ImportToken = () => {
                   borderColor: colors.Primary,
                   borderRadius: 8,
                   overflow: "hidden",
-                  paddingHorizontal: 10,
+                  paddingHorizontal: 20,
                   paddingVertical: 15,
                   marginTop: 10,
                 }}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Image
-                    source={require("../../assets/logo/img_usdt.png")}
-                    style={{ width: 50, height: 50, resizeMode: "contain" }}
+                    source={{ uri: chain.logo }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                      resizeMode: "contain",
+                    }}
                   />
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: "600",
                       color: colors.Black,
                       fontFamily: "Poppins-Bold",
                       marginLeft: 10,
                     }}
                   >
-                    Etherium
+                    {chain.name}
                   </Text>
                 </View>
+
                 <Image
                   source={require("../../assets/icons/png/ic-dropdown-12.png")}
-                  style={{ tintColor: colors.Primary, width: 24, height: 24 }}
+                  style={{
+                    tintColor: colors.Primary,
+                    width: 20,
+                    height: 20,
+                    resizeMode: "contain",
+                  }}
                 />
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View
             style={{
               width: "100%",
-              height: 10,
+              height: 5,
               backgroundColor: colors.Gray_Light,
               marginVertical: 20,
+              opacity: 0.5,
             }}
           ></View>
-          <View style={{ paddingHorizontal: 25 }}>
-            <InputItem lable="Token Address" placeholder="Ox..." icon={false} />
-            <InputItem lable="Symbol" placeholder="ETH" icon={true} />
-            <InputItem
-              lable="Decimals"
-              placeholder="18"
-              type="numeric"
-              icon={true}
-            />
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.textButton}>Save</Text>
+          <View style={{ paddingHorizontal: 25, gap: 20 }}>
+            <View>
+              <Text style={styles.lable}>Token Address</Text>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"0x..."}
+                  placeholderTextColor={colors.Gray_Light}
+                  value={tokenAddress}
+                  onChangeText={handleInputChange}
+                />
+                {tokenAddress.length > 0 ? (
+                  <TouchableOpacity
+                    style={styles.buttonIcon}
+                    onPress={onClearTokenAddress}
+                  >
+                    <Image
+                      source={require("../../assets/icons/png/ic-close-16.png")}
+                      style={[styles.iconInput, { tintColor: colors.Black }]}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            </View>
+            <View>
+              <Text style={styles.lable}>Symbol</Text>
+              <View style={styles.boxInput}>
+                <Text
+                  style={[
+                    styles.textBoxInput,
+                    {
+                      color:
+                        symbol.length > 0 ? colors.Black : colors.Gray_Light,
+                    },
+                  ]}
+                >
+                  {symbol.length > 0 ? symbol : "ETH"}
+                </Text>
+                <TouchableOpacity style={styles.buttonIcon}>
+                  <Image
+                    source={require("../../assets/icons/png/ic-pencil-16.png")}
+                    style={styles.iconInput}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.lable}>Decimals</Text>
+              <View style={styles.boxInput}>
+                <Text
+                  style={[
+                    styles.textBoxInput,
+                    {
+                      color:
+                        decimals.length > 0 ? colors.Black : colors.Gray_Light,
+                    },
+                  ]}
+                >
+                  {decimals.length > 0 ? decimals : "18"}
+                </Text>
+                <TouchableOpacity style={styles.buttonIcon}>
+                  <Image
+                    source={require("../../assets/icons/png/ic-pencil-16.png")}
+                    style={styles.iconInput}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            {disabled() ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: colors.White,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderBottomWidth: 1,
+                    borderBottomColor: colors.Primary,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: colors.Primary,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Your token is
+                  </Text>
+                  <Image
+                    style={styles.icon}
+                    source={require("../../assets/icons/png/ic-chevron-right-16.png")}
+                  />
+                </TouchableOpacity>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color: colors.Black,
+                      fontFamily: "Poppins-Bold",
+                      marginRight: 10,
+                    }}
+                  >
+                    {symbol}
+                  </Text>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                      backgroundColor: colors.Primary,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        color: colors.White,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {symbol.charAt(0)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ) : null}
+
+            <TouchableOpacity
+              disabled={!disabled()}
+              style={[styles.button, { opacity: disabled() ? 1 : 0.1 }]}
+            >
+              <Text style={styles.textButton}>Import Token</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -178,7 +417,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     backgroundColor: "#4871EA",
-    borderRadius: 8,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
@@ -189,5 +428,72 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.White,
     fontFamily: "Poppins-Medium",
+  },
+  input: {
+    height: 57,
+    backgroundColor: colors.White,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.Black,
+    textAlign: "left",
+    fontFamily: "Poppins-Light",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.Gray_Light,
+    paddingRight: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textBoxInput: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.Black,
+    textAlign: "left",
+    fontFamily: "Poppins-Light",
+  },
+  boxInput: {
+    width: "100%",
+    height: 57,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.Black,
+    textAlign: "left",
+    fontFamily: "Poppins-Light",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.Gray_Light,
+    paddingRight: 50,
+    justifyContent: "center",
+  },
+  textInput: {},
+  lable: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.Black,
+    lineHeight: 20,
+    textAlign: "left",
+    fontFamily: "Poppins-Bold",
+    marginBottom: 5,
+  },
+  iconInput: {
+    width: 20,
+    height: 20,
+    tintColor: colors.Gray_Light,
+    resizeMode: "contain",
+  },
+  buttonIcon: {
+    position: "absolute",
+    right: 15,
+    top: 20,
+  },
+  icon: {
+    width: 16,
+    height: 16,
+    tintColor: colors.Primary,
+    resizeMode: "contain",
   },
 });

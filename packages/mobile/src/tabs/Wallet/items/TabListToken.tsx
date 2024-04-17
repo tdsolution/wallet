@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import ItemWallet from "./ItemWallet";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { useChain } from "@tonkeeper/shared/hooks";
+import { navigation } from "@tonkeeper/router";
 
 const TabListToken = ({tokens, chainActive, address}) => {
   return (
@@ -31,7 +32,7 @@ const TabListToken = ({tokens, chainActive, address}) => {
           scrollEnabled={false}
           ListFooterComponent={
           <View style={{  alignItems:'center', marginBottom:40}} >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("ImportToken")}>
               <View style={{flexDirection:'row'}}>
                 <Text style={{color:'#4871EA', fontWeight:'600', marginRight:10}}>Import Tokens</Text>
                  <Image source={require('../../../assets/logo/icon_dowload.png')}  style={{width:20,height:20}}/>
