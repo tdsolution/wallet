@@ -48,5 +48,6 @@ export const Screen = memo<Props>((props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#ffffff'
   },
 });
