@@ -108,10 +108,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
     chain.rpc,
     chain.id
   );
-  const tokensEVM = getTokenListByChainID(
-    chain.chainId
-  );
-  console.log('tokensEVM '+tokensEVM.length);
+  const tokensEVM = getTokenListByChainID(chain.chainId);
+  console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -578,8 +576,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
             )}
           </IconButtonList>
         </View>
-       
-        <View style={{ flex: 1,}}>
+
+        <View style={{ flex: 1 }}>
           <TabTop
             tabs={["Tokens", "Activities"]}
             initialTab="Tokens"
@@ -588,38 +586,44 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <View
             style={{
               flex: 1,
-              width: '100%',
+              width: "100%",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            {
-              activeTab === "Tokens" ? (
-              chain.chainId != '1100' ? 
-              <TabListToken tokens={tokensEVM} chainActive={chain} address={addressEVMString(addressEvm)}/> 
-              :  <View
+            {activeTab === "Tokens" ? (
+              chain.chainId != "1100" ? (
+                <TabListToken
+                  tokens={tokensEVM}
+                  chainActive={chain}
+                  address={addressEVMString(addressEvm)}
+                />
+              ) : (
+                <View
                   style={{
                     width: "100%",
-                    paddingBottom:80,
+                    paddingBottom: 80,
                   }}
                 >
-                <WalletContentList
-                  inscriptions={inscriptions}
-                  currency={currency}
-                  tronBalances={tronBalances}
-                  handleRefresh={handleRefresh}
-                  isRefreshing={isRefreshing}
-                  isFocused={isFocused}
-                  balance={balance}
-                  tokens={tokens}
-                  tonPrice={tonPrice}
-                  nfts={nfts}
-                /></View>
-              ) : (<TabListActivities chainActive={chain}  address={addressEVMString(addressEvm)}/>)
-            }
+                  <WalletContentList
+                    inscriptions={inscriptions}
+                    currency={currency}
+                    tronBalances={tronBalances}
+                    handleRefresh={handleRefresh}
+                    isRefreshing={isRefreshing}
+                    isFocused={isFocused}
+                    balance={balance}
+                    tokens={tokens}
+                    tonPrice={tonPrice}
+                    nfts={nfts}
+                  />
+                </View>
+              )
+            ) : (
+              <TabListActivities chainActive={chain}  address={addressEVMString(addressEvm)}/>
+            )}
           </View>
         </View>
-         
       </ScrollView>
       {isPagerView ? (
         <PagerView estimatedHeaderHeight={288}>
@@ -736,5 +740,3 @@ const styles = Steezy.create(({ isTablet }) => ({
     alignItems: "center",
   },
 }));
-
-

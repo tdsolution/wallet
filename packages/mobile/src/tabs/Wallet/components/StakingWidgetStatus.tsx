@@ -109,19 +109,7 @@ const StakingWidgetStatusComponent: FC<Props> = (props) => {
   ]);
 
   return (
-    <StakingListCell
-      id={`amount_${pool.address}`}
-      name={t('staking.staked')}
-      description={pool.name}
-      balance={balance.amount}
-      stakingJetton={stakingJetton}
-      icon={<StakedTonIcon pool={pool} size="small" />}
-      numberOfLines={1}
-      separator={true}
-      message={message}
-      onMessagePress={hasReadyWithdraw ? handleConfirmWithdrawalPress : undefined}
-      onPress={handlePoolPress}
-    />
+   <></>
   );
 };
 

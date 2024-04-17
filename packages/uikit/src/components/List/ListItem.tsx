@@ -11,6 +11,7 @@ import { isAndroid } from "../../utils";
 import { SText as Text } from "../Text";
 import { Icon } from "../Icon";
 import { View } from "../View";
+import { colors } from "@tonkeeper/mobile/src/constants/colors";
 
 export interface ListItemProps {
   titleType?: "primary" | "secondary";
@@ -133,21 +134,39 @@ export const ListItem = memo<ListItemProps>((props) => {
                     {props.title}
                   </Text>
                 ) : (
-                  props.title
+                  <Text
+                    style={{
+                      color: colors.Primary,
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {props.title}
+                  </Text>
+                  // props.title
                 )}
               </View>
               <View style={[styles.valueContainer, props.valueContainerStyle]}>
                 {isString(props.value) ? (
                   <Text
                     numberOfLines={!valueMultiline ? 1 : undefined}
-                    style={props.valueStyle}
+                    style={[props.valueStyle]}
                     textAlign="right"
                     type="label1"
                   >
                     {`  ${props.value}`}
                   </Text>
                 ) : (
-                  props.value
+                  <Text
+                    style={{
+                      color: colors.Primary,
+                      fontSize: 14,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {props.value}
+                  </Text>
+                  // props.value
                 )}
               </View>
             </View>

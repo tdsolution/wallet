@@ -1,13 +1,13 @@
-import { FlashList, ContentStyle, FlashListProps } from '@shopify/flash-list';
-import { Fragment, forwardRef, memo, useEffect, useMemo } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenBottomSeparator } from './ScreenBottomSeparator';
-import { useBottomTabBarHeight } from '@tonkeeper/router';
-import { useScrollToTop } from '@react-navigation/native';
-import { FlatList, StyleSheet, View, FlatListProps } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { useMergeRefs } from '../../utils';
-import { useScreenScroll } from './hooks';
+import { FlashList, ContentStyle, FlashListProps } from "@shopify/flash-list";
+import { Fragment, forwardRef, memo, useEffect, useMemo } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScreenBottomSeparator } from "./ScreenBottomSeparator";
+import { useBottomTabBarHeight } from "@tonkeeper/router";
+import { useScrollToTop } from "@react-navigation/native";
+import { FlatList, StyleSheet, View, FlatListProps } from "react-native";
+import Animated from "react-native-reanimated";
+import { useMergeRefs } from "../../utils";
+import { useScreenScroll } from "./hooks";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlatList);
 
@@ -51,13 +51,15 @@ export const ScreenScrollList = memo<ScreenScrollListProps>(
         paddingBottom: safeArea ? safeAreaInsets.bottom : tabBarHeight,
         ...contentContainerStyle,
       }),
-      [contentContainerStyle, tabBarHeight, safeArea, safeAreaInsets.bottom],
+      [contentContainerStyle, tabBarHeight, safeArea, safeAreaInsets.bottom]
     );
 
     const HeaderComponent = (
       <Fragment>
         <Animated.View style={headerOffsetStyle} />
-        {typeof ListHeaderComponent === 'function' ? ListHeaderComponent() : ListHeaderComponent as any}
+        {typeof ListHeaderComponent === "function"
+          ? ListHeaderComponent()
+          : (ListHeaderComponent as any)}
       </Fragment>
     );
 
@@ -78,7 +80,7 @@ export const ScreenScrollList = memo<ScreenScrollListProps>(
         {!hideBottomSeparator && <ScreenBottomSeparator />}
       </View>
     );
-  }),
+  })
 );
 
 const styles = StyleSheet.create({

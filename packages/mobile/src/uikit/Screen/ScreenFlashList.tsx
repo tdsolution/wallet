@@ -54,5 +54,6 @@ export const ScreenScrollList = memo<ScreenScrollListProps>(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "green",
   },
 });

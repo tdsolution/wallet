@@ -3,6 +3,7 @@ import { ns } from '$utils';
 
 export const Wrap = styled.View`
   flex: 1;
+  background: #FAFAFA;
 `;
 
 export const Content = styled.View<{ bottomInset: number }>`
