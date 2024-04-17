@@ -11,7 +11,6 @@ export async function fetchBalaceEvm(walletAddress : string, rpc: string) {
     const provider = new JsonRpcProvider(rpc);
     const balanceResponse = await provider.getBalance(walletAddress);
     const balancePrice =  formatUnits(balanceResponse, 18);
-    console.log(balancePrice);
     if(balancePrice == '0.0'){
        return '0.0';
     }else{

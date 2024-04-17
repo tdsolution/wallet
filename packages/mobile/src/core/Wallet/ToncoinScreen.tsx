@@ -55,35 +55,35 @@ export const ToncoinScreen = memo(() => {
   return (
     <Screen>
       <Screen.Header
-        title="Toncoin"
-        rightContent={
-          <PopupMenu
-            items={[
-              <PopupMenuItem
-                waitForAnimationEnd
-                shouldCloseMenu
-                onPress={handleOpenExplorer}
-                text={t('jetton_open_explorer')}
-                icon={<Icon name="ic-globe-16" color="accentBlue" />}
-              />,
-            ]}
-          >
-            <S.HeaderViewDetailsButton onPress={() => null}>
-              <Icon name="ic-ellipsis-16" color="iconPrimary" />
-            </S.HeaderViewDetailsButton>
-          </PopupMenu>
-        }
-      />
-      <ActivityList
-        ListHeaderComponent={<HeaderList />}
-        onLoadMore={activityList.loadMore}
-        onReload={activityList.reload}
-        isReloading={activityList.isReloading}
-        isLoading={activityList.isLoading}
-        sections={activityList.sections}
-        hasMore={activityList.hasMore}
-        error={activityList.error}
-      />
+            title="Toncoin"
+            rightContent={
+              <PopupMenu
+                items={[
+                  <PopupMenuItem
+                    waitForAnimationEnd
+                    shouldCloseMenu
+                    onPress={handleOpenExplorer}
+                    text={t('jetton_open_explorer')}
+                    icon={<Icon name="ic-globe-16" color="accentBlue" />}
+                  />,
+                ]}
+              >
+                <S.HeaderViewDetailsButton onPress={() => null}>
+                  <Icon name="ic-ellipsis-16" color="iconPrimary" />
+                </S.HeaderViewDetailsButton>
+              </PopupMenu>
+            }
+          />
+          <ActivityList
+            ListHeaderComponent={<HeaderList />}
+            onLoadMore={activityList.loadMore}
+            onReload={activityList.reload}
+            isReloading={activityList.isReloading}
+            isLoading={activityList.isLoading}
+            sections={activityList.sections}
+            hasMore={activityList.hasMore}
+            error={activityList.error}
+          />
     </Screen>
   );
 });
@@ -254,8 +254,7 @@ const HeaderList = memo(() => {
 
 export function openWallet(currency: CryptoCurrency) {
   _.throttle(() => {
-    navigate(MainStackRouteNames.Wallet, {
-      currency,
-    });
+    navigate(MainStackRouteNames.WalletScreen);
   }, 1000)();
 }
+

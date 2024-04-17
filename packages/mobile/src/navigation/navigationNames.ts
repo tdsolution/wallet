@@ -39,6 +39,7 @@ export enum MainStackRouteNames {
   MigrationStack = "MigrationStack",
   Tabs = "Tabs",
   Wallet = "Wallet",
+  WalletScreen = "WalletScreen",
   Staking = "Staking",
   StakingPools = "StakingPools",
   StakingPoolDetails = "StakingPoolDetails",

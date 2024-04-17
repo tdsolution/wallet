@@ -26,27 +26,25 @@ const ItemWallet = (props: Props) => {
   }, []);
    async function fetchBalance() {
             if(addressToken != 'coin'){
-            const balance = await getBalanceToken(rpc, addressToken, address);
-            const coinRate = await SaveListCoinRate.getCoinRateById(id);
-            const rateUsd = coinRate?.usd ?? '0';
-            const coinUsd24 = coinRate?.usdChange ?? '0';
-            const checkLevel = parseFloat(coinUsd24);
-            setIsCheckLevel(checkLevel >= 0 ? true : false);
-            const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
-            console.log(balance);
-            setPrice(balance);
-            setPriceUsd(balanceUsd);
-            setCoinUsd24(parseFloat(coinUsd24));
-            setCoinUsd(parseFloat(rateUsd));
-            }else{
-               const balance = await fetchBalaceEvm(rpc, '0xEa5007831646fa01C7079B15cFa4c62748905b04' );
+              const balance = await getBalanceToken(rpc, addressToken, address);
               const coinRate = await SaveListCoinRate.getCoinRateById(id);
               const rateUsd = coinRate?.usd ?? '0';
               const coinUsd24 = coinRate?.usdChange ?? '0';
               const checkLevel = parseFloat(coinUsd24);
               setIsCheckLevel(checkLevel >= 0 ? true : false);
               const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
-              console.log(balance);
+              setPrice(balance);
+              setPriceUsd(balanceUsd);
+              setCoinUsd24(parseFloat(coinUsd24));
+              setCoinUsd(parseFloat(rateUsd));
+            }else if(addressToken == 'coin'){
+              const balance = await fetchBalaceEvm(address ,rpc);
+              const coinRate = await SaveListCoinRate.getCoinRateById(id);
+              const rateUsd = coinRate?.usd ?? '0';
+              const coinUsd24 = coinRate?.usdChange ?? '0';
+              const checkLevel = parseFloat(coinUsd24);
+              setIsCheckLevel(checkLevel >= 0 ? true : false);
+              const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
               setPrice(balance);
               setPriceUsd(balanceUsd);
               setCoinUsd24(parseFloat(coinUsd24));

@@ -28,6 +28,8 @@ const TabListActivities = ({ chainActive, address}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(address);
+    console.log(chainActive.chainId);
     const fetchData = async () => {
       setIsLoading(true);
       try {

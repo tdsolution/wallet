@@ -50,7 +50,7 @@ import { UpdateState } from "$store/zustand/updates/types";
 import { ShowBalance } from "$core/HideableAmount/ShowBalance";
 import { Events, SendAnalyticsFrom } from "$store/models";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
-import { openWallet } from "$core/Wallet/ToncoinScreen";
+// import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { trackEvent } from "$utils/stats";
 import { ExpiringDomainCell } from "./components/ExpiringDomainCell";
 import { BatteryIcon } from "@tonkeeper/shared/components/BatteryIcon/BatteryIcon";
@@ -69,7 +69,7 @@ import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { WalletStackRouteNames } from "$navigation";
+import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 import ItemWallet from "./Item/ItemWallet";
 import Title from "../../components/Title";
 import {
@@ -344,7 +344,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <List>
             <List.Item
               title="Toncoin"
-              onPress={() => openWallet(CryptoCurrencies.Ton)}
+              onPress={() => 
+                openWallet(CryptoCurrencies.Ton)
+              }
               leftContent={<TonIcon />}
               chevron
               subtitle={
@@ -596,7 +598,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 <TabListToken
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={addressEVMString(addressEvm)}
+                  address={
+                    addressEVMString(addressEvm)
+                  }
                 />
               ) : (
                 <View
@@ -620,7 +624,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               )
             ) : (
-              <TabListActivities chainActive={chain}  address={addressEVMString(addressEvm)}/>
+              <TabListActivities chainActive={chain}  address={chain.chainId != '1100' ?  
+                addressEVMString(addressEvm) : wallet.address.ton.friendly
+              }/>
             )}
           </View>
         </View>

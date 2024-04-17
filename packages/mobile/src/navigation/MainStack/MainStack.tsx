@@ -18,7 +18,7 @@ import { Subscriptions } from '$core/Subscriptions/Subscriptions';
 import { useSelector } from 'react-redux';
 import { mainSelector } from '$store/main';
 import { useNotificationsResolver } from '$hooks/useNotificationsResolver';
-import { AccessConfirmation, AddressUpdateInfo, ChangePin } from '$core';
+import { AccessConfirmation, AddressUpdateInfo, ChangePin, ScanQR } from '$core';
 import { ModalStack } from '$navigation/ModalStack';
 import { withModalStack } from '@tonkeeper/router';
 import { ToncoinScreen } from '$core/Wallet/ToncoinScreen';
@@ -118,6 +118,7 @@ export const MainStack: FC = () => {
         component={AddWatchOnlyStack}
       />
       <Stack.Screen name={MainStackRouteNames.Wallet} component={ToncoinScreen} />
+       <Stack.Screen name={MainStackRouteNames.WalletScreen} component={ToncoinScreen} />
       <Stack.Screen name={MainStackRouteNames.Staking} component={Staking} />
       <Stack.Screen name={MainStackRouteNames.StakingPools} component={StakingPools} />
       <Stack.Screen

@@ -3,6 +3,7 @@ import { CryptoCurrency } from '$shared/constants';
 
 export type MainStackParamList = {
   [MainStackRouteNames.Onboarding]: {};
+  [MainStackRouteNames.WalletScreen]: {};
   [MainStackRouteNames.Start]: {};
   [MainStackRouteNames.CreateWalletStack]: {};
   [MainStackRouteNames.ImportWalletStack]: {};

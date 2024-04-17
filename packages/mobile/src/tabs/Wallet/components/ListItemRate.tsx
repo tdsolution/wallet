@@ -33,8 +33,10 @@ const styles = StyleSheet.create({
   },
   title: {
     marginRight: 6,
+    fontSize:13
   },
   percentText: {
     opacity: 0.74,
+    fontSize:13
   },
 });

@@ -1,3 +1,4 @@
+import { Address } from "@tonkeeper/shared/Address";
 import axios from "axios";
 
 export const fetchDataTokens = async () => {
@@ -141,9 +142,9 @@ export const fetchTransactions = async (
   blockChainType: string
 ) => {
   try {
-    if (blockChainType == "1000") {
+    if (blockChainType == "1100") {
       let response = await axios.get(
-        `https://tronscan.org/#/address/${address}`
+        `https://toncenter.com/api/v2/getTransactions?address=${address}&limit=20&to_lt=0&archival=true`
       );
       if (response.status == 200) {
         return response.data;

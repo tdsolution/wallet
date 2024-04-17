@@ -11,7 +11,7 @@ import {
 } from '@tonkeeper/uikit';
 import { Steezy } from '$styles';
 import { RefreshControl } from 'react-native';
-import { openJetton, openTonInscription } from '$navigation';
+import { MainStackRouteNames, openJetton, openTonInscription } from '$navigation';
 import { Rate } from '../hooks/useBalance';
 import { ListItemRate } from './ListItemRate';
 import { TonIcon, TonIconProps } from '@tonkeeper/uikit';
@@ -35,6 +35,8 @@ import { InscriptionBalance } from '@tonkeeper/core/src/TonAPI';
 import { ListItemProps } from '@tonkeeper/uikit/src/components/List/ListItem';
 import { FinishSetupList } from './FinishSetupList';
 import BigNumber from 'bignumber.js';
+import { navigate } from '$navigation/imperative';
+import { useNavigation } from '@tonkeeper/router';
 
 enum ContentType {
   Token,
@@ -150,13 +152,11 @@ const RenderItem = ({ item }: { item: Content }) => {
             }
             subvalue={
               item.subvalue && (
-                <HideableAmount
+                <Text
                   style={styles.subvalueText.static}
-                  variant="body2"
-                  color="textSecondary"
                 >
                   {item.subvalue}
-                </HideableAmount>
+                </Text>
               )
             }
             subtitle={
@@ -220,7 +220,7 @@ export const WalletContentList = memo<BalancesListProps>(
     ListHeaderComponent,
   }) => {
     const theme = useTheme();
-
+    const nav = useNavigation();
     const fiatCurrency = useWalletCurrency();
     const shouldShowTonDiff = fiatCurrency !== WalletCurrency.TON;
 
@@ -240,7 +240,7 @@ export const WalletContentList = memo<BalancesListProps>(
         type: ContentType.Token,
         key: 'ton',
         title: 'Toncoin',
-        onPress: () => openWallet(CryptoCurrencies.Ton),
+        onPress: () =>  openWallet(CryptoCurrencies.Ton),
         value: balance.ton.amount.formatted,
         subvalue: balance.ton.amount.fiat,
         tonIcon: true,
@@ -436,8 +436,9 @@ const styles = Steezy.create(({ colors, corners }) => ({
     flexShrink: 1,
   },
   subvalueText: {
-    color: colors.textSecondary,
+    color: '#B6B6B6',
     textAlign: 'right',
+    fontSize:12,
   },
 
   container: {
