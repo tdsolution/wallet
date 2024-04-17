@@ -74,12 +74,10 @@ const ImportToken = () => {
       const provider = new JsonRpcProvider(chain.rpc);
       // const tokenContractAddress = '0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805'; // Thay YOUR_TOKEN_CONTRACT_ADDRESS bằng địa chỉ smart contract của token
       const tokenContract = new Contract(tokenAddress, abi, provider);
-
       // Gọi hàm symbol() từ smart contract để lấy symbol
       const symbol = await tokenContract.symbol();
       // Gọi hàm decimals() từ smart contract để lấy số lượng số thập phân (decimals)
       const decimals = await tokenContract.decimals();
-
       let result = {
         tokenAddress: tokenAddress,
         symbol: symbol,
