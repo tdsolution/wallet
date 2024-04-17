@@ -32,8 +32,6 @@ const ImportToken = () => {
   const [decimals, setDecimals] = useState("");
   const [tokenAddress, setTokenAddress] = useState("");
   const [result, setResult] = useState(false);
-  const networkUrl = "https://bsc-testnet.publicnode.com";
-  const walletAddress = "0xEa5007831646fa01C7079B15cFa4c62748905b04";
   const disabled = () => {
     if (
       result &&
@@ -73,7 +71,7 @@ const ImportToken = () => {
 
   const handleDataEntered = async (tokenAddress: string) => {
     try {
-      const provider = new JsonRpcProvider(networkUrl);
+      const provider = new JsonRpcProvider(chain.rpc);
       // const tokenContractAddress = '0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805'; // Thay YOUR_TOKEN_CONTRACT_ADDRESS bằng địa chỉ smart contract của token
       const tokenContract = new Contract(tokenAddress, abi, provider);
 
