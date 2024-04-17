@@ -17,6 +17,7 @@ import { Text as RNText } from 'react-native';
 import { useNavigation } from '@tonkeeper/router';
 import { FlashCountKeys, useFlashCount } from '$store';
 import { tk } from '$wallet';
+import { colors } from "../../../constants/colors";
 
 const WalletSelectorComponent: FC = () => {
   const wallet = useWallet();
@@ -35,19 +36,19 @@ const WalletSelectorComponent: FC = () => {
         <Flash
           style={[
             styles.selectorContainer.static,
-            { backgroundColor: getWalletColorHex(wallet.config.color) },
+            //{ backgroundColor: getWalletColorHex(wallet.config.color) },
           ]}
           disabled={!tk.migrationData || flashShownCount >= 3}
         >
           <RNText style={styles.emoji.static}>{wallet.config.emoji}</RNText>
           <Spacer x={4} />
           <View style={styles.nameContainer}>
-            <Text type="label2" numberOfLines={1}>
+            <Text type="label2" numberOfLines={1} style={{color: colors.Primary}}>
               {wallet.config.name}
             </Text>
           </View>
           <Spacer x={6} />
-          <Icon name="ic-chevron-down-16" style={styles.icon.static} />
+          <Icon name="ic-chevron-down-16" style={styles.icon.static} colorHex="#4871EA" />
         </Flash>
       </TouchableOpacity>
     </View>
@@ -59,11 +60,11 @@ export const WalletSelector = memo(WalletSelectorComponent);
 const styles = Steezy.create({
   container: { alignItems: 'center' },
   selectorContainer: {
-    height: 40,
+    height: 30,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 12,
+    // paddingLeft: 10,
+    // paddingRight: 12,
     borderRadius: 20,
     overflow: 'hidden',
   },
