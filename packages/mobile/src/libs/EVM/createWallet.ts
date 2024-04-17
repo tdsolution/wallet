@@ -21,15 +21,17 @@ export async function createWalletFromMnemonic(mnemonic: string){
   const wallet = WalletETH.fromPhrase(mnemonic);
   const address : string = wallet.address;
   const privateKey : string = wallet.privateKey;
+  const name = 'Account1';
   const walletModel: ListWalletModel = {
-  name: 'Account1',
+  name: name,
   addressWallet: address, // Thêm giá trị của addressWallet tại đây
   privateKey: privateKey, // Thêm giá trị của privateKey tại đây
   mnemonic: mnemonic, // Thêm giá trị của mnemonic tại đây
   };
-  await AsyncStorage.setItem('EVMPrivateKey',JSON.stringify(privateKey));
-  await AsyncStorage.setItem('EVMAddress',JSON.stringify(address));
-  await AsyncStorage.setItem('EVMMnemonic',JSON.stringify(mnemonic));
+  await AsyncStorage.setItem('EVMPrivateKey',privateKey);
+  await AsyncStorage.setItem('EVMAddress',address);
+  await AsyncStorage.setItem('EVMMnemonic',mnemonic);
+  await AsyncStorage.setItem('EVMName',name);
   SaveListWallet.fullFlowSaveData({wallet:walletModel});
   console.log('Save Wallet');
 }

@@ -88,8 +88,10 @@ import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
+import { openWallet } from "$core/Wallet/ToncoinScreen";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
+  const [nameEvm, setNameEVM] = useState("Account 1");
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -133,9 +135,19 @@ export const WalletScreen = memo(({ navigation }: any) => {
       throw error;
     }
   }, []);
+  const loadNameEVM = useCallback(async () => {
+    try {
+      const name =  (await AsyncStorage.getItem('EVMName')) ?? '';
+      return name;
+    } catch (error) {
+      console.error("Error loading EVM address:", error);
+      throw error;
+    }
+  }, []);
   useEffect(() => {
     loadDataEVM().then((address) => setAddressEVM(address));
-  }, [loadDataEVM]);
+    loadNameEVM().then((name) => setNameEVM(name));
+  }, [loadDataEVM,loadNameEVM]);
   // TODO: rewrite
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -422,7 +434,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 14 }}>Main Balance</Text>
+                <Text style={{ fontSize: 14 }}>{nameEvm}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <TouchableOpacity
                     onPress={() => {
@@ -533,7 +545,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 fontSize: 14,
               }}
             >
-              Vi TTT
+              {nameEvm}
             </Text>
             <Image
               source={require("../../assets/icons_v1/icon_eye.png")}
