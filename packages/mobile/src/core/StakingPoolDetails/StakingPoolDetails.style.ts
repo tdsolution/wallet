@@ -55,12 +55,14 @@ export const Item = styled.View`
 `;
 
 export const ItemLabel = styled(Text).attrs({
-  color: 'foregroundSecondary',
+  color: 'foregroundPrimary',
   variant: 'body2',
 })``;
 
 export const ItemValue = styled(Text).attrs({
   variant: 'body2',
+  color: 'foregroundPrimary',
+
 })`
   margin-left: ${ns(10)}px;
   text-align: right;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from '$uikit/Text/Text';
 import { TextProps } from '$uikit/Text/Text';
 import { usePrivacyStore } from '$store/zustand/privacy/usePrivacyStore';
+import { colors } from '../../constants/colors';
 
 export enum AnimationDirection {
   Left = -1,
@@ -15,7 +16,7 @@ const HideableAmountComponent: React.FC<
   const isHidden = usePrivacyStore((state) => state.hiddenAmounts);
 
   return (
-    <Text style={style} {...rest}>
+    <Text style={[style, {color: colors.Primary}]} {...rest}>
       {isHidden ? stars : children}
     </Text>
   );

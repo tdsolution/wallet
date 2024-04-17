@@ -1,11 +1,11 @@
-import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useBottomSheetInternal } from '@gorhom/bottom-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../../../styles';
+import React from "react";
+import { Platform, StyleSheet, View, ViewStyle } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { useBottomSheetInternal } from "@gorhom/bottom-sheet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "../../../styles";
 
-import { useSheetInternal } from '@tonkeeper/router';
+import { useSheetInternal } from "@tonkeeper/router";
 
 export type SheetModalFooterProps = {
   children?: React.ReactNode;
@@ -33,7 +33,8 @@ export const SheetModalFooter = React.memo((props: SheetModalFooterProps) => {
     const contentHeight = animatedContentHeight.value - footerHeight.value;
     const position = animatedPosition.value;
 
-    const footerTranslateY = Math.max(0, containerHeight - position) - footerHeight.value;
+    const footerTranslateY =
+      Math.max(0, containerHeight - position) - footerHeight.value;
 
     const value =
       animatedIndex.value < 0
@@ -66,12 +67,12 @@ export const SheetModalFooter = React.memo((props: SheetModalFooterProps) => {
   );
 });
 
-SheetModalFooter.displayName = 'BottomSheetModalFooter';
+SheetModalFooter.displayName = "BottomSheetModalFooter";
 
 const styles = StyleSheet.create({
   absolute: {
-    position: 'absolute',
-    top: 0,
+    position: "absolute",
+    top: Platform.OS === "android" ? 0 : 40,
     left: 0,
     right: 0,
   },

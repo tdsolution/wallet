@@ -1,10 +1,11 @@
-import { ViewStyle } from 'react-native';
-import { Steezy, StyleProp } from '../../styles';
-import { Text } from '../Text';
-import { View } from '../View';
-import { useMemo } from 'react';
-import { Spacer, SpacerSizes } from '../Spacer';
-import { TTextTypes } from '../Text/TextStyles';
+import { ViewStyle } from "react-native";
+import { Steezy, StyleProp } from "../../styles";
+import { Text } from "../Text";
+import { View } from "../View";
+import { useMemo } from "react";
+import { Spacer, SpacerSizes } from "../Spacer";
+import { TTextTypes } from "../Text/TextStyles";
+import { colors } from "@tonkeeper/mobile/src/constants/colors";
 
 interface ListHeaderProps {
   rightContent?: React.ReactNode;
@@ -19,7 +20,7 @@ interface ListHeaderProps {
 export const ListHeader = (props: ListHeaderProps) => {
   const {
     title,
-    titleTextType = 'h3',
+    titleTextType = "h3",
     indentTop,
     indent,
     rightContent,
@@ -34,14 +35,16 @@ export const ListHeader = (props: ListHeaderProps) => {
       indent && styles.indentHorizontal,
       style,
     ],
-    [indentTop, style],
+    [indentTop, style]
   );
 
   return (
     <>
       {!!spacerY && <Spacer y={spacerY} />}
       <View style={containerStyle}>
-        <Text type={titleTextType}>{title}</Text>
+        <Text style={{ color: colors.Primary }} type={titleTextType}>
+          {title}
+        </Text>
         {rightContent}
       </View>
     </>
@@ -51,9 +54,9 @@ export const ListHeader = (props: ListHeaderProps) => {
 const styles = Steezy.create({
   container: {
     height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   indentTop: {
     marginTop: 16,

@@ -51,7 +51,7 @@ export const Icon = memo((props: IconProps) => {
   if (icon) {
     return (
       <View style={[style, sizeStyle]}>
-        <Image style={[imageStyle, sizeStyle, customImageStyle]} source={icon} />
+        <Image style={[imageStyle, sizeStyle, customImageStyle,{tintColor: colorHex ? colorHex : 'white'}]} source={icon} />
       </View>
     );
   } else {

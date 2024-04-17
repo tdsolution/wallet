@@ -1,18 +1,24 @@
-import { useFiatValue } from '$hooks/useFiatValue';
-import { CryptoCurrencies, Decimals } from '$shared/constants';
-import { Steezy } from '$styles';
-import { Spacer, Tag, Text, View } from '$uikit';
-import { stakingFormatter } from '$utils/formatter';
-import React, { FC, ReactNode, memo, useCallback } from 'react';
-import { ImageRequireSource, TouchableHighlight } from 'react-native';
-import { Source } from 'react-native-fast-image';
-import * as S from './StakingListCell.style';
-import { HideableAmount } from '$core/HideableAmount/HideableAmount';
-import { JettonBalanceModel } from '$store/models';
-import { t } from '@tonkeeper/shared/i18n';
-import { Icon, ListSeparator, Pressable, isAndroid, useTheme } from '@tonkeeper/uikit';
-import { useBackgroundHighlighted } from '@tonkeeper/shared/hooks/useBackgroundHighlighted';
-import Animated from 'react-native-reanimated';
+import { useFiatValue } from "$hooks/useFiatValue";
+import { CryptoCurrencies, Decimals } from "$shared/constants";
+import { Steezy } from "$styles";
+import { Spacer, Tag, Text, View } from "$uikit";
+import { stakingFormatter } from "$utils/formatter";
+import React, { FC, ReactNode, memo, useCallback } from "react";
+import { ImageRequireSource, TouchableHighlight, TouchableOpacity } from "react-native";
+import { Source } from "react-native-fast-image";
+import * as S from "./StakingListCell.style";
+import { HideableAmount } from "$core/HideableAmount/HideableAmount";
+import { JettonBalanceModel } from "$store/models";
+import { t } from "@tonkeeper/shared/i18n";
+import {
+  Icon,
+  ListSeparator,
+  Pressable,
+  isAndroid,
+  useTheme,
+} from "@tonkeeper/uikit";
+import { useBackgroundHighlighted } from "@tonkeeper/shared/hooks/useBackgroundHighlighted";
+import Animated from "react-native-reanimated";
 
 interface Props {
   id: string;
@@ -56,14 +62,18 @@ const StakingListCellComponent: FC<Props> = (props) => {
 
   const theme = useTheme();
 
-  const currency = stakingJetton ? stakingJetton.jettonAddress : CryptoCurrencies.Ton;
+  const currency = stakingJetton
+    ? stakingJetton.jettonAddress
+    : CryptoCurrencies.Ton;
 
   const balance = useFiatValue(
     currency as CryptoCurrencies,
-    stakingJetton ? stakingJetton.balance : balanceValue || '0',
-    stakingJetton ? stakingJetton.metadata.decimals : Decimals[CryptoCurrencies.Ton],
+    stakingJetton ? stakingJetton.balance : balanceValue || "0",
+    stakingJetton
+      ? stakingJetton.metadata.decimals
+      : Decimals[CryptoCurrencies.Ton],
     !!stakingJetton,
-    'TON',
+    "TON"
   );
 
   const handlePress = useCallback(() => {
@@ -83,7 +93,20 @@ const StakingListCellComponent: FC<Props> = (props) => {
         underlayColor={theme.backgroundContentTint}
       >
         <View>
-          <S.Container style={{backgroundColor:'#ffffff'}}>
+          <S.Container
+            style={{
+              backgroundColor: "#ffffff",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+
+              elevation: 5,
+            }}
+          >
             {icon}
             {!icon ? (
               <View
@@ -97,32 +120,43 @@ const StakingListCellComponent: FC<Props> = (props) => {
                   <S.Icon source={iconSource} />
                 ) : (
                   <Icon
-                    name={isBuyTon ? 'ic-creditcard-28' : 'ic-staking-28'}
-                    color={isWidget ? 'iconPrimary' : 'iconSecondary'}
+                    name={isBuyTon ? "ic-creditcard-28" : "ic-staking-28"}
+                    color={isWidget ? "iconPrimary" : "iconSecondary"}
                   />
                 )}
               </View>
             ) : null}
             <Spacer x={16} />
             <S.Content>
-              <S.Row >
-                <S.Title style={{color:'#4871EA', fontSize:14}}>{name}</S.Title>
+              <S.Row>
+                <S.Title style={{ color: "#4871EA", fontSize: 14 }}>
+                  {name}
+                </S.Title>
                 {highestApy ? (
-                  <Tag type="positive">{t('staking.highest_apy')}</Tag>
+                  <Tag type="positive">{t("staking.highest_apy")}</Tag>
                 ) : null}
               </S.Row>
-              <S.SubTitle numberOfLines={numberOfLines ?? 2} style={{ fontSize:12}}>{description}</S.SubTitle>
+              <S.SubTitle
+                numberOfLines={numberOfLines ?? 2}
+                style={{ fontSize: 12 }}
+              >
+                {description}
+              </S.SubTitle>
             </S.Content>
             <S.RightContainer>
               {balanceValue ? (
                 <>
-                  <HideableAmount variant="label1" numberOfLines={1} textAlign="right">
-                    {stakingFormatter.format(balance.totalTon, { decimals: 2 })}{' '}
+                  <HideableAmount
+                    variant="label1"
+                    numberOfLines={1}
+                    textAlign="right"
+                  >
+                    {stakingFormatter.format(balance.totalTon, { decimals: 2 })}{" "}
                     {balance.symbol}
                   </HideableAmount>
                   <HideableAmount
                     variant="body2"
-                    color={'foregroundSecondary'}
+                    color={"foregroundSecondary"}
                     numberOfLines={1}
                     textAlign="right"
                   >
@@ -130,7 +164,7 @@ const StakingListCellComponent: FC<Props> = (props) => {
                   </HideableAmount>
                 </>
               ) : (
-                <Icon name="ic-chevron-right-16" colorHex="#4871EA" />
+                <Icon name="ic-chevron-right-16" colorHex="#111" />
               )}
             </S.RightContainer>
           </S.Container>
@@ -163,10 +197,10 @@ const styles = Steezy.create(({ colors }) => ({
     width: 40,
     height: 40,
     borderRadius: 40 / 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.backgroundContentTint,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   widgetIconContainer: {
     backgroundColor: colors.accentGreen,
@@ -175,7 +209,7 @@ const styles = Steezy.create(({ colors }) => ({
     backgroundColor: colors.accentBlue,
   },
   messageContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     paddingHorizontal: 16,
   },
   message: {
@@ -184,7 +218,7 @@ const styles = Steezy.create(({ colors }) => ({
     marginLeft: 60,
     marginTop: -8,
     marginBottom: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   massageInner: {
     paddingHorizontal: 12,
