@@ -7,19 +7,23 @@ import {
   Steezy,
   Switch,
   View,
-} from '@tonkeeper/uikit';
-import { memo, useCallback, useEffect, useMemo } from 'react';
-import { t } from '@tonkeeper/shared/i18n';
-import { useBiometrySettings, useWallet, useWalletSetup } from '@tonkeeper/shared/hooks';
-import { useNavigation } from '@tonkeeper/router';
-import { useNotificationsSwitch } from '$hooks/useNotificationsSwitch';
-import { LayoutAnimation, Linking } from 'react-native';
-import { getBiometryIcon, getBiometryName } from '$utils';
+} from "@tonkeeper/uikit";
+import { memo, useCallback, useEffect, useMemo } from "react";
+import { t } from "@tonkeeper/shared/i18n";
+import {
+  useBiometrySettings,
+  useWallet,
+  useWalletSetup,
+} from "@tonkeeper/shared/hooks";
+import { useNavigation } from "@tonkeeper/router";
+import { useNotificationsSwitch } from "$hooks/useNotificationsSwitch";
+import { LayoutAnimation, Linking } from "react-native";
+import { getBiometryIcon, getBiometryName } from "$utils";
 
 enum SetupItemType {
-  Backup = 'Backup',
-  Notifications = 'Notifications',
-  Biometry = 'Biometry',
+  Backup = "Backup",
+  Notifications = "Notifications",
+  Biometry = "Biometry",
 }
 
 interface SetupItem {
@@ -49,7 +53,11 @@ export const FinishSetupList = memo(() => {
       list.push(SetupItemType.Biometry);
     }
 
-    if (!isTestnet && notifications.isAvailable && !notifications.isSubscribed) {
+    if (
+      !isTestnet &&
+      notifications.isAvailable &&
+      !notifications.isSubscribed
+    ) {
       list.push(SetupItemType.Notifications);
     }
 
@@ -72,8 +80,8 @@ export const FinishSetupList = memo(() => {
     if (initialItems.includes(SetupItemType.Notifications)) {
       list.push({
         type: SetupItemType.Notifications,
-        iconName: 'ic-bell-28',
-        title: t('finish_setup.enable_notifications'),
+        iconName: "ic-bell-28",
+        title: t("finish_setup.enable_notifications"),
         switch: notifications.isSubscribed,
         onPress: () => {
           if (notifications.isDenied) {
@@ -89,7 +97,7 @@ export const FinishSetupList = memo(() => {
       list.push({
         type: SetupItemType.Biometry,
         iconName: getBiometryIcon(biometry.type),
-        title: t('finish_setup.use_biometry', {
+        title: t("finish_setup.use_biometry", {
           name: getBiometryName(biometry.type, { accusative: true }),
         }),
         switch: biometry.isEnabledSwitch,
@@ -100,10 +108,10 @@ export const FinishSetupList = memo(() => {
     if (lastBackupAt === null) {
       list.push({
         type: SetupItemType.Backup,
-        iconName: 'ic-key-28',
-        title: t('finish_setup.backup'),
+        iconName: "ic-key-28",
+        title: t("finish_setup.backup"),
         switch: null,
-        onPress: () => nav.navigate('/backup-warning'),
+        onPress: () => nav.navigate("/backup-warning"),
       });
     }
 
@@ -111,7 +119,8 @@ export const FinishSetupList = memo(() => {
   }, [biometry, initialItems, lastBackupAt, nav, notifications]);
 
   useEffect(() => {
-    const notificationsEnabled = !notifications.isAvailable || notifications.isSubscribed;
+    const notificationsEnabled =
+      !notifications.isAvailable || notifications.isSubscribed;
     const biometryEnabled = !biometry.isAvailable || biometry.isEnabled;
     if (
       !setupDismissed &&
@@ -136,7 +145,7 @@ export const FinishSetupList = memo(() => {
       onPress={handleDone}
       color="secondary"
       size="header"
-      title={t('finish_setup.done_button')}
+      title={t("finish_setup.done_button")}
     />
   ) : null;
 
@@ -167,11 +176,11 @@ export const FinishSetupList = memo(() => {
             title={item.title}
             titleNumberOfLines={3}
             titleTextType="body2"
-            leftContent={
-              <View style={styles.iconContainer}>
-                <Icon name={item.iconName} />
-              </View>
-            }
+            // leftContent={
+            //   <View style={styles.iconContainer}>
+            //     <Icon name={item.iconName} />
+            //   </View>
+            // }
             rightContent={
               item.switch !== null ? (
                 <Switch value={item.switch} onChange={item.onPress} />
@@ -193,7 +202,7 @@ const styles = Steezy.create(({ colors }) => ({
     height: 44,
     borderRadius: 44 / 2,
     backgroundColor: colors.backgroundContentTint,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));

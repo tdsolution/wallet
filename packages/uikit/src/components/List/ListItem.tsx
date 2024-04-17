@@ -224,7 +224,6 @@ const styles = Steezy.create(({ colors }) => ({
     width: 44,
     height: 44,
     overflow: "hidden",
-    backgroundColor: colors.backgroundContentTint,
   },
   pictureFullCorner: {
     borderRadius: 44 / 2,

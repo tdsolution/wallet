@@ -42,7 +42,7 @@ export const ListHeader = (props: ListHeaderProps) => {
     <>
       {!!spacerY && <Spacer y={spacerY} />}
       <View style={containerStyle}>
-        <Text style={{ color: colors.Primary }} type={titleTextType}>
+        <Text style={{ color: colors.Primary, marginBottom: 10 }} type={titleTextType}>
           {title}
         </Text>
         {rightContent}
