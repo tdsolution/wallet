@@ -43,10 +43,7 @@ const WalletListItemComponent: FC<Props> = (props) => {
       }
       leftContent={
         <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: getWalletColorHex(wallet.config.color) },
-          ]}
+          style={styles.iconContainer}
         >
           <RNText style={styles.emoji.static}>{wallet.config.emoji}</RNText>
         </View>
@@ -63,7 +60,7 @@ const styles = Steezy.create(({ colors }) => ({
     width: 44,
     height: 44,
     borderRadius: 44 / 2,
-    backgroundColor: colors.backgroundHighlighted,
+    backgroundColor: colors.primaryColor,
     alignItems: "center",
     justifyContent: "center",
   },
