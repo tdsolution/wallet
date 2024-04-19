@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Button
 } from "react-native";
 import React, { useEffect } from "react";
 import ItemWallet from "./ItemWallet";
@@ -12,7 +13,12 @@ import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { useChain } from "@tonkeeper/shared/hooks";
 import { navigation } from "@tonkeeper/router";
 
-const TabListToken = ({ tokens, chainActive, address, tokensImport }) => {
+const TabListToken = ({
+  tokens,
+  chainActive,
+  address,
+  tokensImport,
+}) => {
   return (
     <View
       style={{

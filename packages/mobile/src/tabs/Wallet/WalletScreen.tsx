@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Wallet as EthWallet } from "ethers";
 import { i18n, t } from "@tonkeeper/shared/i18n";
 import {
@@ -87,8 +87,12 @@ import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
-import { getTokenListByChainID, getTokenListImportByChainID } from "$libs/EVM/token/tokenEVM";
+import {
+  getTokenListByChainID,
+  getTokenListImportByChainID,
+} from "$libs/EVM/token/tokenEVM";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
+import { useFocusEffect } from '@react-navigation/native';
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -377,25 +381,30 @@ export const WalletScreen = memo(({ navigation }: any) => {
       </Screen>
     );
   }
+  const fetchData = async () => {
+    try {
+      const tokens = await getTokenListImportByChainID(chain.chainId);
+      setTokensImportEVM(tokens);
+      console.log("Đau đầu: ", tokens);
+      console.log("length: ", tokens.length);
+      return tokens;
+    } catch (error) {
+      console.error("Error fetching token list:", error);
+    }
+  };
 
-  useEffect( () => {
-    const fetchData = async () => {
-      try {
-        const tokens = await getTokenListImportByChainID(chain.chainId);
-        setTokensImportEVM(tokens);
-        console.log("Laos ca: ", tokens);
-      } catch (error) {
-        console.error("Error fetching token list:", error);
-      }
-    };
-  
-    fetchData(); // Gọi hàm fetchData để lấy dữ liệu khi component mount
-  
-    // Bạn cũng có thể truyền dependencies vào useEffect nếu cần
-  }, [chain.chainId]);
+  // useEffect(() => {
+  //   fetchData(); // Gọi hàm fetchData để lấy dữ liệu khi component mount
 
+  //   // Bạn cũng có thể truyền dependencies vào useEffect nếu cần
+  // }, [chain.chainId, tokenImportLength]);
 
-
+  useFocusEffect(
+    React.useCallback(() => {
+      // Gọi hàm của bạn ở đây
+      fetchData();
+    }, [chain.chainId])
+  );
   return (
     <Screen>
       <Screen.Header
