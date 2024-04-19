@@ -22,17 +22,17 @@ interface Props {
 const ModalDeleteAccount = (props: Props) => {
   const {modalVisible, onClose, item} = props;
   const [descriptionNoti, setDescriptionNoti] = useState('');
-  const [modalNotification, setModdalNotification] = useState(false);
+  const [modalNotification, setModalNotification] = useState(false);
+
+  const handleCloseNotification = () => {
+    setModalNotification(false);
+    onClose();
+  };
 
   const handleDeleteWallet = () => {
     SaveListWallet.deleteWallet(item.privateKey);
-    setModdalNotification(true);
+    setModalNotification(true);
     setDescriptionNoti('The walet has been deleted!');
-  };
-
-  const handleCloseNotification = () => {
-    setModdalNotification(false);
-    onClose();
   };
 
   return (
@@ -41,7 +41,7 @@ const ModalDeleteAccount = (props: Props) => {
       transparent={true} // Cho phép modal trở nên trong suốt
       visible={modalVisible} // Trạng thái của modal (true: hiển thị, false: ẩn)
       onRequestClose={onClose}
-    >
+      >
       <Pressable
         style={styles.modalContainer}
         // onPress={() => setModalAddAccount(false)}

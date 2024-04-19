@@ -29,6 +29,7 @@ const ModalEditName = (props: Props) => {
   const [titleNoti, setTileNoti] = useState("");
   const [descriptionNoti, setDescriptionNoti] = useState("");
   const [modalNotification, setModalNotification] = useState(false);
+  const [status, setStatus] = useState(0);
 
   const onCleanTextInput = () => {
     setTextInput("");
@@ -36,7 +37,7 @@ const ModalEditName = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModalNotification(false);
-    onClose();
+    {status ? onClose() : <></>}
   };
 
   const handleEditName = useCallback(() =>  {
@@ -50,6 +51,7 @@ const ModalEditName = (props: Props) => {
       setDescriptionNoti('The walet has been renamed!');
       SaveListWallet.editNameWallet(item, textInput);
       setModalNotification(true);
+      setStatus(1);
       }
   }, [textInput]);
     

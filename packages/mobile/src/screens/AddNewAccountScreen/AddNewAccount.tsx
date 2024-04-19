@@ -15,18 +15,18 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  Modal,
-  Pressable,
 } from "react-native";
 import { useNavigation } from "@tonkeeper/router";
-import ItemAccount from "./Item/ItemAccount";
 import { WalletStackRouteNames } from "$navigation";
 import ModalChooseAddWallet from "./Item/ModalChooseAddWallet";
 import ModalConnectWallet from "./Item/ModalConnectWallet";
 import SaveListWallet from "$libs/EVM/SaveWallet";
 import { ListWalletModel } from "$libs/EVM/SaveWallet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ModalAccount from "./Item/ModalAccount";
+import { setWalletEVM } from "$libs/EVM/createWallet";
 
-export const AddNewAccount: FC = () => {
+export const AddNewAccount = () => {
   const params = useParams<{ isImport?: boolean }>();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -34,7 +34,10 @@ export const AddNewAccount: FC = () => {
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalAccountVisible, setModalAccountVisible] = useState(false);
   const [data2, setdata2] = useState<ListWalletModel[]>();
+  const [EVM, setEVM] = useState<string|null>();
+  const [item, setItem] = useState({});
 
   const handleCloseChooseWallet = () => {
     setModalVisible(false);
@@ -44,13 +47,35 @@ export const AddNewAccount: FC = () => {
     setPopupVisible(false);
   };
 
+  const handleCloseModalAccount = () => {
+    setModalAccountVisible(false);
+  };
+
+  const handleSetEVM = ({item}) => {
+    setWalletEVM(item);
+  }
+
+  const loadDataEVM = useCallback(async () => {
+    try {
+      const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
+      return address;
+    } catch (error) {
+      console.error("Error loading EVM address:", error);
+      throw error;
+    }
+  }, []);
+
+  useEffect(() => {
+    loadDataEVM().then((address) => setEVM(address));
+  }, [loadDataEVM]);
+
   useEffect(() => {
     async function getdata() {
         const data = await SaveListWallet.getData();
         setdata2(data);
     }
     getdata();
-  }, [data2]);
+  }, [modalVisible, modalAccountVisible, setWalletEVM]);
 
   const handlePinCreated = useCallback(
     async (pin: string) => {
@@ -79,7 +104,43 @@ export const AddNewAccount: FC = () => {
   );
 
   const renderItem = ({ item }) => (
-    <ItemAccount item={item} onPress={() => setPopupVisible(true)} />
+    <View style={{ marginBottom: 11 }}>
+      <View style={styles.headerItem}>
+        <TouchableOpacity 
+        //onPress={() => handleSetEVM(item)}
+        >
+        <View style={{ flexDirection: "row" }}>
+          <View>
+            <Image
+              source={require("../../assets/logo/img_td.png")}
+              style={styles.image}
+            />
+            {item.addressWallet == EVM 
+            ? <Image
+              source={require("../../assets/logo/img_check_connect.png")}
+              style={[styles.imageCheck]}
+            />
+            : <></>
+            }
+          </View>
+          <View>
+            <Text style={styles.title}>{item.name}</Text>
+            <Text style={styles.body}>Multi-coin wallet</Text>
+          </View>
+        </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {setModalAccountVisible(true), setItem(item)}}>
+          <Image
+            source={require("../../assets/icons/png/ic_menu_dot.png")}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity onPress={() => setPopupVisible(true)}>
+        <Text style={styles.textbutton}>Backup to iCloud</Text>
+      </TouchableOpacity>
+      
+    </View>
   );
 
   return (
@@ -105,7 +166,6 @@ export const AddNewAccount: FC = () => {
       </View>
       <View style={{ paddingHorizontal: 25, marginTop: 37 }}>
         <Text style={styles.textBody}>Multi-coin wallets</Text>
-
         <FlatList
           data={data2}
           renderItem={renderItem}
@@ -124,6 +184,7 @@ export const AddNewAccount: FC = () => {
 
       {/* Modal Add Accont Start */}
       {/* <ModalAddAccount modalVisible={modalAddAccount} onClose={handleCloseAddAccount} /> */}
+      <ModalAccount modalVisible={modalAccountVisible} onClose={handleCloseModalAccount} item={item}/>
      
     </SafeAreaView>
   );
@@ -162,5 +223,61 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     resizeMode: "contain",
+  },
+  headerItem: {
+    backgroundColor: "#4871EA14",
+    height: 70,
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  image: {
+    width: 29,
+    height: 29,
+    borderRadius: 15,
+    resizeMode: "cover",
+    marginRight: 11,
+  },
+  icon2: {
+    width: 21,
+    height: 21,
+    resizeMode: "contain",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2B2D42",
+    lineHeight: 20,
+    textAlign: "left",
+    fontFamily: "Poppins-Bold",
+  },
+  body: {
+    fontSize: 12,
+    fontWeight: "400",
+    color: "#909090",
+    lineHeight: 16,
+    textAlign: "left",
+    fontFamily: "Poppins-Medium",
+  },
+  textbutton: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#4871EA",
+    lineHeight: 16,
+    textAlign: "right",
+    fontFamily: "Poppins-Bold",
+    marginTop: 8,
+  },
+  imageCheck: {
+    width: 13.13,
+    height: 13.13,
+    borderRadius: 15,
+    resizeMode: "cover",
+    position: "absolute",
+    top: -5,
+    right: 8,
   },
 });

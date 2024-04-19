@@ -6,8 +6,6 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
-  Dimensions,
-  Platform,
   Keyboard,
 } from "react-native";
 import React, { useCallback, useState } from "react";
@@ -15,22 +13,20 @@ import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import ModalNotification from "./ModalNotification";
-import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
-const { width, height } = Dimensions.get("window");
+import { createNewWalletFromMnemonic, generateMnemonic } from "$libs/EVM/createWallet";
 
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
+  item?: any;
 }
-
-const ModalAddAccount = (props: Props) => {
-  const { modalVisible, onClose } = props;
+  
+const ModalCreateWallet = (props: Props) => {
+  const { modalVisible, onClose, item} = props;
   const [textInput, setTextInput] = useState("");
-  const heigthModal = Platform.OS === "ios" ? 300 : 320;
   const [titleNoti, setTileNoti] = useState("");
   const [descriptionNoti, setDescriptionNoti] = useState("");
   const [modalNotification, setModalNotification] = useState(false);
-  const [status, setStatus] = useState(0);
 
   const onCleanTextInput = () => {
     setTextInput("");
@@ -38,40 +34,16 @@ const ModalAddAccount = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModalNotification(false);
-    {status ? onClose() : <></>}
+    onClose();
   };
 
-  const handleCreateWallet = useCallback(() => {
-    if (textInput === '') {
-      setModalNotification(true);
-      setTileNoti('Private key is none!');
-      setDescriptionNoti('Please enter the private key.');
-    }
-    else {
-      async function noti() {
-        const a = await createWalletFromPrivateKey(textInput);
-        if (a) {
-          if (a==1) {
-            setModalNotification(true);
-            setTileNoti('');
-            setDescriptionNoti('Wallet added successfully!');
-            setStatus(1);
-          }
-          else {
-            setModalNotification(true);
-            setTileNoti('Wallet already exists!');
-            setDescriptionNoti('Please enter another private key.');
-          }
-        } 
-        else {
-            setModalNotification(true);
-            setTileNoti('Wallet does not exist!');
-            setDescriptionNoti('You may have entered the wrong private key, please check again.');
-        }
-      }
-      noti();
-  }
+  const handleCreateWallet = useCallback( async () =>  {
+    const mnemonic = await generateMnemonic();
+    createNewWalletFromMnemonic(mnemonic, textInput);
+    setModalNotification(true);
+    setDescriptionNoti('Wallet created successfully!');
   }, [textInput]);
+    
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -81,11 +53,9 @@ const ModalAddAccount = (props: Props) => {
     >
       <Pressable
         onPress={Keyboard.dismiss}
-        style={styles.modalContainerAdd}
+        style={styles.modalContainer}
       >
-        <View style={[styles.modalContentAdd, 
-          // { height: heigthModal }
-          ]}>
+        <View style={styles.modalContent}>
           <View
             style={{
               width: "100%",
@@ -101,30 +71,27 @@ const ModalAddAccount = (props: Props) => {
                 { fontSize: 16},
               ]}
             >
-              Add account
+              Create Wallet
             </Text>
           <TouchableOpacity onPress={() => {onClose(); onCleanTextInput()}}>
-              <Image
-                style={[
-                  styles.iconCancel,
-                  { tintColor: colors.Black, width: 30, height: 30 },
-                ]}
-                source={require("../../../assets/icons/png/ic_cancel.png")}
-              />
-            </TouchableOpacity>
+            <Image
+              style={[
+                styles.iconCancel,
+                { tintColor: colors.Black, width: 30, height: 30 },
+              ]}
+              source={require("../../../assets/icons/png/ic_cancel.png")}
+            />
+          </TouchableOpacity>
           </View>
-
           <Text style={styles.subtitle}>
-            TD Wallet cannot recover your password. To validate your ownership,
-            restore your wallet and set up a new password. First, enter the
-            Private Key that you were given where you created your wallet.
+            Example: Private funds, Savings account, App account, Work funds, Airdrops
           </Text>
-          <View style={{ width: "100%" }}>
+          <View style={{ width: "100%", marginTop: 5 }}>
             <TextInput
               style={styles.input}
               value={textInput}
               onChangeText={(text) => setTextInput(text)}
-              placeholder="Your private key"
+              placeholder="Wallet name..."
               placeholderTextColor={colors.Gray}
             />
             <TouchableOpacity
@@ -137,8 +104,8 @@ const ModalAddAccount = (props: Props) => {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.buttonAdd} onPress={() => handleCreateWallet()}>
-            <Text style={styles.textButtonAdd}>Add</Text>
+          <TouchableOpacity style={styles.button} onPress={handleCreateWallet}>
+            <Text style={styles.textButton}>Create</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -152,7 +119,7 @@ const ModalAddAccount = (props: Props) => {
   );
 };
 
-export default ModalAddAccount;
+export default ModalCreateWallet;
 
 const styles = StyleSheet.create({
   iconCancel: {
@@ -161,13 +128,13 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
-modalContainerAdd: {
+  modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
   },
-  modalContentAdd: {
+  modalContent: {
     width: 350,
     backgroundColor: "#fff",
     padding: 20,
@@ -200,14 +167,14 @@ modalContainerAdd: {
     borderColor: colors.Gray_Light,
   },
   iconInput: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
-  buttonAdd: {
+  button: {
     width: "100%",
-    height: 50,
+    height: 40,
     backgroundColor: colors.Primary,
     borderRadius: 25,
     paddingHorizontal: 20,
@@ -216,10 +183,11 @@ modalContainerAdd: {
     alignItems: "center",
     marginTop: 10,
   },
-  textButtonAdd: {
-    fontSize: 16,
+  textButton: {
+    fontSize: 14,
     fontWeight: "600",
     color: colors.White,
     fontFamily: "Poppins-Medium",
   },
 });
+  
