@@ -111,7 +111,7 @@ export const SheetModal = memo(
         ref={setRef}
         backgroundStyle={{
           borderRadius: 18,
-          backgroundColor: theme.backgroundPage,
+          backgroundColor: theme.backgroundPrimary,
         }}
       >
         {props.children}

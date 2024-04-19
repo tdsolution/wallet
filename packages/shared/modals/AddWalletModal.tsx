@@ -65,7 +65,7 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
       <Modal.Header />
       <Modal.Content safeArea>
         <View style={styles.caption}>
-          <Text type="h2" textAlign="center">
+          <Text type="h2" textAlign="center" color="primaryColor">
             {t('add_wallet_modal.title')}
           </Text>
           <Spacer y={4} />
@@ -74,7 +74,7 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
           </Text>
         </View>
         <View style={styles.listContainer}>
-          <List>
+          <List style={styles.itemContainer.static}>
             <List.Item
               onPress={handleCreatePress}
               leftContentStyle={styles.iconContainer}
@@ -85,7 +85,7 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
               chevron
             />
           </List>
-          <List>
+          <List style={styles.itemContainer.static}>
             <List.Item
               onPress={() => {
                 nav.goBack();
@@ -100,7 +100,7 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
             />
           </List>
           {!isTonConnect ? (
-            <List>
+            <List style={styles.itemContainer.static}>
               <List.Item
                 onPress={() => {
                   nav.goBack();
@@ -116,7 +116,7 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
             </List>
           ) : null}
           {config.get('devmode_enabled') ? (
-            <List>
+            <List style={styles.itemContainer.static}>
               <List.Item
                 onPress={() => {
                   nav.goBack();
@@ -141,6 +141,17 @@ export const AddWalletModal = memo<AddWalletModalProps>(({ isTonConnect }) => {
 });
 
 const styles = Steezy.create({
+  itemContainer: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: '#909090',
+    shadowOffset: {
+        width: 0,
+        height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 14,
+  },
   iconContainer: {
     alignSelf: 'center',
   },

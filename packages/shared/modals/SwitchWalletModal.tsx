@@ -41,7 +41,7 @@ export const SwitchWalletModal: FC<Props> = memo((props) => {
       <Modal.Header title={t('wallets')} />
       <Modal.ScrollView>
         <Modal.Content safeArea>
-          <List>
+          <List style={styles.itemContainer.static}>
             {selectableWallets.map((wallet) => (
               <WalletListItem
                 key={wallet.identifier}
@@ -119,5 +119,16 @@ const styles = Steezy.create(({ colors }) => ({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  itemContainer: {
+    backgroundColor: "#FFFFFF",
+    shadowColor: '#909090',
+    shadowOffset: {
+        width: 0,
+        height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 14,
   },
 }));

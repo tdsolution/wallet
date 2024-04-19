@@ -112,6 +112,7 @@ export const SheetModalHeader = memo<SheetModalHeaderProps>((props) => {
                 numberOfLines={props.numberOfLines}
                 type="h3"
                 textAlign={center ? "center" : "left"}
+                color="primaryColor"
               >
                 {title}
               </Text>

@@ -7,6 +7,7 @@ export const DarkTheme = {
   textPrimaryAlternate: "#10161F",
 
   backgroundPage: "#4871EA",
+  backgroundPrimary: "#FFFFFF",
   backgroundTransparent: "rgba(16, 22, 31, 0.96)",
   backgroundContent: "#1D2633",
   backgroundContentTint: "#2E3847",
