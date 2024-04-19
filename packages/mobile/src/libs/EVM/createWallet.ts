@@ -3,7 +3,8 @@ import {  Wallet as WalletETH } from 'ethers';
 import SaveListWallet, { ListWalletModel } from './SaveWallet';
 import { JsonRpcProvider, Contract } from 'ethers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- export async function generateMnemonic(): Promise<string> {
+
+export async function generateMnemonic(): Promise<string> {
   try {
     const mnemonic = await bip39.generateMnemonic();
     return mnemonic;
@@ -53,7 +54,7 @@ export async function createWalletFromPrivateKey(privateKey: string){
       const wallet = new WalletETH(privateKey);
       const address: string = wallet.address;
       const walletModel: ListWalletModel = {
-      name: 'Account' + n,
+      name: 'Account ' + n,
       addressWallet: address, // Thêm giá trị của addressWallet tại đây
       privateKey: privateKey, // Thêm giá trị của privateKey tại đây
       mnemonic: '', // Thêm giá trị của mnemonic tại đây
@@ -89,7 +90,7 @@ export async function addWalletFromMnemonic(mnemonic: string){
     if (!isDuplicate) {
       n = n + list.length;
       const walletModel: ListWalletModel = {
-      name: 'Account' + n,
+      name: 'Account ' + n,
       addressWallet: address, // Thêm giá trị của addressWallet tại đây
       privateKey: privateKey, // Thêm giá trị của privateKey tại đây
       mnemonic: mnemonic, // Thêm giá trị của mnemonic tại đây
@@ -108,6 +109,29 @@ export async function addWalletFromMnemonic(mnemonic: string){
     // throw error;
     return;
   }
+}
+
+export async function createNewWalletFromMnemonic(mnemonic: string, name:string){
+  const list = await SaveListWallet.getData();
+  let n = list.length + 1; 
+  const wallet = WalletETH.fromPhrase(mnemonic);
+  const address : string = wallet.address;
+  const privateKey : string = wallet.privateKey;
+  const walletModel: ListWalletModel = {
+    name: name,
+    addressWallet: address, // Thêm giá trị của addressWallet tại đây
+    privateKey: privateKey, // Thêm giá trị của privateKey tại đây
+    mnemonic: mnemonic, // Thêm giá trị của mnemonic tại đây
+  };
+  SaveListWallet.fullFlowSaveData({wallet:walletModel});
+  console.log('Save Wallet');
+}
+
+export async function setWalletEVM(wallet: ListWalletModel){
+  await AsyncStorage.setItem('EVMPrivateKey',JSON.stringify(wallet.privateKey));
+  await AsyncStorage.setItem('EVMAddress',JSON.stringify(wallet.addressWallet));
+  await AsyncStorage.setItem('EVMMnemonic',JSON.stringify(wallet.mnemonic));
+  console.log('Save Wallet');
 }
 
 export function shortenWalletAddress(walletAddress: string, prefixLength: number = 8, suffixLength: number = 5): string {

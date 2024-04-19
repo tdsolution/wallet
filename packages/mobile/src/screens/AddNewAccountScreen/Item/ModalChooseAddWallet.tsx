@@ -8,13 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
-import { TextInput } from "react-native-gesture-handler";
 import ModalAddAccount from "./ModalAddAccount";
 import { Icon } from "$uikit";
 import ModalAddMnemonic from "./ModalAddMnemonic";
+import ModalCreateWallet from "./ModalCreateWallet";
 
 interface Props {
   modalVisible: boolean;
@@ -24,17 +23,22 @@ interface Props {
 const ModalChooseAddWallet = (props: Props) => {
   const { modalVisible, onClose } = props;
   const [modalAddAccount, setModalAddAccount] = useState(false);
-  const [modalAddMnemonic, setmodalAddMnemonic] = useState(false);
+  const [modalAddMnemonic, setModalAddMnemonic] = useState(false);
+  const [modalCreateWallet, setModalCreateWallet] = useState(false);
 
   const handleCloseAddAccount = () => {
     setModalAddAccount(false);
-    onClose();
+    // onClose();
   };
 
-  const handleCloseAddMnemonic= () => {
-    setmodalAddMnemonic(false);
+  const handleCloseAddMnemonic = () => {
+    setModalAddMnemonic(false);
   };
 
+  const handleCloseCreateWallet = () => {
+    setModalCreateWallet(false);
+  };
+ 
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -84,7 +88,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setmodalAddMnemonic(true)}
+              onPress={() => setModalAddMnemonic(true)}
               style={styles.menuContainer}
             >
               <View style={styles.menu}>
@@ -99,7 +103,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
             <TouchableOpacity
-              //onPress={() => setModalDeleteAccount(true)}
+               onPress={() => setModalCreateWallet(true)}
               style={styles.menuContainer}
             >
               <View style={styles.menu}>
@@ -109,7 +113,7 @@ const ModalChooseAddWallet = (props: Props) => {
                   source={require("../../../assets/icons/png/ic-plus-28.png")}
                 />
               </View>
-              <Text style={styles.textButton}>Add a new wallet</Text>
+              <Text style={styles.textButton}>Create a new wallet</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -123,7 +127,11 @@ const ModalChooseAddWallet = (props: Props) => {
       <ModalAddMnemonic
       modalVisible={modalAddMnemonic}
       onClose={handleCloseAddMnemonic}
-    />
+      />
+      <ModalCreateWallet
+        modalVisible={modalCreateWallet} 
+        onClose={handleCloseCreateWallet} 
+      />
     </Modal>
   );
 };

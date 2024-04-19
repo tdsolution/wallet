@@ -34,6 +34,7 @@ const ModalAddMnemonic = (props: Props) => {
   const [titleNoti, setTileNoti] = useState("");
   const [descriptionNoti, setDescriptionNoti] = useState("");
   const [modalNotification, setModalNotification] = useState(false);
+  const [status, setStatus] = useState(0);
 
   const setHide = ({item}) => {
     const newList = listSeed.map(obj => {
@@ -87,6 +88,7 @@ const showAll = () => {
 
 const handleCloseNotification = () => {
   setModalNotification(false);
+  {status ? onClose() : <></>}
 };
 
 const confirmAddWallet = () => {
@@ -110,6 +112,7 @@ const confirmAddWallet = () => {
           setModalNotification(true);
           setTileNoti('');
           setDescriptionNoti('Wallet added successfully!');
+          setStatus(1);
         }
         else {
           setModalNotification(true);
