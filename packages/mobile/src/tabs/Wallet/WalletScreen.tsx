@@ -87,9 +87,11 @@ import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
-import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
+import { getTokenListByChainID, getTokenListImportByChainID } from "$libs/EVM/token/tokenEVM";
+import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
+  const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -109,6 +111,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     chain.id
   );
   const tokensEVM = getTokenListByChainID(chain.chainId);
+
   console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
@@ -344,9 +347,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <List>
             <List.Item
               title="Toncoin"
-              onPress={() => 
-                openWallet(CryptoCurrencies.Ton)
-              }
+              onPress={() => openWallet(CryptoCurrencies.Ton)}
               leftContent={<TonIcon />}
               chevron
               subtitle={
@@ -376,6 +377,24 @@ export const WalletScreen = memo(({ navigation }: any) => {
       </Screen>
     );
   }
+
+  useEffect( () => {
+    const fetchData = async () => {
+      try {
+        const tokens = await getTokenListImportByChainID(chain.chainId);
+        setTokensImportEVM(tokens);
+        console.log("Laos ca: ", tokens);
+      } catch (error) {
+        console.error("Error fetching token list:", error);
+      }
+    };
+  
+    fetchData(); // Gọi hàm fetchData để lấy dữ liệu khi component mount
+  
+    // Bạn cũng có thể truyền dependencies vào useEffect nếu cần
+  }, [chain.chainId]);
+
+
 
   return (
     <Screen>
@@ -596,11 +615,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
             {activeTab === "Tokens" ? (
               chain.chainId != "1100" ? (
                 <TabListToken
+                  tokensImport={tokensImportEVM}
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={
-                    addressEVMString(addressEvm)
-                  }
+                  address={addressEVMString(addressEvm)}
                 />
               ) : (
                 <View
@@ -624,9 +642,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               )
             ) : (
-              <TabListActivities chainActive={chain}  address={chain.chainId != '1100' ?  
-                addressEVMString(addressEvm) : wallet.address.ton.friendly
-              }/>
+              <TabListActivities
+                chainActive={chain}
+                address={
+                  chain.chainId != "1100"
+                    ? addressEVMString(addressEvm)
+                    : wallet.address.ton.friendly
+                }
+              />
             )}
           </View>
         </View>
