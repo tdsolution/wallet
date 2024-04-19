@@ -6,6 +6,7 @@ import {
 import { useAppsListStore, useConnectedAppsList } from "$store";
 import { useFlags } from "$utils/flags";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import {Image} from 'react-native';
 import React, {
   FC,
   memo,
@@ -32,6 +33,9 @@ import { useFocusEffect, useTabPress } from "@tonkeeper/router";
 import { useSelectedCountry } from "$store/zustand/methodsToBuy/useSelectedCountry";
 import { CountryButton } from "@tonkeeper/shared/components";
 import { useChain } from "@tonkeeper/shared/hooks";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { getDappListByChainID } from "$libs/EVM/dapp/dappEVM ";
+import ListDapp from "./components/EVM/ListDapp";
 
 export type DAppsExploreProps = NativeStackScreenProps<
   BrowserStackParamList,
@@ -42,7 +46,7 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
   const chain = useChain()?.chain;
   const flags = useFlags(["disable_dapps"]);
   const tabBarHeight = useBottomTabBarHeight();
-
+  const dapps = getDappListByChainID(chain.chainId);
   const { changeEnd } = useContext(ScrollPositionContext);
 
   const connectedApps = useConnectedAppsList();
@@ -171,8 +175,9 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
           </View>
         </Screen.ScrollView>
       : <Screen.ScrollView>
-        <View>
-          <Text style={{color:'#4871EA'}}>NewApp</Text>
+        <View style={{marginHorizontal:20}}>
+          <Text style={{color:'#4871EA', fontWeight:'700', fontSize:14, marginVertical:12}}>Defi</Text>
+          <ListDapp dapps={dapps}/>
         </View>
       </Screen.ScrollView>
        }
