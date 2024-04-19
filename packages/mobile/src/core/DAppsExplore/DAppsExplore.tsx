@@ -23,7 +23,7 @@ import {
   AppsCategory,
 } from "./components";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Screen, SegmentedControl, Steezy, View } from "@tonkeeper/uikit";
+import { Screen, SegmentedControl, Steezy, View ,Text} from "@tonkeeper/uikit";
 import { shallow } from "zustand/shallow";
 import { BrowserStackParamList } from "$navigation/BrowserStack/BrowserStack.interface";
 import { t } from "@tonkeeper/shared/i18n";
@@ -31,6 +31,7 @@ import { ScrollPositionContext } from "$uikit";
 import { useFocusEffect, useTabPress } from "@tonkeeper/router";
 import { useSelectedCountry } from "$store/zustand/methodsToBuy/useSelectedCountry";
 import { CountryButton } from "@tonkeeper/shared/components";
+import { useChain } from "@tonkeeper/shared/hooks";
 
 export type DAppsExploreProps = NativeStackScreenProps<
   BrowserStackParamList,
@@ -38,6 +39,7 @@ export type DAppsExploreProps = NativeStackScreenProps<
 >;
 
 const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
+  const chain = useChain()?.chain;
   const flags = useFlags(["disable_dapps"]);
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -147,26 +149,33 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
           indicatorStyle={styles.segmentedControlIndicator}
         />
       </Screen.Header>
+       { chain.chainId == '1100' ?
       <Screen.ScrollView
-        contentContainerStyle={styles.contentContainerStyle.static}
-        scrollEnabled={!(showConnected && connectedApps.length === 0)}
-      >
-        <View style={!!showConnected && styles.hidden}>
-          {flags.disable_dapps ? (
-            <AboutDApps />
-          ) : (
-            <>
-              <FeaturedApps items={filteredFeaturedApps} />
-              {filteredCategories.map((category) => (
-                <AppsCategory key={category.id} category={category} />
-              ))}
-            </>
-          )}
-        </View>
-        <View style={!showConnected && styles.hidden}>
-          <ConnectedApps connectedApps={connectedApps} />
+          contentContainerStyle={styles.contentContainerStyle.static}
+          scrollEnabled={!(showConnected && connectedApps.length === 0)}
+        >
+            <View style={!!showConnected && styles.hidden}>
+            {flags.disable_dapps ? (
+              <AboutDApps />
+            ) : (
+              <>
+                <FeaturedApps items={filteredFeaturedApps} />
+                {filteredCategories.map((category) => (
+                  <AppsCategory key={category.id} category={category} />
+                ))}
+              </>
+            )}
+          </View>
+          <View style={!showConnected && styles.hidden}>
+            <ConnectedApps connectedApps={connectedApps} />
+          </View>
+        </Screen.ScrollView>
+      : <Screen.ScrollView>
+        <View>
+          <Text style={{color:'#4871EA'}}>NewApp</Text>
         </View>
       </Screen.ScrollView>
+       }
       <View style={[styles.searchBarContainer, { marginBottom: tabBarHeight }]}>
         <SearchButton onPress={handleSearchPress} />
       </View>

@@ -91,8 +91,8 @@ import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
-  const [nameEvm, setNameEVM] = useState("Account 1");
   const chain = useChain()?.chain;
+  const [nameEvm, setNameEVM] = useState("Account 1");
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -135,7 +135,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       throw error;
     }
   }, []);
-  const loadNameEVM = useCallback(async () => {
+   const loadNameEVM = useCallback(async () => {
     try {
       const name =  (await AsyncStorage.getItem('EVMName')) ?? '';
       return name;
@@ -528,10 +528,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
         <View
           style={{ alignItems: "flex-end", marginRight: 20, paddingTop: 10 }}
         >
-          <TouchableOpacity
+          {chain.chainId != "1100" 
+          ? <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
             onPress={() => navigation.navigate(WalletStackRouteNames.Account)}
-          >
+            >
             {/* <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}> */}
             <Image
               source={require("../../assets/icons_v1/icon_drow.png")}
@@ -553,6 +554,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
+          : <WalletSelector />
+          }
         </View>
         <View style={{ marginTop: 4 }}>
           <IconButtonList style={styles.actionButtons}>
