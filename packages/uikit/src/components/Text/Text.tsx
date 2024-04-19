@@ -11,6 +11,7 @@ import { memo, useMemo } from "react";
 import { nfs } from "../../utils";
 
 export type TextColors =
+    "primaryColor"
   | "textPrimary"
   | "textSecondary"
   | "textTertiary"
