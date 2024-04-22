@@ -207,7 +207,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabLongPress", () => {
       Haptics.notificationSuccess();
-      nav.openModal("/switch-wallet");
+      nav.openModal(" v");
     });
 
     return unsubscribe;

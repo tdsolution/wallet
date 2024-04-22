@@ -4,10 +4,10 @@ import { colors } from "../../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import {  fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { trackEvent } from "@aptabase/react-native";
+import { openDAppBrowser } from "$navigation/helper";
 
-interface Props {
-  dapp:any;
-}
+
 const display12Words = (sentence) => {
   const words = sentence.split(' ');
   if (words.length <= 10) {
@@ -16,10 +16,16 @@ const display12Words = (sentence) => {
     return words.slice(0, 10).join(' ');
   }
 }
+interface Props {
+  dapp:any;
+}
 const ItemApps = (props: Props) => {
   const {dapp} = props;
+  const handlePress = useCallback(() => {
+    openDAppBrowser(dapp.linkDapp);
+  }, [dapp]);
   return (
-     <TouchableOpacity onPress={() => {console.log('demo')}}>
+     <TouchableOpacity onPress={handlePress} style={{marginTop:10}}>
         <View style={styles.container}>
         <View style={{width: 60, height: 60, borderWidth:1, borderRadius:40, borderColor:'#F0F0F0'}}>
               <Image
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection:'row'
   },
   logo: {
-     width: 60, height: 60 , padding:10
+     width: 40, height: 40 , margin:10
   },
   title: {
     color:'#000000',
