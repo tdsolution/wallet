@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Button
 } from "react-native";
 import React, { useEffect } from "react";
 import ItemWallet from "./ItemWallet";
@@ -12,7 +13,12 @@ import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { useChain } from "@tonkeeper/shared/hooks";
 import { navigation } from "@tonkeeper/router";
 
-const TabListToken = ({ tokens, chainActive, address, tokensImport }) => {
+const TabListToken = ({
+  tokens,
+  chainActive,
+  address,
+  tokensImport,
+}) => {
   return (
     <View
       style={{
@@ -36,7 +42,22 @@ const TabListToken = ({ tokens, chainActive, address, tokensImport }) => {
           )}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
-          ListFooterComponent={
+        />
+        <FlatList
+          data={tokensImport}
+          renderItem={({ item }) => (
+            <ItemWallet
+              // id={item.id}
+              symbol={item.symbol}
+              // image={item.logo}
+              rpc={chainActive.rpc}
+              addressToken={item.tokenAddress}
+              address={address}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
+            ListFooterComponent={
             <View style={{ alignItems: "center", marginBottom: 40 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate("ImportToken")}
@@ -60,21 +81,6 @@ const TabListToken = ({ tokens, chainActive, address, tokensImport }) => {
             </View>
           }
           ListHeaderComponent={<View style={{ marginTop: 0 }}></View>}
-        />
-        <FlatList
-          data={tokensImport}
-          renderItem={({ item }) => (
-            <ItemWallet
-              // id={item.id}
-              symbol={item.symbol}
-              // image={item.logo}
-              rpc={chainActive.rpc}
-              addressToken={item.tokenAddress}
-              address={address}
-            />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          scrollEnabled={false}
         />
       </View>
     </View>

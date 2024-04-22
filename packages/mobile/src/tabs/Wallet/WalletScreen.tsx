@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Wallet as EthWallet } from "ethers";
 import { i18n, t } from "@tonkeeper/shared/i18n";
 import {
@@ -87,11 +87,16 @@ import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
-import { openWallet } from "$core/Wallet/ToncoinScreen";
-import { getTokenListByChainID, getTokenListImportByChainID } from "$libs/EVM/token/tokenEVM";
+import {
+  getTokenListByChainID,
+  getTokenListImportByChainID,
+} from "$libs/EVM/token/tokenEVM";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
+import { useFocusEffect } from '@react-navigation/native';
+import { openWallet } from "$core/Wallet/ToncoinScreen";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
+  const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const chain = useChain()?.chain;
   const [nameEvm, setNameEVM] = useState("Account 1");
   const flags = useFlags(["disable_swap"]);
@@ -112,7 +117,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     chain.id
   );
   const tokensEVM = getTokenListByChainID(chain.chainId);
-  const tokensImportEVMs =  getTokenListImportByChainID(chain.chainId);
 
   console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
@@ -389,8 +393,25 @@ export const WalletScreen = memo(({ navigation }: any) => {
       </Screen>
     );
   }
+  const fetchData = async () => {
+    try {
+      const tokens = await getTokenListImportByChainID(chain.chainId);
+      setTokensImportEVM(tokens);
+      console.log("Đau đầu: ", tokens);
+      console.log("length: ", tokens.length);
+      return tokens;
+    } catch (error) {
+      console.error("Error fetching token list:", error);
+    }
+  };
 
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Gọi hàm của bạn ở đây
+      fetchData();
+    }, [chain.chainId])
+  );
   return (
     <Screen>
       <Screen.Header
@@ -613,7 +634,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
             {activeTab === "Tokens" ? (
               chain.chainId != "1100" ? (
                 <TabListToken
-                  tokensImport={tokensImportEVMs}
+                  tokensImport={tokensImportEVM}
                   tokens={tokensEVM}
                   chainActive={chain}
                   address={addressEVMString(addressEvm)}
