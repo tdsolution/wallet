@@ -546,7 +546,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
         >
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => navigation.navigate(WalletStackRouteNames.SendCoin)}
+            onPress={() => navigation.navigate(WalletStackRouteNames.Account)}
           >
             {/* <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}> */}
             <Image
