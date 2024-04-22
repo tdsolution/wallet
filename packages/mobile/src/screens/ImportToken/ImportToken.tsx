@@ -65,6 +65,7 @@ const ImportToken = () => {
     if (value.length >= 40) {
       timeOut = setTimeout(() => {
         handleDataEntered(value);
+        
       }, 500);
     }
   };
@@ -97,6 +98,7 @@ const ImportToken = () => {
       setResult(true);
     } catch (error) {
       console.log("Error fetching token info:", error);
+      Alert.alert("")
       setResult(false);
     }
   };
