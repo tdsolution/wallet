@@ -94,6 +94,7 @@ import {
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import { useFocusEffect } from '@react-navigation/native';
 import { openWallet } from "$core/Wallet/ToncoinScreen";
+import { SendCoinEVM } from "$libs/EVM/send/SendCoinAndToken";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -185,6 +186,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     } else {
       openRequireWalletModal();
     }
+    // SendCoinEVM();
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {

@@ -142,7 +142,8 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
-
+ 
+  
   return (
     <S.Container>
       <BrowserNavBar
