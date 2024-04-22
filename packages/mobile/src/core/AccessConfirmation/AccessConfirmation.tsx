@@ -24,6 +24,7 @@ import { t } from '@tonkeeper/shared/i18n';
 import { tk, vault } from '$wallet';
 import { CanceledActionError } from '$core/Send/steps/ConfirmStep/ActionErrors';
 import { useBiometrySettings, useWallet } from '@tonkeeper/shared/hooks';
+import SaveListToken from '$libs/EVM/HistoryEVM/SaveToken';
 
 export const AccessConfirmation: FC = () => {
   const route = useRoute();
@@ -170,6 +171,15 @@ export const AccessConfirmation: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleClearToken = async () => {
+    try {
+      await SaveListToken.clearData();
+      console.log("Token clear successfully!: ");
+    } catch (error) {
+      console.error("Error clear token:", error);
+    }
+  };
+
   const handleLogout = useCallback(() => {
     const title = isUnlock
       ? t('settings_reset_alert_title_all')
@@ -187,6 +197,7 @@ export const AccessConfirmation: FC = () => {
         style: 'destructive',
         onPress: () => {
           dispatch(walletActions.cleanWallet({ cleanAll: isUnlock }));
+          handleClearToken()
         },
       },
     ]);

@@ -60,6 +60,7 @@ import { nativeLocaleNames } from "@tonkeeper/shared/i18n/translations";
 import { colors } from "../../constants/colors";
 import ModalSignOut from "./Item/ModalSignOut";
 import ModalDeleteAccount from "./Item/ModalDeleteAccount";
+import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 
 export const Settings: FC = () => {
   const animationRef = useRef<AnimatedLottieView>(null);
@@ -139,6 +140,15 @@ export const Settings: FC = () => {
     );
   }, []);
 
+  const handleClearToken = async () => {
+    try {
+      await SaveListToken.clearData();
+      console.log("Token clear successfully!: ");
+    } catch (error) {
+      console.error("Error clear token:", error);
+    }
+  };
+
   const handleResetWallet = useCallback(() => {
     // Alert.alert(
     //   t("settings_reset_alert_title"),
@@ -159,6 +169,7 @@ export const Settings: FC = () => {
     // );
     dispatch(walletActions.cleanWallet());
     setModalVisibleSignOut(false);
+    handleClearToken();
   }, [dispatch]);
 
   const handleStopWatchWallet = useCallback(() => {
