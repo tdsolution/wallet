@@ -13,9 +13,9 @@ import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
-import ItemYourWallet from "./Item/ItemYourWallet";
+import ItemYourWallet from "../../screens/SendToken/Item/ItemYourWallet";
 
-const SendToken = () => {
+const SendCoin = () => {
   const navigation = useNavigation();
   const [wallet, setWallet] = React.useState([
     { id: "1", name: "" },
@@ -38,13 +38,50 @@ const SendToken = () => {
             source={require("../../assets/icons/png/ic-close-16.png")}
           />
         </TouchableOpacity>
-        <Text style={globalStyles.textHeader}>Send MATIC</Text>
+        <Text style={globalStyles.textHeader}>Send Coins</Text>
         <Text style={{ opacity: 0 }}>scacasc</Text>
       </View>
       <View>
         <View style={{ gap: 25, paddingHorizontal: 25 }}>
-          <View>
-            <Text style={styles.lable}>Address</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 10,
+            }}
+          >
+            <Text style={styles.title}>From</Text>
+            <View
+              style={{
+                width: "80%",
+                borderWidth: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 8,
+                padding: 10,
+                borderColor: "#DDDDDD",
+              }}
+            >
+              <Image
+                style={[styles.image]}
+                source={require("../../assets/icons_v1/icon_qr.png")}
+              />
+              <View>
+                <Text style={styles.textTitle}>Main Account</Text>
+                <Text style={styles.textToken}>saasssaa</Text>
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.title}>To</Text>
             <View style={styles.boxInput}>
               <TextInput
                 style={styles.input}
@@ -58,54 +95,12 @@ const SendToken = () => {
                   justifyContent: "center",
                 }}
               >
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginRight: 10,
-                      marginBottom: 0,
-                    },
-                  ]}
-                >
-                  Paste
-                </Text>
                 <TouchableOpacity>
                   <Image
-                    style={[styles.iconClose]}
+                    style={[styles.iconClose, { tintColor: colors.Black }]}
                     source={require("../../assets/icons_v1/icon_qr.png")}
                   />
                 </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
-          <View>
-            <Text style={styles.lable}>Amount</Text>
-            <View style={styles.boxInput}>
-              <TextInput
-                style={styles.input}
-                placeholder="0.0"
-                placeholderTextColor={colors.Gray_Light}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginBottom: 0,
-                    },
-                  ]}
-                >
-                  Max
-                </Text>
               </View>
             </View>
           </View>
@@ -130,13 +125,13 @@ const SendToken = () => {
         </View>
       </View>
       <TouchableOpacity style={[styles.button]}>
-        <Text style={styles.textButton}>Next</Text>
+        <Text style={styles.textButton}>Continue</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default SendToken;
+export default SendCoin;
 
 const styles = StyleSheet.create({
   iconClose: {
@@ -146,7 +141,7 @@ const styles = StyleSheet.create({
     tintColor: colors.Primary,
   },
   input: {
-    width: "80%",
+    width: "93%",
     height: 57,
     paddingVertical: 5,
     paddingRight: 10,
@@ -173,7 +168,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   boxInput: {
-    width: "100%",
+    width: "80%",
     height: 57,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -184,14 +179,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Light",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: "#DDDDDD",
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
   },
   title: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "bold",
     color: colors.Black,
     textAlign: "left",
     fontFamily: "Poppins-Bold",
@@ -215,5 +210,26 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.White,
     fontFamily: "Poppins-Medium",
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    resizeMode: "contain",
+    marginRight: 10,
+  },
+  textToken: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.Black,
+    textAlign: "left",
+    fontFamily: "Poppins-Medium",
+  },
+  textTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.Black,
+    textAlign: "left",
+    fontFamily: "Poppins-Bold",
   },
 });

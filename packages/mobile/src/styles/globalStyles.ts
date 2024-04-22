@@ -20,7 +20,7 @@ export const globalStyles = StyleSheet.create({
   },
   textHeader: {
     fontSize: 21,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: colors.Primary,
     lineHeight: 30,
     textAlign: "left",
