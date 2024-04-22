@@ -131,6 +131,7 @@ export async function setWalletEVM(wallet: ListWalletModel){
   await AsyncStorage.setItem('EVMPrivateKey',JSON.stringify(wallet.privateKey));
   await AsyncStorage.setItem('EVMAddress',JSON.stringify(wallet.addressWallet));
   await AsyncStorage.setItem('EVMMnemonic',JSON.stringify(wallet.mnemonic));
+  await AsyncStorage.setItem('EVMMname',JSON.stringify(wallet.name));
   console.log('Save Wallet');
 }
 

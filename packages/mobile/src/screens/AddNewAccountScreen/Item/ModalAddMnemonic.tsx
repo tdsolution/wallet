@@ -20,6 +20,7 @@ import Clipboard from "@react-native-community/clipboard";
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
+  callback: () => void;
 };
 
 const ModalAddMnemonic = (props: Props) => {
@@ -28,7 +29,7 @@ const ModalAddMnemonic = (props: Props) => {
     Seed.push({"id": i, "hide": false, "text": ""}); 
   };
 
-  const { modalVisible, onClose } = props;
+  const { modalVisible, onClose, callback } = props;
   const [selectedIndex, setIndex] = useState(0);
   const [listSeed, setListSeed] = useState(Seed);
   const [titleNoti, setTileNoti] = useState("");
@@ -88,7 +89,7 @@ const showAll = () => {
 
 const handleCloseNotification = () => {
   setModalNotification(false);
-  {status ? onClose() : <></>}
+  {status ? (onClose(), callback()) : <></>}
 };
 
 const confirmAddWallet = () => {

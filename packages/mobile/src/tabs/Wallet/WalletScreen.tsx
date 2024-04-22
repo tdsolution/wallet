@@ -59,6 +59,7 @@ import { format } from "date-fns";
 import { getLocale } from "$utils/date";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import {
+  useEvm,
   useChain,
   useWallet,
   useWalletCurrency,
@@ -96,10 +97,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM } from "$libs/EVM/send/SendCoinAndToken";
 export const WalletScreen = memo(({ navigation }: any) => {
-  const [addressEvm, setAddressEVM] = useState("");
-  const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
+  //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
-  const [nameEvm, setNameEVM] = useState("Account 1");
+  const evm = useEvm()?.evm;
+  const addressEvm = evm.addressWallet;
+ const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -134,28 +136,18 @@ export const WalletScreen = memo(({ navigation }: any) => {
     setActiveTab(tab);
   };
 
-  const loadDataEVM = useCallback(async () => {
-    try {
-      const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
-      return address;
-    } catch (error) {
-      console.error("Error loading EVM address:", error);
-      throw error;
-    }
-  }, []);
-   const loadNameEVM = useCallback(async () => {
-    try {
-      const name =  (await AsyncStorage.getItem('EVMName')) ?? '';
-      return name;
-    } catch (error) {
-      console.error("Error loading EVM address:", error);
-      throw error;
-    }
-  }, []);
-  useEffect(() => {
-    loadDataEVM().then((address) => setAddressEVM(address));
-    loadNameEVM().then((name) => setNameEVM(name));
-  }, [loadDataEVM,loadNameEVM]);
+  // const loadDataEVM = useCallback(async () => {
+  //   try {
+  //     const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
+  //     return address;
+  //   } catch (error) {
+  //     console.error("Error loading EVM address:", error);
+  //     throw error;
+  //   }
+  // }, [nav]);
+  // useEffect(() => {
+  //   loadDataEVM().then((address) => setAddressEVM(address));
+  // }, [loadDataEVM]);
   // TODO: rewrite
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -459,7 +451,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 14 }}>{nameEvm}</Text>
+                <Text style={{ fontSize: 14 }}>{evm.name}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <TouchableOpacity
                     onPress={() => {
@@ -571,7 +563,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 fontSize: 14,
               }}
             >
-              {nameEvm}
+              {evm.name}
             </Text>
             <Image
               source={require("../../assets/icons_v1/icon_eye.png")}

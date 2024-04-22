@@ -18,7 +18,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { HideableAmountProvider } from '$core/HideableAmount/HideableAmountProvider';
 
 import { queryClient } from '@tonkeeper/shared/queryClient';
-import { ChainProvider, WalletProvider } from '../context';
+import { ChainProvider, EmvProvider, WalletProvider } from '../context';
 import { BlockingLoaderView } from '@tonkeeper/uikit';
 
 const TonThemeProvider = ({ children }) => {
@@ -46,6 +46,7 @@ export function App() {
     // <KeyboardProvider>
     <ChainProvider>
     <WalletProvider>
+      <EmvProvider>
       <StoreProvider {...{ store }}>
         <ActionSheetProvider>
           <QueryClientProvider client={queryClient}>
@@ -76,6 +77,7 @@ export function App() {
           </QueryClientProvider>
         </ActionSheetProvider>
       </StoreProvider>
+      </EmvProvider>
     </WalletProvider>
     </ChainProvider>
     // </KeyboardProvider>
