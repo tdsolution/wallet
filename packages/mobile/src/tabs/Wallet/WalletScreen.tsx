@@ -93,7 +93,7 @@ import {
   getTokenListImportByChainID,
 } from "$libs/EVM/token/tokenEVM";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM } from "$libs/EVM/send/SendCoinAndToken";
 export const WalletScreen = memo(({ navigation }: any) => {
@@ -101,7 +101,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
- const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
+  const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -399,7 +399,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     }
   };
 
-
   useFocusEffect(
     React.useCallback(() => {
       // Gọi hàm của bạn ở đây
@@ -505,11 +504,15 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 <TouchableOpacity
                   hitSlop={{ top: 8, bottom: 8, left: 18, right: 18 }}
                   style={{ zIndex: 3, marginVertical: 8 }}
-                  onPress={copyText(
-                    chain.chainId == "1100"
-                      ? wallet.address.ton.friendly
-                      : addressEVMString(addressEvm)
-                  )}
+                  onPress={() =>
+                    copyText(
+                      chain.chainId == "1100"
+                        ? wallet.address.ton.friendly
+                        : addressEVMString(addressEvm),
+                      undefined, // Khi không cần thiết truyền tham số duration, sử dụng undefined
+                      "green" // Tham số color cho toast
+                    )()
+                  }
                   activeOpacity={0.6}
                 >
                   <Text
@@ -545,34 +548,35 @@ export const WalletScreen = memo(({ navigation }: any) => {
         <View
           style={{ alignItems: "flex-end", marginRight: 20, paddingTop: 10 }}
         >
-          {chain.chainId != "1100" 
-          ? <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => navigation.navigate(WalletStackRouteNames.Account)}
+          {chain.chainId != "1100" ? (
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => navigation.navigate(WalletStackRouteNames.Account)}
             >
-            {/* <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}> */}
-            <Image
-              source={require("../../assets/icons_v1/icon_drow.png")}
-              style={{ width: 10, height: 10, marginRight: 4 }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                color: theme.colors.primaryColor,
-                fontWeight: "700",
-                fontSize: 14,
-              }}
-            >
-              {evm.name}
-            </Text>
-            <Image
-              source={require("../../assets/icons_v1/icon_eye.png")}
-              style={{ width: 10, height: 10, marginLeft: 4 }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          : <WalletSelector />
-          }
+              {/* <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}> */}
+              <Image
+                source={require("../../assets/icons_v1/icon_drow.png")}
+                style={{ width: 10, height: 10, marginRight: 4 }}
+                resizeMode="contain"
+              />
+              <Text
+                style={{
+                  color: theme.colors.primaryColor,
+                  fontWeight: "700",
+                  fontSize: 14,
+                }}
+              >
+                {evm.name}
+              </Text>
+              <Image
+                source={require("../../assets/icons_v1/icon_eye.png")}
+                style={{ width: 10, height: 10, marginLeft: 4 }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          ) : (
+            <WalletSelector />
+          )}
         </View>
         <View style={{ marginTop: 4 }}>
           <IconButtonList style={styles.actionButtons}>

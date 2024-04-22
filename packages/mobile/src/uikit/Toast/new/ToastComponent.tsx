@@ -15,6 +15,7 @@ import { Loader } from '../../Loader/Loader';
 import { Text } from '../../Text/Text';
 import { deviceWidth, ns } from '$utils';
 import { Toast, useToastStore } from '$store';
+import { colors } from '../../../constants/colors';
 
 export enum ToastAnimationState {
   SHOWING = 'SHOWING',
@@ -104,7 +105,7 @@ export const ToastComponent = memo(() => {
             {
               backgroundColor: toast.warning
                 ? theme.colors.accentOrange
-                : theme.colors.backgroundTertiary,
+                : colors.White,
             },
           ]}
         >
@@ -114,7 +115,7 @@ export const ToastComponent = memo(() => {
             </View>
           )}
 
-          <Text variant="label2">{toast.message}</Text>
+          <Text style={{color: colors.Primary}} variant="label2">{toast.message}</Text>
         </Animated.View>
       </Pressable>
     </FullWindowOverlay>

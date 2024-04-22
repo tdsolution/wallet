@@ -9,6 +9,7 @@ export type ToastOptions = {
   duration?: number;
   isLoading?: boolean;
   size?: ToastSize;
+  color?: string;
 };
 
 export type ToastData = ToastOptions & {
