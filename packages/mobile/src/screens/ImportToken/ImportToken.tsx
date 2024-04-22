@@ -98,7 +98,7 @@ const ImportToken = () => {
       setResult(true);
     } catch (error) {
       console.log("Error fetching token info:", error);
-      Alert.alert("")
+      Alert.alert("Invalid token. Please try again.")
       setResult(false);
     }
   };
@@ -110,7 +110,7 @@ const ImportToken = () => {
     const tokenList = getTokenListByChainID(tokenInfo.chainId);
     let isDuplicate = false;
     tokenList.forEach((token: any) => {
-      if (token.tokenAddress === tokenAddress) {
+      if (token.tokenAddress.toUpperCase() == tokenAddress.toUpperCase()) {
         isDuplicate = true;
       }
     });
