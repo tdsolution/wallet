@@ -92,7 +92,7 @@ import {
   getTokenListImportByChainID,
 } from "$libs/EVM/token/tokenEVM";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -546,7 +546,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
         >
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => navigation.navigate(WalletStackRouteNames.Account)}
+            onPress={() => navigation.navigate(WalletStackRouteNames.SendCoin)}
           >
             {/* <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={()=>{ console.log('List Account')}}> */}
             <Image

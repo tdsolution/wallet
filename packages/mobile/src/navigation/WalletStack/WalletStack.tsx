@@ -24,6 +24,9 @@ import { WalletScreen } from "../../tabs/Wallet/WalletScreen";
 import TransactionHistory from "../../screens/TransactionHistory/TransactionHistory";
 import ImportToken from "../../screens/ImportToken/ImportToken";
 import NotificationScreen from "../../screens/NotificationScreen/NotificationScreen";
+import SendToken from "../../screens/SendToken/SendToken";
+import SendCoin from "../../screens/SendCoin/SendCoin";
+import DetailToken from "../../screens/DetailToken/DetailToken";
 
 const Stack = createNativeStackNavigator<WalletStackParamList>();
 
@@ -61,6 +64,18 @@ export const WalletStack: FC = () => {
       <Stack.Screen
         name={WalletStackRouteNames.Notification}
         component={NotificationScreen}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.SendToken}
+        component={SendToken}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.SendCoin}
+        component={SendCoin}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.DetailToken}
+        component={DetailToken}
       />
     </Stack.Navigator>
   );

@@ -1,9 +1,18 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, DeviceEventEmitter } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  DeviceEventEmitter,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { useNavigation } from "@tonkeeper/router";
+import { WalletStackRouteNames } from "$navigation";
 
 interface Props {
   id?: string;
@@ -21,8 +30,10 @@ const ItemWallet = (props: Props) => {
   const [coinUsd, setCoinUsd] = useState(0);
   const [coinUsd24, setCoinUsd24] = useState(0);
   const [isCheckLevel, setIsCheckLevel] = useState(false);
+  const navigation = useNavigation()
   const handlePress = useCallback(async () => {
     console.log(price);
+    navigation.navigate(WalletStackRouteNames.DetailToken, { id: id, symbol: symbol, image: image, address: address, addressToken: address, rpc: rpc});
   }, []);
   const logo =
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
