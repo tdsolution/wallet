@@ -17,10 +17,11 @@ interface Props {
   modalVisible: boolean;
   onClose: () => void;
   item: any;
+  callback: () => void;
 }
 
 const ModalViewPrivateKey = (props: Props) => {
-  const { modalVisible, onClose, item} = props;
+  const { modalVisible, onClose, item, callback} = props;
   const [descriptionNoti, setDescriptionNoti] = useState('');
   const [modalNotification, setModdalNotification] = useState(false);
 
@@ -33,6 +34,7 @@ const ModalViewPrivateKey = (props: Props) => {
   const handleCloseNotification = () => {
     setModdalNotification(false);
     onClose();
+    callback();
   };
 
   return (

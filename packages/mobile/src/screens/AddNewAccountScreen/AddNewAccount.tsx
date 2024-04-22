@@ -24,7 +24,9 @@ import SaveListWallet from "$libs/EVM/SaveWallet";
 import { ListWalletModel } from "$libs/EVM/SaveWallet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ModalAccount from "./Item/ModalAccount";
-import { setWalletEVM } from "$libs/EVM/createWallet";
+import { addressEVMString, setWalletEVM } from "$libs/EVM/createWallet";
+import { useEvm } from "@tonkeeper/shared/hooks";
+import ModalSetMainAccount from "./Item/ModalSetMainAccount";
 
 export const AddNewAccount = () => {
   const params = useParams<{ isImport?: boolean }>();
@@ -35,8 +37,9 @@ export const AddNewAccount = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAccountVisible, setModalAccountVisible] = useState(false);
+  const [modalSetMainAccount, setModalSetMainAccount] = useState(false);
   const [data2, setdata2] = useState<ListWalletModel[]>();
-  const [EVM, setEVM] = useState<string|null>();
+  const [addressEvm, setAddressEVM] = useState("");
   const [item, setItem] = useState({});
 
   const handleCloseChooseWallet = () => {
@@ -50,10 +53,10 @@ export const AddNewAccount = () => {
   const handleCloseModalAccount = () => {
     setModalAccountVisible(false);
   };
-
-  const handleSetEVM = ({item}) => {
-    setWalletEVM(item);
-  }
+  
+  const handleCloseModalSetMainAccount = () => {
+    setModalSetMainAccount(false);
+  };
 
   const loadDataEVM = useCallback(async () => {
     try {
@@ -66,7 +69,7 @@ export const AddNewAccount = () => {
   }, []);
 
   useEffect(() => {
-    loadDataEVM().then((address) => setEVM(address));
+    loadDataEVM().then((address) => setAddressEVM(addressEVMString(address)));
   }, [loadDataEVM]);
 
   useEffect(() => {
@@ -107,7 +110,8 @@ export const AddNewAccount = () => {
     <View style={{ marginBottom: 11 }}>
       <View style={styles.headerItem}>
         <TouchableOpacity 
-        //onPress={() => handleSetEVM(item)}
+          onPress={() => {setModalSetMainAccount(true), setItem(item)}}
+          style={{width: "80%"}}
         >
         <View style={{ flexDirection: "row" }}>
           <View>
@@ -115,7 +119,7 @@ export const AddNewAccount = () => {
               source={require("../../assets/logo/img_td.png")}
               style={styles.image}
             />
-            {item.addressWallet == EVM 
+            {item.addressWallet == addressEvm 
             ? <Image
               source={require("../../assets/logo/img_check_connect.png")}
               style={[styles.imageCheck]}
@@ -129,7 +133,9 @@ export const AddNewAccount = () => {
           </View>
         </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {setModalAccountVisible(true), setItem(item)}}>
+        <TouchableOpacity 
+          onPress={() => {setModalAccountVisible(true), setItem(item)}}
+        >
           <Image
             source={require("../../assets/icons/png/ic_menu_dot.png")}
             style={styles.icon}
@@ -174,18 +180,25 @@ export const AddNewAccount = () => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      {/* Modal Connect Wallet Start */}
-      <ModalConnectWallet modalVisible={popupVisible} onClose={handleCloseConnectWallet} />
-      {/* Modal Connect Wallet End */}
 
-      {/* Modal Add A Secondary Wallet Start */}
-      <ModalChooseAddWallet modalVisible={modalVisible} onClose={handleCloseChooseWallet}/>
-      {/* Modal Add A Secondary Wallet End */}
-
-      {/* Modal Add Accont Start */}
-      {/* <ModalAddAccount modalVisible={modalAddAccount} onClose={handleCloseAddAccount} /> */}
-      <ModalAccount modalVisible={modalAccountVisible} onClose={handleCloseModalAccount} item={item}/>
-     
+      <ModalConnectWallet 
+        modalVisible={popupVisible} 
+        onClose={handleCloseConnectWallet} 
+      />
+      <ModalChooseAddWallet 
+        modalVisible={modalVisible} 
+        onClose={handleCloseChooseWallet}
+      />
+      <ModalAccount 
+        modalVisible={modalAccountVisible} 
+        onClose={handleCloseModalAccount} 
+        item={item}
+      />
+      <ModalSetMainAccount
+        modalVisible={modalSetMainAccount} 
+        onClose={handleCloseModalSetMainAccount} 
+        item={item}
+      />
     </SafeAreaView>
   );
 };

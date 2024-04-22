@@ -38,6 +38,10 @@ const ModalChooseAddWallet = (props: Props) => {
   const handleCloseCreateWallet = () => {
     setModalCreateWallet(false);
   };
+
+  const handleClose = () => {
+    onClose();
+   };
  
   return (
     <Modal
@@ -78,10 +82,7 @@ const ModalChooseAddWallet = (props: Props) => {
             >
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#68B984"}]}>
-                <Image
-                  style={styles.icon}
-                  source={require("../../../assets/icons/png/ic-key-28.png")}
-                />
+                <Icon name="ic-key-28" size={20}/>
               </View>
               <Text style={styles.textButton}>Add wallet with private key</Text>
               </View>
@@ -93,10 +94,7 @@ const ModalChooseAddWallet = (props: Props) => {
             >
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
-                <Image
-                  style={styles.icon}
-                  source={require("../../../assets/icons/png/ic-key-28.png")}
-                />
+                <Icon name="ic-wallet-28" size={20}/>
               </View>
               <Text style={styles.textButton}>Add wallet with mnemonic</Text>
               </View>
@@ -123,14 +121,17 @@ const ModalChooseAddWallet = (props: Props) => {
       <ModalAddAccount
         modalVisible={modalAddAccount}
         onClose={handleCloseAddAccount}
+        callback={handleClose}
       />
       <ModalAddMnemonic
-      modalVisible={modalAddMnemonic}
-      onClose={handleCloseAddMnemonic}
+        modalVisible={modalAddMnemonic}
+        onClose={handleCloseAddMnemonic}
+        callback={handleClose}
       />
       <ModalCreateWallet
         modalVisible={modalCreateWallet} 
-        onClose={handleCloseCreateWallet} 
+        onClose={handleCloseCreateWallet}
+        callback={handleClose}
       />
     </Modal>
   );

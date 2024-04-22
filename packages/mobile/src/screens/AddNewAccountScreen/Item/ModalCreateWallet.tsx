@@ -19,10 +19,11 @@ interface Props {
   modalVisible: boolean;
   onClose: () => void;
   item?: any;
+  callback: () => void;
 }
   
 const ModalCreateWallet = (props: Props) => {
-  const { modalVisible, onClose, item} = props;
+  const { modalVisible, onClose, item, callback} = props;
   const [textInput, setTextInput] = useState("");
   const [titleNoti, setTileNoti] = useState("");
   const [descriptionNoti, setDescriptionNoti] = useState("");
@@ -35,6 +36,7 @@ const ModalCreateWallet = (props: Props) => {
   const handleCloseNotification = () => {
     setModalNotification(false);
     onClose();
+    callback();
   };
 
   const handleCreateWallet = useCallback( async () =>  {

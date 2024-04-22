@@ -40,6 +40,10 @@ const ModalAccount = (props: Props) => {
     setModalDeleteAccount(false);
   };
 
+  const handleClose = () => {
+   onClose();
+  };
+
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -81,7 +85,7 @@ const ModalAccount = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#2b6099"}]}>
                 <Image
                   style={styles.icon}
-                  source={require("../../../assets/icons/png/ic-key-28.png")}
+                  source={require("../../../assets/icons_v2/ic-view.png")}
                 />
               </View>
               <Text style={styles.textButton}>View private key</Text>
@@ -94,10 +98,7 @@ const ModalAccount = (props: Props) => {
             >
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#ffe063"}]}>
-                <Image
-                  style={styles.icon}
-                  source={require("../../../assets/icons/png/ic-key-28.png")}
-                />
+                <Icon name="ic-pencil-16"/>
               </View>
               <Text style={styles.textButton}>Edit wallet name</Text>
               </View>
@@ -109,10 +110,7 @@ const ModalAccount = (props: Props) => {
             >
               <View style={styles.menu}>
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
-                <Image
-                  style={styles.icon}
-                  source={require("../../../assets/icons/png/ic-key-28.png")}
-                />
+                <Icon name="ic-trash-bin-28" size={18}/>
               </View>
               <Text style={styles.textButton}>Delete wallet</Text>
               </View>
@@ -125,16 +123,19 @@ const ModalAccount = (props: Props) => {
         modalVisible={modalViewPrivateKey}
         onClose={handleCloseViewPrivateKey}
         item={item}
+        callback={handleClose}
       />
       <ModalEditName
         modalVisible={modalEditName}
         onClose={handleCloseEditName}
         item={item}
+        callback={handleClose}
       />
       <ModalDeleteAccount
         modalVisible={modalDeleteAccount}
         onClose={handleCloseDeleteAccount}
         item={item}
+        callback={handleClose}
       />
     </Modal>
   );
@@ -236,8 +237,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   icon: {
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
     resizeMode: "contain",
     tintColor: colors.White,
   },

@@ -59,6 +59,7 @@ import { format } from "date-fns";
 import { getLocale } from "$utils/date";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import {
+  useEvm,
   useChain,
   useWallet,
   useWalletCurrency,
@@ -90,8 +91,10 @@ import TabListActivities from "./items/TabListActivities";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 export const WalletScreen = memo(({ navigation }: any) => {
-  const [addressEvm, setAddressEVM] = useState("");
+  //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
+  const addressEvm = evm.addressWallet;
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
   const dispatch = useDispatch();
@@ -125,18 +128,18 @@ export const WalletScreen = memo(({ navigation }: any) => {
     setActiveTab(tab);
   };
 
-  const loadDataEVM = useCallback(async () => {
-    try {
-      const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
-      return address;
-    } catch (error) {
-      console.error("Error loading EVM address:", error);
-      throw error;
-    }
-  }, []);
-  useEffect(() => {
-    loadDataEVM().then((address) => setAddressEVM(address));
-  }, [loadDataEVM]);
+  // const loadDataEVM = useCallback(async () => {
+  //   try {
+  //     const address = (await AsyncStorage.getItem("EVMAddress")) ?? "";
+  //     return address;
+  //   } catch (error) {
+  //     console.error("Error loading EVM address:", error);
+  //     throw error;
+  //   }
+  // }, [nav]);
+  // useEffect(() => {
+  //   loadDataEVM().then((address) => setAddressEVM(address));
+  // }, [loadDataEVM]);
   // TODO: rewrite
   useEffect(() => {
     const timer = setTimeout(() => {

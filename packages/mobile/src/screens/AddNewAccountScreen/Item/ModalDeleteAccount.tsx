@@ -17,16 +17,18 @@ interface Props {
   modalVisible: boolean;
   onClose: () => void;
   item: any;
+  callback: () => void;
 }
 
 const ModalDeleteAccount = (props: Props) => {
-  const {modalVisible, onClose, item} = props;
+  const {modalVisible, onClose, item, callback} = props;
   const [descriptionNoti, setDescriptionNoti] = useState('');
   const [modalNotification, setModalNotification] = useState(false);
 
   const handleCloseNotification = () => {
     setModalNotification(false);
     onClose();
+    callback();
   };
 
   const handleDeleteWallet = () => {

@@ -21,10 +21,11 @@ const { width, height } = Dimensions.get("window");
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
+  callback: () => void;
 }
 
 const ModalAddAccount = (props: Props) => {
-  const { modalVisible, onClose } = props;
+  const { modalVisible, onClose, callback} = props;
   const [textInput, setTextInput] = useState("");
   const heigthModal = Platform.OS === "ios" ? 300 : 320;
   const [titleNoti, setTileNoti] = useState("");
@@ -38,7 +39,7 @@ const ModalAddAccount = (props: Props) => {
 
   const handleCloseNotification = () => {
     setModalNotification(false);
-    {status ? onClose() : <></>}
+    {status ? (onClose(), callback()) : <></>}
   };
 
   const handleCreateWallet = useCallback(() => {
