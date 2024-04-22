@@ -1,84 +1,129 @@
-import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, DeviceEventEmitter } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
-import {  fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 
 interface Props {
-  id:string;
+  id?: string;
   symbol: string;
-  image: string;
-  address : string;
-  addressToken : string;
-  rpc : string;
+  image?: string;
+  address: string;
+  addressToken: string;
+  rpc: string;
 }
 
 const ItemWallet = (props: Props) => {
-  const {id, symbol, image,address ,addressToken,rpc} = props;
-   const [price, setPrice] = useState('0');
-   const [priceUsd, setPriceUsd] = useState(0);
-   const [coinUsd, setCoinUsd] = useState(0);
-   const [coinUsd24, setCoinUsd24] = useState(0);
-   const [isCheckLevel, setIsCheckLevel] = useState(false);
-   const handlePress = useCallback(async () => {
-     console.log(price);
+  const { id, symbol, image, address, addressToken, rpc } = props;
+  const [price, setPrice] = useState("0");
+  const [priceUsd, setPriceUsd] = useState(0);
+  const [coinUsd, setCoinUsd] = useState(0);
+  const [coinUsd24, setCoinUsd24] = useState(0);
+  const [isCheckLevel, setIsCheckLevel] = useState(false);
+  const handlePress = useCallback(async () => {
+    console.log(price);
   }, []);
-   async function fetchBalance() {
-            if(addressToken != 'coin'){
-              const balance = await getBalanceToken(rpc, addressToken, address);
-              const coinRate = await SaveListCoinRate.getCoinRateById(id);
-              const rateUsd = coinRate?.usd ?? '0';
-              const coinUsd24 = coinRate?.usdChange ?? '0';
-              const checkLevel = parseFloat(coinUsd24);
-              setIsCheckLevel(checkLevel >= 0 ? true : false);
-              const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
-              setPrice(balance);
-              setPriceUsd(balanceUsd);
-              setCoinUsd24(parseFloat(coinUsd24));
-              setCoinUsd(parseFloat(rateUsd));
-            }else if(addressToken == 'coin'){
-              const balance = await fetchBalaceEvm(address ,rpc);
-              const coinRate = await SaveListCoinRate.getCoinRateById(id);
-              const rateUsd = coinRate?.usd ?? '0';
-              const coinUsd24 = coinRate?.usdChange ?? '0';
-              const checkLevel = parseFloat(coinUsd24);
-              setIsCheckLevel(checkLevel >= 0 ? true : false);
-              const balanceUsd  = parseFloat(rateUsd) * parseFloat(balance);
-              setPrice(balance);
-              setPriceUsd(balanceUsd);
-              setCoinUsd24(parseFloat(coinUsd24));
-              setCoinUsd(parseFloat(rateUsd));
-            }
-          
+  const logo =
+    "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
+  async function fetchBalance() {
+    if (addressToken != "coin") {
+      const balance = await getBalanceToken(rpc, addressToken, address);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id);
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const checkLevel = parseFloat(coinUsd24);
+      setIsCheckLevel(checkLevel >= 0 ? true : false);
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+      setCoinUsd24(parseFloat(coinUsd24));
+      setCoinUsd(parseFloat(rateUsd));
+    } else if (addressToken == "coin") {
+      const balance = await fetchBalaceEvm(address, rpc);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id);
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const checkLevel = parseFloat(coinUsd24);
+      setIsCheckLevel(checkLevel >= 0 ? true : false);
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+      setCoinUsd24(parseFloat(coinUsd24));
+      setCoinUsd(parseFloat(rateUsd));
+    }
   }
-   useEffect(() => {
-        fetchBalance();
-    }, [address]);
+  useEffect(() => {
+    fetchBalance();
+  }, [address]);
   return (
     <TouchableOpacity onPress={handlePress}>
       <View style={styles.container}>
-          <View style={styles.row}>
-            <View style={styles.bgLogo}>
-             <Image style={styles.logo} source={{ uri: image }} />
-            </View>
-            <View>
-              <Text style={styles.title}>{symbol}</Text>
-              <View style={styles.row}>
-                <Text style={styles.body}>{'$'+formatCurrencyNoCrc(coinUsd)}</Text>
-                <View style={{width:4, height:4, backgroundColor:'#D9D9D9', borderRadius:20, marginLeft:2}}></View>
-                <Text style={[styles.body, { marginLeft: 8, color: isCheckLevel ? colors.Green : colors.Red }]}>
-                  {coinUsd24}%
+        <View style={styles.row}>
+          <View style={styles.bgLogo}>
+            {image ? (
+              <Image style={styles.logo} source={{ uri: image }} />
+            ) : (
+              <View
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 20,
+                  backgroundColor: colors.Primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: colors.White,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {symbol.charAt(0)}
                 </Text>
-
               </View>
-            </View>
+            )}
           </View>
           <View>
-            <Text style={[styles.title, { textAlign: "right" }]}>{formatCurrencyNoCrc(parseFloat(price))}</Text>
-            <Text style={[styles.body, { textAlign: "right" }]}>${formatCurrencyNoCrc(priceUsd)}</Text>
+            <Text style={styles.title}>{symbol}</Text>
+            <View style={styles.row}>
+              <Text style={styles.body}>
+                {"$" + formatCurrencyNoCrc(coinUsd)}
+              </Text>
+              <View
+                style={{
+                  width: 4,
+                  height: 4,
+                  backgroundColor: "#D9D9D9",
+                  borderRadius: 20,
+                  marginLeft: 2,
+                }}
+              ></View>
+              <Text
+                style={[
+                  styles.body,
+                  {
+                    marginLeft: 8,
+                    color: isCheckLevel ? colors.Green : colors.Red,
+                  },
+                ]}
+              >
+                {coinUsd24}%
+              </Text>
+            </View>
           </View>
         </View>
+        <View>
+          <Text style={[styles.title, { textAlign: "right" }]}>
+            {formatCurrencyNoCrc(parseFloat(price))}
+          </Text>
+          <Text style={[styles.body, { textAlign: "right" }]}>
+            ${formatCurrencyNoCrc(priceUsd)}
+          </Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -86,11 +131,11 @@ const ItemWallet = (props: Props) => {
 export default ItemWallet;
 
 const styles = StyleSheet.create({
-  bgLogo:{
-     borderRadius: 25,
-     backgroundColor:'#ffffff',
-     alignItems:'center',
-     marginRight: 12,
+  bgLogo: {
+    borderRadius: 25,
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    marginRight: 12,
   },
   logo: {
     width: 36,

@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  ToastAndroid,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { colors } from "../../constants/colors";
@@ -17,17 +19,21 @@ import { JsonRpcProvider, formatUnits, Contract } from "ethers";
 import { abi } from "./Item/Data";
 import { Alert } from "react-native";
 import { useNavigation } from "@tonkeeper/router";
-import {
-  useChain,
-  useWallet,
-  useWalletCurrency,
-  useWalletStatus,
-} from "@tonkeeper/shared/hooks";
+import { useChain } from "@tonkeeper/shared/hooks";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
+import { ListTokenModel } from "$libs/EVM/HistoryEVM/SaveToken";
+import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 
 const ImportToken = () => {
   const nav = useNavigation();
   const chain = useChain()?.chain;
-  const [tokenInfo, setTokenInfo] = useState<object>({});
+  const [tokenInfo, setTokenInfo] = useState({
+    chainId: "",
+    tokenAddress: "",
+    symbol: "",
+    decimals: 0,
+  });
   const [symbol, setSymbol] = useState("");
   const [decimals, setDecimals] = useState("");
   const [tokenAddress, setTokenAddress] = useState("");
@@ -73,27 +79,23 @@ const ImportToken = () => {
     try {
       const provider = new JsonRpcProvider(chain.rpc);
       // const tokenContractAddress = '0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805'; // Thay YOUR_TOKEN_CONTRACT_ADDRESS bằng địa chỉ smart contract của token
-      const tokenContract = new Contract(tokenAddress, abi, provider);
+      const tokenContract = new Contract(tokenAddress.trim(), abi, provider);
       // Gọi hàm symbol() từ smart contract để lấy symbol
       const symbol = await tokenContract.symbol();
       // Gọi hàm decimals() từ smart contract để lấy số lượng số thập phân (decimals)
       const decimals = await tokenContract.decimals();
       let result = {
-        tokenAddress: tokenAddress,
+        chainId: chain.chainId,
+        tokenAddress: tokenAddress.trim(),
         symbol: symbol,
-        decimals: decimals.toString(),
+        decimals: Number(decimals.toString()),
       };
-      setTokenInfo({
-        tokenAddress: tokenAddress,
-        symbol: symbol,
-        decimals: decimals.toString(), // Convert decimals to string
-      });
+      setTokenInfo(result);
       setSymbol(symbol);
       setDecimals(decimals.toString());
-      setTokenAddress(tokenAddress);
+      setTokenAddress(tokenAddress.trim());
       setResult(true);
     } catch (error) {
-      // Alert.alert("Token address not found");
       console.log("Error fetching token info:", error);
       setResult(false);
     }
@@ -101,6 +103,46 @@ const ImportToken = () => {
   useEffect(() => {
     // handleDataEntered("0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805");
   }, []);
+
+  const checkDuplicateTokenAddress = (tokenAddress: string) => {
+    const tokenList = getTokenListByChainID(tokenInfo.chainId);
+    let isDuplicate = false;
+    tokenList.forEach((token: any) => {
+      if (token.tokenAddress === tokenAddress) {
+        isDuplicate = true;
+      }
+    });
+    return isDuplicate;
+  };
+
+  const handleAddToken = async () => {
+    try {
+      if (checkDuplicateTokenAddress(tokenAddress)) {
+        Alert.alert("Token already exists!");
+      } else {
+        await SaveListToken.fullFlowSaveData(tokenInfo);
+        onClearTokenAddress();
+        console.log("Token added successfully!");
+        if (Platform.OS === "android") {
+          ToastAndroid.show("Token added successfully!", ToastAndroid.SHORT);
+        } else {
+          Alert.alert("Import token successfully!");
+        }
+      }
+      // console.log("Data", result);
+    } catch (error) {
+      console.error("Error adding token:", error);
+    }
+  };
+  const handleGetToken = async () => {
+    try {
+      const result = await SaveListToken.getData();
+      console.log("Token get successfully!: ", result);
+      // console.log("Token get successfully!: ",JSON.stringify(result[0].token[2]));
+    } catch (error) {
+      console.error("Error get token:", error);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -338,6 +380,7 @@ const ImportToken = () => {
             ) : null}
 
             <TouchableOpacity
+              onPress={handleAddToken}
               disabled={!disabled()}
               style={[styles.button, { opacity: disabled() ? 1 : 0.1 }]}
             >

@@ -87,8 +87,9 @@ import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
-import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
+import { getTokenListByChainID, getTokenListImportByChainID } from "$libs/EVM/token/tokenEVM";
+import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 export const WalletScreen = memo(({ navigation }: any) => {
   const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
@@ -111,6 +112,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
     chain.id
   );
   const tokensEVM = getTokenListByChainID(chain.chainId);
+  const tokensImportEVMs =  getTokenListImportByChainID(chain.chainId);
+
   console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
@@ -356,9 +359,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
           <List>
             <List.Item
               title="Toncoin"
-              onPress={() => 
-                openWallet(CryptoCurrencies.Ton)
-              }
+              onPress={() => openWallet(CryptoCurrencies.Ton)}
               leftContent={<TonIcon />}
               chevron
               subtitle={
@@ -388,6 +389,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       </Screen>
     );
   }
+
 
   return (
     <Screen>
@@ -611,11 +613,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
             {activeTab === "Tokens" ? (
               chain.chainId != "1100" ? (
                 <TabListToken
+                  tokensImport={tokensImportEVMs}
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={
-                    addressEVMString(addressEvm)
-                  }
+                  address={addressEVMString(addressEvm)}
                 />
               ) : (
                 <View
@@ -639,9 +640,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 </View>
               )
             ) : (
-              <TabListActivities chainActive={chain}  address={chain.chainId != '1100' ?  
-                addressEVMString(addressEvm) : wallet.address.ton.friendly
-              }/>
+              <TabListActivities
+                chainActive={chain}
+                address={
+                  chain.chainId != "1100"
+                    ? addressEVMString(addressEvm)
+                    : wallet.address.ton.friendly
+                }
+              />
             )}
           </View>
         </View>
