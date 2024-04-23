@@ -5,7 +5,7 @@ export interface TransactionModel {
   amount?: string;
   fromAddress?: string;
   toAddress?: string;
-  idxChain?: number;
+  idxChain?: string;
   isRead?: boolean;
   name?: string;
   symbol?: string;

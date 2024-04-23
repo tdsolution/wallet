@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  FlatList,
 } from "react-native";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { globalStyles } from "$styles/globalStyles";
@@ -19,6 +20,10 @@ import { useFlags } from "$utils/flags";
 import { t } from "@tonkeeper/shared/i18n";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import ItemTransaction from "./Item/ItemTransaction";
+import moment from "moment";
+import { any } from "bluebird";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
@@ -26,6 +31,7 @@ const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
+   const [dataTransaction, setDataTransaction] = useState<any>([]);
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
@@ -140,6 +146,22 @@ const DetailToken = ({ route }: any) => {
     }
   };
 
+  const handleGetTransaction = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      const result = await SaveTransaction.getData();
+      console.log("Data transaction: ", result);
+      const dataChainId = result.filter(
+        (data) => data.idxChain === chain.chainId
+      );
+      setDataTransaction(dataChainId);
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
+  };
+  useEffect(() => {
+    handleGetTransaction();
+  }, [chain.chainId]);
   return (
     <SafeAreaView>
       <View
@@ -185,7 +207,7 @@ const DetailToken = ({ route }: any) => {
         )}
 
         <Text style={styles.price}>
-        {formatCurrencyNoCrc(parseFloat(price))} {symbol}
+          {formatCurrencyNoCrc(parseFloat(price))} {symbol}
         </Text>
         <Text style={styles.priceDolla}>{formatCurrencyNoCrc(priceUsd)} $</Text>
       </View>
@@ -232,6 +254,7 @@ const DetailToken = ({ route }: any) => {
           justifyContent: "center",
           alignItems: "center",
           marginTop: 20,
+          marginBottom: 10,
         }}
       >
         <Text style={styles.caption}>Can't find your transaction? </Text>
@@ -239,6 +262,26 @@ const DetailToken = ({ route }: any) => {
           <Text style={styles.textCheckExplorer}>Check explorer</Text>
         </TouchableOpacity>
       </View>
+
+      <FlatList
+        data={dataTransaction}
+        renderItem={({ item }) => (
+          <ItemTransaction
+            unSwap={item.unSwap}
+            amount={item.amount}
+            fromAddress={item.fromAddress}
+            toAddress={item.toAddress}
+            idxChain={item.idxChain}
+            isRead={item.isRead}
+            name={item.name}
+            symbol={item.symbol}
+            time={item.time}
+          />
+        )}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={<View style={{ height: 450 }}></View>}
+      />
     </SafeAreaView>
   );
 };
