@@ -121,14 +121,7 @@ const styles = Steezy.create(({ colors }) => ({
     alignItems: 'center',
   },
   itemContainer: {
-    backgroundColor: "#FFFFFF",
-    shadowColor: '#909090',
-    shadowOffset: {
-        width: 0,
-        height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 14,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
   },
 }));
