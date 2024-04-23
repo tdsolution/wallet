@@ -11,7 +11,7 @@ import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
-import { useNavigation } from "@tonkeeper/router";
+import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
 
 interface Props {
@@ -31,17 +31,7 @@ const ItemWallet = (props: Props) => {
   const [coinUsd24, setCoinUsd24] = useState(0);
   const [isCheckLevel, setIsCheckLevel] = useState(false);
   const navigation = useNavigation()
-  const handlePress = useCallback(async () => {
-    console.log(price);
-    navigation.navigate(WalletStackRouteNames.DetailToken, { 
-      id: id, symbol: symbol,
-      image: image,
-      address: address,
-      addressToken: address,
-      rpc: rpc,
-      price: price,
-      priceUsd: priceUsd});
-  }, []);
+ 
   const logo =
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
   async function fetchBalance() {
@@ -71,9 +61,21 @@ const ItemWallet = (props: Props) => {
       setCoinUsd(parseFloat(rateUsd));
     }
   }
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
     fetchBalance();
-  }, [address]);
+    }, [address])
+  );
+   const handlePress = useCallback(async () => {
+    navigation.navigate(WalletStackRouteNames.DetailToken, { 
+      id: id, 
+      symbol: symbol,
+      image: image,
+      address: address,
+      addressToken: addressToken,
+      rpc: rpc,
+     });
+  }, []);
   return (
     <TouchableOpacity onPress={handlePress}>
       <View style={styles.container}>

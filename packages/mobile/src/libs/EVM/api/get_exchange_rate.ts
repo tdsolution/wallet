@@ -54,7 +54,6 @@ export async function fetchExchangeRate (){
         const response = await axios.get(url);
         if(response.status === 200){
             const data = JSON.stringify(response.data);
-            console.log(data);
             return data;
         }else{
             throw new Error('Failed to fetch exchange rate.');
@@ -121,9 +120,16 @@ class SaveListCoinRate {
             console.error(error);
         }
      }else{
-        const jsonData = JSON.stringify(_list);
-        const nestedJsonString = convertListToNestedJson(jsonData);
-        await this.saveData(nestedJsonString);
+         try {
+            let coinRates = await fetchExchangeRate();
+            if(coinRates != null){
+              await this.saveData(coinRates);
+            }
+        } catch (error) {
+            const jsonData = JSON.stringify(_list);
+            const nestedJsonString = convertListToNestedJson(jsonData);
+            await this.saveData(nestedJsonString);
+        }
      }
    }
 

@@ -91,6 +91,7 @@ import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import { useFocusEffect } from "@react-navigation/native";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM } from "$libs/EVM/send/SendCoinAndToken";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
@@ -386,8 +387,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     try {
       const tokens = await getTokenListImportByChainID(chain.chainId);
       setTokensImportEVM(tokens);
-      // console.log("Đau đầu: ", tokens);
-      // console.log("length: ", tokens.length);
       return tokens;
     } catch (error) {
       console.error("Error fetching token list:", error);
@@ -396,8 +395,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Gọi hàm của bạn ở đây
       fetchData();
+      SaveListCoinRate.fullFlowSaveData();
     }, [chain.chainId])
   );
   return (

@@ -11,7 +11,7 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
@@ -22,7 +22,7 @@ import { Icon } from "$uikit";
 import Clipboard from "@react-native-community/clipboard";
 
 const SendToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc, price } = route.params;
+  const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
@@ -56,6 +56,9 @@ const SendToken = ({ route }: any) => {
   const handleBack = () => {
     navigation.goBack();
   };
+  const handleNext = useCallback(() => {
+    console.log('dau cho'+price);
+  }, []);
 
   return (
     <SafeAreaView style={globalStyles.container}>
@@ -182,7 +185,7 @@ const SendToken = ({ route }: any) => {
       </Pressable>
       </ScrollView>
        <View style={{paddingHorizontal: 10 }}>
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity style={[styles.button]} onPress={handleNext}>
             <Text style={styles.textButton}>Next</Text>
           </TouchableOpacity>
         </View>

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { globalStyles } from "$styles/globalStyles";
-import { useNavigation } from "@tonkeeper/router";
+import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
 import { trackEvent } from "$utils/stats";
@@ -20,8 +20,12 @@ import { t } from "@tonkeeper/shared/i18n";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
+import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 const DetailToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc, price, priceUsd } = route.params;
+  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const [price, setPrice] = useState("0");
+  const [priceUsd, setPriceUsd] = useState(0);
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
@@ -53,7 +57,7 @@ const DetailToken = ({ route }: any) => {
       id: id, symbol: symbol,
       image: image,
       address: address,
-      addressToken: address,
+      addressToken: addressToken,
       rpc: rpc,
       price: price,
       });
@@ -74,6 +78,30 @@ const DetailToken = ({ route }: any) => {
       openRequireWalletModal();
     }
   }, [navigation, wallet]);
+
+   async function fetchBalance() {
+    if (addressToken != "coin") {
+      const balance = await getBalanceToken(rpc, addressToken, address);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+    } else if (addressToken == "coin") {
+      const balance = await fetchBalaceEvm(address, rpc);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+    }
+  };
+   useEffect(() => {
+    fetchBalance();
+    console.log('dau cho'+addressToken);
+  }, []);
 
   const buildTransactionUrl = (address: string, blockchainType: string): string => {
     switch (blockchainType) {
