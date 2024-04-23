@@ -72,103 +72,105 @@ const SendToken = () => {
         <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send MATIC</Text>
         </View>
       </View>
-      <View style={{flex:1}}>
-        <View style={{ gap: 25, paddingHorizontal: 25 }}>
-          <View>
-            <Text style={styles.lable}>Address</Text>
-            <View style={styles.boxInput}>
-              <TextInput
-                style={styles.input}
-                placeholder="0x..."
-                placeholderTextColor={colors.Gray_Light}
-                value={address}
-                onChangeText={(text) => setAddress(text)}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  width: "30%"
-                }}
-              >
-                { address ?
-                <TouchableOpacity onPress={onCleanTextInput}>
-                <Icon name="ic-close-16" color= "primaryColor"/>
-                </TouchableOpacity>
-              : <></>}
-              <TouchableOpacity onPress={pasteText}>
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginLeft: 8,
-                      marginBottom: -2,
-                    },
-                  ]}
+      <View style={{flex:1, justifyContent: "space-between"}}>
+        <View>
+          <View style={{ gap: 25, paddingHorizontal: 25 }}>
+            <View>
+              <Text style={styles.lable}>Address</Text>
+              <View style={styles.boxInput}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0x..."
+                  placeholderTextColor={colors.Gray_Light}
+                  value={address}
+                  onChangeText={(text) => setAddress(text)}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    width: "30%"
+                  }}
                 >
-                  Paste
-                </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image
-                    style={[styles.iconQR]}
-                    source={require("../../assets/icons_v1/icon_qr.png")}
-                  />
-                </TouchableOpacity>
+                  { address ?
+                  <TouchableOpacity onPress={onCleanTextInput}>
+                  <Icon name="ic-close-16" color= "primaryColor"/>
+                  </TouchableOpacity>
+                : <></>}
+                <TouchableOpacity onPress={pasteText}>
+                  <Text
+                    style={[
+                      styles.lable,
+                      {
+                        color: colors.Primary,
+                        marginLeft: 8,
+                        marginBottom: -2,
+                      },
+                    ]}
+                  >
+                    Paste
+                  </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Image
+                      style={[styles.iconQR]}
+                      source={require("../../assets/icons_v1/icon_qr.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
 
-          <View>
-            <Text style={styles.lable}>Amount</Text>
-            <View style={styles.boxInput}>
-              <TextInput
-                style={styles.input}
-                placeholder="0.0"
-                placeholderTextColor={colors.Gray_Light}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginBottom: 0,
-                    },
-                  ]}
+            <View>
+              <Text style={styles.lable}>Amount</Text>
+              <View style={styles.boxInput}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0.0"
+                  placeholderTextColor={colors.Gray_Light}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  Max
-                </Text>
+                  <Text
+                    style={[
+                      styles.lable,
+                      {
+                        color: colors.Primary,
+                        marginBottom: 0,
+                      },
+                    ]}
+                  >
+                    Max
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            height: 1,
-            borderWidth: 0.2,
-            borderColor: "#EEEEEE",
-            marginVertical: 20,
-          }}
-        ></View>
-        <View style={{ paddingHorizontal: 25 }}>
-          <Text style={styles.title}>Your wallets</Text>
-          {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
-          {/* <FlatList
-            contentContainerStyle={{ gap: 10 }}
-            data={wallet}
-            renderItem={({item }) => <ItemYourWallet item={item} callback={handlePasteAddress}/>}
-            keyExtractor={(item) => item.privateKey}
-          /> */}
+          <View
+            style={{
+              width: "100%",
+              height: 1,
+              borderWidth: 0.2,
+              borderColor: "#EEEEEE",
+              marginVertical: 20,
+            }}
+          ></View>
+          <View style={{ paddingHorizontal: 25 }}>
+            <Text style={styles.title}>Your wallets</Text>
+            {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
+            {/* <FlatList
+              contentContainerStyle={{ gap: 10 }}
+              data={wallet}
+              renderItem={({item }) => <ItemYourWallet item={item} callback={handlePasteAddress}/>}
+              keyExtractor={(item) => item.privateKey}
+            /> */}
+          </View>
         </View>
         <View style={{paddingHorizontal: 25 }}>
           <TouchableOpacity style={[styles.button]}>
