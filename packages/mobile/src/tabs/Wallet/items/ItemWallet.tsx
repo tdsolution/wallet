@@ -40,7 +40,7 @@ const ItemWallet = (props: Props) => {
   async function fetchBalance() {
     if (addressToken != "coin") {
       const balance = await getBalanceToken(rpc, addressToken, address);
-      const coinRate = await SaveListCoinRate.getCoinRateById(id);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
       const coinUsd24 = coinRate?.usdChange ?? "0";
       const checkLevel = parseFloat(coinUsd24);

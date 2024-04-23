@@ -79,11 +79,6 @@ import {
   shortenWalletAddress,
 } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
-import SaveListCoinRate, {
-  coinRateModelFromJson,
-  getTokenCST,
-  getTokenTrend,
-} from "$libs/EVM/api/get_exchange_rate";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
