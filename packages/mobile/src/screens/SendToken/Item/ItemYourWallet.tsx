@@ -6,10 +6,10 @@ const ItemYourWallet = ({item, callback}) => {
   let truncatedAddress =
     item.addressWallet.length > 20 ? item.addressWallet.substring(0, 20) + "..." : item.addressWallet;
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity onPress={() => callback(item.addressWallet)} style={styles.container}>
       <Image
         style={styles.image}
-        source={require("../../../assets/logo/img_td.png")}
+        source={require("../../../assets/icons_v1/img_td.jpeg")}
       />
       <View>
         <Text style={styles.title}>{item.name}</Text>

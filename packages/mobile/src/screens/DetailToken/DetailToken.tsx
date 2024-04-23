@@ -51,7 +51,14 @@ const DetailToken = ({ route }: any) => {
   }, [navigation, wallet]);
 
   const handlePressSend = () => {
-    navigation.navigate(WalletStackRouteNames.SendToken);
+     navigation.navigate(WalletStackRouteNames.SendToken, { 
+      id: id, symbol: symbol,
+      image: image,
+      address: address,
+      addressToken: address,
+      rpc: rpc,
+      price: price,
+      });
   };
   //   const handlePressSend = useCallback(async () => {
   //     if (wallet) {

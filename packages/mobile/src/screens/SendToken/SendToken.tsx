@@ -21,10 +21,12 @@ import SaveListWallet, { ListWalletModel } from "$libs/EVM/SaveWallet";
 import { Icon } from "$uikit";
 import Clipboard from "@react-native-community/clipboard";
 
-const SendToken = () => {
+const SendToken = ({ route }: any) => {
+  const { id, symbol, image, address, addressToken, rpc, price } = route.params;
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
-  const [address, setAddress] = useState("");
+  const [addressInput, setAddressInput] = useState("");
+  const [amount, setAmount] = useState("0.0");
 
   useEffect(() => {
     async function getdata() {
@@ -34,18 +36,21 @@ const SendToken = () => {
     getdata();
   }, []);
 
-  const handlePasteAddress = (address) => {
-    setAddress(address);
-    console.log(address);
+  const handlePasteAddress = (addressInput) => {
+    setAddressInput(addressInput);
+    console.log(addressInput);
   }
 
   const onCleanTextInput = () => {
-    setAddress("");
+    setAddressInput("");
+  };
+  const onCleanTextAmount = () => {
+    setAmount("0.0");
   };
 
   const pasteText = async () => {
     const clipboardContent = await Clipboard.getString();
-    setAddress(clipboardContent);
+    setAddressInput(clipboardContent);
   };
  
   const handleBack = () => {
@@ -69,7 +74,7 @@ const SendToken = () => {
           />
         </TouchableOpacity>
         <View style={{alignItems: "center", width: "100%"}}>
-        <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send MATIC</Text>
+        <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send {symbol}</Text>
         </View>
       </View>
       <View style={{flex:1, justifyContent: "space-between"}}>
@@ -82,8 +87,8 @@ const SendToken = () => {
                   style={styles.input}
                   placeholder="0x..."
                   placeholderTextColor={colors.Gray_Light}
-                  value={address}
-                  onChangeText={(text) => setAddress(text)}
+                  value={addressInput}
+                  onChangeText={(text) => setAddressInput(text)}
                 />
                 <View
                   style={{
@@ -93,7 +98,7 @@ const SendToken = () => {
                     width: "30%"
                   }}
                 >
-                  { address ?
+                  { addressInput ?
                   <TouchableOpacity onPress={onCleanTextInput}>
                   <Icon name="ic-close-16" color= "primaryColor"/>
                   </TouchableOpacity>
@@ -129,6 +134,8 @@ const SendToken = () => {
                   style={styles.input}
                   placeholder="0.0"
                   placeholderTextColor={colors.Gray_Light}
+                  value={amount}
+                  onChangeText={(text) => setAmount(text)}
                 />
                 <View
                   style={{
@@ -137,6 +144,11 @@ const SendToken = () => {
                     justifyContent: "center",
                   }}
                 >
+                   { amount ?
+                  <TouchableOpacity onPress={onCleanTextAmount} style={{marginRight:10}}>
+                  <Icon name="ic-close-16" color= "primaryColor"/>
+                  </TouchableOpacity>
+                : <></>}
                   <Text
                     style={[
                       styles.lable,
@@ -164,22 +176,16 @@ const SendToken = () => {
           <View style={{ paddingHorizontal: 25 }}>
             <Text style={styles.title}>Your wallets</Text>
             {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
-            {/* <FlatList
-              contentContainerStyle={{ gap: 10 }}
-              data={wallet}
-              renderItem={({item }) => <ItemYourWallet item={item} callback={handlePasteAddress}/>}
-              keyExtractor={(item) => item.privateKey}
-            /> */}
           </View>
-        </View>
-        <View style={{paddingHorizontal: 25 }}>
-          <TouchableOpacity style={[styles.button]}>
-            <Text style={styles.textButton}>Next</Text>
-          </TouchableOpacity>
         </View>
       </View>
       </Pressable>
       </ScrollView>
+       <View style={{paddingHorizontal: 10 }}>
+          <TouchableOpacity style={[styles.button]}>
+            <Text style={styles.textButton}>Next</Text>
+          </TouchableOpacity>
+        </View>
     </SafeAreaView>
   );
 };
@@ -202,7 +208,6 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "70%",
-    height: 57,
     paddingVertical: 5,
     paddingRight: 10,
     fontSize: 16,
