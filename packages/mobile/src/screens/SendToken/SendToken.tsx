@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Alert,
 } from "react-native";
 import React from "react";
 import HeaderBar from "../../components/HeaderBar";
@@ -14,6 +15,9 @@ import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import ItemYourWallet from "./Item/ItemYourWallet";
+import SaveTransaction, {
+  TransactionModel,
+} from "$libs/EVM/HistoryEVM/SaveTransaction";
 
 const SendToken = () => {
   const navigation = useNavigation();
@@ -23,6 +27,38 @@ const SendToken = () => {
   ]);
   const handleBack = () => {
     navigation.goBack();
+  };
+
+  const sampleTransaction: TransactionModel = {
+    unSwap: true,
+    amount: "1000000000",
+    fromAddress: "0x42D78018D4607566c70B8AfBc993CF1289B26cCE",
+    toAddress: "0x483bBF9Fdaa62892eA53aC791F7a41CD9bd6FDdD",
+    idxChain: "97",
+    isRead: false,
+    name: "Send Coin",
+    symbol: "USDT",
+    time: Date.now().toString(),
+  };
+
+  // Định nghĩa hàm xử lý thêm token
+  const handleAddTransaction = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      await SaveTransaction.fullFlowSaveData([sampleTransaction]);
+      console.log("Sample transaction saved successfully!");
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
+  };
+
+  const handleClearToken = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      const result = await SaveTransaction.clearData();
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
   };
   return (
     <SafeAreaView style={globalStyles.container}>
@@ -129,7 +165,7 @@ const SendToken = () => {
           />
         </View>
       </View>
-      <TouchableOpacity style={[styles.button]}>
+      <TouchableOpacity onPress={handleAddTransaction} style={[styles.button]}>
         <Text style={styles.textButton}>Next</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -184,7 +220,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Light",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: "#DDDDDD",
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
