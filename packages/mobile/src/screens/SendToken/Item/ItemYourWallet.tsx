@@ -1,26 +1,20 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
-import { useNavigation } from "@tonkeeper/router";
-import { WalletStackRouteNames } from "$navigation";
 
-const ItemYourWallet = () => {
-    const navigation = useNavigation();
-  const token = "0xd0F0bd3B24B436B868720711FC1060A99c8Dc049";
+const ItemYourWallet = ({item, callback}) => {
   let truncatedAddress =
-    token.length > 20 ? token.substring(0, 20) + "..." : token;
+    item.addressWallet.length > 20 ? item.addressWallet.substring(0, 20) + "..." : item.addressWallet;
   return (
-    <TouchableOpacity onPress={() => navigation.navigate(WalletStackRouteNames.DetailToken)}>
-    <View style={styles.container}>
+    <TouchableOpacity onPress={() => callback(item.addressWallet)} style={styles.container}>
       <Image
         style={styles.image}
         source={require("../../../assets/icons_v1/icon_qr.png")}
       />
       <View>
-        <Text style={styles.title}>Main Account</Text>
+        <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.textToken}>{truncatedAddress}</Text>
       </View>
-    </View>
     </TouchableOpacity>
   );
 };
@@ -29,6 +23,7 @@ export default ItemYourWallet;
 
 const styles = StyleSheet.create({
   container: {
+    marginVertical: 5,
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",

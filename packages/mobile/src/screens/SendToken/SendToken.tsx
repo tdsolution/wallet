@@ -7,25 +7,55 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Pressable,
+  Keyboard,
+  ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import ItemYourWallet from "./Item/ItemYourWallet";
+import SaveListWallet, { ListWalletModel } from "$libs/EVM/SaveWallet";
+import { Icon } from "$uikit";
+import Clipboard from "@react-native-community/clipboard";
 
 const SendToken = () => {
   const navigation = useNavigation();
-  const [wallet, setWallet] = React.useState([
-    { id: "1", name: "" },
-    { id: "2", name: "" },
-  ]);
+  const [wallet, setWallet] = useState<ListWalletModel[]>();
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    async function getdata() {
+        const data = await SaveListWallet.getData();
+        setWallet(data);
+    }
+    getdata();
+  }, []);
+
+  const handlePasteAddress = (address) => {
+    setAddress(address);
+    console.log(address);
+  }
+
+  const onCleanTextInput = () => {
+    setAddress("");
+  };
+
+  const pasteText = async () => {
+    const clipboardContent = await Clipboard.getString();
+    setAddress(clipboardContent);
+  };
+ 
   const handleBack = () => {
     navigation.goBack();
   };
+
   return (
     <SafeAreaView style={globalStyles.container}>
+      <ScrollView>
+      <Pressable onPress={Keyboard.dismiss} style={{flex:1}}>
       <View
         style={[
           globalStyles.row,
@@ -38,10 +68,11 @@ const SendToken = () => {
             source={require("../../assets/icons/png/ic-close-16.png")}
           />
         </TouchableOpacity>
-        <Text style={globalStyles.textHeader}>Send MATIC</Text>
-        <Text style={{ opacity: 0 }}>scacasc</Text>
+        <View style={{alignItems: "center", width: "100%"}}>
+        <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send MATIC</Text>
+        </View>
       </View>
-      <View>
+      <View style={{flex:1}}>
         <View style={{ gap: 25, paddingHorizontal: 25 }}>
           <View>
             <Text style={styles.lable}>Address</Text>
@@ -50,29 +81,39 @@ const SendToken = () => {
                 style={styles.input}
                 placeholder="0x..."
                 placeholderTextColor={colors.Gray_Light}
+                value={address}
+                onChangeText={(text) => setAddress(text)}
               />
               <View
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "center",
+                  justifyContent: "flex-end",
+                  width: "30%"
                 }}
               >
+                { address ?
+                <TouchableOpacity onPress={onCleanTextInput}>
+                <Icon name="ic-close-16" color= "primaryColor"/>
+                </TouchableOpacity>
+              : <></>}
+              <TouchableOpacity onPress={pasteText}>
                 <Text
                   style={[
                     styles.lable,
                     {
                       color: colors.Primary,
-                      marginRight: 10,
-                      marginBottom: 0,
+                      marginLeft: 8,
+                      marginBottom: -2,
                     },
                   ]}
                 >
                   Paste
                 </Text>
+                </TouchableOpacity>
                 <TouchableOpacity>
                   <Image
-                    style={[styles.iconClose]}
+                    style={[styles.iconQR]}
                     source={require("../../assets/icons_v1/icon_qr.png")}
                   />
                 </TouchableOpacity>
@@ -121,17 +162,22 @@ const SendToken = () => {
         ></View>
         <View style={{ paddingHorizontal: 25 }}>
           <Text style={styles.title}>Your wallets</Text>
-          <FlatList
+          {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
+          {/* <FlatList
             contentContainerStyle={{ gap: 10 }}
             data={wallet}
-            renderItem={({ item }) => <ItemYourWallet />}
-            keyExtractor={(item) => item.id.toString()}
-          />
+            renderItem={({item }) => <ItemYourWallet item={item} callback={handlePasteAddress}/>}
+            keyExtractor={(item) => item.privateKey}
+          /> */}
+        </View>
+        <View style={{paddingHorizontal: 25 }}>
+          <TouchableOpacity style={[styles.button]}>
+            <Text style={styles.textButton}>Next</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={[styles.button]}>
-        <Text style={styles.textButton}>Next</Text>
-      </TouchableOpacity>
+      </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -145,8 +191,15 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
+  iconQR: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+    tintColor: colors.Primary,
+    marginLeft: 8,
+  },
   input: {
-    width: "80%",
+    width: "70%",
     height: 57,
     paddingVertical: 5,
     paddingRight: 10,
@@ -205,10 +258,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     marginBottom: 100,
-    position: "absolute",
-    bottom: 0,
-    left: 25,
-    right: 25,
+    width: "100%",
   },
   textButton: {
     fontSize: 16,
