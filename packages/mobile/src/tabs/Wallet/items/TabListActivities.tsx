@@ -21,11 +21,16 @@ import {
   fetchTransactions,
 } from "$libs/EVM/HistoryEVM/DataHistory";
 import moment from 'moment';
+import { openDAppBrowser } from "$navigation";
+import { buildTransactionUrl } from "$libs/EVM/brower";
+import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 const TabListActivities = ({ chainActive, address}) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const dataToShow = transactions.slice(-3);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
 
   useEffect(() => {
     console.log(address);
@@ -70,7 +75,7 @@ const TabListActivities = ({ chainActive, address}) => {
     >
       <View>
         <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop: 10 }}>
-          <TouchableOpacity style={styles.buttonBrower}>
+          <TouchableOpacity style={styles.buttonBrower} onPress={() => openDAppBrowser(buildTransactionUrl(evm.addressWallet, chain.chainId))}>
             <Image
               style={styles.image}
               source={require("../../../assets/icons/png/ic-globe-56.png")}
