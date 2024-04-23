@@ -13,8 +13,10 @@ import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import ItemNotification from "./Item/ItemNotification";
+import { useNavigation } from "@tonkeeper/router";
 
 const NotificationScreen = () => {
+  const navigation = useNavigation()
   const [data, setdData] = useState([
     { id: '1', title: "Send coins" },
     { id: '2', title: "Send Coins" },
@@ -32,6 +34,7 @@ const NotificationScreen = () => {
         ]}
       >
         <TouchableOpacity
+        onPress={() => navigation.goBack()}
           style={{ flexDirection: "row", alignItems: "center" }}
         >
           <Image

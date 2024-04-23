@@ -33,7 +33,7 @@ const ItemWallet = (props: Props) => {
   const navigation = useNavigation()
   const handlePress = useCallback(async () => {
     console.log(price);
-    navigation.navigate(WalletStackRouteNames.DetailToken, { id: id, symbol: symbol, image: image, address: address, addressToken: address, rpc: rpc});
+    navigation.navigate(WalletStackRouteNames.DetailToken, { id: id, symbol: symbol, image: image, address: address, addressToken: address, rpc: rpc, price: price, priceUsd: priceUsd});
   }, []);
   const logo =
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";

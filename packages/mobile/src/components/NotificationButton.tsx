@@ -3,7 +3,11 @@ import React, {memo, useMemo} from 'react';
 import { Steezy } from '$styles';
 import { Text, TouchableOpacity } from '@tonkeeper/uikit';
 import {Image, View} from 'react-native';
+import { useNavigation } from '@tonkeeper/router';
+import { WalletStackRouteNames } from "$navigation";
+
 export const NotificationButton = memo (() => {
+   const navigation = useNavigation();
    const deeplinking = useDeeplinking();
    const hitSlop = useMemo(()=> ({
     top:26,
@@ -13,7 +17,7 @@ export const NotificationButton = memo (() => {
    }), []);
    return (
       <TouchableOpacity
-      onPress={()=>{}}
+      onPress={()=> navigation.navigate(WalletStackRouteNames.Notification)}
       style={styles.container}
       activeOpacity={0.6}
       hitSlop={hitSlop}

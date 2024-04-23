@@ -10,7 +10,7 @@ const ItemYourWallet = () => {
   let truncatedAddress =
     token.length > 20 ? token.substring(0, 20) + "..." : token;
   return (
-    <TouchableOpacity onPress={() => navigation.navigate(WalletStackRouteNames.DetailToken)}>
+    <TouchableOpacity onPress={() => {}}>
     <View style={styles.container}>
       <Image
         style={styles.image}
