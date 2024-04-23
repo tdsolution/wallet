@@ -9,7 +9,7 @@ const ItemYourWallet = ({item, callback}) => {
     <TouchableOpacity onPress={() => callback(item.addressWallet)} style={styles.container}>
       <Image
         style={styles.image}
-        source={require("../../../assets/icons_v1/icon_qr.png")}
+        source={require("../../../assets/logo/img_td.png")}
       />
       <View>
         <Text style={styles.title}>{item.name}</Text>
