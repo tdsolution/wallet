@@ -27,6 +27,7 @@ import { any } from "bluebird";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { buildTransactionUrl } from "$libs/EVM/brower";
 const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
   const [price, setPrice] = useState("0");
