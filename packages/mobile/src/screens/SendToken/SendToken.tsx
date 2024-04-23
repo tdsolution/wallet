@@ -165,7 +165,7 @@ const SendToken = () => {
           />
         </View>
       </View>
-      <TouchableOpacity onPress={handleAddTransaction} style={[styles.button]}>
+      <TouchableOpacity style={[styles.button]}>
         <Text style={styles.textButton}>Next</Text>
       </TouchableOpacity>
     </SafeAreaView>
