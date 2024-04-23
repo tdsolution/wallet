@@ -17,14 +17,17 @@ import { trackEvent } from "$utils/stats";
 import { Events, SendAnalyticsFrom } from "$store/models";
 import { useFlags } from "$utils/flags";
 import { t } from "@tonkeeper/shared/i18n";
-import { useChain, useWallet } from "@tonkeeper/shared/hooks";
+import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { WalletStackRouteNames } from "$navigation";
-
+import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 
 const DetailToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const { id, symbol, image, address, addressToken, rpc, price, priceUsd } = route.params;
   const navigation = useNavigation();
   const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
+  const addressEvm = evm.addressWallet;
+  // const balance = useBalance(tokens.total.fiat);
   const handleBack = () => {
     navigation.goBack();
   };
@@ -49,15 +52,15 @@ const DetailToken = ({ route }: any) => {
 
   const handlePressSend = () => {
     navigation.navigate(WalletStackRouteNames.SendToken);
-  }
-//   const handlePressSend = useCallback(async () => {
-//     if (wallet) {
-//       trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
-//       navigation.go("Send", { from: SendAnalyticsFrom.WalletScreen });
-//     } else {
-//       openRequireWalletModal();
-//     }
-//   }, [navigation, wallet]);
+  };
+  //   const handlePressSend = useCallback(async () => {
+  //     if (wallet) {
+  //       trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
+  //       navigation.go("Send", { from: SendAnalyticsFrom.WalletScreen });
+  //     } else {
+  //       openRequireWalletModal();
+  //     }
+  //   }, [navigation, wallet]);
 
   const handlePressRecevie = useCallback(() => {
     if (wallet) {
@@ -109,8 +112,10 @@ const DetailToken = ({ route }: any) => {
           </View>
         )}
 
-        <Text style={styles.price}>0,01 MATIC</Text>
-        <Text style={styles.priceDolla}>= 0.0016 $</Text>
+        <Text style={styles.price}>
+        {formatCurrencyNoCrc(parseFloat(price))} {symbol}
+        </Text>
+        <Text style={styles.priceDolla}>{formatCurrencyNoCrc(priceUsd)} $</Text>
       </View>
       <View style={{ marginTop: 10 }}>
         <IconButtonList style={{ height: 100 }}>

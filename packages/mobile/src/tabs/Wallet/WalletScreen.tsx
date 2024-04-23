@@ -386,8 +386,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
     try {
       const tokens = await getTokenListImportByChainID(chain.chainId);
       setTokensImportEVM(tokens);
-      console.log("Đau đầu: ", tokens);
-      console.log("length: ", tokens.length);
+      // console.log("Đau đầu: ", tokens);
+      // console.log("length: ", tokens.length);
       return tokens;
     } catch (error) {
       console.error("Error fetching token list:", error);
