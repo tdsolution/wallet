@@ -8,8 +8,10 @@ import {
   TextInput,
   FlatList,
   Alert,
+  Modal,
+  Button,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
@@ -18,13 +20,22 @@ import ItemYourWallet from "./Item/ItemYourWallet";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { openScanQR, openSend } from "$navigation";
+import { CryptoCurrencies } from "$shared/constants";
+import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
+import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
+import { Address } from "@tonkeeper/core";
+import { store } from "$store";
+import QRCodeScanner from "react-native-qrcode-scanner";
 
 const SendToken = () => {
+  const deeplinking = useDeeplinking();
   const navigation = useNavigation();
   const [wallet, setWallet] = React.useState([
     { id: "1", name: "" },
     { id: "2", name: "" },
   ]);
+  const [addressWallet, setAddressWallet] = useState<string>('');
   const handleBack = () => {
     navigation.goBack();
   };
@@ -60,6 +71,36 @@ const SendToken = () => {
       console.error("Error saving sample transaction:", error);
     }
   };
+
+  const handlePressScanQR = React.useCallback(() => {
+    if (store.getState().wallet.wallet) {
+      openScanQR((address) => {
+        if (Address.isValid(address)) {
+          setTimeout(() => {
+            openSend({ currency: CryptoCurrencies.Ton, address });
+          }, 200);
+          setAddressWallet(address);
+          console.log("Quet ma thanh cong: ", address.toString());
+          return true;
+        }
+
+        const resolver = deeplinking.getResolver(address, {
+          delay: 200,
+          origin: DeeplinkOrigin.QR_CODE,
+        });
+
+        if (resolver) {
+          resolver();
+          return true;
+        }
+
+        return false;
+      });
+    } else {
+      openRequireWalletModal();
+    }
+  }, []);
+  
   return (
     <SafeAreaView style={globalStyles.container}>
       <View
@@ -84,8 +125,10 @@ const SendToken = () => {
             <View style={styles.boxInput}>
               <TextInput
                 style={styles.input}
+                value={addressWallet}
                 placeholder="0x..."
                 placeholderTextColor={colors.Gray_Light}
+                onChangeText={(text) => setAddressWallet(text)}
               />
               <View
                 style={{
@@ -106,7 +149,7 @@ const SendToken = () => {
                 >
                   Paste
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handlePressScanQR}>
                   <Image
                     style={[styles.iconClose]}
                     source={require("../../assets/icons_v1/icon_qr.png")}
