@@ -20,13 +20,14 @@ import ItemYourWallet from "./Item/ItemYourWallet";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
-import { openScanQR, openSend } from "$navigation";
+import { MainStackRouteNames, openScanQR, openSend } from "$navigation";
 import { CryptoCurrencies } from "$shared/constants";
 import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
 import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
+import { WalletStackRouteNames } from "$navigation";
 
 const SendToken = () => {
   const deeplinking = useDeeplinking();
@@ -36,6 +37,7 @@ const SendToken = () => {
     { id: "2", name: "" },
   ]);
   const [addressWallet, setAddressWallet] = useState<string>('');
+  const [amount, setAmount] = useState<number>(0);
   const handleBack = () => {
     navigation.goBack();
   };
@@ -100,7 +102,7 @@ const SendToken = () => {
       openRequireWalletModal();
     }
   }, []);
-  
+
   return (
     <SafeAreaView style={globalStyles.container}>
       <View
@@ -208,7 +210,7 @@ const SendToken = () => {
           />
         </View>
       </View>
-      <TouchableOpacity style={[styles.button]}>
+      <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})}>
         <Text style={styles.textButton}>Next</Text>
       </TouchableOpacity>
     </SafeAreaView>

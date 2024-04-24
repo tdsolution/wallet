@@ -10,4 +10,5 @@ export type WalletStackParamList = {
   [WalletStackRouteNames.SendToken]: {};
   [WalletStackRouteNames.SendCoin]: {};
   [WalletStackRouteNames.DetailToken]: {};
+  [WalletStackRouteNames.Transfer]: {};
 };

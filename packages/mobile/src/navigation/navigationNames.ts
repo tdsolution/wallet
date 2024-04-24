@@ -82,6 +82,7 @@ export enum WalletStackRouteNames {
   SendToken = "SendToken",
   SendCoin = "SendCoin",
   DetailToken = "DetailToken",
+  Transfer = "Transfer",
 }
 
 export enum SettingsStackRouteNames {
