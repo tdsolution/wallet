@@ -65,7 +65,6 @@ const ImportToken = () => {
     if (value.length >= 40) {
       timeOut = setTimeout(() => {
         handleDataEntered(value);
-        
       }, 500);
     }
   };
@@ -98,7 +97,7 @@ const ImportToken = () => {
       setResult(true);
     } catch (error) {
       console.log("Error fetching token info:", error);
-      Alert.alert("Invalid token. Please try again.")
+      Alert.alert("Invalid token. Please try again.");
       setResult(false);
     }
   };
@@ -471,6 +470,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   input: {
+    flex: 1,
     height: 57,
     backgroundColor: colors.White,
     paddingHorizontal: 10,

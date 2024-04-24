@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     tintColor: colors.Primary,
   },
   input: {
-    width: "80%",
+    flex: 1,
     height: 57,
     paddingVertical: 5,
     paddingRight: 10,
