@@ -1,7 +1,7 @@
 const bip39 = require('bip39');
 import {  Wallet as WalletETH } from 'ethers';
 import SaveListWallet, { ListWalletModel } from './SaveWallet';
-import { JsonRpcProvider, Contract } from 'ethers';
+import { JsonRpcProvider, Contract, isAddress } from 'ethers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function generateMnemonic(): Promise<string> {
@@ -166,6 +166,9 @@ export async function getInfoToken  ()  {
       console.error('Error fetching token info:', error);
     }
   };
+export async function isValidAddressEVM(addressEvm : string){
+  return isAddress(addressEvm);
+}
 
 
 

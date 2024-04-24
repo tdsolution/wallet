@@ -24,6 +24,7 @@ import Clipboard from "@react-native-community/clipboard";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { Toast } from "@tonkeeper/uikit";
 
 const SendToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
@@ -62,9 +63,9 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if(price > 0){
-      console.log('dau cho '+price);
+      Toast.success("");
     }else{
-      console.log('nho hon '+price);
+      Toast.fail('Insufficient balance!!');
     }
   }, []);
 
