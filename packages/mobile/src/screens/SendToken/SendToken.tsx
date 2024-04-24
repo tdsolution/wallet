@@ -61,7 +61,11 @@ const SendToken = ({ route }: any) => {
     navigation.goBack();
   };
   const handleNext = useCallback(() => {
-    console.log('dau cho'+price);
+    if(price > 0){
+      console.log('dau cho '+price);
+    }else{
+      console.log('nho hon '+price);
+    }
   }, []);
 
 
@@ -220,11 +224,11 @@ const SendToken = ({ route }: any) => {
       </View>
       </Pressable>
       </ScrollView>
-       <View style={{paddingHorizontal: 10 }}>
+         <View style={{paddingHorizontal: 10 }}>
           <TouchableOpacity style={[styles.button]} onPress={handleNext}>
             <Text style={styles.textButton}>Next</Text>
           </TouchableOpacity>
-        </View>
+        </View> 
     </SafeAreaView>
   );
 };
@@ -297,7 +301,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    height: 50,
+    paddingVertical:16,
     backgroundColor: "#4871EA",
     borderRadius: 25,
     justifyContent: "center",
@@ -305,6 +309,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 100,
     width: "100%",
+  },
+  button1:{
+    paddingVertical:16,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 100,
+    width: "100%",
+    backgroundColor:'red'
   },
   textButton: {
     fontSize: 16,
