@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addressEVMString } from '$libs/EVM/createWallet';
 
 // Define the context
 interface EmvContextType {

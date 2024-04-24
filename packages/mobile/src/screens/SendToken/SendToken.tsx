@@ -11,6 +11,8 @@ import {
   Keyboard,
   ScrollView,
   Alert,
+  Modal,
+  Button,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
@@ -24,6 +26,13 @@ import Clipboard from "@react-native-community/clipboard";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { openScanQR, openSend } from "$navigation";
+import { CryptoCurrencies } from "$shared/constants";
+import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
+import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
+import { Address } from "@tonkeeper/core";
+import { store } from "$store";
+import QRCodeScanner from "react-native-qrcode-scanner";
 import { Toast } from "@tonkeeper/uikit";
 
 const SendToken = ({ route }: any) => {
@@ -32,7 +41,8 @@ const SendToken = ({ route }: any) => {
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
   const [amount, setAmount] = useState("0.0");
-
+  const [addressWallet, setAddressWallet] = useState<string>('');
+   const deeplinking = useDeeplinking();
   useEffect(() => {
     async function getdata() {
         const data = await SaveListWallet.getData();
@@ -101,6 +111,36 @@ const SendToken = ({ route }: any) => {
       console.error("Error saving sample transaction:", error);
     }
   };
+
+  const handlePressScanQR = React.useCallback(() => {
+    if (store.getState().wallet.wallet) {
+      openScanQR((address) => {
+        if (Address.isValid(address)) {
+          setTimeout(() => {
+            openSend({ currency: CryptoCurrencies.Ton, address });
+          }, 200);
+          setAddressWallet(address);
+          console.log("Quet ma thanh cong: ", address.toString());
+          return true;
+        }
+
+        const resolver = deeplinking.getResolver(address, {
+          delay: 200,
+          origin: DeeplinkOrigin.QR_CODE,
+        });
+
+        if (resolver) {
+          resolver();
+          return true;
+        }
+
+        return false;
+      });
+    } else {
+      openRequireWalletModal();
+    }
+  }, []);
+  
   return (
     <SafeAreaView style={globalStyles.container}>
       <ScrollView>
@@ -161,7 +201,7 @@ const SendToken = ({ route }: any) => {
                     Paste
                   </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={handlePressScanQR}>
                     <Image
                       style={[styles.iconQR]}
                       source={require("../../assets/icons_v1/icon_qr.png")}
