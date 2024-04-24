@@ -15,8 +15,8 @@ import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { useChain } from "@tonkeeper/shared/hooks";
 
-const TransferScreen = ({props}: {props: any}) => {
-    const {address, amount} = props;
+const TransferScreen = ({route}) => {
+    const {address, amount} = route.params;
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const handleBack = () => {
