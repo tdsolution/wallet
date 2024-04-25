@@ -25,6 +25,7 @@ import { tk, vault } from '$wallet';
 import { CanceledActionError } from '$core/Send/steps/ConfirmStep/ActionErrors';
 import { useBiometrySettings, useWallet } from '@tonkeeper/shared/hooks';
 import SaveListToken from '$libs/EVM/HistoryEVM/SaveToken';
+import SaveTransaction from '$libs/EVM/HistoryEVM/SaveTransaction';
 
 export const AccessConfirmation: FC = () => {
   const route = useRoute();
@@ -174,6 +175,7 @@ export const AccessConfirmation: FC = () => {
   const handleClearToken = async () => {
     try {
       await SaveListToken.clearData();
+      await SaveTransaction.clearData();
       console.log("Token clear successfully!: ");
     } catch (error) {
       console.error("Error clear token:", error);

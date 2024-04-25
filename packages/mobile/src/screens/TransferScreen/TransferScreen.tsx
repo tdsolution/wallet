@@ -52,7 +52,7 @@ const TransferScreen = ({route}) => {
         toAddress: addressTo,
         idxChain: chain.chainId,
         isRead: false,
-        name:  "Send Coin",
+        name:  "Send Token",
         symbol: symbol,
         time: Date.now().toString(),
       };
@@ -77,7 +77,7 @@ const TransferScreen = ({route}) => {
         toAddress: addressTo,
         idxChain: chain.chainId,
         isRead: false,
-        name:  "Send Token" ,
+        name:  "Send Coin" ,
         symbol: symbol,
         time: Date.now().toString(),
       };

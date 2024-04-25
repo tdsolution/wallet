@@ -110,6 +110,7 @@ const DetailToken = ({ route }: any) => {
   
   const handleGetTransaction = async () => {
     try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
       const result = await SaveTransaction.getData();
       console.log("Data transaction: ", result);
       const dataChainId = result.filter(
@@ -120,11 +121,13 @@ const DetailToken = ({ route }: any) => {
       console.error("Error saving sample transaction:", error);
     }
   };
+  useEffect(() => {
+      fetchBalance();
+  }, []);
   useFocusEffect(
     React.useCallback(() => {
-      fetchBalance();
      handleGetTransaction();
-    }, [chain.chainId])
+    }, [])
   );
   return (
     <SafeAreaView>
@@ -181,10 +184,6 @@ const DetailToken = ({ route }: any) => {
             <IconButton
               onPress={
                 handlePressSend
-                // async ()=>{
-                //  let coinRates = await getTokenCST();
-                //  console.log(coinRates);
-                // }
               }
               iconName="ic-arrow-up-28"
               title={t("wallet.send_btn")}

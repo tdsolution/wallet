@@ -54,7 +54,7 @@ const formatTimestamp = (timestamp: number): string => {
         </View>
       </View>
       <View>
-        <Text style={styles.price}>-0.000001 tBNB</Text>
+        <Text style={styles.price}>{amount +' '+ symbol}</Text>
         <Text style={[styles.date, { textAlign: "right" }]}>
           {formatDatestamp(time)}
         </Text>

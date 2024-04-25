@@ -61,6 +61,7 @@ import { colors } from "../../constants/colors";
 import ModalSignOut from "./Item/ModalSignOut";
 import ModalDeleteAccount from "./Item/ModalDeleteAccount";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
+import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 
 export const Settings: FC = () => {
   const animationRef = useRef<AnimatedLottieView>(null);
@@ -143,6 +144,7 @@ export const Settings: FC = () => {
   const handleClearToken = async () => {
     try {
       await SaveListToken.clearData();
+      await SaveTransaction.clearData();
       console.log("Token clear successfully!: ");
     } catch (error) {
       console.error("Error clear token:", error);
