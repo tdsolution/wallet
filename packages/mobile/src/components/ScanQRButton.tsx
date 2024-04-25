@@ -2,15 +2,17 @@ import React, { memo, useMemo } from 'react';
 import { Icon, TouchableOpacity } from '$uikit';
 import { Steezy } from '$styles';
 import { store } from '$store';
-import {Image} from 'react-native'
+import {Alert, Image} from 'react-native'
 import { openScanQR, openSend } from '$navigation';
 import { CryptoCurrencies } from '$shared/constants';
 import { DeeplinkOrigin, useDeeplinking } from '$libs/deeplinking';
 import { openRequireWalletModal } from '$core/ModalContainer/RequireWallet/RequireWallet';
 import { Address } from '@tonkeeper/core';
+import { navigation, useNavigation } from '@tonkeeper/router';
 
 export const ScanQRButton = memo(() => {
   const deeplinking = useDeeplinking();
+  const nav = useNavigation();
 
   const hitSlop = useMemo(
     () => ({
@@ -32,7 +34,7 @@ export const ScanQRButton = memo(() => {
 
           return true;
         }
-
+        
         const resolver = deeplinking.getResolver(address, {
           delay: 200,
           origin: DeeplinkOrigin.QR_CODE,

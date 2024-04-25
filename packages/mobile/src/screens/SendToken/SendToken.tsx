@@ -37,17 +37,17 @@ import { Toast } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
 
 const SendToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
+  const { id, symbol, image, address, addressToken, rpc, price } = route.params;
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
   const [amount, setAmount] = useState("0.0");
-  const [addressWallet, setAddressWallet] = useState<string>('');
-   const deeplinking = useDeeplinking();
+  const [addressWallet, setAddressWallet] = useState<string>("");
+  const deeplinking = useDeeplinking();
   useEffect(() => {
     async function getdata() {
-        const data = await SaveListWallet.getData();
-        setWallet(data);
+      const data = await SaveListWallet.getData();
+      setWallet(data);
     }
     getdata();
   }, []);
@@ -55,7 +55,7 @@ const SendToken = ({ route }: any) => {
   const handlePasteAddress = (addressInput) => {
     setAddressInput(addressInput);
     console.log(addressInput);
-  }
+  };
 
   const onCleanTextInput = () => {
     setAddressInput("");
@@ -68,18 +68,20 @@ const SendToken = ({ route }: any) => {
     const clipboardContent = await Clipboard.getString();
     setAddressInput(clipboardContent);
   };
- 
+
   const handleBack = () => {
     navigation.goBack();
   };
   const handleNext = useCallback(() => {
-    if(price > 0){
-      navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})
-    }else{
-      Toast.fail('Insufficient balance!!');
+    if (price > 0) {
+      navigation.navigate(WalletStackRouteNames.Transfer, {
+        address: addressInput,
+        amount: amount,
+      });
+    } else {
+      Toast.fail("Insufficient balance!!");
     }
   }, []);
-
 
   const sampleTransaction: TransactionModel = {
     unSwap: true,
@@ -114,6 +116,7 @@ const SendToken = ({ route }: any) => {
   };
 
   const handlePressScanQR = React.useCallback(() => {
+    console.log("Ví Chain: ", store.getState().wallet.wallet);
     if (store.getState().wallet.wallet) {
       openScanQR((address) => {
         if (Address.isValid(address)) {
@@ -124,9 +127,13 @@ const SendToken = ({ route }: any) => {
           console.log("Quet ma thanh cong: ", address.toString());
           return true;
         }
+        if (address) {
+          setAddressInput(address);
+          return true;
+        }
 
         const resolver = deeplinking.getResolver(address, {
-          delay: 200,
+          delay: 1000,
           origin: DeeplinkOrigin.QR_CODE,
         });
 
@@ -145,132 +152,147 @@ const SendToken = ({ route }: any) => {
   return (
     <SafeAreaView style={globalStyles.container}>
       <ScrollView>
-      <Pressable onPress={Keyboard.dismiss} style={{flex:1}}>
-      <View
-        style={[
-          globalStyles.row,
-          { paddingHorizontal: 25, paddingVertical: 10 },
-        ]}
-      >
-        <TouchableOpacity onPress={handleBack}>
-          <Image
-            style={styles.iconClose}
-            source={require("../../assets/icons/png/ic-close-16.png")}
-          />
-        </TouchableOpacity>
-        <View style={{alignItems: "center", width: "100%"}}>
-        <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send {symbol}</Text>
-        </View>
-      </View>
-      <View style={{flex:1, justifyContent: "space-between"}}>
-        <View>
-          <View style={{ gap: 25, paddingHorizontal: 25 }}>
-            <View>
-              <Text style={styles.lable}>Address</Text>
-              <View style={styles.boxInput}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="0x..."
-                  placeholderTextColor={colors.Gray_Light}
-                  value={addressInput}
-                  onChangeText={(text) => setAddressInput(text)}
-                />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    width: "30%"
-                  }}
-                >
-                  { addressInput ?
-                  <TouchableOpacity onPress={onCleanTextInput}>
-                  <Icon name="ic-close-16" color= "primaryColor"/>
-                  </TouchableOpacity>
-                : <></>}
-                <TouchableOpacity onPress={pasteText}>
-                  <Text
-                    style={[
-                      styles.lable,
-                      {
-                        color: colors.Primary,
-                        marginLeft: 8,
-                        marginBottom: -2,
-                      },
-                    ]}
-                  >
-                    Paste
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handlePressScanQR}>
-                    <Image
-                      style={[styles.iconQR]}
-                      source={require("../../assets/icons_v1/icon_qr.png")}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            <View>
-              <Text style={styles.lable}>Amount</Text>
-              <View style={styles.boxInput}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="0.0"
-                  placeholderTextColor={colors.Gray_Light}
-                  value={amount}
-                  onChangeText={(text) => setAmount(text)}
-                />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                   { amount ?
-                  <TouchableOpacity onPress={onCleanTextAmount} style={{marginRight:10}}>
-                  <Icon name="ic-close-16" color= "primaryColor"/>
-                  </TouchableOpacity>
-                : <></>}
-                  <Text
-                    style={[
-                      styles.lable,
-                      {
-                        color: colors.Primary,
-                        marginBottom: 0,
-                      },
-                    ]}
-                  >
-                    Max
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
+        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
           <View
-            style={{
-              width: "100%",
-              height: 1,
-              borderWidth: 0.2,
-              borderColor: "#EEEEEE",
-              marginVertical: 20,
-            }}
-          ></View>
-          <View style={{ paddingHorizontal: 25 }}>
-            <Text style={styles.title}>Your wallets</Text>
-            {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
+            style={[
+              globalStyles.row,
+              { paddingHorizontal: 25, paddingVertical: 10 },
+            ]}
+          >
+            <TouchableOpacity onPress={handleBack}>
+              <Image
+                style={styles.iconClose}
+                source={require("../../assets/icons/png/ic-close-16.png")}
+              />
+            </TouchableOpacity>
+            <View style={{ alignItems: "center", width: "100%" }}>
+              <Text style={[globalStyles.textHeader, { marginLeft: -5 }]}>
+                Send {symbol}
+              </Text>
+            </View>
           </View>
-        </View>
-      </View>
-      </Pressable>
+          <View style={{ flex: 1, justifyContent: "space-between" }}>
+            <View>
+              <View style={{ gap: 25, paddingHorizontal: 25 }}>
+                <View>
+                  <Text style={styles.lable}>Address</Text>
+                  <View style={styles.boxInput}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="0x..."
+                      placeholderTextColor={colors.Gray_Light}
+                      value={addressInput}
+                      onChangeText={(text) => setAddressInput(text)}
+                    />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        width: "30%",
+                      }}
+                    >
+                      {addressInput ? (
+                        <TouchableOpacity onPress={onCleanTextInput}>
+                          <Icon name="ic-close-16" color="primaryColor" />
+                        </TouchableOpacity>
+                      ) : (
+                        <></>
+                      )}
+                      <TouchableOpacity onPress={pasteText}>
+                        <Text
+                          style={[
+                            styles.lable,
+                            {
+                              color: colors.Primary,
+                              marginLeft: 8,
+                              marginBottom: -2,
+                            },
+                          ]}
+                        >
+                          Paste
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handlePressScanQR}>
+                        <Image
+                          style={[styles.iconQR]}
+                          source={require("../../assets/icons_v1/icon_qr.png")}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+
+                <View>
+                  <Text style={styles.lable}>Amount</Text>
+                  <View style={styles.boxInput}>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="0.0"
+                      placeholderTextColor={colors.Gray_Light}
+                      value={amount}
+                      onChangeText={(text) => setAmount(text)}
+                    />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {amount ? (
+                        <TouchableOpacity
+                          onPress={onCleanTextAmount}
+                          style={{ marginRight: 10 }}
+                        >
+                          <Icon name="ic-close-16" color="primaryColor" />
+                        </TouchableOpacity>
+                      ) : (
+                        <></>
+                      )}
+                      <Text
+                        style={[
+                          styles.lable,
+                          {
+                            color: colors.Primary,
+                            marginBottom: 0,
+                          },
+                        ]}
+                      >
+                        Max
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  width: "100%",
+                  height: 1,
+                  borderWidth: 0.2,
+                  borderColor: "#EEEEEE",
+                  marginVertical: 20,
+                }}
+              ></View>
+              <View style={{ paddingHorizontal: 25 }}>
+                <Text style={styles.title}>Your wallets</Text>
+                {wallet?.map((item, index) => (
+                  <ItemYourWallet
+                    item={item}
+                    callback={handlePasteAddress}
+                    key={index}
+                  />
+                ))}
+              </View>
+            </View>
+          </View>
+        </Pressable>
       </ScrollView>
-         <View style={{paddingHorizontal: 10 }}>
-          <TouchableOpacity style={[styles.button]} onPress={handleNext}>
-            <Text style={styles.textButton}>Next</Text>
-          </TouchableOpacity>
-        </View> 
+      <View style={{ paddingHorizontal: 10 }}>
+        <TouchableOpacity style={[styles.button]} onPress={handleNext}>
+          <Text style={styles.textButton}>Next</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -343,7 +365,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    paddingVertical:16,
+    paddingVertical: 16,
     backgroundColor: "#4871EA",
     borderRadius: 25,
     justifyContent: "center",
@@ -352,15 +374,15 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     width: "100%",
   },
-  button1:{
-    paddingVertical:16,
+  button1: {
+    paddingVertical: 16,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
     marginBottom: 100,
     width: "100%",
-    backgroundColor:'red'
+    backgroundColor: "red",
   },
   textButton: {
     fontSize: 16,
