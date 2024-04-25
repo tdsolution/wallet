@@ -1,9 +1,15 @@
-import { TransitionOpacity, SegmentedControl, TonIcon, Modal } from '@tonkeeper/uikit';
-import { ReceiveTokenContent } from '../components/ReceiveTokenContent';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { tk } from '@tonkeeper/mobile/src/wallet';
-import { t } from '../i18n';
+import {
+  TransitionOpacity,
+  SegmentedControl,
+  TonIcon,
+  Modal,
+} from "@tonkeeper/uikit";
+import { ReceiveTokenContent } from "../components/ReceiveTokenContent";
+import { memo, useCallback, useMemo, useState } from "react";
+import { Image, StyleSheet } from "react-native";
+import { tk } from "@tonkeeper/mobile/src/wallet";
+import { t } from "../i18n";
+import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 
 enum Segments {
   Ton = 0,
@@ -15,19 +21,30 @@ export const ReceiveModal = memo(() => {
 
   const tonAddress = tk.wallet.address.ton.friendly;
   const tronAddress = tk.wallet.address.tron?.proxy;
-
+  const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
+  let evmAddress = evm.addressWallet;
+  evmAddress = evmAddress.replace(/^"|"$/g, "");
+  console.log("Ton Address: " + tonAddress);
+  console.log("EVM Address: " + evm.addressWallet);
+  const chainId = chain.chainId == "1100";
   const segments = useMemo(() => {
-    const items = ['TON'];
+    const items = ["TON"];
 
     if (tronAddress) {
-      items.push('TRC20');
+      items.push("TRC20");
     }
 
     return items;
   }, [tronAddress]);
 
   const address2url = useCallback((addr: string) => {
-    return 'ton://transfer/' + addr;
+    if (chainId) {
+      return "ton://transfer/" + addr;
+    } else {
+      console.log("Địa chỉ: " + addr);
+      return addr;
+    }
   }, []);
 
   return (
@@ -54,13 +71,29 @@ export const ReceiveModal = memo(() => {
         >
           <ReceiveTokenContent
             qrCodeScale={0.8}
-            logo={<TonIcon size="small" />}
-            qrAddress={address2url(tonAddress)}
-            address={tonAddress}
-            title={t('receiveModal.receive_title', { tokenName: 'Toncoin' })}
-            description={t('receiveModal.receive_description', {
-              tokenName: 'Toncoin TON',
+            logo={
+              chainId ? (
+                <TonIcon size="small" />
+              ) : (
+                <Image
+                  style={{ width: 30, height: 30, resizeMode: "contain" }}
+                  source={{ uri: chain.logo }}
+                />
+              )
+            }
+            qrAddress={address2url(chainId ? tonAddress : evmAddress)}
+            address={chainId ? tonAddress : evmAddress}
+            title={t("receiveModal.receive_title", {
+              tokenName: chainId ? "Toncoin" : chain.name,
             })}
+            description={
+              chainId
+                ? t("receiveModal.receive_description", {
+                    tokenName: "Toncoin TON",
+                    // chainId ? "Toncoin TON" : "Coin and Token",
+                  })
+                : `Send only Coin and Token in EVM network to this address, or you might lose your funds.`
+            }
           />
         </TransitionOpacity>
       </Modal.Content>
@@ -70,7 +103,7 @@ export const ReceiveModal = memo(() => {
 
 const styles = StyleSheet.create({
   transition: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
