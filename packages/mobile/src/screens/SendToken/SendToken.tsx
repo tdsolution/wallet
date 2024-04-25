@@ -7,16 +7,22 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Pressable,
+  Keyboard,
+  ScrollView,
   Alert,
   Modal,
   Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import ItemYourWallet from "./Item/ItemYourWallet";
+import SaveListWallet, { ListWalletModel } from "$libs/EVM/SaveWallet";
+import { Icon } from "$uikit";
+import Clipboard from "@react-native-community/clipboard";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
@@ -27,21 +33,53 @@ import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/Requi
 import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
+import { Toast } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
 
-const SendToken = () => {
-  const deeplinking = useDeeplinking();
+const SendToken = ({ route }: any) => {
+  const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
   const navigation = useNavigation();
-  const [wallet, setWallet] = React.useState([
-    { id: "1", name: "" },
-    { id: "2", name: "" },
-  ]);
-  const [addressWallet, setAddressWallet] = useState<string>("");
-  const [amount, setAmount] = useState<number>(0);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [wallet, setWallet] = useState<ListWalletModel[]>();
+  const [addressInput, setAddressInput] = useState("");
+  const [amount, setAmount] = useState("0.0");
+  const [addressWallet, setAddressWallet] = useState<string>('');
+   const deeplinking = useDeeplinking();
+  useEffect(() => {
+    async function getdata() {
+        const data = await SaveListWallet.getData();
+        setWallet(data);
+    }
+    getdata();
+  }, []);
+
+  const handlePasteAddress = (addressInput) => {
+    setAddressInput(addressInput);
+    console.log(addressInput);
+  }
+
+  const onCleanTextInput = () => {
+    setAddressInput("");
+  };
+  const onCleanTextAmount = () => {
+    setAmount("0.0");
+  };
+
+  const pasteText = async () => {
+    const clipboardContent = await Clipboard.getString();
+    setAddressInput(clipboardContent);
+  };
+ 
   const handleBack = () => {
     navigation.goBack();
   };
+  const handleNext = useCallback(() => {
+    if(price > 0){
+      navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})
+    }else{
+      Toast.fail('Insufficient balance!!');
+    }
+  }, []);
+
 
   const sampleTransaction: TransactionModel = {
     unSwap: true,
@@ -106,6 +144,8 @@ const SendToken = () => {
 
   return (
     <SafeAreaView style={globalStyles.container}>
+      <ScrollView>
+      <Pressable onPress={Keyboard.dismiss} style={{flex:1}}>
       <View
         style={[
           globalStyles.row,
@@ -118,144 +158,119 @@ const SendToken = () => {
             source={require("../../assets/icons/png/ic-close-16.png")}
           />
         </TouchableOpacity>
-        <Text style={globalStyles.textHeader}>Send MATIC</Text>
-        <Text style={{ opacity: 0 }}>scacasc</Text>
+        <View style={{alignItems: "center", width: "100%"}}>
+        <Text style={[globalStyles.textHeader, {marginLeft: -5}]}>Send {symbol}</Text>
+        </View>
       </View>
-      <View>
-        <View style={{ gap: 25, paddingHorizontal: 25 }}>
-          <View>
-            <Text style={styles.lable}>Address</Text>
-            <View style={styles.boxInput}>
-              <TextInput
-                style={styles.input}
-                value={addressWallet}
-                placeholder="0x..."
-                placeholderTextColor={colors.Gray_Light}
-                onChangeText={(text) => setAddressWallet(text)}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginRight: 10,
-                      marginBottom: 0,
-                    },
-                  ]}
+      <View style={{flex:1, justifyContent: "space-between"}}>
+        <View>
+          <View style={{ gap: 25, paddingHorizontal: 25 }}>
+            <View>
+              <Text style={styles.lable}>Address</Text>
+              <View style={styles.boxInput}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0x..."
+                  placeholderTextColor={colors.Gray_Light}
+                  value={addressInput}
+                  onChangeText={(text) => setAddressInput(text)}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    width: "30%"
+                  }}
                 >
-                  Paste
-                </Text>
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                  <Image
-                    style={[styles.iconClose]}
-                    source={require("../../assets/icons_v1/icon_qr.png")}
-                  />
-                </TouchableOpacity>
+                  { addressInput ?
+                  <TouchableOpacity onPress={onCleanTextInput}>
+                  <Icon name="ic-close-16" color= "primaryColor"/>
+                  </TouchableOpacity>
+                : <></>}
+                <TouchableOpacity onPress={pasteText}>
+                  <Text
+                    style={[
+                      styles.lable,
+                      {
+                        color: colors.Primary,
+                        marginLeft: 8,
+                        marginBottom: -2,
+                      },
+                    ]}
+                  >
+                    Paste
+                  </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handlePressScanQR}>
+                    <Image
+                      style={[styles.iconQR]}
+                      source={require("../../assets/icons_v1/icon_qr.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            <View>
+              <Text style={styles.lable}>Amount</Text>
+              <View style={styles.boxInput}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0.0"
+                  placeholderTextColor={colors.Gray_Light}
+                  value={amount}
+                  onChangeText={(text) => setAmount(text)}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                   { amount ?
+                  <TouchableOpacity onPress={onCleanTextAmount} style={{marginRight:10}}>
+                  <Icon name="ic-close-16" color= "primaryColor"/>
+                  </TouchableOpacity>
+                : <></>}
+                  <Text
+                    style={[
+                      styles.lable,
+                      {
+                        color: colors.Primary,
+                        marginBottom: 0,
+                      },
+                    ]}
+                  >
+                    Max
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-
-          <View>
-            <Text style={styles.lable}>Amount</Text>
-            <View style={styles.boxInput}>
-              <TextInput
-                style={styles.input}
-                placeholder="0.0"
-                placeholderTextColor={colors.Gray_Light}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={[
-                    styles.lable,
-                    {
-                      color: colors.Primary,
-                      marginBottom: 0,
-                    },
-                  ]}
-                >
-                  Max
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            height: 1,
-            borderWidth: 0.2,
-            borderColor: "#EEEEEE",
-            marginVertical: 20,
-          }}
-        ></View>
-        <View style={{ paddingHorizontal: 25 }}>
-          <Text style={styles.title}>Your wallets</Text>
-          <FlatList
-            contentContainerStyle={{ gap: 10 }}
-            data={wallet}
-            renderItem={({ item }) => <ItemYourWallet />}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        </View>
-      </View>
-      <TouchableOpacity
-        style={[styles.button]}
-        onPress={() =>
-          navigation.navigate(WalletStackRouteNames.Transfer, {
-            address: addressWallet,
-            amount: amount,
-          })
-        }
-      >
-        <Text style={styles.textButton}>Next</Text>
-      </TouchableOpacity>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          }}
-        >
           <View
             style={{
-              width: '100%', height: '100%',
-              backgroundColor: "white",
-              padding: 20,
-              borderRadius: 10,
-              alignItems: "center",
+              width: "100%",
+              height: 1,
+              borderWidth: 0.2,
+              borderColor: "#EEEEEE",
+              marginVertical: 20,
             }}
-          >
-            <Text>Modal Content</Text>
-            <Button
-              title="Close Modal"
-              onPress={() => setModalVisible(!modalVisible)}
-            />
+          ></View>
+          <View style={{ paddingHorizontal: 25 }}>
+            <Text style={styles.title}>Your wallets</Text>
+            {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
           </View>
         </View>
-      </Modal>
+      </View>
+      </Pressable>
+      </ScrollView>
+         <View style={{paddingHorizontal: 10 }}>
+          <TouchableOpacity style={[styles.button]} onPress={handleNext}>
+            <Text style={styles.textButton}>Next</Text>
+          </TouchableOpacity>
+        </View> 
     </SafeAreaView>
   );
 };
@@ -269,9 +284,15 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Primary,
   },
+  iconQR: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+    tintColor: colors.Primary,
+    marginLeft: 8,
+  },
   input: {
-    flex: 1,
-    height: 57,
+    width: "70%",
     paddingVertical: 5,
     paddingRight: 10,
     fontSize: 16,
@@ -322,17 +343,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    height: 50,
+    paddingVertical:16,
     backgroundColor: "#4871EA",
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
     marginBottom: 100,
-    position: "absolute",
-    bottom: 0,
-    left: 25,
-    right: 25,
+    width: "100%",
+  },
+  button1:{
+    paddingVertical:16,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 100,
+    width: "100%",
+    backgroundColor:'red'
   },
   textButton: {
     fontSize: 16,

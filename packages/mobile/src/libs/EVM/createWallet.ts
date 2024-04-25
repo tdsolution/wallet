@@ -1,7 +1,7 @@
 const bip39 = require('bip39');
 import {  Wallet as WalletETH } from 'ethers';
 import SaveListWallet, { ListWalletModel } from './SaveWallet';
-import { JsonRpcProvider, Contract } from 'ethers';
+import { JsonRpcProvider, Contract, isAddress } from 'ethers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function generateMnemonic(): Promise<string> {
@@ -128,10 +128,10 @@ export async function createNewWalletFromMnemonic(mnemonic: string, name:string)
 }
 
 export async function setWalletEVM(wallet: ListWalletModel){
-  await AsyncStorage.setItem('EVMPrivateKey',JSON.stringify(wallet.privateKey));
-  await AsyncStorage.setItem('EVMAddress',JSON.stringify(wallet.addressWallet));
-  await AsyncStorage.setItem('EVMMnemonic',JSON.stringify(wallet.mnemonic));
-  await AsyncStorage.setItem('EVMMname',JSON.stringify(wallet.name));
+  await AsyncStorage.setItem('EVMPrivateKey',wallet.privateKey);
+  await AsyncStorage.setItem('EVMAddress',wallet.addressWallet);
+  await AsyncStorage.setItem('EVMMnemonic',wallet.mnemonic);
+  await AsyncStorage.setItem('EVMMname',wallet.name);
   console.log('Save Wallet');
 }
 
@@ -166,6 +166,9 @@ export async function getInfoToken  ()  {
       console.error('Error fetching token info:', error);
     }
   };
+export async function isValidAddressEVM(addressEvm : string){
+  return isAddress(addressEvm);
+}
 
 
 

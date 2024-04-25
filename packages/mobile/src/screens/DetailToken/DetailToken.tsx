@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { globalStyles } from "$styles/globalStyles";
-import { useNavigation } from "@tonkeeper/router";
+import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
 import { trackEvent } from "$utils/stats";
@@ -19,22 +19,24 @@ import { Events, SendAnalyticsFrom } from "$store/models";
 import { useFlags } from "$utils/flags";
 import { t } from "@tonkeeper/shared/i18n";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
-import { WalletStackRouteNames } from "$navigation";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import ItemTransaction from "./Item/ItemTransaction";
 import moment from "moment";
 import { any } from "bluebird";
-
+import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
+import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { buildTransactionUrl } from "$libs/EVM/brower";
 const DetailToken = ({ route }: any) => {
-  const [dataTransaction, setDataTransaction] = useState<any>([]);
-  const { id, symbol, image, address, addressToken, rpc, price, priceUsd } =
-    route.params;
+  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const [price, setPrice] = useState("0");
+  const [priceUsd, setPriceUsd] = useState(0);
+   const [dataTransaction, setDataTransaction] = useState<any>([]);
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
-  // const balance = useBalance(tokens.total.fiat);
   const handleBack = () => {
     navigation.goBack();
   };
@@ -58,7 +60,14 @@ const DetailToken = ({ route }: any) => {
   }, [navigation, wallet]);
 
   const handlePressSend = () => {
-    navigation.navigate(WalletStackRouteNames.SendToken);
+     navigation.navigate(WalletStackRouteNames.SendToken, { 
+      id: id, symbol: symbol,
+      image: image,
+      address: address,
+      addressToken: addressToken,
+      rpc: rpc,
+      price: price,
+      });
   };
   //   const handlePressSend = useCallback(async () => {
   //     if (wallet) {
@@ -76,6 +85,65 @@ const DetailToken = ({ route }: any) => {
       openRequireWalletModal();
     }
   }, [navigation, wallet]);
+
+   async function fetchBalance() {
+    if (addressToken != "coin") {
+      const balance = await getBalanceToken(rpc, addressToken, address);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const rateUsd = coinRate?.usd ?? "0";
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+    } else if (addressToken == "coin") {
+      const balance = await fetchBalaceEvm(address, rpc);
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const rateUsd = coinRate?.usd ?? "0";
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+    }
+  };
+   useEffect(() => {
+    fetchBalance();
+    console.log('dau cho'+address);
+  }, []);
+
+  const buildTransactionUrl = (address: string, blockchainType: string): string => {
+    switch (blockchainType) {
+      case '1':
+        return `https://etherscan.io/address/${address}`;
+      case '324':
+        return `https://explorer.zksync.io/address/${address}`;
+      case '56':
+        return `https://bscscan.com/address/${address}`;
+      case '1116':
+        return `https://scan.coredao.org/address/${address}`;
+      case '97':
+        return `https://polygonscan.com/address/${address}`;
+      case '10':
+        return `https://optimistic.etherscan.io/address/${address}`;
+      case '137':
+        return `https://polygonscan.com/address/${address}`;
+      // case '1000':
+      //   return `https://tronscan.org/#/address/${AppDataGlobal.ADDRESS_TRON}`;
+      // case '1100':
+      //   return `https://tonscan.org/address/${AppDataGlobal.ADDRESS_TON}`;
+      case '43114':
+        return `https://avascan.info/blockchain/dfk/address/${address}/transactions`;
+      case '42161':
+        return `https://arbiscan.io/address/${address}`;
+      case '250':
+        return `https://ftmscan.com/address/${address}`;
+      case '1088':
+        return `https://explorer.metis.io/address/${address}`;
+      case '42220':
+        return `https://celoscan.io/address/${address}`;
+      case '25':
+        return `https://cronoscan.com/address/${address}`;
+      default:
+        throw new Error('Invalid blockchain type');
+    }
+  };
 
   const handleGetTransaction = async () => {
     try {
@@ -107,8 +175,9 @@ const DetailToken = ({ route }: any) => {
             source={require("../../assets/icons/png/ic-arrow-up-16.png")}
           />
         </TouchableOpacity>
-        <Text style={globalStyles.textHeader}>{chain.name}</Text>
-        <Text style={{ opacity: 0 }}>scacasc</Text>
+        <View style={{width: "100%", alignItems: "center"}}>
+        <Text style={[globalStyles.textHeader, {marginLeft: -45}]}>{chain.name}</Text>
+        </View>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         {image ? (
@@ -188,7 +257,7 @@ const DetailToken = ({ route }: any) => {
         }}
       >
         <Text style={styles.caption}>Can't find your transaction? </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => openDAppBrowser(buildTransactionUrl(evm.addressWallet, chain.chainId))}>
           <Text style={styles.textCheckExplorer}>Check explorer</Text>
         </TouchableOpacity>
       </View>

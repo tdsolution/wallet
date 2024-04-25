@@ -220,7 +220,7 @@ const confirmAddWallet = () => {
                       <TextInput 
                         secureTextEntry={listSeed[index].hide}  
                         style={styles.textInput}
-                        value={listSeed[index].text}
+                        value={listSeed[index].text.toLocaleLowerCase()}
                         onChangeText={(newValue) => handleTextChange({item, newValue})}
                       ></TextInput>
                       <TouchableOpacity onPress={()=> setHide({item})} style={{marginLeft: 5}}>
@@ -366,6 +366,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textInput: {
+    paddingHorizontal:10,
     borderWidth: 1,
     height: 35,
     width: "65%",

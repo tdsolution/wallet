@@ -69,21 +69,11 @@ import { WalletSelector } from "./components/WalletSelector";
 import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
-import ItemWallet from "./Item/ItemWallet";
-import Title from "../../components/Title";
 import {
-  addressEVMString,
-  getInfoToken,
   shortenWalletAddress,
 } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
-import SaveListCoinRate, {
-  coinRateModelFromJson,
-  getTokenCST,
-  getTokenTrend,
-} from "$libs/EVM/api/get_exchange_rate";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
@@ -95,12 +85,14 @@ import {
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import { useFocusEffect } from "@react-navigation/native";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
-import { SendCoinEVM } from "$libs/EVM/send/SendCoinAndToken";
+import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
+  console.log(addressEvm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -115,7 +107,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
   const balanceEVM = useBalanceEVMDemo(
-    addressEVMString(addressEvm),
+    addressEvm,
     chain.rpc,
     chain.id
   );
@@ -172,13 +164,13 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [nav, wallet]);
 
   const handlePressSend = useCallback(async () => {
-    if (wallet) {
-      trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
-      nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
-    } else {
-      openRequireWalletModal();
-    }
-    // SendCoinEVM();
+    // if (wallet) {
+    //   trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
+    //   nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
+    // } else {
+    //   openRequireWalletModal();
+    // }
+    SendTokenEVM();
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {
@@ -391,8 +383,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     try {
       const tokens = await getTokenListImportByChainID(chain.chainId);
       setTokensImportEVM(tokens);
-      // console.log("Đau đầu: ", tokens);
-      // console.log("length: ", tokens.length);
       return tokens;
     } catch (error) {
       console.error("Error fetching token list:", error);
@@ -401,8 +391,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Gọi hàm của bạn ở đây
       fetchData();
+      SaveListCoinRate.fullFlowSaveData();
     }, [chain.chainId])
   );
   return (
@@ -508,7 +498,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                     copyText(
                       chain.chainId == "1100"
                         ? wallet.address.ton.friendly
-                        : addressEVMString(addressEvm),
+                        : addressEvm,
                       undefined, // Khi không cần thiết truyền tham số duration, sử dụng undefined
                       "green" // Tham số color cho toast
                     )()
@@ -529,7 +519,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   onPress={copyText(
                     chain.chainId == "1100"
                       ? wallet.address.ton.friendly
-                      : addressEVMString(addressEvm)
+                      : addressEvm
                   )}
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
@@ -635,7 +625,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   tokensImport={tokensImportEVM}
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={addressEVMString(addressEvm)}
+                  address={addressEvm}
                 />
               ) : (
                 <View
@@ -663,7 +653,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 chainActive={chain}
                 address={
                   chain.chainId != "1100"
-                    ? addressEVMString(addressEvm)
+                    ? addressEvm
                     : wallet.address.ton.friendly
                 }
               />

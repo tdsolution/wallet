@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addressEVMString } from '$libs/EVM/createWallet';
 
 // Define the context
 interface EmvContextType {
@@ -21,10 +20,10 @@ export const EmvProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
         const name = await AsyncStorage.getItem("EVMMname");
         const evmModal = {
-          addressWallet: addressEVMString(address ?? ''),
-          privateKey: addressEVMString(privateKey ?? ''),
-          mnemonic: addressEVMString(mnemonic ?? ''),
-          name: addressEVMString(name ?? ''),
+          addressWallet: address,
+          privateKey: privateKey,
+          mnemonic: mnemonic,
+          name: name,
         }
         setEvm(evmModal);
       } catch (error) {

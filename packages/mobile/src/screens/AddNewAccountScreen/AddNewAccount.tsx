@@ -69,7 +69,7 @@ export const AddNewAccount = () => {
   }, []);
 
   useEffect(() => {
-    loadDataEVM().then((address) => setAddressEVM(addressEVMString(address)));
+    loadDataEVM().then((address) => setAddressEVM(address));
   }, [loadDataEVM]);
 
   useEffect(() => {
