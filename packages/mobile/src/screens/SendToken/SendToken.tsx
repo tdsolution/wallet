@@ -36,8 +36,9 @@ const SendToken = () => {
     { id: "1", name: "" },
     { id: "2", name: "" },
   ]);
-  const [addressWallet, setAddressWallet] = useState<string>('');
+  const [addressWallet, setAddressWallet] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const handleBack = () => {
     navigation.goBack();
   };
@@ -151,7 +152,7 @@ const SendToken = () => {
                 >
                   Paste
                 </Text>
-                <TouchableOpacity onPress={handlePressScanQR}>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
                   <Image
                     style={[styles.iconClose]}
                     source={require("../../assets/icons_v1/icon_qr.png")}
@@ -210,9 +211,51 @@ const SendToken = () => {
           />
         </View>
       </View>
-      <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})}>
+      <TouchableOpacity
+        style={[styles.button]}
+        onPress={() =>
+          navigation.navigate(WalletStackRouteNames.Transfer, {
+            address: addressWallet,
+            amount: amount,
+          })
+        }
+      >
         <Text style={styles.textButton}>Next</Text>
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: '100%', height: '100%',
+              backgroundColor: "white",
+              padding: 20,
+              borderRadius: 10,
+              alignItems: "center",
+            }}
+          >
+            <Text>Modal Content</Text>
+            <Button
+              title="Close Modal"
+              onPress={() => setModalVisible(!modalVisible)}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
