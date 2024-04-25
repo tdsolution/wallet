@@ -44,31 +44,21 @@ const TransferScreen = ({route}) => {
     try { 
       if (addressToken != "coin") {
         await SendTokenEVM(addressTo, evm.privateKey, chain.rpc, addressToken, amount);
-      }
-     else if (addressToken == "coin") {
-        await SendCoinEVM(addressTo, evm.privateKey, chain.rpc, amount);
-      }
-      Toast.success("Transaction success!!");
+         Toast.success("Transaction success!!");
       const sampleTransaction: TransactionModel = {
         unSwap: true,
         amount: amount,
         fromAddress: evm.addressWallet,
         toAddress: addressTo,
-        idxChain: id,
+        idxChain: chain.chainId,
         isRead: false,
-        name: "Send Coin",
+        name:  "Send Coin",
         symbol: symbol,
         time: Date.now().toString(),
       };
-      try {
-        // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
-        await SaveTransaction.fullFlowSaveData([sampleTransaction]);
-        console.log("Sample transaction saved successfully!");
-      } catch (error) {
-        console.error("Error saving sample transaction:", error);
-      }
+      await SaveTransaction.fullFlowSaveData([sampleTransaction]);
       setIsLoading(false);
-      navigation.navigate(WalletStackRouteNames.DetailToken, { 
+        navigation.navigate(WalletStackRouteNames.DetailToken, { 
         id: id, 
         symbol: symbol,
         image: image,
@@ -76,6 +66,32 @@ const TransferScreen = ({route}) => {
         addressToken: addressToken,
         rpc: rpc,
       });
+      }
+     else if (addressToken == "coin") {
+        await SendCoinEVM(addressTo, evm.privateKey, chain.rpc, amount);
+         Toast.success("Transaction success!!");
+      const sampleTransaction: TransactionModel = {
+        unSwap: true,
+        amount: amount,
+        fromAddress: evm.addressWallet,
+        toAddress: addressTo,
+        idxChain: chain.chainId,
+        isRead: false,
+        name:  "Send Token" ,
+        symbol: symbol,
+        time: Date.now().toString(),
+      };
+        await SaveTransaction.fullFlowSaveData([sampleTransaction]);
+        setIsLoading(false);
+        navigation.navigate(WalletStackRouteNames.DetailToken, { 
+        id: id, 
+        symbol: symbol,
+        image: image,
+        address: address,
+        addressToken: addressToken,
+        rpc: rpc,
+      });
+      }
     }
     catch(error) {
       Toast.fail('Transaction failed!!');

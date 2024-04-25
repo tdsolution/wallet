@@ -107,14 +107,9 @@ const DetailToken = ({ route }: any) => {
       setPriceUsd(balanceUsd);
     }
   };
-   useEffect(() => {
-    fetchBalance();
-    console.log('dau cho 1'+ addressToken);
-  }, []);
-
+  
   const handleGetTransaction = async () => {
     try {
-      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
       const result = await SaveTransaction.getData();
       console.log("Data transaction: ", result);
       const dataChainId = result.filter(
@@ -125,9 +120,12 @@ const DetailToken = ({ route }: any) => {
       console.error("Error saving sample transaction:", error);
     }
   };
-  useEffect(() => {
-    handleGetTransaction();
-  }, [chain.chainId]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchBalance();
+     handleGetTransaction();
+    }, [chain.chainId])
+  );
   return (
     <SafeAreaView>
       <View

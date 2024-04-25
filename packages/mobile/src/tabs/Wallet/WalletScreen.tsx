@@ -164,12 +164,12 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [nav, wallet]);
 
   const handlePressSend = useCallback(async () => {
-    // if (wallet) {
-    //   trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
-    //   nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
-    // } else {
-    //   openRequireWalletModal();
-    // }
+    if (wallet) {
+      trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
+      nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
+    } else {
+      openRequireWalletModal();
+    }
     // SendTokenEVM();
   }, [nav, wallet]);
 
