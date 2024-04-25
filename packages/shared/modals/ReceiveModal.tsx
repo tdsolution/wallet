@@ -42,6 +42,7 @@ export const ReceiveModal = memo(() => {
     if (chainId) {
       return "ton://transfer/" + addr;
     } else {
+      console.log("Địa chỉ: " + addr);
       return addr;
     }
   }, []);
