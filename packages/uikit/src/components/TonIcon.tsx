@@ -22,7 +22,7 @@ export const iconContainerSizes: { [key in TonIconSizes]: number } = {
   xmedium: 56,
   medium: 64,
   xsmall: 24,
-  small: 44,
+  small: 30,
   large: 96,
   xlarge: 72,
 };

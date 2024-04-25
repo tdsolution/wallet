@@ -39,9 +39,9 @@ export const ReceiveModal = memo(() => {
   }, [tronAddress]);
 
   const address2url = useCallback((addr: string) => {
-    if(chainId) {
+    if (chainId) {
       return "ton://transfer/" + addr;
-    }else {
+    } else {
       return addr;
     }
   }, []);
@@ -75,7 +75,7 @@ export const ReceiveModal = memo(() => {
                 <TonIcon size="small" />
               ) : (
                 <Image
-                  style={{ width: 44, height: 44, resizeMode: "contain" }}
+                  style={{ width: 30, height: 30, resizeMode: "contain" }}
                   source={{ uri: chain.logo }}
                 />
               )

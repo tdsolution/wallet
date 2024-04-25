@@ -128,6 +128,10 @@ const SendToken = ({ route }: any) => {
           return true;
         }
         if (address) {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
           setAddressInput(address);
           return true;
         }
