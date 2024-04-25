@@ -170,7 +170,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     // } else {
     //   openRequireWalletModal();
     // }
-    SendTokenEVM();
+    // SendTokenEVM();
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {

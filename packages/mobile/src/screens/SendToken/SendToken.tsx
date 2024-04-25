@@ -35,6 +35,9 @@ import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { Toast } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
+import { isValidAddressEVM } from "$libs/EVM/createWallet";
+import { isAddress } from "ethers";
+import { useEvm } from "@tonkeeper/shared/hooks";
 
 const SendToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
@@ -43,7 +46,9 @@ const SendToken = ({ route }: any) => {
   const [addressInput, setAddressInput] = useState("");
   const [amount, setAmount] = useState("0.0");
   const [addressWallet, setAddressWallet] = useState<string>('');
-   const deeplinking = useDeeplinking();
+  const deeplinking = useDeeplinking();
+  const evm = useEvm()?.evm;
+  
   useEffect(() => {
     async function getdata() {
         const data = await SaveListWallet.getData();
@@ -57,7 +62,7 @@ const SendToken = ({ route }: any) => {
     console.log(addressInput);
   }
 
-  const onCleanTextInput = () => {
+  const onCleanTextAddressInput = () => {
     setAddressInput("");
   };
   const onCleanTextAmount = () => {
@@ -73,12 +78,28 @@ const SendToken = ({ route }: any) => {
     navigation.goBack();
   };
   const handleNext = useCallback(() => {
-    if(price > 0){
-      navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})
-    }else{
-      Toast.fail('Insufficient balance!!');
+    if (isAddress(addressInput)) {
+      if(price > 0){
+        navigation.navigate(WalletStackRouteNames.Transfer, {
+          id: id, 
+          symbol: symbol,
+          image: image,
+          address: address,
+          addressToken: addressToken,
+          rpc: rpc,
+          price: price,
+          addressTo: addressInput, 
+          amount: amount
+        })
+      }
+      else {
+        Toast.fail('Insufficient balance!!');
+      }
     }
-  }, []);
+    else {
+      Toast.fail('Address is wrong!');
+    }
+  }, [addressInput, amount, addressToken]);
 
 
   const sampleTransaction: TransactionModel = {
@@ -144,7 +165,7 @@ const SendToken = ({ route }: any) => {
 
   return (
     <SafeAreaView style={globalStyles.container}>
-      <ScrollView>
+      <ScrollView  showsVerticalScrollIndicator={false}>
       <Pressable onPress={Keyboard.dismiss} style={{flex:1}}>
       <View
         style={[
@@ -184,7 +205,7 @@ const SendToken = ({ route }: any) => {
                   }}
                 >
                   { addressInput ?
-                  <TouchableOpacity onPress={onCleanTextInput}>
+                  <TouchableOpacity onPress={onCleanTextAddressInput}>
                   <Icon name="ic-close-16" color= "primaryColor"/>
                   </TouchableOpacity>
                 : <></>}
@@ -218,9 +239,10 @@ const SendToken = ({ route }: any) => {
                 <TextInput
                   style={styles.input}
                   placeholder="0.0"
+                  keyboardType = "numeric"
                   placeholderTextColor={colors.Gray_Light}
                   value={amount}
-                  onChangeText={(text) => setAmount(text)}
+                  onChangeText={(text) => [setAmount(text.replace(/[^0-9 .]/g, ''))]}
                 />
                 <View
                   style={{
@@ -230,7 +252,7 @@ const SendToken = ({ route }: any) => {
                   }}
                 >
                    { amount ?
-                  <TouchableOpacity onPress={onCleanTextAmount} style={{marginRight:10}}>
+                  <TouchableOpacity onPress={onCleanTextAmount}>
                   <Icon name="ic-close-16" color= "primaryColor"/>
                   </TouchableOpacity>
                 : <></>}
@@ -239,7 +261,8 @@ const SendToken = ({ route }: any) => {
                       styles.lable,
                       {
                         color: colors.Primary,
-                        marginBottom: 0,
+                        marginLeft: 8,
+                        marginBottom: -2,
                       },
                     ]}
                   >
@@ -260,13 +283,13 @@ const SendToken = ({ route }: any) => {
           ></View>
           <View style={{ paddingHorizontal: 25 }}>
             <Text style={styles.title}>Your wallets</Text>
-            {wallet?.map((item, index) => (<ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
+            {wallet?.map((item, index) => (item.addressWallet == evm.addressWallet ? <></> : <ItemYourWallet item={item} callback={handlePasteAddress} key={index}/>))}
           </View>
         </View>
       </View>
       </Pressable>
       </ScrollView>
-         <View style={{paddingHorizontal: 10 }}>
+         <View style={{paddingHorizontal: 25 }}>
           <TouchableOpacity style={[styles.button]} onPress={handleNext}>
             <Text style={styles.textButton}>Next</Text>
           </TouchableOpacity>
@@ -343,24 +366,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    paddingVertical:16,
+    height: 50,
     backgroundColor: "#4871EA",
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
-    marginBottom: 100,
+    marginBottom: 80,
     width: "100%",
-  },
-  button1:{
-    paddingVertical:16,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 100,
-    width: "100%",
-    backgroundColor:'red'
   },
   textButton: {
     fontSize: 16,
