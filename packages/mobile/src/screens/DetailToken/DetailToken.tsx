@@ -1,5 +1,4 @@
 import { IconButton, IconButtonList } from "@tonkeeper/uikit";
-
 import {
   SafeAreaView,
   StyleSheet,
@@ -28,21 +27,25 @@ import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { buildTransactionUrl } from "$libs/EVM/brower";
+
 const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
-   const [dataTransaction, setDataTransaction] = useState<any>([]);
+  const [dataTransaction, setDataTransaction] = useState<any>([]);
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
+
   const handleBack = () => {
     navigation.goBack();
   };
+
   const flags = useFlags(["disable_swap"]);
   const wallet = useWallet();
   const isWatchOnly = wallet && wallet.isWatchOnly;
+
   const handlePressSwap = useCallback(() => {
     if (wallet) {
       navigation.openModal("Swap");
@@ -61,7 +64,8 @@ const DetailToken = ({ route }: any) => {
 
   const handlePressSend = () => {
      navigation.navigate(WalletStackRouteNames.SendToken, { 
-      id: id, symbol: symbol,
+      id: id, 
+      symbol: symbol,
       image: image,
       address: address,
       addressToken: addressToken,
@@ -105,45 +109,8 @@ const DetailToken = ({ route }: any) => {
   };
    useEffect(() => {
     fetchBalance();
-    console.log('dau cho'+address);
+    console.log('dau cho 1'+ addressToken);
   }, []);
-
-  const buildTransactionUrl = (address: string, blockchainType: string): string => {
-    switch (blockchainType) {
-      case '1':
-        return `https://etherscan.io/address/${address}`;
-      case '324':
-        return `https://explorer.zksync.io/address/${address}`;
-      case '56':
-        return `https://bscscan.com/address/${address}`;
-      case '1116':
-        return `https://scan.coredao.org/address/${address}`;
-      case '97':
-        return `https://polygonscan.com/address/${address}`;
-      case '10':
-        return `https://optimistic.etherscan.io/address/${address}`;
-      case '137':
-        return `https://polygonscan.com/address/${address}`;
-      // case '1000':
-      //   return `https://tronscan.org/#/address/${AppDataGlobal.ADDRESS_TRON}`;
-      // case '1100':
-      //   return `https://tonscan.org/address/${AppDataGlobal.ADDRESS_TON}`;
-      case '43114':
-        return `https://avascan.info/blockchain/dfk/address/${address}/transactions`;
-      case '42161':
-        return `https://arbiscan.io/address/${address}`;
-      case '250':
-        return `https://ftmscan.com/address/${address}`;
-      case '1088':
-        return `https://explorer.metis.io/address/${address}`;
-      case '42220':
-        return `https://celoscan.io/address/${address}`;
-      case '25':
-        return `https://cronoscan.com/address/${address}`;
-      default:
-        throw new Error('Invalid blockchain type');
-    }
-  };
 
   const handleGetTransaction = async () => {
     try {
