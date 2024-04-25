@@ -38,11 +38,13 @@ export const BackupPhraseScreen = memo(() => {
   const leftColumn = useMemo(() => phrase.slice(0, 12), [phrase]);
   const rightColumn = useMemo(() => phrase.slice(12, 24), [phrase]);
   const evm = useEvm()?.evm;
+  let evmAddress = evm.privateKey;
+  evmAddress = evmAddress.replace(/^"|"$/g, '');
   const str = evm.mnemonic;
   const arrStringSecurity = str.split(" ");
   const [dataSecurity, setDataSecurity] = useState<string[]>(arrStringSecurity);
   const [dataPhrase, setDataPhrase] = useState<string[]>(phrase);
-  const [privateKey, setprivateKey] = useState<string>(evm.privateKey);
+  const [privateKey, setprivateKey] = useState<string>(evmAddress);
   const [isShowPrivateKey, setIsShowPrivateKey] = useState<boolean>(true);
   const [isShowSecurity, setIsShowSecurity] = useState<boolean>(false);
   const [isShowPhrase, setIsShowPhrase] = useState<boolean>(false);
