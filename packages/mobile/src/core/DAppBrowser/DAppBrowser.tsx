@@ -35,7 +35,7 @@ const removeUtmFromUrl = (url: string) => {
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const { url: initialUrl } = props;
-
+// const walletEvm 
   const wallet = useWallet();
   const walletAddress = wallet
     ? Address.parse(wallet.address.ton.raw).toFriendly({

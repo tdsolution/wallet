@@ -52,6 +52,7 @@ export function openDAppBrowser(url: string) {
   if (getCurrentRoute()?.name === AppStackRouteNames.DAppsSearch) {
     replace(AppStackRouteNames.DAppBrowser, params);
   } else {
+    console.log('dau cho'+url);
     navigate(AppStackRouteNames.DAppBrowser, params);
   }
 }
