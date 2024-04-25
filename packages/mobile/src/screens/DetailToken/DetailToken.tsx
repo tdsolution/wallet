@@ -91,7 +91,6 @@ const DetailToken = ({ route }: any) => {
       const balance = await getBalanceToken(rpc, addressToken, address);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
-      const coinUsd24 = coinRate?.usdChange ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
       setPrice(balance);
       setPriceUsd(balanceUsd);
@@ -99,7 +98,6 @@ const DetailToken = ({ route }: any) => {
       const balance = await fetchBalaceEvm(address, rpc);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
-      const coinUsd24 = coinRate?.usdChange ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
       setPrice(balance);
       setPriceUsd(balanceUsd);
@@ -107,7 +105,7 @@ const DetailToken = ({ route }: any) => {
   };
    useEffect(() => {
     fetchBalance();
-    console.log('dau cho'+addressToken);
+    console.log('dau cho'+address);
   }, []);
 
   const buildTransactionUrl = (address: string, blockchainType: string): string => {

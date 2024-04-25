@@ -26,7 +26,7 @@ import Clipboard from "@react-native-community/clipboard";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
-import { openScanQR, openSend } from "$navigation";
+import { MainStackRouteNames, openScanQR, openSend } from "$navigation";
 import { CryptoCurrencies } from "$shared/constants";
 import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
@@ -34,6 +34,7 @@ import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { Toast } from "@tonkeeper/uikit";
+import { WalletStackRouteNames } from "$navigation";
 
 const SendToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc ,price} = route.params;
@@ -73,7 +74,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if(price > 0){
-      Toast.success("");
+      navigation.navigate(WalletStackRouteNames.Transfer,{address: addressWallet, amount: amount})
     }else{
       Toast.fail('Insufficient balance!!');
     }
@@ -140,7 +141,7 @@ const SendToken = ({ route }: any) => {
       openRequireWalletModal();
     }
   }, []);
-  
+
   return (
     <SafeAreaView style={globalStyles.container}>
       <ScrollView>

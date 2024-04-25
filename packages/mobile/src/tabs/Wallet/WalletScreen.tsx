@@ -69,13 +69,8 @@ import { WalletSelector } from "./components/WalletSelector";
 import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
-import ItemWallet from "./Item/ItemWallet";
-import Title from "../../components/Title";
 import {
-  addressEVMString,
-  getInfoToken,
   shortenWalletAddress,
 } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
@@ -97,6 +92,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
+  console.log(addressEvm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -111,7 +107,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
   const balanceEVM = useBalanceEVMDemo(
-    addressEVMString(addressEvm),
+    addressEvm,
     chain.rpc,
     chain.id
   );
@@ -502,7 +498,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                     copyText(
                       chain.chainId == "1100"
                         ? wallet.address.ton.friendly
-                        : addressEVMString(addressEvm),
+                        : addressEvm,
                       undefined, // Khi không cần thiết truyền tham số duration, sử dụng undefined
                       "green" // Tham số color cho toast
                     )()
@@ -523,7 +519,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   onPress={copyText(
                     chain.chainId == "1100"
                       ? wallet.address.ton.friendly
-                      : addressEVMString(addressEvm)
+                      : addressEvm
                   )}
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
@@ -629,7 +625,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   tokensImport={tokensImportEVM}
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={addressEVMString(addressEvm)}
+                  address={addressEvm}
                 />
               ) : (
                 <View
@@ -657,7 +653,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 chainActive={chain}
                 address={
                   chain.chainId != "1100"
-                    ? addressEVMString(addressEvm)
+                    ? addressEvm
                     : wallet.address.ton.friendly
                 }
               />
