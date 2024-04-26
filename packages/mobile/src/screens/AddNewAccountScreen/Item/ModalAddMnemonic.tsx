@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   Keyboard,
   TextInput,
+  ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { Checkbox, Icon } from "$uikit";
@@ -25,10 +26,6 @@ interface Props {
 
 const ModalAddMnemonic = (props: Props) => {
   let Seed = [{"id": 1, "hide": false, "text": ""}]
-  for (let i = 2; i < 13; i++) {
-    Seed.push({"id": i, "hide": false, "text": ""}); 
-  };
-
   const { modalVisible, onClose, callback } = props;
   const [selectedIndex, setIndex] = useState(0);
   const [listSeed, setListSeed] = useState(Seed);
@@ -36,6 +33,20 @@ const ModalAddMnemonic = (props: Props) => {
   const [descriptionNoti, setDescriptionNoti] = useState("");
   const [modalNotification, setModalNotification] = useState(false);
   const [status, setStatus] = useState(0);
+
+  useEffect(() => {
+    let newList = [{"id": 1, "hide": false, "text": ""}]
+    if (selectedIndex) {
+    for (let i = 2; i <= 24; i++) {
+      newList.push({"id": i, "hide": false, "text": ""}); 
+    };}
+    else{
+      for (let i = 2; i <= 12; i++) {
+        newList.push({"id": i, "hide": false, "text": ""}); 
+      };
+    }
+    setListSeed(newList);
+  },[selectedIndex]);
 
   const setHide = ({item}) => {
     const newList = listSeed.map(obj => {
@@ -53,7 +64,7 @@ const ModalAddMnemonic = (props: Props) => {
     newList[item.id - 1].text = newValue;
     setListSeed(newList);
     //console.log(listSeed);
-};
+  };
 
   const pasteText = async () => {
     const clipboardContent = await Clipboard.getString();
@@ -71,78 +82,78 @@ const ModalAddMnemonic = (props: Props) => {
     setListSeed(newList);
   };
 
-const clearText = () => {
-  const newList = listSeed.map(obj => {
-   return {
-      ...obj, text: "",}
-  });
-    setListSeed(newList);
-};
-
-const showAll = () => {
-  const newList = listSeed.map(obj => {
+  const clearText = () => {
+    const newList = listSeed.map(obj => {
     return {
-      ...obj, hide: false,}
-  });
-  setListSeed(newList);
-};
-
-const handleCloseNotification = () => {
-  setModalNotification(false);
-  {status ? (onClose(), callback()) : <></>}
-};
-
-const confirmAddWallet = () => {
-  let n: number = 0;
-  listSeed.map((ss) => {
-    if (ss.text === "") 
-      n=1; 
+        ...obj, text: "",}
     });
-  if (n==1) {
-    setModalNotification(true);
-    setTileNoti('Seed phrase is wrong!');
-    setDescriptionNoti('You may have entered the wrong seed phrase, please check again.');
-  } 
-  else {
-    const mnemonic = listSeed.map(ss => ss.text).join(" ");
-    console.log(mnemonic);
-    async function noti() {
-      const a = await addWalletFromMnemonic(mnemonic);
-      if (a) {
-        if (a==1) {
-          setModalNotification(true);
-          setTileNoti('');
-          setDescriptionNoti('Wallet added successfully!');
-          setStatus(1);
-        }
+      setListSeed(newList);
+  };
+
+  const showAll = () => {
+    const newList = listSeed.map(obj => {
+      return {
+        ...obj, hide: false,}
+    });
+    setListSeed(newList);
+  };
+
+  const handleCloseNotification = () => {
+    setModalNotification(false);
+    {status ? (onClose(), callback()) : <></>}
+  };
+
+  const confirmAddWallet = () => {
+    let n: number = 0;
+    listSeed.map((ss) => {
+      if (ss.text === "") 
+        n=1; 
+      });
+    if (n==1) {
+      setModalNotification(true);
+      setTileNoti('Seed phrase is wrong!');
+      setDescriptionNoti('You may have entered the wrong seed phrase, please check again.');
+    } 
+    else {
+      const mnemonic = listSeed.map(ss => ss.text).join(" ");
+      console.log(mnemonic);
+      async function noti() {
+        const a = await addWalletFromMnemonic(mnemonic);
+        if (a) {
+          if (a==1) {
+            setModalNotification(true);
+            setTileNoti('');
+            setDescriptionNoti('Wallet added successfully!');
+            setStatus(1);
+          }
+          else {
+            setModalNotification(true);
+            setTileNoti('Wallet already exists!');
+            setDescriptionNoti('Please enter another seed phrase.');
+          }
+        } 
         else {
           setModalNotification(true);
-          setTileNoti('Wallet already exists!');
-          setDescriptionNoti('Please enter another seed phrase.');
-        }
-      } 
-      else {
-        setModalNotification(true);
           setTileNoti('Seed phrase is wrong!');
           setDescriptionNoti('You may have entered the wrong seed phrase, please check again.');
+        }
       }
+      noti();
     }
-    noti();
   }
-}
+
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
       transparent={true} // Cho phép modal trở nên trong suốt
       visible={modalVisible} // Trạng thái của modal (true: hiển thị, false: ẩn)
       onRequestClose={onClose}
-      style = {{flex: 1}}
     >
-      <Pressable
-        onPress={Keyboard.dismiss}
-        style={styles.modalContainer}
-      >
-        <View style={styles.modalHeader}>
+      <ScrollView  showsVerticalScrollIndicator={false} style={{backgroundColor: "#fff"}}>
+        <Pressable
+          onPress={Keyboard.dismiss}
+          style={{backgroundColor: colors.Primary}}
+        >
           <View style={styles.rowHeader}>
             <View>
               <TouchableOpacity style={styles.boxBack} onPress={onClose}>
@@ -214,17 +225,17 @@ const confirmAddWallet = () => {
                 </View>
                 
                 <View style={styles.inputContainer}>
-                  {Seed.map((item, index) => (
+                  {listSeed.map((item, index) => (
                     <View style={styles.textInputContainer} key={index}>
                       <Text style={[styles.chooseText, {width: "15%"}]}>{item.id}.</Text>
                       <TextInput 
-                        secureTextEntry={listSeed[index].hide}  
+                        secureTextEntry={item.hide}  
                         style={styles.textInput}
-                        value={listSeed[index].text.toLocaleLowerCase()}
+                        value={item.text.toLocaleLowerCase()}
                         onChangeText={(newValue) => handleTextChange({item, newValue})}
                       ></TextInput>
                       <TouchableOpacity onPress={()=> setHide({item})} style={{marginLeft: 5}}>
-                        {(listSeed[index].hide === true)
+                        {(item.hide === true)
                           ? <Image
                             style={[styles.icon]}
                             source={require("../../../assets/icons_v2/ic-view.png")}
@@ -240,12 +251,14 @@ const confirmAddWallet = () => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.buttonConfirm} onPress={confirmAddWallet} >
-              <Text style={styles.textButton}>Confirm Secret Recovery Phrase</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </ScrollView>
+      <View style={{paddingHorizontal: 20, backgroundColor: "#fff",}}>
+        <TouchableOpacity style={styles.buttonConfirm} onPress={confirmAddWallet}>
+          <Text style={styles.textButton}>Confirm Secret Recovery Phrase</Text>
+        </TouchableOpacity>
+      </View>
       <ModalNotification
         modalVisible={modalNotification}
         onClose={handleCloseNotification}
@@ -260,30 +273,17 @@ export default ModalAddMnemonic;
 
 const styles = StyleSheet.create({
   modalContainer: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Màu nền của modal
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  modalHeader: {
     width: "100%",
-    backgroundColor: colors.Primary,
-    alignItems: "center",
-    paddingTop: 10,
+    backgroundColor: "#fff",
+    //flex: 1,// Màu nền của modal
   },
   rowHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+    marginTop: 20,
     paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
-  pressable: {
-    flex: 1,
   },
   boxBack: {
     width: 26,
@@ -293,8 +293,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "100%",
-    height: "94%",
     backgroundColor: "#fff",
+    marginTop: 10,
     padding: 20,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
@@ -333,9 +333,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginVertical: 10,
     width: "100%", 
-    height: 40,    
+    height: 40,  
   },
   textButton: {
     fontSize: 14,
