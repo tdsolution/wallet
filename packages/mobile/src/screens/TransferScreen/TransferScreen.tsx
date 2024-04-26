@@ -9,18 +9,20 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 import { send } from "process";
-import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
+import { GasLimitPromise, SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import { handlers } from "react-native-localize/dist/typescript/module";
 import { WalletStackRouteNames } from "$navigation";
 import { Toast } from "$store";
 import SaveTransaction, { TransactionModel } from "$libs/EVM/HistoryEVM/SaveTransaction";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 
 const TransferScreen = ({route}) => {
   const {id, symbol, image, address, addressToken, rpc, addressTo, amount} = route.params;
@@ -28,6 +30,8 @@ const TransferScreen = ({route}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
+  const [gasLimit, setGasLimit] = useState<string>('0');
+  const [coinRate, setCoinRate] = useState<string>('0');
 
   const handleBack = () => {
     navigation.goBack();
@@ -97,7 +101,26 @@ const TransferScreen = ({route}) => {
       Toast.fail('Transaction failed!!');
     }
   };
-
+ useEffect(() => {
+    async function fetchGasLimit() {
+      try {
+        const gasLimit = await GasLimitPromise(addressTo, evm.privateKey, chain.rpc, amount);
+        setGasLimit(gasLimit);
+      } catch (error) {
+        console.error('Error fetching gas limit:', error);
+      }
+    }
+     async function fetchCoinRate() {
+      try {
+        const coinRate = await SaveListCoinRate.getCoinRateById(id);
+        setCoinRate(coinRate?.usd ?? '0');
+      } catch (error) {
+        console.error('Error fetching gas limit:', error);
+      }
+    }
+    fetchGasLimit();
+    fetchCoinRate();
+  }, []);
   return (
     <SafeAreaView style={globalStyles.container}>
       <View
@@ -117,13 +140,13 @@ const TransferScreen = ({route}) => {
         </View>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text style={styles.price}>{amount} {chain.name}</Text>
+        <Text style={styles.price}>{amount} {chain.currency}</Text>
         <Text style={styles.priceDolla}>= 0.0 $</Text>
       </View>
       <View style={styles.box}>
         <View style={styles.row}>
           <Text style={styles.text}>Asset</Text>
-          <Text style={styles.text}>Core Chain ({chain.name})</Text>
+          <Text style={styles.text}>{chain.name}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.text}>From</Text>
@@ -137,11 +160,11 @@ const TransferScreen = ({route}) => {
       <View style={styles.box}>
         <View style={styles.row}>
           <Text style={styles.text}>Network fee</Text>
-          <Text style={styles.text}>0.00063 CORE (0.001587$)</Text>
+          <Text style={[styles.text, {fontSize:12}]}>{gasLimit} {chain.currency} {'('+(parseFloat(gasLimit) * parseFloat(coinRate)).toFixed(6)+'$)'}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.text}>Max total</Text>
-          <Text style={styles.text}>0.0 $</Text>
+          <Text style={styles.text}>{((parseFloat(gasLimit) * parseFloat(coinRate))+(parseFloat(amount) * parseFloat(coinRate))).toFixed(6)} $</Text>
         </View>
       </View>
       <TouchableOpacity style={[styles.button]} onPress={handleContinue}>
