@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { globalStyles } from "$styles/globalStyles";
@@ -33,6 +34,7 @@ const DetailToken = ({ route }: any) => {
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [dataTransaction, setDataTransaction] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation();
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
@@ -63,15 +65,15 @@ const DetailToken = ({ route }: any) => {
   }, [navigation, wallet]);
 
   const handlePressSend = () => {
-     navigation.navigate(WalletStackRouteNames.SendToken, { 
-      id: id, 
+    navigation.navigate(WalletStackRouteNames.SendToken, {
+      id: id,
       symbol: symbol,
       image: image,
       address: address,
       addressToken: addressToken,
       rpc: rpc,
       price: price,
-      });
+    });
   };
   //   const handlePressSend = useCallback(async () => {
   //     if (wallet) {
@@ -90,26 +92,27 @@ const DetailToken = ({ route }: any) => {
     }
   }, [navigation, wallet]);
 
-   async function fetchBalance() {
+  async function fetchBalance() {
     if (addressToken != "coin") {
       const balance = await getBalanceToken(rpc, addressToken, address);
-      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
       setPrice(balance);
       setPriceUsd(balanceUsd);
     } else if (addressToken == "coin") {
       const balance = await fetchBalaceEvm(address, rpc);
-      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
+      const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
       setPrice(balance);
       setPriceUsd(balanceUsd);
     }
-  };
-  
+  }
+
   const handleGetTransaction = async () => {
     try {
+      setIsLoading(true);
       // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
       const result = await SaveTransaction.getData();
       console.log("Data transaction: ", result);
@@ -119,14 +122,16 @@ const DetailToken = ({ route }: any) => {
       setDataTransaction(dataChainId);
     } catch (error) {
       console.error("Error saving sample transaction:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
-      fetchBalance();
+    fetchBalance();
   }, []);
   useFocusEffect(
     React.useCallback(() => {
-     handleGetTransaction();
+      handleGetTransaction();
     }, [])
   );
   return (
@@ -143,8 +148,10 @@ const DetailToken = ({ route }: any) => {
             source={require("../../assets/icons/png/ic-arrow-up-16.png")}
           />
         </TouchableOpacity>
-        <View style={{width: "100%", alignItems: "center"}}>
-        <Text style={[globalStyles.textHeader, {marginLeft: -45}]}>{chain.name}</Text>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <Text style={[globalStyles.textHeader, { marginLeft: -45 }]}>
+            {chain.name}
+          </Text>
         </View>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -182,9 +189,7 @@ const DetailToken = ({ route }: any) => {
         <IconButtonList style={{ height: 100 }}>
           {!isWatchOnly ? (
             <IconButton
-              onPress={
-                handlePressSend
-              }
+              onPress={handlePressSend}
               iconName="ic-arrow-up-28"
               title={t("wallet.send_btn")}
             />
@@ -221,30 +226,47 @@ const DetailToken = ({ route }: any) => {
         }}
       >
         <Text style={styles.caption}>Can't find your transaction? </Text>
-        <TouchableOpacity onPress={() => openDAppBrowser(buildTransactionUrl(evm.addressWallet, chain.chainId))}>
+        <TouchableOpacity
+          onPress={() =>
+            openDAppBrowser(
+              buildTransactionUrl(evm.addressWallet, chain.chainId)
+            )
+          }
+        >
           <Text style={styles.textCheckExplorer}>Check explorer</Text>
         </TouchableOpacity>
       </View>
-
-      <FlatList
-        data={dataTransaction}
-        renderItem={({ item }) => (
-          <ItemTransaction
-            unSwap={item.unSwap}
-            amount={item.amount}
-            fromAddress={item.fromAddress}
-            toAddress={item.toAddress}
-            idxChain={item.idxChain}
-            isRead={item.isRead}
-            name={item.name}
-            symbol={item.symbol}
-            time={item.time}
-          />
-        )}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={<View style={{ height: 450 }}></View>}
-      />
+      {isLoading ? (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 150,
+          }}
+        >
+          <ActivityIndicator size={"large"} color={"blue"} />
+        </View>
+      ) : (
+        <FlatList
+          data={dataTransaction}
+          renderItem={({ item }) => (
+            <ItemTransaction
+              unSwap={item.unSwap}
+              amount={item.amount}
+              fromAddress={item.fromAddress}
+              toAddress={item.toAddress}
+              idxChain={item.idxChain}
+              isRead={item.isRead}
+              name={item.name}
+              symbol={item.symbol}
+              time={item.time}
+            />
+          )}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          ListFooterComponent={<View style={{ height: 450 }}></View>}
+        />
+      )}
     </SafeAreaView>
   );
 };

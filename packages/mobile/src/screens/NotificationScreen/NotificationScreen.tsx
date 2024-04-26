@@ -7,20 +7,53 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  ActivityIndicator,
+  Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,  } from "react";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import ItemNotification from "./Item/ItemNotification";
-import { useNavigation } from "@tonkeeper/router";
+import { useFocusEffect, useNavigation } from "@tonkeeper/router";
+import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
+import { useTransaction } from "@tonkeeper/shared/hooks/useTransaction";
+import { WalletStackRouteNames } from "$navigation";
 
 const NotificationScreen = () => {
-  const navigation = useNavigation()
-  const [data, setdData] = useState([
-    { id: '1', title: "Send coins" },
-    { id: '2', title: "Send Coins" },
-  ]);
+  const navigation = useNavigation();
+  const chain = useChain()?.chain;
+  const transactionData = useTransaction()?.transactionData;
+  const [dataTransaction, setDataTransaction] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isData, setIsData] = useState<boolean>(false);
+  const [isRead, setIsRead] = useState<boolean>(false);
+
+  const handleGetTransaction = async () => {
+    try {
+      setIsLoading(true);
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      const result = await SaveTransaction.getData();
+      console.log("Data transaction: ", transactionData);
+      const dataChainId = result.filter(
+        (data) => data.idxChain === chain.chainId
+      );
+      setDataTransaction(dataChainId);
+      if (dataChainId.length != 0) {
+        setIsData(true);
+      }
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      handleGetTransaction();
+    }, [chain.chainId])
+  );
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -34,7 +67,7 @@ const NotificationScreen = () => {
         ]}
       >
         <TouchableOpacity
-        onPress={() => navigation.goBack()}
+          onPress={() => navigation.goBack()}
           style={{ flexDirection: "row", alignItems: "center" }}
         >
           <Image
@@ -55,16 +88,70 @@ const NotificationScreen = () => {
       </View>
 
       <View style={styles.content}>
-        <View style ={{marginVertical: 25}}>
+        <View style={{ marginVertical: 25 }}>
           <Text style={styles.textTitle}>Notifications & Alertfor</Text>
           <Text style={styles.textTitle}>Your acticities</Text>
         </View>
-        <FlatList
-          data={data}
-          renderItem={({ item: any }) => <ItemNotification />}
-          keyExtractor={(item) => item.id}
-          ListFooterComponent={<View style={{height: 100}}></View>}
-        />
+        {isLoading ? (
+          <View
+            style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+          >
+            <ActivityIndicator size="large" color={colors.Primary} />
+          </View>
+        ) : !isData ? (
+          <View style={{ padding: 25 }}>
+            <View
+              style={[
+                styles.boxNotFound,
+                { marginBottom: Platform.OS === "android" ? 50 : 0 },
+              ]}
+            >
+              <Image
+                style={styles.imageNotFound}
+                source={require("../../assets/logo/logo_app.png")}
+              />
+              <Text
+                style={[styles.title, { color: colors.Primary, fontSize: 20 }]}
+              >
+                No Notifications
+              </Text>
+              <Text style={styles.subtitle}>
+                There are currently no announcements
+              </Text>
+              <TouchableOpacity
+                style={[styles.buttonGoHead]}
+                onPress={() =>
+                  navigation.navigate(WalletStackRouteNames.Wallet)
+                }
+              >
+                <Text style={[styles.textButton, { color: colors.White }]}>
+                  Go Home
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <FlatList
+            data={dataTransaction}
+            renderItem={({ item, index }) => (
+              <ItemNotification
+                id={item.id}
+                unSwap={item.unSwap}
+                amount={item.amount}
+                fromAddress={item.fromAddress}
+                toAddress={item.toAddress}
+                idxChain={item.idxChain}
+                isRead={item.isRead}
+                name={item.name}
+                symbol={item.symbol}
+                time={item.time}
+                index={index}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={<View style={{ height: 100 }}></View>}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -145,5 +232,43 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.White,
     fontFamily: "Poppins-Medium",
+  },
+  imageNotFound: {
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
+    borderRadius: 50,
+  },
+  subtitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.Gray,
+    fontFamily: "Poppins-Medium",
+  },
+  buttonGoHead: {
+    width: "100%",
+    height: 50,
+    padding: 10,
+    backgroundColor: colors.Primary,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
+    marginTop: 25,
+  },
+  boxNotFound: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    padding: 25,
   },
 });

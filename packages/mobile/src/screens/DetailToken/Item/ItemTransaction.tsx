@@ -23,11 +23,11 @@ const ItemTransaction = (props) => {
   };
   const formatDatestamp = (timestamp: number): string => {
     return moment.unix(timestamp / 1000).format("DD MMM");
-};
+  };
 
-const formatTimestamp = (timestamp: number): string => {
+  const formatTimestamp = (timestamp: number): string => {
     return moment.unix(timestamp / 1000).format("HH:mm");
-};
+  };
   return (
     <TouchableOpacity
       style={[styles.container, globalStyles.row]}
@@ -54,7 +54,7 @@ const formatTimestamp = (timestamp: number): string => {
         </View>
       </View>
       <View>
-        <Text style={styles.price}>{amount +' '+ symbol}</Text>
+        <Text style={styles.price}>{amount + " " + symbol}</Text>
         <Text style={[styles.date, { textAlign: "right" }]}>
           {formatDatestamp(time)}
         </Text>

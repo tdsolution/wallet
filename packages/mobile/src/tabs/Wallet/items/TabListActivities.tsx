@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import ItemWallet from "./ItemWallet";
@@ -20,11 +20,11 @@ import {
   TransactionModel,
   fetchTransactions,
 } from "$libs/EVM/HistoryEVM/DataHistory";
-import moment from 'moment';
+import moment from "moment";
 import { openDAppBrowser } from "$navigation";
 import { buildTransactionUrl } from "$libs/EVM/brower";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
-const TabListActivities = ({ chainActive, address}) => {
+const TabListActivities = ({ chainActive, address }) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const dataToShow = transactions.slice(-3);
   const navigation = useNavigation();
@@ -46,16 +46,19 @@ const TabListActivities = ({ chainActive, address}) => {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     };
     fetchData();
   }, [chainActive]);
   function convertToTimestampString(timeString: string): string {
-    const timestamp: number = moment(timeString, "ddd MMM DD HH:mm:ss [UTC] YYYY").valueOf();
+    const timestamp: number = moment(
+      timeString,
+      "ddd MMM DD HH:mm:ss [UTC] YYYY"
+    ).valueOf();
     return timestamp.toString();
-}
+  }
   const FooterComponent = ({ isLoading }) => (
     <View
       style={{
@@ -75,7 +78,14 @@ const TabListActivities = ({ chainActive, address}) => {
     >
       <View>
         <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop: 10 }}>
-          <TouchableOpacity style={styles.buttonBrower} onPress={() => openDAppBrowser(buildTransactionUrl(evm.addressWallet, chain.chainId))}>
+          <TouchableOpacity
+            style={styles.buttonBrower}
+            onPress={() =>
+              openDAppBrowser(
+                buildTransactionUrl(evm.addressWallet, chain.chainId)
+              )
+            }
+          >
             <Image
               style={styles.image}
               source={require("../../../assets/icons/png/ic-globe-56.png")}
@@ -93,7 +103,11 @@ const TabListActivities = ({ chainActive, address}) => {
               data={dataToShow}
               renderItem={({ item }) => (
                 <ItemTransactionHistory
-                  timeStamp= {chainActive.chainId != '1116' ?  item.timeStamp : convertToTimestampString(item.timeStamp ?? '')}
+                  timeStamp={
+                    chainActive.chainId != "1116"
+                      ? item.timeStamp
+                      : convertToTimestampString(item.timeStamp ?? "")
+                  }
                   blockHash={item.blockHash}
                   from={item.from}
                   to={item.to}
@@ -102,7 +116,10 @@ const TabListActivities = ({ chainActive, address}) => {
                   transactionIndex={item.transactionIndex}
                   gasUsed={item.gasUsed}
                   chainSymbol={chainActive.currency}
-                  isSend = {item.from?.toLocaleLowerCase() === address.toLocaleLowerCase()}
+                  isSend={
+                    item.from?.toLocaleLowerCase() ===
+                    address.toLocaleLowerCase()
+                  }
                 />
               )}
               keyExtractor={(item, index) => index.toString()}
@@ -120,7 +137,12 @@ const TabListActivities = ({ chainActive, address}) => {
             >
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate("TransactionHistory", {chainActive, address})}
+                onPress={() =>
+                  navigation.navigate("TransactionHistory", {
+                    chainActive,
+                    address,
+                  })
+                }
               >
                 <Text style={styles.textButton}>See all transactions</Text>
                 <Image

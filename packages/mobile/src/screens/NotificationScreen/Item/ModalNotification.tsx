@@ -15,11 +15,21 @@ import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { on } from "process";
+import { AnyActionPayload } from "$wallet/models/ActivityModel";
 const { width, height } = Dimensions.get("window");
 
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
+  unSwap?: string;
+  amount?: string;
+  fromAddress?: string;
+  toAddress?: string;
+  idxChain?: string;
+  isRead?: string;
+  name?: string;
+  symbol?: string;
+  time?: string;
 }
 
 const TruncateString = ({ string, maxLength }) => {
@@ -34,15 +44,27 @@ const TruncateString = ({ string, maxLength }) => {
 };
 
 const ModalNotification = (props: Props) => {
-  const { modalVisible, onClose } = props;
+  const {
+    modalVisible,
+    onClose,
+    unSwap,
+    amount,
+    fromAddress,
+    toAddress,
+    idxChain,
+    isRead,
+    name,
+    symbol,
+    time,
+  } = props;
   const [textInput, setTextInput] = useState("");
   // const heigthModal = Platform.OS === "ios" ? 470 : 530;
   const token = "0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805";
-  const truncatedString = TruncateString({ string: token, maxLength: 7 });
-
-  const onCleanTextInput = () => {
-    setTextInput("");
-  };
+  let date = new Date(Number(time));
+  let options = { hour12: false, timeZone: "Asia/Ho_Chi_Minh" };
+  let formatted_time = date
+    .toLocaleString("en-GB", options)
+    .replace(/\s?[ap]m/i, "");
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -97,7 +119,7 @@ const ModalNotification = (props: Props) => {
                 { fontSize: 20, fontWeight: "bold", color: colors.Black },
               ]}
             >
-              Send Coin
+              {name}
             </Text>
             <TouchableOpacity onPress={onClose}>
               <Image
@@ -118,8 +140,14 @@ const ModalNotification = (props: Props) => {
             </View>
             <View>
               <Text style={[styles.title, { textAlign: "right" }]}>Time</Text>
-              <Text style={[styles.subtitle, { fontSize: 12 }]}>
-                10/03/2024 9:30:03
+              <Text
+                style={[
+                  styles.subtitle,
+                  { fontSize: 12, flex: 1, marginTop: 10 },
+                ]}
+              >
+                {/* 10/03/2024 9:30:03 */}
+                {formatted_time}
               </Text>
             </View>
           </View>
@@ -138,7 +166,9 @@ const ModalNotification = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>{truncatedString}</Text>
+              <Text style={styles.subtitle}>
+                {TruncateString({ string: fromAddress, maxLength: 7 })}
+              </Text>
             </View>
             <Image
               style={[
@@ -160,7 +190,9 @@ const ModalNotification = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>{truncatedString}</Text>
+              <Text style={styles.subtitle}>
+                {TruncateString({ string: toAddress, maxLength: 7 })}
+              </Text>
             </View>
           </View>
           <View style={styles.line}></View>
@@ -174,7 +206,7 @@ const ModalNotification = (props: Props) => {
               Money amount
             </Text>
             <Text style={styles.amount}>
-              -0.000001 <Text style={styles.currency}>tBNB</Text>
+              {amount} <Text style={styles.currency}>{symbol}</Text>
             </Text>
           </View>
         </View>
@@ -258,7 +290,6 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   subtitle: {
-    maxWidth: 120,
     fontSize: 14,
     fontWeight: "500",
     color: colors.Black,
