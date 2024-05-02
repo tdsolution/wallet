@@ -43,6 +43,12 @@ const TransferScreen = ({route}) => {
     const suffix = hexString.slice(-6); // Lấy 6 ký tự cuối cùng
     return prefix + '...' + suffix;
   };
+  const handleRandomId = () => {
+    let timestamp = Date.now();
+    let random = Math.floor(Math.random() * 100000);
+    return timestamp.toString() + random.toString();
+  };
+
   const handleContinue = async () => {
     setIsLoading(true);
     try { 
@@ -56,9 +62,10 @@ const TransferScreen = ({route}) => {
         toAddress: addressTo,
         idxChain: chain.chainId,
         isRead: false,
-        name:  "Send Token",
+        name: "Send Token",
         symbol: symbol,
         time: Date.now().toString(),
+        id: handleRandomId()
       };
       await SaveTransaction.fullFlowSaveData([sampleTransaction]);
       setIsLoading(false);
@@ -81,9 +88,10 @@ const TransferScreen = ({route}) => {
         toAddress: addressTo,
         idxChain: chain.chainId,
         isRead: false,
-        name:  "Send Coin" ,
+        name: "Send Coin",
         symbol: symbol,
         time: Date.now().toString(),
+        id: handleRandomId()
       };
         await SaveTransaction.fullFlowSaveData([sampleTransaction]);
         setIsLoading(false);
