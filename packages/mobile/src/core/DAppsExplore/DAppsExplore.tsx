@@ -149,7 +149,7 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
           onChange={(segment) => setSegmentIndex(segment)}
           index={segmentIndex}
           items={[t("browser.explore"), t("browser.connected")]}
-          style={styles.segmentedControl}
+          // style={styles.segmentedControl}
           indicatorStyle={styles.segmentedControlIndicator}
         />
       </Screen.Header>

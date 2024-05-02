@@ -446,9 +446,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
           >
             <ImageBackground
               source={require("../../assets/logo/bg_card.png")}
-              resizeMode="cover"
+              resizeMode="stretch"
               style={{
-                borderRadius: 10,
+                borderRadius: 16,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: "#7A6BFF",
