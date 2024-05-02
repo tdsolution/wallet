@@ -87,6 +87,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
@@ -124,6 +125,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const notifications = useInternalNotifications();
   const { isConnected } = useNetInfo();
   const [activeTab, setActiveTab] = useState("Tokens");
+  const [amountTransaction, setAmountTransaction] = useState<number>(0);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -147,6 +149,25 @@ export const WalletScreen = memo(({ navigation }: any) => {
     }, 500);
     return () => clearTimeout(timer);
   }, [dispatch]);
+  const handleGetTransaction = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      const result = await SaveTransaction.getData();
+      const dataChainId = result.filter(
+        (data) => data.idxChain === chain.chainId
+      );
+      const amount = dataChainId.filter((data) => data.isRead === false )
+      setAmountTransaction(amount.length);
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      handleGetTransaction();
+    }, [chain.chainId])
+  );
   const handlePressSwap = useCallback(() => {
     if (wallet) {
       nav.openModal("Swap");
@@ -410,7 +431,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
             >
               <ScanQRButton />
               <View style={{ width: 10 }}></View>
-              <NotificationButton />
+              <NotificationButton amount={amountTransaction} />
               <View style={{ width: 10 }}></View>
             </View>
           ) : null

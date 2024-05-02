@@ -1,16 +1,53 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import ModalNotification from "./ModalNotification";
+import moment from "moment";
+import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 
-const ItemNotification = () => {
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const onClose = () => {
-      setModalVisible(false);
-    };
+const ItemNotification = (props) => {
+  const {
+    unSwap,
+    amount,
+    fromAddress,
+    toAddress,
+    idxChain,
+    isRead,
+    name,
+    symbol,
+    time,
+    id
+  } = props;
+
+  const handlePressMarkAsRead = async () => {
+    // Call the onPressMarkAsRead function when needed
+    if (!isRead) {
+      try {
+        await SaveTransaction.markAsReadById(id);
+      } catch (error) {
+        console.error('Error marking transaction as read:', error);
+      }
+    }
+    setModalVisible(true);
+    console.log("TransactionID: " + id);
+  };
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const onClose = () => {
+    setModalVisible(false);
+  };
+  const formatDatestamp = (timestamp: number): string => {
+    return moment.unix(timestamp / 1000).format("DD MMM");
+  };
+
+  const formatTimestamp = (timestamp: number): string => {
+    return moment.unix(timestamp / 1000).format("HH:mm");
+  };
   return (
-    <TouchableOpacity style={[styles.container, globalStyles.row]} onPress={() => setModalVisible(true)}>
+    <TouchableOpacity
+      style={[styles.container, globalStyles.row]}
+      onPress={handlePressMarkAsRead}
+    >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
           style={styles.image}
@@ -18,7 +55,7 @@ const ItemNotification = () => {
         />
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>Send Coin</Text>
+            <Text style={styles.title}>{name}</Text>
             <View style={styles.dot}></View>
             <Text style={styles.success}>Successful</Text>
           </View>
@@ -27,16 +64,35 @@ const ItemNotification = () => {
               style={styles.icon}
               source={require("../../../assets/icons/png/ic_clock.png")}
             />
-            <Text style={styles.date}>09:30</Text>
+            <Text style={styles.date}>{formatTimestamp(time)}</Text>
           </View>
         </View>
       </View>
       <View>
-        <Text style={styles.price}>-0.000001 tBNB</Text>
-        <Text style={[styles.date, { textAlign: "right" }]}>6 Apr</Text>
+        <Text style={styles.price}>{amount + " " + symbol}</Text>
+        <Text style={[styles.date, { textAlign: "right" }]}>
+          {formatDatestamp(time)}
+        </Text>
       </View>
-      <View style={styles.dotRed}></View>
-      <ModalNotification modalVisible={modalVisible} onClose={onClose} />
+      <View
+        style={[
+          styles.dotRed,
+          { backgroundColor: isRead ? colors.Gray_Light : colors.Primary },
+        ]}
+      ></View>
+      <ModalNotification
+        modalVisible={modalVisible}
+        onClose={onClose}
+        unSwap={unSwap}
+        fromAddress={fromAddress}
+        toAddress={toAddress}
+        idxChain={idxChain}
+        isRead={isRead}
+        name={name}
+        symbol={symbol}
+        time={time}
+        amount={amount}
+      />
     </TouchableOpacity>
   );
 };
@@ -100,7 +156,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: colors.Red,
+    backgroundColor: colors.Primary,
     position: "absolute",
     top: 10,
     right: 10,

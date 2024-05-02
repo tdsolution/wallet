@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface TransactionModel {
+  id: string;
   unSwap?: boolean;
   amount?: string;
   fromAddress?: string;
@@ -19,7 +20,7 @@ class SaveTransaction {
     try {
       let list = await this.getData();
       transactions.forEach(transaction => {
-        list.push(transaction);
+        list.unshift(transaction);
       });
       await this.saveData(list);
     } catch (error) {
@@ -61,6 +62,23 @@ class SaveTransaction {
       throw error;
     }
   }
+
+  static async markAsReadById(id: string): Promise<void> {
+    try {
+      let list = await this.getData();
+      const transaction = list.find(transaction => transaction.id === id);
+      if (transaction) {
+        transaction.isRead = true;
+        await this.saveData(list);
+        console.log("Marked transaction as read successfully");
+      } else {
+        console.error("Transaction not found with id:", id);
+      }
+    } catch (error) {
+      console.error("Error marking transaction as read:", error);
+      throw error;
+    }
+}
 }
 
 export default SaveTransaction;
