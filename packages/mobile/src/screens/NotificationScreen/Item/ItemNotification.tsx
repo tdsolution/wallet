@@ -5,6 +5,7 @@ import { globalStyles } from "$styles/globalStyles";
 import ModalNotification from "./ModalNotification";
 import moment from "moment";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { useEvm } from "@tonkeeper/shared/hooks";
 
 const ItemNotification = (props) => {
   const {
@@ -19,6 +20,19 @@ const ItemNotification = (props) => {
     time,
     id
   } = props;
+  
+  const evm = useEvm()?.evm;
+  
+  const TruncateString = ({ string, maxLength }) => {
+    if (string.length <= maxLength) {
+      return <Text>{string}</Text>;
+    }
+    return (
+      <Text>{`${string.substring(0, maxLength)}...${string.substring(
+        string.length - 5
+      )}`}</Text>
+    );
+  };
 
   const handlePressMarkAsRead = async () => {
     // Call the onPressMarkAsRead function when needed
@@ -55,7 +69,12 @@ const ItemNotification = (props) => {
         />
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title}>
+            {fromAddress === evm.addressWallet
+              ? name
+              : (name === 'Send Coin' ? 'Receive Coin' : 'Receive Token')
+            }  
+          </Text>
             <View style={styles.dot}></View>
             <Text style={styles.success}>Successful</Text>
           </View>
@@ -65,6 +84,13 @@ const ItemNotification = (props) => {
               source={require("../../../assets/icons/png/ic_clock.png")}
             />
             <Text style={styles.date}>{formatTimestamp(time)}</Text>
+            <View style={[styles.dot, {backgroundColor: colors.Gray}]}></View>
+            <Text style={styles.date}>
+              {fromAddress === evm.addressWallet
+                ? TruncateString({ string: toAddress, maxLength: 8 })
+                : TruncateString({ string: fromAddress, maxLength: 8 })
+              }
+              </Text>
           </View>
         </View>
       </View>
@@ -120,6 +146,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Gray,
     marginRight: 4,
+    marginBottom: 2,
   },
   date: {
     fontSize: 12,
@@ -144,7 +171,8 @@ const styles = StyleSheet.create({
     height: 5,
     borderRadius: 5,
     backgroundColor: colors.Primary,
-    marginHorizontal: 4,
+    marginHorizontal: 6,
+    marginBottom: 3,
   },
   price: {
     fontSize: 12,

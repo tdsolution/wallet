@@ -86,13 +86,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.ton_keeper"
+    namespace "com.mobile_1.tdwallet.app"
     defaultConfig {
-        applicationId "com.ton_keeper"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 433
-        versionName "4.1.0"
+        applicationId "com.mobile_1.tdwallet.app"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 21
+        versionName "1.1.9"
         missingDimensionStrategy 'react-native-camera', 'general'
         missingDimensionStrategy 'store', 'play'
     }
