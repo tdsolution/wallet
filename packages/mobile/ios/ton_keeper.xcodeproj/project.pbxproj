@@ -1052,7 +1052,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/$PROJECT_NAME/Resources/Generated/R.generated.swift",
+				$SRCROOT/$PROJECT_NAME/Resources/Generated/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1289,6 +1289,7 @@
 				DEVELOPMENT_TEAM = 855G73Q95V;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ton_keeper/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TD Wallet";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1306,6 +1307,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "ton_keeper-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1326,6 +1328,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 855G73Q95V;
 				INFOPLIST_FILE = ton_keeper/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TD Wallet";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1343,6 +1346,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "ton_keeper-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

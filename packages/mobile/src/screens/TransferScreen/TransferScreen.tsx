@@ -49,6 +49,11 @@ const TransferScreen = ({route}) => {
     return timestamp.toString() + random.toString();
   };
 
+  const handleTimeStamp = () => {
+    let timestamp = Date.now();
+    return timestamp.toString();
+  };
+
   const handleContinue = async () => {
     setIsLoading(true);
     try { 
@@ -64,7 +69,7 @@ const TransferScreen = ({route}) => {
         isRead: false,
         name: "Send Token",
         symbol: symbol,
-        time: Date.now().toString(),
+        time: handleTimeStamp(),
         id: handleRandomId()
       };
       await SaveTransaction.fullFlowSaveData([sampleTransaction]);

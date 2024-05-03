@@ -110,7 +110,7 @@ export const BackButtonTouchable = styled.TouchableOpacity.attrs({
 })``;
 
 export const BackButton = styled.View`
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => theme.colors.primaryColor};
   width: ${ns(32)}px;
   height: ${ns(32)}px;
   border-radius: ${ns(32 / 2)}px;
