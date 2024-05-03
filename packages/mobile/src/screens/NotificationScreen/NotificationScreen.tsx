@@ -29,6 +29,7 @@ const NotificationScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isData, setIsData] = useState<boolean>(false);
   const [isRead, setIsRead] = useState<boolean>(false);
+  const evm = useEvm()?.evm;
 
   const handleGetTransaction = async () => {
     try {
@@ -37,7 +38,7 @@ const NotificationScreen = () => {
       const result = await SaveTransaction.getData();
       console.log("Data transaction: ", transactionData);
       const dataChainId = result.filter(
-        (data) => data.idxChain === chain.chainId
+        (data) => data.idxChain === chain.chainId && (data.fromAddress === evm.addressWallet || data.toAddress === evm.addressWallet)
       );
       setDataTransaction(dataChainId);
       if (dataChainId.length != 0) {

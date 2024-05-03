@@ -117,7 +117,7 @@ const DetailToken = ({ route }: any) => {
       const result = await SaveTransaction.getData();
       console.log("Data transaction: ", result);
       const dataChainId = result.filter(
-        (data) => data.idxChain === chain.chainId
+        (data) => data.idxChain === chain.chainId && (data.fromAddress === evm.addressWallet || data.toAddress === evm.addressWallet)
       );
       setDataTransaction(dataChainId);
     } catch (error) {

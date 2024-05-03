@@ -16,6 +16,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { on } from "process";
 import { AnyActionPayload } from "$wallet/models/ActivityModel";
+import { useEvm } from "@tonkeeper/shared/hooks";
 const { width, height } = Dimensions.get("window");
 
 interface Props {
@@ -32,17 +33,6 @@ interface Props {
   time?: string;
 }
 
-const TruncateString = ({ string, maxLength }) => {
-  if (string.length <= maxLength) {
-    return <Text>{string}</Text>;
-  }
-  return (
-    <Text>{`${string.substring(0, maxLength)}...${string.substring(
-      string.length - 5
-    )}`}</Text>
-  );
-};
-
 const ModalNotification = (props: Props) => {
   const {
     modalVisible,
@@ -57,6 +47,8 @@ const ModalNotification = (props: Props) => {
     symbol,
     time,
   } = props;
+  
+  const evm = useEvm()?.evm;
   const [textInput, setTextInput] = useState("");
   // const heigthModal = Platform.OS === "ios" ? 470 : 530;
   const token = "0x0221144D770De4ca55D0a9B7306cA8BF7FB8B805";
@@ -65,6 +57,18 @@ const ModalNotification = (props: Props) => {
   let formatted_time = date
     .toLocaleString("en-GB", options)
     .replace(/\s?[ap]m/i, "");
+
+    const TruncateString = ({ string, maxLength }) => {
+      if (string.length <= maxLength) {
+        return <Text>{string}</Text>;
+      }
+      return (
+        <Text>{`${string.substring(0, maxLength)}...${string.substring(
+          string.length - 5
+        )}`}</Text>
+      );
+    };
+
   return (
     <Modal
       animationType="slide" // Loại animation khi mở/closed modal
@@ -100,11 +104,11 @@ const ModalNotification = (props: Props) => {
             }}
           >
             <TouchableOpacity onPress={onClose}>
-              <Image
+              {fromAddress === evm.addressWallet
+              ? <Image
                 style={[
                   styles.iconCancel,
                   {
-                    tintColor: colors.Primary,
                     width: 30,
                     height: 30,
                     transform: [{ rotate: "45deg" }],
@@ -112,6 +116,18 @@ const ModalNotification = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-arrow-up-16.png")}
               />
+              : <Image
+                style={[
+                styles.iconCancel,
+                {
+                  width: 30,
+                  height: 30,
+                  transform: [{ rotate: "45deg" }],
+                },
+              ]}
+              source={require("../../../assets/icons/png/ic-arrow-down-16.png")}
+            />
+            }
             </TouchableOpacity>
             <Text
               style={[
@@ -119,7 +135,10 @@ const ModalNotification = (props: Props) => {
                 { fontSize: 20, fontWeight: "bold", color: colors.Black },
               ]}
             >
-              {name}
+              {fromAddress === evm.addressWallet
+             ? name
+             : (name === 'Send Coin' ? 'Receive Coin' : 'Receive Token')
+             }
             </Text>
             <TouchableOpacity onPress={onClose}>
               <Image
