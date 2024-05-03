@@ -13,7 +13,7 @@ import { BrowserNavBar } from './components/BrowserNavBar/BrowserNavBar';
 import * as S from './DAppBrowser.style';
 import { useAppInfo } from './hooks/useAppInfo';
 import { useDAppBridge } from './hooks/useDAppBridge';
-import { useWallet } from '@tonkeeper/shared/hooks';
+import { useChain, useEvm, useWallet } from '@tonkeeper/shared/hooks';
 import { Address } from '@tonkeeper/shared/Address';
 import { config } from '$config';
 
@@ -35,14 +35,15 @@ const removeUtmFromUrl = (url: string) => {
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const { url: initialUrl } = props;
-// const walletEvm 
+  const chain = useChain()?.chain;
+  const walletEvm = useEvm()?.evm;
   const wallet = useWallet();
-  const walletAddress = wallet
+  const walletAddress = chain.chainId == '1100' ? wallet
     ? Address.parse(wallet.address.ton.raw).toFriendly({
         bounceable: true,
         testOnly: wallet.isTestnet,
       })
-    : '';
+    : '': walletEvm.addressWallet;
 
   const deeplinking = useDeeplinking();
 
