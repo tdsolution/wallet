@@ -4,6 +4,8 @@ import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import moment from "moment";
 import ModalTrasactionHistory from "../../../screens/TransactionHistory/Item/ModalTransactionHistory";
+import { useEvm } from "@tonkeeper/shared/hooks";
+import ModalNotification from "../../NotificationScreen/Item/ModalNotification"
 
 const ItemTransaction = (props) => {
   const {
@@ -17,10 +19,13 @@ const ItemTransaction = (props) => {
     symbol,
     time,
   } = props;
+  const evm = useEvm()?.evm;
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   const onClose = () => {
     setModalVisible(false);
   };
+
   const formatDatestamp = (timestamp: number): string => {
     return moment.unix(timestamp / 1000).format("DD MMM");
   };
@@ -28,6 +33,18 @@ const ItemTransaction = (props) => {
   const formatTimestamp = (timestamp: number): string => {
     return moment.unix(timestamp / 1000).format("HH:mm");
   };
+
+  const TruncateString = ({ string, maxLength }) => {
+    if (string.length <= maxLength) {
+      return <Text>{string}</Text>;
+    }
+    return (
+      <Text>{`${string.substring(0, maxLength)}...${string.substring(
+        string.length - 5
+      )}`}</Text>
+    );
+  };
+
   return (
     <TouchableOpacity
       style={[styles.container, globalStyles.row]}
@@ -40,7 +57,12 @@ const ItemTransaction = (props) => {
         />
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title}>
+            {fromAddress === evm.addressWallet
+              ? name
+              : (name === 'Send Coin' ? 'Receive Coin' : 'Receive Token')
+            }  
+          </Text>
             <View style={styles.dot}></View>
             <Text style={styles.success}>Successful</Text>
           </View>
@@ -50,6 +72,13 @@ const ItemTransaction = (props) => {
               source={require("../../../assets/icons/png/ic_clock.png")}
             />
             <Text style={styles.date}>{formatTimestamp(time)}</Text>
+            <View style={[styles.dot, {backgroundColor: colors.Gray}]}></View>
+            <Text style={styles.date}>
+              {fromAddress === evm.addressWallet
+                ? TruncateString({ string: toAddress, maxLength: 8 })
+                : TruncateString({ string: fromAddress, maxLength: 8 })
+              }
+              </Text>
           </View>
         </View>
       </View>
@@ -69,6 +98,19 @@ const ItemTransaction = (props) => {
         transactionIndex={"transactionIndex"}
         gasUsed={"gasUsed"}
         chainSymbol={symbol} /> */}
+      <ModalNotification
+        modalVisible={modalVisible}
+        onClose={onClose}
+        unSwap={unSwap}
+        fromAddress={fromAddress}
+        toAddress={toAddress}
+        idxChain={idxChain}
+        isRead={isRead}
+        name={name}
+        symbol={symbol}
+        time={time}
+        amount={amount}
+      />
     </TouchableOpacity>
   );
 };
@@ -96,6 +138,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Gray,
     marginRight: 4,
+    marginBottom: 2,
   },
   date: {
     fontSize: 12,
@@ -120,7 +163,8 @@ const styles = StyleSheet.create({
     height: 5,
     borderRadius: 5,
     backgroundColor: colors.Primary,
-    marginHorizontal: 4,
+    marginHorizontal: 6,
+    marginBottom: 3,
   },
   price: {
     fontSize: 12,
