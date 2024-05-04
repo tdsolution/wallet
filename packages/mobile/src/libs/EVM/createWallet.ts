@@ -32,7 +32,7 @@ export async function createWalletFromMnemonic(mnemonic: string){
   await AsyncStorage.setItem('EVMPrivateKey',privateKey);
   await AsyncStorage.setItem('EVMAddress',address);
   await AsyncStorage.setItem('EVMMnemonic',mnemonic);
-  await AsyncStorage.setItem('EVMName',name);
+  await AsyncStorage.setItem('EVMMname',name);
   SaveListWallet.fullFlowSaveData({wallet:walletModel});
   console.log('Save Wallet');
 }
