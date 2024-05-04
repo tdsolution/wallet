@@ -31,6 +31,7 @@ import { buildTransactionUrl } from "$libs/EVM/brower";
 
 const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
+  console.log('dau cho'+address);
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [dataTransaction, setDataTransaction] = useState<any>([]);
@@ -94,14 +95,14 @@ const DetailToken = ({ route }: any) => {
 
   async function fetchBalance() {
     if (addressToken != "coin") {
-      const balance = await getBalanceToken(rpc, addressToken, address);
+      const balance = await getBalanceToken(rpc, addressToken, addressEvm);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
       setPrice(balance);
       setPriceUsd(balanceUsd);
     } else if (addressToken == "coin") {
-      const balance = await fetchBalaceEvm(address, rpc);
+      const balance = await fetchBalaceEvm(addressEvm, rpc);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
