@@ -3,7 +3,7 @@ import { JsonRpcProvider, Contract,Wallet as WalletETH, parseEther, formatUnits 
 
 export async function SendCoinEVM(addressTo, privateKey, rpc, amount) {
   const walletPrivateKey = new WalletETH(privateKey);
-    const provider = new JsonRpcProvider(rpc);
+  const provider = new JsonRpcProvider(rpc);
   let wallet = walletPrivateKey.connect(provider);
   try {
     const tx = {
@@ -16,14 +16,15 @@ export async function SendCoinEVM(addressTo, privateKey, rpc, amount) {
     const gasPrice = txHash.gasPrice;
     console.log('Gas price:', gasPrice);
     Toast.success("Transaction success!!");
+    return 1;
   } 
   catch (error) {
     Toast.fail('Transaction failed!!');
     console.error('Error:', error);
-    return 0;
+    return;
   }
 }
-export async function GasLimitPromise(addressTo, privateKey, rpc, amount) {
+export async function GasLimitPromise(addressTo: string, privateKey: string, rpc, amount) {
   const walletPrivateKey = new WalletETH(privateKey);
     const provider = new JsonRpcProvider(rpc);
   let wallet = walletPrivateKey.connect(provider);
@@ -41,20 +42,23 @@ export async function GasLimitPromise(addressTo, privateKey, rpc, amount) {
   }
 }
 
-export async function SendTokenEVM(addressTo, privateKey, rpc, addressToken, amount){
+export async function SendTokenEVM(addressTo: string, privateKey: string, rpc, addressToken: string, amount){
   const abi = [
-   "function transfer(address to, uint amount)"
-   ]
-   const walletPrivateKey = new WalletETH(privateKey);
-   const provider = new JsonRpcProvider(rpc);
-   let wallet = walletPrivateKey.connect(provider);
-   const contract = new Contract(addressToken, abi, wallet)
-   const value = parseEther(amount);
-   try {
-        const tx = await contract.transfer(addressTo, value);
-        Toast.success("Transaction success!!");
-    } catch (error) {
-        Toast.fail('Transaction failed!!');
-        console.error('Error:', error);
-    }
+  "function transfer(address to, uint amount)"
+  ]
+  const walletPrivateKey = new WalletETH(privateKey);
+  const provider = new JsonRpcProvider(rpc);
+  let wallet = walletPrivateKey.connect(provider);
+  const contract = new Contract(addressToken, abi, wallet)
+  const value = parseEther(amount);
+  try {
+    const tx = await contract.transfer(addressTo, value);
+    Toast.success("Transaction success!!");
+    return 1;
+  } 
+  catch (error) {
+    Toast.fail('Transaction failed!!');
+    console.error('Error:', error);
+    return;
+  }
 }
