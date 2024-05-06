@@ -49,6 +49,11 @@ const TransferScreen = ({route}) => {
     return timestamp.toString() + random.toString();
   };
 
+  const handleTimeStamp = () => {
+    let timestamp = Date.now();
+    return timestamp.toString();
+  };
+
   const handleContinue = async () => {
     setIsLoading(true);
     if (addressToken != "coin") {

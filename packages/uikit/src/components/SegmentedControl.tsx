@@ -1,4 +1,4 @@
-import { LayoutChangeEvent, LayoutRectangle } from "react-native";
+import { LayoutChangeEvent, LayoutRectangle, Platform } from "react-native";
 import { TouchableOpacity } from "./TouchableOpacity";
 import { memo, useCallback, useState } from "react";
 import { Steezy, StyleProp, useTheme } from "../styles";
@@ -71,7 +71,12 @@ export const SegmentedControl = memo<SegmentedControlProps>((props) => {
   const indicatorStyles = Steezy.useStyle([styles.indicator, indicatorStyle]);
 
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[
+        styles.container,
+        style,
+      ]}
+    >
       <Animated.View style={[indicatorStyles, indicatorAnimatedStyle]} />
       {items.map((item, index) => (
         <TouchableOpacity
@@ -89,7 +94,7 @@ export const SegmentedControl = memo<SegmentedControlProps>((props) => {
 
 const styles = Steezy.create(({ colors, corners }) => ({
   container: {
-    backgroundColor: "#C7C8CC",
+    backgroundColor: "#DDDDDD",
     padding: 4,
     borderRadius: corners.large,
     alignSelf: "center",
