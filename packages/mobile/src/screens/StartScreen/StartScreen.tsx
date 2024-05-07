@@ -44,7 +44,7 @@ export const StartScreen = memo(() => {
   const handleCreatePress = useCallback(async () => {
     dispatch(walletActions.generateVault());
     const mnemonic  = await generateMnemonic();
-    createWalletFromMnemonic(mnemonic);
+    await createWalletFromMnemonic(mnemonic);
     nav.navigate(MainStackRouteNames.CreateWalletStack);
   }, [dispatch, nav]);
   const handleImportPress = useCallback(() => {

@@ -98,9 +98,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Tonkeeper uses camera to scan QR codes</string>
+	<string>TD Wallet uses camera to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Tonkeeper uses biometric authentication to authorize transactions</string>
+	<string>TDWallet uses biometric authentication to authorize transactions</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>

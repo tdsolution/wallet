@@ -39,18 +39,13 @@ const removeUtmFromUrl = (url: string) => {
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const { url: initialUrl } = props;
-  const chain = useChain()?.chain;
-  const walletEvm = useEvm()?.evm;
   const wallet = useWallet();
-  const walletAddress =
-    chain.chainId == "1100"
-      ? wallet
-        ? Address.parse(wallet.address.ton.raw).toFriendly({
-            bounceable: true,
-            testOnly: wallet.isTestnet,
-          })
-        : ""
-      : walletEvm.addressWallet;
+  const walletAddress = wallet
+    ? Address.parse(wallet.address.ton.raw).toFriendly({
+        bounceable: true,
+        testOnly: wallet.isTestnet,
+      })
+    : '';
 
   const deeplinking = useDeeplinking();
 

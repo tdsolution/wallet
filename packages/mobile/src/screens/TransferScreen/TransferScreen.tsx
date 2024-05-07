@@ -56,62 +56,69 @@ const TransferScreen = ({route}) => {
 
   const handleContinue = async () => {
     setIsLoading(true);
-    try { 
-      if (addressToken != "coin") {
-        await SendTokenEVM(addressTo, evm.privateKey, chain.rpc, addressToken, amount);
-         Toast.success("Transaction success!!");
-      const sampleTransaction: TransactionModel = {
-        unSwap: true,
-        amount: amount,
-        fromAddress: evm.addressWallet,
-        toAddress: addressTo,
-        idxChain: chain.chainId,
-        isRead: false,
-        name: "Send Token",
-        symbol: symbol,
-        time: handleTimeStamp(),
-        id: handleRandomId()
-      };
-      await SaveTransaction.fullFlowSaveData([sampleTransaction]);
-      setIsLoading(false);
-        navigation.navigate(WalletStackRouteNames.DetailToken, { 
-        id: id, 
-        symbol: symbol,
-        image: image,
-        address: address,
-        addressToken: addressToken,
-        rpc: rpc,
-      });
+    if (addressToken != "coin") {
+      const a = await SendTokenEVM(addressTo, evm.privateKey, chain.rpc, addressToken, amount);
+      if (a) {
+        Toast.success("Transaction success!!");
+        const sampleTransaction: TransactionModel = {
+          unSwap: true,
+          amount: amount,
+          fromAddress: evm.addressWallet,
+          toAddress: addressTo,
+          idxChain: chain.chainId,
+          isRead: false,
+          name: "Send Token",
+          symbol: symbol,
+          time: Date.now().toString(),
+          id: handleRandomId()
+        };
+        await SaveTransaction.fullFlowSaveData([sampleTransaction]);
+        setIsLoading(false);
+          navigation.navigate(WalletStackRouteNames.DetailToken, { 
+          id: id, 
+          symbol: symbol,
+          image: image,
+          address: address,
+          addressToken: addressToken,
+          rpc: rpc,
+        })
       }
-     else if (addressToken == "coin") {
-        await SendCoinEVM(addressTo, evm.privateKey, chain.rpc, amount);
-         Toast.success("Transaction success!!");
-      const sampleTransaction: TransactionModel = {
-        unSwap: true,
-        amount: amount,
-        fromAddress: evm.addressWallet,
-        toAddress: addressTo,
-        idxChain: chain.chainId,
-        isRead: false,
-        name: "Send Coin",
-        symbol: symbol,
-        time: Date.now().toString(),
-        id: handleRandomId()
-      };
+      else {
+        Toast.fail('Transaction failed!!');
+        setIsLoading(false);
+      }
+    }
+    else if (addressToken == "coin") {
+      const a = await SendCoinEVM(addressTo, evm.privateKey, chain.rpc, amount);
+      if (a) {
+        Toast.success("Transaction success!!");
+        const sampleTransaction: TransactionModel = {
+          unSwap: true,
+          amount: amount,
+          fromAddress: evm.addressWallet,
+          toAddress: addressTo,
+          idxChain: chain.chainId,
+          isRead: false,
+          name: "Send Coin",
+          symbol: symbol,
+          time: Date.now().toString(),
+          id: handleRandomId()
+        };
         await SaveTransaction.fullFlowSaveData([sampleTransaction]);
         setIsLoading(false);
         navigation.navigate(WalletStackRouteNames.DetailToken, { 
-        id: id, 
-        symbol: symbol,
-        image: image,
-        address: address,
-        addressToken: addressToken,
-        rpc: rpc,
-      });
+          id: id, 
+          symbol: symbol,
+          image: image,
+          address: address,
+          addressToken: addressToken,
+          rpc: rpc,
+        });
       }
-    }
-    catch(error) {
-      Toast.fail('Transaction failed!!');
+      else {
+        Toast.fail('Transaction failed!!');
+        setIsLoading(false);
+      }
     }
   };
  useEffect(() => {
