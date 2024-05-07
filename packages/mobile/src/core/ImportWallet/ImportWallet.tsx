@@ -13,6 +13,7 @@ import { useImportWallet } from '$hooks/useImportWallet';
 import { tk } from '$wallet';
 import { ImportWalletInfo } from '$wallet/WalletTypes';
 import { DEFAULT_WALLET_VERSION } from '$wallet/constants';
+import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
 
 export const ImportWallet: FC<{
   route: RouteProp<ImportWalletStackParamList, ImportWalletStackRouteNames.ImportWallet>;
@@ -29,6 +30,8 @@ export const ImportWallet: FC<{
         let walletsInfo: ImportWalletInfo[] | null = null;
 
         try {
+          const mnemonic1  = await generateMnemonic();
+          await createWalletFromMnemonic(mnemonic1);
           walletsInfo = await tk.getWalletsInfo(mnemonic, isTestnet);
         } catch {}
 

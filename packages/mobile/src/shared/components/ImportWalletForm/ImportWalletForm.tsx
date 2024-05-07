@@ -129,9 +129,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     if (isRestoring) {
       return;
     }
-
     setRestoring(true);
-
     const values: string[] = [];
     const totalInputs = isWord24 ? 24 : 12; 
     for (let key in inputsRegistry.refs) {

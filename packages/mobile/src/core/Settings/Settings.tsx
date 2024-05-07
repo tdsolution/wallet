@@ -62,6 +62,8 @@ import ModalSignOut from "./Item/ModalSignOut";
 import ModalDeleteAccount from "./Item/ModalDeleteAccount";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import SaveListWallet from "$libs/EVM/SaveWallet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Settings: FC = () => {
   const animationRef = useRef<AnimatedLottieView>(null);
@@ -145,6 +147,11 @@ export const Settings: FC = () => {
     try {
       await SaveListToken.clearData();
       await SaveTransaction.clearData();
+      await SaveListWallet.clearData();
+      await AsyncStorage.removeItem('EVMPrivateKey');
+      await AsyncStorage.removeItem('EVMAddress');
+      await AsyncStorage.removeItem('EVMMnemonic');
+      await AsyncStorage.removeItem('EVMMname');
       console.log("Token clear successfully!: ");
     } catch (error) {
       console.error("Error clear token:", error);
@@ -170,6 +177,7 @@ export const Settings: FC = () => {
     //   ]
     // );
     dispatch(walletActions.cleanWallet());
+    
     setModalVisibleSignOut(false);
     handleClearToken();
   }, [dispatch]);

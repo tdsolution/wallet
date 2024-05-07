@@ -27,7 +27,6 @@ export const SelectNetworkModal: FC<Props> = memo((props) => {
        nav.goBack();
   };
   useEffect(() => {
-    // console.log(chain.id);
     fetchChainActive();
   }, []);
     const fetchChainActive = async () => {
