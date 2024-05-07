@@ -150,7 +150,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
   return (
     <S.Container>
-      {/* <BrowserNavBar
+      <BrowserNavBar
         title={app?.name || title}
         url={currentUrl}
         isNotificationsEnabled={notificationsEnabled}
@@ -162,7 +162,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
         onRefreshPress={handleRefreshPress}
         disconnect={disconnect}
         unsubscribeFromNotifications={unsubscribeFromNotifications}
-      /> */}
+      />
       <S.DAppContainer>
         <S.DAppWebView
           ref={ref}
