@@ -2,7 +2,17 @@ import React, { memo, useMemo, useState } from "react";
 import { Icon, TouchableOpacity } from "$uikit";
 import { Steezy } from "$styles";
 import { store } from "$store";
-import { Alert, Image, View, Modal, Text } from "react-native";
+import {
+  Alert,
+  Image,
+  View,
+  Modal,
+  Text,
+  StyleSheet,
+  Pressable,
+  Platform,
+  ToastAndroid
+} from "react-native";
 import { openScanQR, openSend } from "$navigation";
 import { CryptoCurrencies } from "$shared/constants";
 import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
@@ -10,11 +20,14 @@ import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/Requi
 import { Address } from "@tonkeeper/core";
 import { navigation, useNavigation } from "@tonkeeper/router";
 import { copyText } from "@tonkeeper/uikit";
+import { colors } from "../constants/colors";
+import { Toast } from "$store";
 
 export const ScanQRButton = memo(() => {
   const deeplinking = useDeeplinking();
   const nav = useNavigation();
   const [visible, setVisible] = useState<boolean>(false);
+  const [addressWallet, setAddressWallet] = useState<string>("");
   const hitSlop = useMemo(
     () => ({
       top: 26,
@@ -36,6 +49,16 @@ export const ScanQRButton = memo(() => {
           return true;
         }
 
+        if (address) {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
+          setVisible(true);
+          setAddressWallet(address.toString());
+          return true;
+        }
+
         const resolver = deeplinking.getResolver(address, {
           delay: 200,
           origin: DeeplinkOrigin.QR_CODE,
@@ -52,12 +75,11 @@ export const ScanQRButton = memo(() => {
       openRequireWalletModal();
     }
   }, []);
-
   return (
     <View>
       <TouchableOpacity
         onPress={handlePressScanQR}
-        style={styles.container}
+        style={style.container}
         activeOpacity={0.6}
         hitSlop={hitSlop}
       >
@@ -71,19 +93,25 @@ export const ScanQRButton = memo(() => {
         animationType="slide"
         transparent={true}
         visible={visible}
-        // onRequestClose={closeModal}
+        onRequestClose={() => setVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.innerContainer}>
-            <View style={styles.topSection}>
-              <Text>This is the top section</Text>
-              {/* <Image
-                source={require("./your-image-icon.png")}
-                style={styles.icon}
-              /> */}
-            </View>
-            <View style={styles.bottomSection}>
-              <Text>This is the bottom section</Text>
+        <Pressable
+          onPress={() => setVisible(false)}
+          style={styles.modalContainer}
+        ></Pressable>
+        <View style={styles.innerContainer}>
+          <View>
+            <Text style={{ marginBottom: 4 }}>Result</Text>
+            <View style={[styles.row]}>
+              <Text style={[styles.text]}>
+                {addressWallet}
+              </Text>
+              <TouchableOpacity onPress={copyText(addressWallet)}>
+                <Image
+                  style={[styles.icon]}
+                  source={require("../assets/icons_v1/icon_copy.png")}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -92,38 +120,64 @@ export const ScanQRButton = memo(() => {
   );
 });
 
-const styles = Steezy.create({
-  container: {
-    zIndex: 3,
-    padding: 10,
-  },
-
+const styles = StyleSheet.create({
   modalContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // semi-transparent background
   },
   innerContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 300,
     backgroundColor: "#fff",
-    width: "80%", // adjust as needed
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#000",
     padding: 20,
+    borderRadius: 20,
   },
-  topSection: {
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#ccc",
+    borderRadius: 5,
+    alignSelf: "flex-end",
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
+    tintColor: colors.Gray,
+  },
+  row: {
+    width: "100%",
+    height: 100,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    backgroundColor: "#eeeeee",
+    borderRadius: 10,
+    paddingHorizontal: 20,
   },
-  bottomSection: {
-    paddingVertical: 20,
+  text: {
+    width: "85%",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000",
   },
-  icon: {
-    width: 20,
-    height: 20,
+});
+const style = Steezy.create({
+  container: {
+    zIndex: 3,
+    padding: 10,
   },
 });

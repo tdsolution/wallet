@@ -153,8 +153,17 @@ const SendToken = ({ route }: any) => {
           setTimeout(() => {
             openSend({ currency: CryptoCurrencies.Ton, address });
           }, 200);
-          setAddressWallet(address);
+          setAddressInput(address);
           console.log("Quet ma thanh cong: ", address.toString());
+          return true;
+        }
+
+        if (address) {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
+          setAddressInput(address);
           return true;
         }
 
