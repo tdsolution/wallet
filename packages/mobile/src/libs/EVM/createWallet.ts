@@ -22,7 +22,7 @@ export async function createWalletFromMnemonic(mnemonic: string){
   const wallet = WalletETH.fromPhrase(mnemonic);
   const address : string = wallet.address;
   const privateKey : string = wallet.privateKey;
-  const name = 'Account1';
+  const name = 'Account 1';
   const walletModel: ListWalletModel = {
   name: name,
   addressWallet: address, // Thêm giá trị của addressWallet tại đây
