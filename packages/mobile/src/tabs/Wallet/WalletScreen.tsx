@@ -88,10 +88,11 @@ import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
-  const evm = useEvm()?.evm;
+  const {evm, setEvm} = useEvm();
   const addressEvm = evm.addressWallet;
   // console.log(addressEvm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -149,6 +150,29 @@ export const WalletScreen = memo(({ navigation }: any) => {
     }, 500);
     return () => clearTimeout(timer);
   }, [dispatch]);
+
+  useEffect(() => {
+    if(!addressEvm) {
+    const fetchEvm = async () => {
+      try {
+        const address = await AsyncStorage.getItem("EVMAddress");
+        const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
+        const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
+        const name = await AsyncStorage.getItem("EVMMname");
+        const evmModal = {
+          addressWallet: address,
+          privateKey: privateKey,
+          mnemonic: mnemonic,
+          name: name,
+        }
+        setEvm(evmModal);
+      } catch (error) {
+        console.error('Error reading data from AsyncStorage:', error);
+      }
+    };
+    fetchEvm();};
+  }, []);
+
   const handleGetTransaction = async () => {
     try {
       // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
