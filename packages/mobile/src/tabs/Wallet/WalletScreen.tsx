@@ -170,7 +170,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
   );
   const handlePressSwap = useCallback(() => {
     if (wallet) {
-      nav.openModal("Swap");
+      chain.chainId == '1100' ? 
+      nav.openModal("Swap") : nav.openModal("Swap");
     } else {
       openRequireWalletModal();
     }
