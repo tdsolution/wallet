@@ -1,9 +1,8 @@
-import { SendRecipient } from '../../../../Send.interface';
-import { t } from '@tonkeeper/shared/i18n';
-import { openScanQR } from '$navigation';
-import { WordHintsPopupRef } from '$shared/components/ImportWalletForm/WordHintsPopup';
-import { Icon, Input, Loader, Text } from '$uikit';
-import { isAndroid, isTransferOp, ns, parseTonLink } from '$utils';
+import { SendRecipient } from "../../../../Send.interface";
+import { t } from "@tonkeeper/shared/i18n";
+import { WordHintsPopupRef } from "$shared/components/ImportWalletForm/WordHintsPopup";
+import { Icon, Input, Loader, Text } from "$uikit";
+import { isAndroid, isTransferOp, ns, parseTonLink } from "$utils";
 import React, {
   FC,
   memo,
@@ -12,15 +11,25 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import { LayoutChangeEvent } from 'react-native';
-import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import * as S from './AddressInput.style';
-import { InputContentSize } from '$uikit/Input/Input.interface';
-import { Toast } from '$store';
-import { TextInput } from 'react-native-gesture-handler';
-import { Address } from '@tonkeeper/core';
-import { css } from '$styled';
+} from "react";
+import { LayoutChangeEvent } from "react-native";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import * as S from "./AddressInput.style";
+import { InputContentSize } from "$uikit/Input/Input.interface";
+import { Toast } from "$store";
+import { TextInput } from "react-native-gesture-handler";
+import { Address } from "@tonkeeper/core";
+import { css } from "$styled";
+import { store } from "$store";
+import { openScanQR, openSend } from "$navigation";
+import { CryptoCurrencies } from "$shared/constants";
+import { DeeplinkOrigin, useDeeplinking } from "$libs/deeplinking";
+import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
+import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 
 interface Props {
   wordHintsRef?: RefObject<WordHintsPopupRef>;
@@ -46,13 +55,14 @@ const AddressInputComponent: FC<Props> = (props) => {
   } = props;
 
   const [value, setValue] = useState(
-    recipient?.name || recipient?.domain || recipient?.address || '',
+    recipient?.name || recipient?.domain || recipient?.address || ""
   );
   const inputValue = useRef(value);
 
   const [showFailed, setShowFailed] = useState(true);
 
-  const isFailed = error || (showFailed && !dnsLoading && value.length > 0 && !recipient);
+  const isFailed =
+    error || (showFailed && !dnsLoading && value.length > 0 && !recipient);
 
   const canScanQR = value.length === 0;
 
@@ -87,7 +97,7 @@ const AddressInputComponent: FC<Props> = (props) => {
 
       updateHints();
     },
-    [editable, updateHints, updateRecipient],
+    [editable, updateHints, updateRecipient]
   );
 
   const handleBlur = useCallback(() => {
@@ -113,7 +123,7 @@ const AddressInputComponent: FC<Props> = (props) => {
     (contentSize: InputContentSize) => {
       contentWidth.value = contentSize.width;
     },
-    [contentWidth],
+    [contentWidth]
   );
 
   const handleInputLayout = useCallback(
@@ -122,7 +132,7 @@ const AddressInputComponent: FC<Props> = (props) => {
 
       inputWidth.value = width;
     },
-    [inputWidth],
+    [inputWidth]
   );
 
   const handleInfoLayout = useCallback(
@@ -131,15 +141,27 @@ const AddressInputComponent: FC<Props> = (props) => {
 
       infoWidth.value = width;
     },
-    [infoWidth],
+    [infoWidth]
   );
-
+  
+  const chain = useChain()?.chain;
   const handleScanQR = useCallback(() => {
     openScanQR(async (code: string) => {
       const link = parseTonLink(code);
-      if (link.match && isTransferOp(link.operation) && !Address.isValid(link.address)) {
-        Toast.fail(t('transfer_deeplink_address_error'));
-        return false;
+      console.log(link);
+      if (code) {
+        if (
+          link.match &&
+          isTransferOp(link.operation) &&
+          !Address.isValid(link.address)
+        ) {
+          Toast.fail(t("transfer_deeplink_address_error"));
+          return false;
+        } else if (link.match == false) {
+          console.log(">>>>>>Code co nhe!");
+          setValue(code);
+          return true;
+        }
       }
 
       return await updateRecipient(code);
@@ -150,7 +172,8 @@ const AddressInputComponent: FC<Props> = (props) => {
 
   const loadingContainerStyle = useAnimatedStyle(() => {
     const visible =
-      showLoader && inputWidth.value - contentWidth.value - infoWidth.value > -5;
+      showLoader &&
+      inputWidth.value - contentWidth.value - infoWidth.value > -5;
 
     return {
       opacity: withTiming(visible ? 1 : 0, { duration: 150 }),
@@ -175,7 +198,7 @@ const AddressInputComponent: FC<Props> = (props) => {
     if (!recipient) {
       const isFocused = textInputRef.current?.isFocused();
 
-      setValue((s) => (isFocused ? s : ''));
+      setValue((s) => (isFocused ? s : ""));
 
       return;
     }
@@ -194,7 +217,7 @@ const AddressInputComponent: FC<Props> = (props) => {
   const preparedAddress =
     recipient && (recipient.name || recipient.domain)
       ? Address.parse(recipient.address, { bounceable: false }).toShort()
-      : '';
+      : "";
 
   const isFirstRender = useRef(true);
 
@@ -242,11 +265,11 @@ const AddressInputComponent: FC<Props> = (props) => {
         onFocus={updateHints}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleInputLayout}
-        label={t('send_address_placeholder')}
+        label={t("send_address_placeholder")}
         wrapperStyle={css`
           background-color: #f2f2f2;
         `}
-        style={{color:'#000'}}
+        style={{ color: "#000" }}
         innerRef={textInputRef}
         autoComplete="off"
         returnKeyType="next"
@@ -262,7 +285,7 @@ const AddressInputComponent: FC<Props> = (props) => {
         withPasteButton
         rightContent={
           <S.ScanQRTouchable disabled={!canScanQR} onPress={handleScanQR}>
-            <Icon name="ic-viewfinder-28" colorHex="#4871EA"  />
+            <Icon name="ic-viewfinder-28" colorHex="#4871EA" />
           </S.ScanQRTouchable>
         }
       />
