@@ -1,36 +1,40 @@
-import { useDeeplinking } from '$libs/deeplinking';
-import { openDAppsSearch } from '$navigation';
-import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy } from '$utils';
-import React, { FC, memo, useCallback, useState } from 'react';
-import { Linking, useWindowDimensions } from 'react-native';
-import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useDeeplinking } from "$libs/deeplinking";
+import { openDAppsSearch } from "$navigation";
+import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy } from "$utils";
+import React, { FC, memo, useCallback, useState } from "react";
+import { Linking, useWindowDimensions } from "react-native";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import {
   ShouldStartLoadRequest,
   WebViewNavigation,
   WebViewProgressEvent,
-} from 'react-native-webview/lib/WebViewTypes';
-import { BrowserNavBar } from './components/BrowserNavBar/BrowserNavBar';
-import * as S from './DAppBrowser.style';
-import { useAppInfo } from './hooks/useAppInfo';
-import { useDAppBridge } from './hooks/useDAppBridge';
-import { useChain, useEvm, useWallet } from '@tonkeeper/shared/hooks';
-import { Address } from '@tonkeeper/shared/Address';
-import { config } from '$config';
+} from "react-native-webview/lib/WebViewTypes";
+import { BrowserNavBar } from "./components/BrowserNavBar/BrowserNavBar";
+import * as S from "./DAppBrowser.style";
+import { useAppInfo } from "./hooks/useAppInfo";
+import { useDAppBridge } from "./hooks/useDAppBridge";
+import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
+import { Address } from "@tonkeeper/shared/Address";
+import { config } from "$config";
 
 export interface DAppBrowserProps {
   url: string;
 }
 
-const TONKEEPER_UTM = 'utm_source=tonkeeper';
+const TONKEEPER_UTM = "utm_source=tonkeeper";
 
 const addUtmToUrl = (url: string) => {
-  const startChar = url.includes('?') ? '&' : '?';
+  const startChar = url.includes("?") ? "&" : "?";
 
   return `${url}${startChar}${TONKEEPER_UTM}`;
 };
 
 const removeUtmFromUrl = (url: string) => {
-  return url.replace(new RegExp(`[?|&]${TONKEEPER_UTM}`), '');
+  return url.replace(new RegExp(`[?|&]${TONKEEPER_UTM}`), "");
 };
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
@@ -47,11 +51,13 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
   const [currentUrl, setCurrentUrl] = useState(getCorrectUrl(initialUrl));
 
-  const [webViewSource, setWebViewSource] = useState({ uri: addUtmToUrl(currentUrl) });
+  const [webViewSource, setWebViewSource] = useState({
+    uri: addUtmToUrl(currentUrl),
+  });
 
   const app = useAppInfo(walletAddress, currentUrl);
 
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
 
   const [canGoBack, setCanGoBack] = useState(false);
 
@@ -86,7 +92,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
       setTitle(e.nativeEvent.title);
       setCurrentUrl(getUrlWithoutTonProxy(removeUtmFromUrl(e.nativeEvent.url)));
     },
-    [progress],
+    [progress]
   );
 
   const handleNavigationStateChange = useCallback((e: WebViewNavigation) => {
@@ -95,7 +101,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
   const openUrl = useCallback(
     (url: string) => setWebViewSource({ uri: addUtmToUrl(getCorrectUrl(url)) }),
-    [],
+    []
   );
 
   const handleOpenExternalLink = useCallback(
@@ -114,7 +120,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
         return false;
       }
 
-      if (req.url.startsWith('http')) {
+      if (req.url.startsWith("http")) {
         return true;
       }
 
@@ -124,7 +130,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
       return false;
     },
-    [deeplinking, openUrl],
+    [deeplinking, openUrl]
   );
 
   const handleGoBackPress = useCallback(() => {
@@ -141,8 +147,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
- 
-  
+
   return (
     <S.Container>
       <BrowserNavBar
@@ -164,7 +169,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           key={webViewSource.uri}
           javaScriptEnabled
           domStorageEnabled
-          originWhitelist={['*']}
+          originWhitelist={["*"]}
           javaScriptCanOpenWindowsAutomatically
           mixedContentMode="always"
           decelerationRate="normal"
@@ -179,7 +184,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           allowsBackForwardNavigationGestures={true}
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
-          webviewDebuggingEnabled={config.get('devmode_enabled')}
+          webviewDebuggingEnabled={config.get("devmode_enabled")}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

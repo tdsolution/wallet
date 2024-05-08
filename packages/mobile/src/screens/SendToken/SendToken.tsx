@@ -79,7 +79,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if (isAddress(addressInput)) {
-      // if (price > 0) {
+      if (price > 0) {
         navigation.navigate(WalletStackRouteNames.Transfer, {
           id: id,
           symbol: symbol,
@@ -91,11 +91,11 @@ const SendToken = ({ route }: any) => {
           addressTo: addressInput,
           amount: amount,
         });
-    //   } else {
-    //     Toast.fail("Insufficient balance!!");
-    //   }
-    // } else {
-    //   Toast.fail("Address is wrong!");
+      } else {
+        Toast.fail("Insufficient balance!!");
+      }
+    } else {
+      Toast.fail("Address is wrong!");
     }
   }, [addressInput, amount, addressToken]);
 
@@ -153,8 +153,17 @@ const SendToken = ({ route }: any) => {
           setTimeout(() => {
             openSend({ currency: CryptoCurrencies.Ton, address });
           }, 200);
-          setAddressWallet(address);
+          setAddressInput(address);
           console.log("Quet ma thanh cong: ", address.toString());
+          return true;
+        }
+
+        if (address) {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
+          setAddressInput(address);
           return true;
         }
 
