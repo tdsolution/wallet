@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Pressable,
   Platform,
-  ToastAndroid
+  ToastAndroid,
 } from "react-native";
 import { openScanQR, openSend } from "$navigation";
 import { CryptoCurrencies } from "$shared/constants";
@@ -22,8 +22,10 @@ import { navigation, useNavigation } from "@tonkeeper/router";
 import { copyText } from "@tonkeeper/uikit";
 import { colors } from "../constants/colors";
 import { Toast } from "$store";
+import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 
 export const ScanQRButton = memo(() => {
+  const chain = useChain()?.chain;
   const deeplinking = useDeeplinking();
   const nav = useNavigation();
   const [visible, setVisible] = useState<boolean>(false);
@@ -48,16 +50,15 @@ export const ScanQRButton = memo(() => {
           console.log("Quet ma thanh cong: ", address.toString());
           return true;
         }
-
-        if (address) {
-          let index = address.indexOf(":");
-          if (index !== -1) {
-            address = address.substring(index + 1); // Lấy phần sau dấu :
-          }
-          setVisible(true);
-          setAddressWallet(address.toString());
-          return true;
-        }
+        // if (address) {
+        //   let index = address.indexOf(":");
+        //   if (index !== -1) {
+        //     address = address.substring(index + 1); // Lấy phần sau dấu :
+        //   }
+        //   setVisible(true);
+        //   setAddressWallet(address.toString());
+        //   return true;
+        // }
 
         const resolver = deeplinking.getResolver(address, {
           delay: 200,
@@ -66,6 +67,14 @@ export const ScanQRButton = memo(() => {
 
         if (resolver) {
           resolver();
+          return true;
+        }else {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
+          setVisible(true);
+          setAddressWallet(address.toString());
           return true;
         }
 
@@ -103,9 +112,7 @@ export const ScanQRButton = memo(() => {
           <View>
             <Text style={{ marginBottom: 4 }}>Result</Text>
             <View style={[styles.row]}>
-              <Text style={[styles.text]}>
-                {addressWallet}
-              </Text>
+              <Text style={[styles.text]}>{addressWallet}</Text>
               <TouchableOpacity onPress={copyText(addressWallet)}>
                 <Image
                   style={[styles.icon]}

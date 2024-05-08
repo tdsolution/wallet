@@ -37,7 +37,7 @@ import { Toast } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
 import { isValidAddressEVM } from "$libs/EVM/createWallet";
 import { isAddress } from "ethers";
-import { useEvm } from "@tonkeeper/shared/hooks";
+import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 
 const SendToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc, price } = route.params;
@@ -48,6 +48,7 @@ const SendToken = ({ route }: any) => {
   const [addressWallet, setAddressWallet] = useState<string>("");
   const deeplinking = useDeeplinking();
   const evm = useEvm()?.evm;
+  const chain = useChain()?.chain;
 
   useEffect(() => {
     async function getdata() {
@@ -158,15 +159,6 @@ const SendToken = ({ route }: any) => {
           return true;
         }
 
-        if (address) {
-          let index = address.indexOf(":");
-          if (index !== -1) {
-            address = address.substring(index + 1); // Lấy phần sau dấu :
-          }
-          setAddressInput(address);
-          return true;
-        }
-
         const resolver = deeplinking.getResolver(address, {
           delay: 200,
           origin: DeeplinkOrigin.QR_CODE,
@@ -174,6 +166,13 @@ const SendToken = ({ route }: any) => {
 
         if (resolver) {
           resolver();
+          return true;
+        } else {
+          let index = address.indexOf(":");
+          if (index !== -1) {
+            address = address.substring(index + 1); // Lấy phần sau dấu :
+          }
+          setAddressInput(address);
           return true;
         }
 
