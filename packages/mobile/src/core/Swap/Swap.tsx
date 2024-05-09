@@ -1,21 +1,22 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { StonfiInjectedObject } from './types';
-import { openSignRawModal } from '$core/ModalContainer/NFTOperations/Modals/SignRawModal';
-import { getTimeSec } from '$utils/getTimeSec';
-import { useNavigation } from '@tonkeeper/router';
-import * as S from './Swap.style';
-import { Icon } from '$uikit';
-import { getCorrectUrl, getDomainFromURL } from '$utils';
-import { logEvent } from '@amplitude/analytics-browser';
-import { checkIsTimeSynced } from '$navigation/hooks/useDeeplinkingResolvers';
-import { useWebViewBridge } from '$hooks/jsBridge';
-import { useWallet } from '@tonkeeper/shared/hooks';
-import { config } from '$config';
-import { tk } from '$wallet';
-import { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
-import { Linking, View } from 'react-native';
-import { useDeeplinking } from '$libs/deeplinking';
-import DeviceInfo from 'react-native-device-info';
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { StonfiInjectedObject } from "./types";
+import { openSignRawModal } from "$core/ModalContainer/NFTOperations/Modals/SignRawModal";
+import { getTimeSec } from "$utils/getTimeSec";
+import { useNavigation } from "@tonkeeper/router";
+import * as S from "./Swap.style";
+import { Icon } from "$uikit";
+import { getCorrectUrl, getDomainFromURL } from "$utils";
+import { logEvent } from "@amplitude/analytics-browser";
+import { checkIsTimeSynced } from "$navigation/hooks/useDeeplinkingResolvers";
+import { useWebViewBridge } from "$hooks/jsBridge";
+import { config } from "$config";
+import { tk } from "$wallet";
+import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
+import { Linking, View } from "react-native";
+import { useDeeplinking } from "$libs/deeplinking";
+import DeviceInfo from "react-native-device-info";
+import { useChain, useWallet } from "@tonkeeper/shared/hooks";
+import SwapScreen from "../../screens/SwapScreen/SwapScreen";
 
 interface Props {
   jettonAddress?: string;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const addVersionToUrl = (url: string) => {
-  const startChar = url.includes('?') ? '&' : '?';
+  const startChar = url.includes("?") ? "&" : "?";
 
   return `${url}${startChar}clientVersion=${DeviceInfo.getVersion()}`;
 };
@@ -33,10 +34,10 @@ export const Swap: FC<Props> = (props) => {
   const { jettonAddress } = props;
   const deeplinking = useDeeplinking();
 
-  const baseUrl = config.get('stonfiUrl', tk.wallet.isTestnet);
+  const baseUrl = config.get("stonfiUrl", tk.wallet.isTestnet);
   const url = useMemo(() => {
-    const ft = props.ft ?? jettonAddress ?? 'TON';
-    const tt = props.tt ?? (jettonAddress ? 'TON' : null);
+    const ft = props.ft ?? jettonAddress ?? "TON";
+    const tt = props.tt ?? (jettonAddress ? "TON" : null);
 
     let path = `${baseUrl}?ft=${ft}`;
 
@@ -47,11 +48,14 @@ export const Swap: FC<Props> = (props) => {
     return path;
   }, [baseUrl, jettonAddress, props.ft, props.tt]);
 
-  const [webViewSource, setWebViewSource] = useState({ uri: addVersionToUrl(url) });
+  const [webViewSource, setWebViewSource] = useState({
+    uri: addVersionToUrl(url),
+  });
 
   const openUrl = useCallback(
-    (url: string) => setWebViewSource({ uri: addVersionToUrl(getCorrectUrl(url)) }),
-    [],
+    (url: string) =>
+      setWebViewSource({ uri: addVersionToUrl(getCorrectUrl(url)) }),
+    []
   );
 
   const wallet = useWallet();
@@ -59,6 +63,7 @@ export const Swap: FC<Props> = (props) => {
   const address = wallet?.address.ton.friendly;
 
   const nav = useNavigation();
+  const chain = useChain()?.chain;
 
   const bridgeObject = useMemo(
     (): StonfiInjectedObject => ({
@@ -91,15 +96,15 @@ export const Swap: FC<Props> = (props) => {
             resolve,
             reject,
             false,
-            false,
+            false
           );
         }),
     }),
-    [address, nav],
+    [address, nav]
   );
 
   const [ref, injectedJavaScriptBeforeContentLoaded, onMessage] =
-    useWebViewBridge<StonfiInjectedObject>(bridgeObject, 'tonkeeperStonfi');
+    useWebViewBridge<StonfiInjectedObject>(bridgeObject, "tonkeeperStonfi");
 
   const [overlayVisible, setOverlayVisible] = useState(true);
 
@@ -108,7 +113,7 @@ export const Swap: FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    logEvent('swap_open', { token: jettonAddress ?? 'TON' });
+    logEvent("swap_open", { token: jettonAddress ?? "TON" });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -129,7 +134,7 @@ export const Swap: FC<Props> = (props) => {
         return false;
       }
 
-      if (req.url.startsWith('http')) {
+      if (req.url.startsWith("http")) {
         return true;
       }
 
@@ -139,31 +144,38 @@ export const Swap: FC<Props> = (props) => {
 
       return false;
     },
-    [deeplinking, openUrl],
+    [deeplinking, openUrl]
   );
 
   return (
     <S.Container>
-      <S.Browser
-        ref={ref}
-        injectedJavaScriptBeforeContentLoaded={injectedJavaScriptBeforeContentLoaded}
-        onMessage={onMessage}
-        javaScriptEnabled
-        domStorageEnabled
-        source={webViewSource}
-        onLoadEnd={handleLoadEnd}
-        startInLoadingState={true}
-        originWhitelist={[`https://${getDomainFromURL(baseUrl)}`, 'ton://']}
-        decelerationRate="normal"
-        javaScriptCanOpenWindowsAutomatically
-        mixedContentMode="always"
-        hideKeyboardAccessoryView
-        thirdPartyCookiesEnabled={true}
-        keyboardDisplayRequiresUserAction={false}
-        mediaPlaybackRequiresUserAction={false}
-        onShouldStartLoadWithRequest={handleOpenExternalLink}
-        webviewDebuggingEnabled={config.get('devmode_enabled')}
-      />
+      {chain.chainId == "1100" ? (
+        <S.Browser
+          ref={ref}
+          injectedJavaScriptBeforeContentLoaded={
+            injectedJavaScriptBeforeContentLoaded
+          }
+          onMessage={onMessage}
+          javaScriptEnabled
+          domStorageEnabled
+          source={webViewSource}
+          onLoadEnd={handleLoadEnd}
+          startInLoadingState={true}
+          originWhitelist={[`https://${getDomainFromURL(baseUrl)}`, "ton://"]}
+          decelerationRate="normal"
+          javaScriptCanOpenWindowsAutomatically
+          mixedContentMode="always"
+          hideKeyboardAccessoryView
+          thirdPartyCookiesEnabled={true}
+          keyboardDisplayRequiresUserAction={false}
+          mediaPlaybackRequiresUserAction={false}
+          onShouldStartLoadWithRequest={handleOpenExternalLink}
+          webviewDebuggingEnabled={config.get("devmode_enabled")}
+        />
+      ) : (
+        <SwapScreen />
+      )}
+
       {overlayVisible ? (
         <S.Overlay>
           <S.BackButtonContainer onPress={nav.goBack}>
