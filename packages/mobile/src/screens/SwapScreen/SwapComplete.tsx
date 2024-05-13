@@ -13,7 +13,8 @@ import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 import { useWallet } from "@tonkeeper/shared/hooks";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
 
-const SwapComplete = () => {
+const SwapComplete = ({ route } : any) => {
+  const { address, amount, assetFrom, assetTo } = route.params;
     const nav = useNavigation();
     const wallet = useWallet();
     const handleHome= () => {
@@ -40,11 +41,11 @@ const SwapComplete = () => {
         <Text style={[styles.caption]}>
           You just swapped{" "}
           <Text style={[styles.title, { color: colors.Primary }]}>
-            0.0 tBNB
+            {amount} {assetFrom}
           </Text>{" "}
           to get{" "}
           <Text style={[styles.title, { color: colors.Primary }]}>
-            0.0 WBNB
+            {amount} {assetTo}
           </Text>{" "}
           successfully
         </Text>
@@ -54,7 +55,7 @@ const SwapComplete = () => {
         <Text style={[styles.textBox]}>
           Check your transaction when scanning with encrypted transaction as:{" "}
           <Text style={[styles.textBox, { color: colors.Primary }]}>
-            0x033092817c6528AF62659a09A2AfBC0411a5Be65
+            {address}
           </Text>
         </Text>
       </View>

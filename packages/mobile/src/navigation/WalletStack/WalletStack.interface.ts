@@ -13,4 +13,5 @@ export type WalletStackParamList = {
   [WalletStackRouteNames.Transfer]: {};
   [WalletStackRouteNames.SwapScreen]: {};
   [WalletStackRouteNames.SwapComplete]: {};
+  [WalletStackRouteNames.YourComponent]: {};
 };

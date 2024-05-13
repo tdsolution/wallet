@@ -30,6 +30,7 @@ import DetailToken from "../../screens/DetailToken/DetailToken";
 import TransferScreen from "../../screens/TransferScreen/TransferScreen";
 import SwapScreen from "../../screens/SwapScreen/SwapScreen";
 import SwapComplete from "../../screens/SwapScreen/SwapComplete";
+import YourComponent from "../../screens/SwapScreen/YourComponent";
 
 const Stack = createNativeStackNavigator<WalletStackParamList>();
 
@@ -91,6 +92,10 @@ export const WalletStack: FC = () => {
       <Stack.Screen
         name={WalletStackRouteNames.SwapComplete}
         component={SwapComplete}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.YourComponent}
+        component={YourComponent}
       />
     </Stack.Navigator>
   );
