@@ -14,18 +14,35 @@ import {
 interface SimpleModalProps {
   visible: boolean;
   closeModal: () => void;
+  amount: string | number;
+  assetFrom: string;
+  assetTo: string;
+  from: string;
+  to: string;
+  network: string;
+  coinUsd: number;
 }
 
-const ModalSwap: React.FC<SimpleModalProps> = ({ visible, closeModal }) => {
+const ModalSwap: React.FC<SimpleModalProps> = ({
+  visible,
+  closeModal,
+  amount,
+  assetFrom,
+  assetTo,
+  from,
+  to,
+  network,
+  coinUsd,
+}) => {
   function formatHexString(hexString: string) {
     const prefix = hexString.slice(0, 10); // Lấy các ký tự đầu tiên (bao gồm cả "0x" và 6 ký tự tiếp theo)
     const suffix = hexString.slice(-6); // Lấy 6 ký tự cuối cùng
     return prefix + "..." + suffix;
   }
-const nav = useNavigation();
+  const nav = useNavigation();
 
   const handleConfirm = () => {
-    nav.navigate("SwapComplete");
+    nav.navigate("SwapComplete", { address: from, amount: amount, assetFrom: assetFrom, assetTo: assetTo});
     closeModal();
   };
   return (
@@ -41,25 +58,27 @@ const nav = useNavigation();
           <Text style={[globalStyles.textHeader, { fontWeight: "bold" }]}>
             Confirm your Transaction
           </Text>
-          <Text style={styles.price}>-0.0 tBNB</Text>
-          <Text style={styles.priceDolla}>= 0.0 $</Text>
+          <Text style={styles.price}>
+            -{parseFloat(amount.toString())} {assetFrom}
+          </Text>
+          <Text style={styles.priceDolla}>
+            {`\u2248`} {coinUsd} $
+          </Text>
         </View>
         <View style={styles.box}>
           <View style={styles.row}>
             <Text style={styles.text}>Asset</Text>
-            <Text style={styles.text}>BNB Testnet (tBNB)</Text>
+            <Text style={styles.text}>
+              {network} ({assetFrom})
+            </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.text}>From</Text>
-            <Text style={styles.text}>
-              {formatHexString("0x033092817c6528AF62659a09A2AfBC0411a5Be65")}
-            </Text>
+            <Text style={styles.text}>{formatHexString(from)}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.text}>To</Text>
-            <Text style={styles.text}>
-              {formatHexString("0x033092817c6528AF62659a09A2AfBC0411a5Be65")}
-            </Text>
+            <Text style={styles.text}>{formatHexString(to)}</Text>
           </View>
         </View>
         <View style={styles.box}>
@@ -69,7 +88,7 @@ const nav = useNavigation();
           </View>
           <View style={styles.row}>
             <Text style={styles.text}>Max total</Text>
-            <Text style={styles.text}>0.0005 tBNB</Text>
+            <Text style={styles.text}>0.0005 {assetFrom}</Text>
           </View>
         </View>
 
@@ -204,7 +223,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#eeeeee",
     borderRadius: 16,
     padding: 16,
-    marginHorizontal: 16,
     gap: 20,
     marginTop: 30,
   },

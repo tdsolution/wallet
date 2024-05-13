@@ -147,8 +147,8 @@ export const BackupPhraseScreen = memo(() => {
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <View style={[styles.right, { paddingVertical: 16 }]}>
+            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={copyText(str)}>
             <Text style={[styles.title, { color: colors.Primary }]}>Copy</Text>
-            <TouchableOpacity>
               <Image
                 style={styles.iconCopy}
                 source={require("../../assets/icons/png/ic-copy-16.png")}

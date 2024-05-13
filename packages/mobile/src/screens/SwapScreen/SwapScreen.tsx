@@ -1,22 +1,128 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Platform,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
-import { useChain } from "@tonkeeper/shared/hooks";
+import { useChain, useEvm } from "@tonkeeper/shared/hooks";
+import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { FontWeights } from "@tonkeeper/uikit/src/components/Text/TextStyles";
-import { useNavigation } from "@tonkeeper/router";
+import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import ModalSwap from "./ModalSwap";
+import ModalCoinDes from "./ModalCoinDes";
+import ModalCoinOrg from "./ModalCoinOrg";
+import { dataCoinOrg } from "./dataSwap/dataCoinOrg";
+import { dataCoinDes } from "./dataSwap/dataCoinDes";
+import {
+  getTokenListByChainID,
+  getTokenListImportByChainID,
+} from "$libs/EVM/token/tokenEVM";
+import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 
 const SwapScreen = () => {
   const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
+  const addressEvm = evm.addressWallet;
+  const swapCoin = useSwapCoin()?.swapCoin;
   const nav = useNavigation();
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const tokensEVM = getTokenListByChainID(chain.chainId);
+
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalVisibleCoinDes, setModalVisibleCoinDes] =
+    useState<boolean>(false);
+  const [modalVisibleCoinOrg, setModalVisibleCoinOrg] =
+    useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [dataCoinDesIndex, setDataCoinDesIndex] = useState<any[]>(dataCoinDes);
+  const [dataCoinOrgIndex, setDataCoinOrgIndex] = useState<any[]>(dataCoinOrg);
+  const [isChangeCoinDes, setIsChangeCoinDes] = useState<boolean>(true);
+  const [isDisable, setIsDisable] = useState<boolean>(true);
+  const checkValue = () => {
+    if (inputValue !== "" && !isNaN(Number(inputValue))) {
+      setIsDisable(false);
+    } else if (inputValue !== "" && isNaN(Number(inputValue))) {
+      setInputValue("");
+      setIsDisable(true);
+    }
+  };
+  console.log(">>>>>>Đung ne: ", !isNaN(Number(inputValue)))
+
+  const [price, setPrice] = useState("0");
+  const [priceUsd, setPriceUsd] = useState(0);
+  const [coinUsd, setCoinUsd] = useState(0);
+  const [coinUsd24, setCoinUsd24] = useState(0);
+  const [isCheckLevel, setIsCheckLevel] = useState(false);
+  let coin = coinUsd * parseFloat(inputValue);
+  // Lấy phần tử từ mảng thứ nhất
+  const itemFromData1 = dataCoinDesIndex[swapCoin];
+
+  // Lấy phần tử từ mảng thứ hai
+  const itemFromData2 = dataCoinOrgIndex[swapCoin];
 
   const handleSwap = () => {
     setModalVisible(true);
+  };
+  const handleSwapCoin = () => {
+    isChangeCoinDes
+      ? setModalVisibleCoinDes(true)
+      : setModalVisibleCoinOrg(true);
+  };
+
+  const handleCoinDes = () => {
+    setIsChangeCoinDes(!isChangeCoinDes);
+  };
+
+  async function fetchBalance() {
+    if (tokensEVM != "coin") {
+      const balance = await getBalanceToken(chain.rpc, tokensEVM, addressEvm);
+      const coinRate = await SaveListCoinRate.getCoinRateById(
+        itemFromData1.id ?? ""
+      );
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const checkLevel = parseFloat(coinUsd24);
+      setIsCheckLevel(checkLevel >= 0 ? true : false);
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+      setCoinUsd24(parseFloat(coinUsd24));
+      setCoinUsd(parseFloat(rateUsd));
+    } else if (tokensEVM == "coin") {
+      const balance = await fetchBalaceEvm(addressEvm, chain.rpc);
+      const coinRate = await SaveListCoinRate.getCoinRateById(
+        itemFromData1.id ?? ""
+      );
+      const rateUsd = coinRate?.usd ?? "0";
+      const coinUsd24 = coinRate?.usdChange ?? "0";
+      const checkLevel = parseFloat(coinUsd24);
+      setIsCheckLevel(checkLevel >= 0 ? true : false);
+      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
+      setPrice(balance);
+      setPriceUsd(balanceUsd);
+      setCoinUsd24(parseFloat(coinUsd24));
+      setCoinUsd(parseFloat(rateUsd));
+    }
   }
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchBalance();
+    }, [addressEvm, swapCoin])
+  );
+  useEffect(() => {
+    checkValue(); // Gọi hàm checkValue trong useEffect
+  }, [inputValue]);
+
   return (
     <View style={styles.container}>
       <View style={[styles.row]}>
@@ -36,22 +142,53 @@ const SwapScreen = () => {
       </View>
       <View>
         <View style={[styles.box]}>
-          <View>
+          <View style={{ width: "48%" }}>
             <Text style={[styles.text]}>From</Text>
-            <Text style={[styles.price]}>0</Text>
-            <Text style={[styles.priceUSD]}>$ 0</Text>
+            <TextInput
+              style={[styles.input]}
+              value={inputValue}
+              onChangeText={(text) => setInputValue(text)}
+              placeholder="0"
+              placeholderTextColor={colors.Gray}
+              keyboardType="numeric"
+            />
+            <Text style={[styles.priceUSD]}>
+              $ {inputValue.length > 0 ? coin : 0}
+            </Text>
           </View>
           <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={handleSwapCoin}
+            style={{
+              width: "48%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            <View>
-              <Image
-                style={[styles.imgCurrent]}
-                source={require("../../assets/currency/ic-btc-48.png")}
-              />
-              <Image style={[styles.imgLogo]} source={{ uri: chain.logo }} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View>
+                <Image
+                  style={[styles.imgCurrent]}
+                  source={{
+                    uri: isChangeCoinDes
+                      ? itemFromData1.logo
+                      : itemFromData2.logo,
+                  }}
+                />
+                <Image
+                  style={[styles.imgLogo]}
+                  source={{
+                    uri: isChangeCoinDes
+                      ? itemFromData1.chainImg
+                      : itemFromData2.chainImg,
+                  }}
+                />
+              </View>
+
+              <Text style={[styles.text, {}]}>
+                {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+              </Text>
             </View>
-            <Text style={[styles.text, {}]}>tBNB</Text>
             <Image
               style={styles.icDown}
               source={require("../../assets/icons/png/ic-chevron-down-16.png")}
@@ -76,7 +213,10 @@ const SwapScreen = () => {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity style={[styles.btnChange]}>
+            <TouchableOpacity
+              style={[styles.btnChange]}
+              onPress={handleCoinDes}
+            >
               <Image
                 style={{
                   width: 30,
@@ -91,22 +231,56 @@ const SwapScreen = () => {
         </View>
 
         <View style={[styles.box]}>
-          <View>
+          <View style={{ width: "48%" }}>
             <Text style={[styles.text]}>To</Text>
-            <Text style={[styles.price]}>0</Text>
-            <Text style={[styles.priceUSD]}>$ 0</Text>
+            <Text
+              style={[
+                styles.price,
+                { color: inputValue ? colors.Primary : colors.Gray },
+              ]}
+              numberOfLines={0}
+            >
+              {!inputValue ? 0 : inputValue}
+            </Text>
+            <Text style={[styles.priceUSD]}>$ {inputValue.length > 0 ? coin : 0}</Text>
           </View>
           <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() =>
+              !isChangeCoinDes
+                ? setModalVisibleCoinDes(true)
+                : setModalVisibleCoinOrg(true)
+            }
+            style={{
+              width: "48%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
           >
-            <View>
-              <Image
-                style={[styles.imgCurrent]}
-                source={require("../../assets/currency/ic-btc-48.png")}
-              />
-              <Image style={[styles.imgLogo]} source={{ uri: chain.logo }} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View>
+                <Image
+                  style={[styles.imgCurrent]}
+                  source={{
+                    uri: !isChangeCoinDes
+                      ? itemFromData1.logo
+                      : itemFromData2.logo,
+                  }}
+                />
+                <Image
+                  style={[styles.imgLogo]}
+                  source={{
+                    uri: !isChangeCoinDes
+                      ? itemFromData1.chainImg
+                      : itemFromData2.chainImg,
+                  }}
+                />
+              </View>
+
+              <Text style={[styles.text, {}]}>
+                {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+              </Text>
             </View>
-            <Text style={[styles.text, {}]}>WBNB</Text>
             <Image
               style={styles.icDown}
               source={require("../../assets/icons/png/ic-chevron-down-16.png")}
@@ -116,12 +290,55 @@ const SwapScreen = () => {
       </View>
       <View style={[styles.resetButton]}>
         <Text style={[styles.text]}>Quote</Text>
-        <Text style={[styles.text]}>1 tBNB =1 WBNB</Text>
+        <Text
+          style={[
+            styles.text,
+            { fontWeight: "500", fontSize: 16, fontFamily: "Popins-Medium" },
+          ]}
+        >
+          1 {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}{" "}
+          {`\u2248`} 1{" "}
+          {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+        </Text>
       </View>
-      <TouchableOpacity style={[styles.button]} onPress={handleSwap}>
+      <TouchableOpacity
+        disabled={isDisable}
+        style={[
+          styles.button,
+          {
+            backgroundColor:
+              inputValue.length > 0 ? colors.Primary : colors.Gray,
+          },
+        ]}
+        onPress={handleSwap}
+      >
         <Text style={[styles.buttonText]}>Swap</Text>
       </TouchableOpacity>
-      <ModalSwap visible={modalVisible}  closeModal={() => setModalVisible(false)} />
+      <ModalSwap
+        visible={modalVisible}
+        closeModal={() => setModalVisible(false)}
+        amount={inputValue}
+        assetFrom={isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+        assetTo={!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+        from={addressEvm}
+        to={
+          isChangeCoinDes
+            ? itemFromData1.tokenAddress
+            : itemFromData2.tokenAddress
+        }
+        network={isChangeCoinDes ? itemFromData1.name : itemFromData2.name}
+        coinUsd = {coin}
+      />
+      <ModalCoinDes
+        visible={modalVisibleCoinDes}
+        closeModal={() => setModalVisibleCoinDes(false)}
+        swapCoin={swapCoin}
+      />
+      <ModalCoinOrg
+        visible={modalVisibleCoinOrg}
+        closeModal={() => setModalVisibleCoinOrg(false)}
+        swapCoin={swapCoin}
+      />
     </View>
   );
 };
@@ -150,19 +367,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.White,
   },
   imgCurrent: {
-    width: 48,
-    height: 48,
+    width: 34,
+    height: 34,
     resizeMode: "contain",
     borderRadius: 24,
     marginRight: 10,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: colors.Black,
     fontFamily: "Poppins-Bold",
   },
   box: {
+    width: "100%",
     backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
@@ -184,14 +402,13 @@ const styles = StyleSheet.create({
     height: 16,
     tintColor: colors.Black,
     resizeMode: "contain",
-    marginLeft: 30,
   },
   imgLogo: {
-    width: 24,
-    height: 24,
+    width: 16,
+    height: 16,
     borderRadius: 15,
     position: "absolute",
-    top: -8,
+    top: -5,
     right: 10,
     borderWidth: 1,
     borderColor: "white",
@@ -201,7 +418,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.Gray,
     fontFamily: "Poppins-Bold",
-    marginVertical: 10,
+    marginVertical: Platform.OS === "android" ? 10 : 5,
+    height: Platform.OS === "android" ? 40 : 40,
+    backgroundColor: "white",
   },
   priceUSD: {
     fontSize: 18,
@@ -242,5 +461,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eeeeee",
     marginTop: 20,
+  },
+  input: {
+    width: "100%",
+    height: Platform.OS === "android" ? 60 : 50,
+    backgroundColor: "white",
+    fontSize: 30,
+    fontWeight: "bold",
+    color: colors.Primary,
+    fontFamily: "Poppins-Bold",
   },
 });
