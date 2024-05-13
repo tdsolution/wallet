@@ -89,6 +89,7 @@ import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
@@ -194,8 +195,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   );
   const handlePressSwap = useCallback(() => {
     if (wallet) {
-      chain.chainId == '1100' ? 
-      nav.openModal("Swap") : nav.openModal("Swap");
+     nav.openModal("Swap");
     } else {
       openRequireWalletModal();
     }
@@ -210,13 +210,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [nav, wallet]);
 
   const handlePressSend = useCallback(async () => {
-    if (wallet) {
-      trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
-      nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
-    } else {
-      openRequireWalletModal();
-    }
+    // if (wallet) {
+    //   trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
+    //   nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
+    // } else {
+    //   openRequireWalletModal();
+    // }
     // SendTokenEVM();
+    // swapTokenDeposit();
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {

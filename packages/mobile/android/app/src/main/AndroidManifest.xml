@@ -92,7 +92,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/tonkeeper_logo_alpha"/>
+            android:resource="@drawable/splashscreen"/>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"

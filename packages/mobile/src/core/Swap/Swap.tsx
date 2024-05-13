@@ -146,6 +146,13 @@ export const Swap: FC<Props> = (props) => {
     },
     [deeplinking, openUrl]
   );
+  const customCSS = `
+  document.querySelector('.bg-backgroundPage').style.backgroundColor = 'white';
+  document.querySelector('h3.truncate').style.color = '#10161F';
+  document.querySelector('div.mb-4 > h3.truncate').style.color = '#10161F';
+  document.querySelector('.inset-0').style.backgroundColor = 'white';
+  document.querySelector('._modal-actions-gradient_1wavc_1').style.background = 'white';
+`;
 
   return (
     <S.Container>

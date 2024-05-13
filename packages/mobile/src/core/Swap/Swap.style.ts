@@ -10,7 +10,7 @@ export const Container = styled.View`
 `;
 
 export const Browser = styled(WebView)`
-  flex: 1;
+  flex:4;
   background: ${({ theme }) => theme.colors.primaryColor};
 `;
 

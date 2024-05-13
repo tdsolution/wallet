@@ -70,6 +70,8 @@ export const getApiKey = (blockChainType: string) => {
   switch (blockChainType) {
     case "1":
       return "GNEBS2B7RXTCZMWBUIUJJ8VSWZBI9JT6UQ";
+    case "14":
+     return "GNEBS2B7RXTCZMWBUIUJJ8VSWZBI9JT6UQ";
     case "10":
       return "GNEBS2B7RXTCZMWBUIUJJ8VSWZBI9JT6UQ";
     case "324":
@@ -100,6 +102,8 @@ export const getApiUrl = (blockChainType: string) => {
     case "1":
       return "https://api.etherscan.io/api";
     // Ethereum API URL
+     case "14":
+      return "https://flare-explorer.flare.network/api";
     case "10":
       return "https://api.etherscan.io/api";
     case "324":
