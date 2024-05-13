@@ -148,6 +148,11 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
 
+  const jsCode = `
+  window.ethereum = window.ethereum || {};
+  window.ethereum.isTDWallet = true;
+  `
+
   return (
     <S.Container>
       <BrowserNavBar
@@ -185,6 +190,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get("devmode_enabled")}
+          injectedJavaScript={jsCode}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
