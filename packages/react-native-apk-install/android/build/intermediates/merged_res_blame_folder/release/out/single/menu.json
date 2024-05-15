@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/menu/example_menu.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/menu/example_menu.xml"
+    },
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/menu/example_menu2.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/menu/example_menu2.xml"
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/layout-v21/notification_template_custom_big.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/layout-v21/notification_action.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/layout-v21/notification_template_icon_group.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "com.apkinstall.react-native-apk-install-merged_res-20:/layout-v21/notification_action_tombstone.xml",
+        "source": "com.apkinstall.react-native-apk-install-core-1.7.0-14:/layout-v21/notification_action_tombstone.xml"
+    }
+]

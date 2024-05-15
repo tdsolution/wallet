@@ -11,7 +11,7 @@ export const Container = styled.View`
 
 export const Browser = styled(WebView)`
   flex: 1;
-  background: ${({ theme }) => theme.colors.primaryColor};
+  // background: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 export const Overlay = styled.View`
