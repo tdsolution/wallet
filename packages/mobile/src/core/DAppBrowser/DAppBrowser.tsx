@@ -1,7 +1,7 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
-import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy } from "$utils";
-import React, { FC, memo, useCallback, useState } from "react";
+import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
+import React, { FC, memo, useCallback, useRef, useState } from "react";
 import { Linking, useWindowDimensions } from "react-native";
 import {
   useAnimatedStyle,
@@ -41,6 +41,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const { url: initialUrl } = props;
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
+  const webviewRef = useRef();
   const wallet = useWallet();
   const walletAddress = wallet
     ? Address.parse(wallet.address.ton.raw).toFriendly({
@@ -69,6 +70,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
+    onMessage,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
 
@@ -155,21 +157,62 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     console.log('input', input)
     return 1
   }
-  console.log(chain.rpcBackup, evm);
-const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
-console.log(chain, providerMainnet);
+  const { JsonRpcEngine } = require('json-rpc-engine')
+  const engine = new JsonRpcEngine();
+
+  engine.push((req, res, next, end) => {
+    if (req.method === 'eth_requestAccounts') {
+      res.result = [evm.addressWallet];
+      end();
+    } else {
+      next();
+    }
+  });
+
+  const handleMessage = async (event) => {
+    const data = JSON.parse(event.nativeEvent.data);
+    const { id, method, params } = data;
+
+    engine.handle({ id, method, params }, (err, response) => {
+      if (err) {
+        ref.current?.postMessage(JSON.stringify({ id, error: err.message }));
+      } else {
+        ref.current?.postMessage(JSON.stringify(response));
+      }
+    });
+  };
+
+  // console.log(chain.rpcBackup, evm);
+const providerMainnet = ethers.getDefaultProvider();
+// console.log(chain, providerMainnet);
 
 const walletProviderMainnet = new Wallet(evm.privateKey, providerMainnet)
 const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
   const jsCode = `
-  window.ethereum = window.ethereum || {};
-  window.ethereum.isTDWallet = true;
-  window.ethereum.isMetaMask = true;
-  window.ethereum.address = '${evm.addressWallet}';
-  window.ethereum.networkVersion = '${chain.chainId}';
-  window.ethereum.chainId = '${chain.chainId}';
-  window.ethereum.provider = ${JSON.stringify(providerMainnet)};
+  window.ethereum = {
+    request: async function({method, params}) {
+        return new Promise((resolve, reject) => {
+          const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+              id: messageId,
+              method: method,
+              params: params
+          }));
+
+          const functionToCall = (event) => {
+              const data = JSON.parse(event.data);
+              if (data.id && data.id === messageId) {
+                alert(data.result);
+              }
+
+          }
+          document.addEventListener("message", functionToCall);
+        });
+    },
+    isConnected: () => true,
+};
   `
+  const message = {a: 'hihi'};
   const getJavascript = function (addressHex, network, infuraAPIKey, jsContent) {
     // return window.test = () => alert('AAA')
     return `
@@ -352,6 +395,7 @@ const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get("devmode_enabled")}
           injectedJavaScript={jsCode}
+          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

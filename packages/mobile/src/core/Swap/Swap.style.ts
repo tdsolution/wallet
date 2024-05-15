@@ -6,12 +6,13 @@ import WebView from 'react-native-webview';
 export const Container = styled.View`
   flex: 1;
   position: relative;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  // background: ${({ theme }) => theme.colors.backgroundPrimary
+};
 `;
 
 export const Browser = styled(WebView)`
-  flex:4;
-  background: ${({ theme }) => theme.colors.primaryColor};
+  flex: 1;
+  // background: ${({ theme }) => theme.colors.primaryColor};
 `;
 
 export const Overlay = styled.View`
