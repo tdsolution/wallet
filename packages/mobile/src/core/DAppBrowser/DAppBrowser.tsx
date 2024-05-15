@@ -1,6 +1,6 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
-import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy } from "$utils";
+import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
 import React, { FC, memo, useCallback, useState } from "react";
 import { Linking, useWindowDimensions } from "react-native";
 import {
@@ -69,6 +69,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
+    onMessage,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
 
@@ -155,21 +156,52 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     console.log('input', input)
     return 1
   }
-  console.log(chain.rpcBackup, evm);
-const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
-console.log(chain, providerMainnet);
+  const handleMessage = async (event) => {
+    const data = JSON.parse(event.nativeEvent.data);
+    console.log(data);
+    if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
+      ref.current?.postMessage(JSON.stringify({ id: data.id, result: [evm.addressWallet] }));
+  }
+  }
+  const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
+  console.log(providerMainnet);
 
 const walletProviderMainnet = new Wallet(evm.privateKey, providerMainnet)
 const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
   const jsCode = `
-  window.ethereum = window.ethereum || {};
-  window.ethereum.isTDWallet = true;
-  window.ethereum.isMetaMask = true;
-  window.ethereum.address = '${evm.addressWallet}';
-  window.ethereum.networkVersion = '${chain.chainId}';
-  window.ethereum.chainId = '${chain.chainId}';
-  window.ethereum.provider = ${JSON.stringify(providerMainnet)};
+  window.ethereum = {
+    request: async function({method, params}) {
+        return new Promise((resolve, reject) => {
+          const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+              id: messageId,
+              method: method,
+              params: params
+          }));
+
+          const functionToCall = (event) => {
+              const data = JSON.parse(event.data);
+              if (data.id && data.id === messageId) {
+                alert(data.result);
+              }
+          }
+          if(${isIOS}) {
+            window.addEventListener("message", functionToCall);
+          } else {
+            document.addEventListener("message", functionToCall);
+          }
+        });
+    },
+    isConnected: () => true,
+    isTDWallet: true,
+    isMetaMask: true,
+    address: '${evm.addressWallet}',
+    networkVersion: '${chain.chainId}',
+    chainId: '${chain.chainId}',
+    provider: ${JSON.stringify(providerMainnet)},
+};
   `
+  const message = {a: 'hihi'};
   const getJavascript = function (addressHex, network, infuraAPIKey, jsContent) {
     // return window.test = () => alert('AAA')
     return `
@@ -352,6 +384,7 @@ const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get("devmode_enabled")}
           injectedJavaScript={jsCode}
+          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
