@@ -64,12 +64,13 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
   const domain = getDomainFromURL(url);
 
   const shortAddress =
-    walletAddress &&
-    Address.parse(walletAddress, {
-      bounceable: !getFlag("address_style_nobounce"),
-      testOnly: Address.isTestnet(walletAddress),
-    }).toShort();
-
+    walletAddress;
+    // &&
+    // Address.parse(walletAddress, {
+    //   bounceable: !getFlag("address_style_nobounce"),
+    //   testOnly: Address.isTestnet(walletAddress),
+    // })
+  console.log('shortAddress '+shortAddress);
   const popupItems = useMemo(() => {
     const items: PopupAction[] = [
       {
@@ -170,7 +171,6 @@ const BrowserNavBarComponent: FC<Props> = (props) => {
               renderItem={(item) => <Text variant="label1">{item.label}</Text>}
               keyExtractor={(item) => item.label}
               autoWidth
-              minWidth={180}
             >
               <S.ActionItemTouchable
                 hitSlop={{

@@ -1,8 +1,9 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
 import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
-import React, { FC, memo, useCallback, useRef, useState } from "react";
-import { Linking, useWindowDimensions } from "react-native";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import { Linking, View, useWindowDimensions } from "react-native";
+import Web3 from 'web3';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -20,7 +21,8 @@ import { useDAppBridge } from "./hooks/useDAppBridge";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { Address } from "@tonkeeper/shared/Address";
 import { config } from "$config";
-import {  ethers, JsonRpcProvider, Wallet } from 'ethers'
+import {  ethers } from 'ethers';
+import  WalletConnectProvider  from '@walletconnect/web3-provider';
 export interface DAppBrowserProps {
   url: string;
 }
@@ -39,16 +41,16 @@ const removeUtmFromUrl = (url: string) => {
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const { url: initialUrl } = props;
+  const [account, setAccount] = useState({ address: '', privateKey: '' });
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
-  const webviewRef = useRef();
   const wallet = useWallet();
-  const walletAddress = wallet
+  const walletAddress = (chain.chainId == '1100' ?(wallet
     ? Address.parse(wallet.address.ton.raw).toFriendly({
         bounceable: true,
         testOnly: wallet.isTestnet,
       })
-    : '';
+    : '') : evm.addressWallet);
 
   const deeplinking = useDeeplinking();
 
@@ -70,7 +72,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
-    onMessage,
+    // onMessage,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
 
@@ -157,37 +159,58 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     console.log('input', input)
     return 1
   }
-  const { JsonRpcEngine } = require('json-rpc-engine')
-  const engine = new JsonRpcEngine();
-
-  engine.push((req, res, next, end) => {
-    if (req.method === 'eth_requestAccounts') {
-      res.result = [evm.addressWallet];
-      end();
-    } else {
-      next();
-    }
-  });
-
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    const { id, method, params } = data;
-
-    engine.handle({ id, method, params }, (err, response) => {
-      if (err) {
-        ref.current?.postMessage(JSON.stringify({ id, error: err.message }));
-      } else {
-        ref.current?.postMessage(JSON.stringify(response));
+    console.log(data);
+    let result;
+    try {
+      switch (data.method) {
+        case 'eth_requestAccounts':
+          result = evm.addressWallet;
+          console.log(result);
+          break;
+      case 'eth_signTransaction':
+          result = await signTransaction(data.params);
+          break;
+      default:
+          throw new Error('Method not supported');
       }
-    });
+     ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
+    } catch (error) {
+      ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
+    }
+    // if(data.method == 'enableEthereum'){
+      
+    // }
+  //   if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
+  //     ref.current?.postMessage(JSON.stringify({ id: data.id, type: 'eth_requestAccounts',result: [evm.addressWallet] }));
+  //  }
+  }
+  const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
+  console.log(providerMainnet);
+  const signTransaction = async (params) => {
+    const web3 = new Web3(provider);
+    const tx = await web3.eth.accounts.signTransaction(params[0], account.privateKey);
+    return tx.rawTransaction;
+  };
+   const signMessage = async (message, privateKey) => {
+    const web3 = new Web3(provider);
+    const signature = await web3.eth.accounts.sign(message, privateKey);
+    return signature.signature;
   };
 
-  // console.log(chain.rpcBackup, evm);
-const providerMainnet = ethers.getDefaultProvider();
-// console.log(chain, providerMainnet);
+  // const signTypedMessage = async (params, privateKey) => {
+  //   const web3 = new Web3(provider);
+  //   const signature = await web3.eth.accounts.signTypedData(params, privateKey);
+  //   return signature;
+  // };
 
-const walletProviderMainnet = new Wallet(evm.privateKey, providerMainnet)
-const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
+  const ecRecover = async (params) => {
+    const web3 = new Web3(provider);
+    const address = await web3.eth.accounts.recover(params[0], params[1]);
+    return address;
+  };
+
   const jsCode = `
   window.ethereum = {
     request: async function({method, params}) {
@@ -204,159 +227,40 @@ const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
               if (data.id && data.id === messageId) {
                 alert(data.result);
               }
-
           }
-          document.addEventListener("message", functionToCall);
+          
+          if(${isIOS}) {
+            window.addEventListener("message", functionToCall);
+          } else {
+            document.addEventListener("message", functionToCall);
+          }
         });
     },
     isConnected: () => true,
+    isTDWallet: true,
+    isMetaMask: true,
+    address: '${evm.addressWallet}',
+    networkVersion: '${chain.chainId}',
+    chainId: '${chain.chainId}',
+    provider: 'https://rpc.ankr.com/eth',
 };
   `
-  const message = {a: 'hihi'};
-  const getJavascript = function (addressHex, network, infuraAPIKey, jsContent) {
-    // return window.test = () => alert('AAA')
-    return `
-      ${jsContent}
-  
-      window.addEventListener("scroll", ()=>{
-          WebViewBridge.send(JSON.stringify({type:"scroll",num:window.pageYOffset}))
-      });
-  
-      function getChainID(name) {
-        switch(name) {
-          case 'mainnet': return 1;
-          case 'ropsten': return 3;
-          case 'rinkeby': return 4;
-          case 'kovan': return 42;
-        }
-  
-        throw new Error('Unsupport network')
-      }
-  
-      function getInfuraRPCURL(chainID, apiKey) {
-        switch(chainID) {
-          case 1: return 'https://mainnet.infura.io/v3/' + apiKey;
-          case 3: return 'https://ropsten.infura.io/v3/' + apiKey;
-          case 4: return 'https://rinkeby.infura.io/v3/' + apiKey;
-          case 42: return 'https://kovan.infura.io/v3/' + apiKey;
-        }
-  
-        throw new Error('Unsupport network')
-      }
-  
-      function getInfuraWSSURL(chainID, apiKey) {
-        switch(chainID) {
-          case 1: return 'wss://mainnet.infura.io/ws/v3/' + apiKey;
-          case 3: return 'wss://ropsten.infura.io/ws/v3/' + apiKey;
-          case 4: return 'wss://rinkeby.infura.io/ws/v3/' + apiKey;
-          case 42: return 'wss://kovan.infura.io/ws/v3/' + apiKey;
-        }
-  
-        throw new Error('Unsupport network')
-      }
-  
-      let infuraAPIKey = '${infuraAPIKey}';
-      let addressHex = '${addressHex}';
-      let network = '${network}';
-      let chainID = getChainID(network) ;
-      let rpcUrl = getInfuraRPCURL(chainID, infuraAPIKey);
-      let wssUrl = getInfuraWSSURL(chainID, infuraAPIKey);
-  
-  
-      function executeCallback (id, error, value) {
-        console.log(JSON.stringify(value))
-        goldenProvider.executeCallback(id, error, value)
-      }
-  
-      let goldenProvider = null
-  
-  
-  function init() {
-        goldenProvider = new Golden({
-          noConflict: true,
-          address: addressHex,
-          networkVersion: chainID,
-          rpcUrl,
-          getAccounts: function (cb) {
-            cb(null, [addressHex])
-          },
-          signTransaction: function (tx, cb){
-            console.log('signing a transaction', tx)
-            const { id = 8888 } = tx
-            goldenProvider.addCallback(id, cb)
-            const resTx = {name: 'signTransaction', id, tx}
-            WebViewBridge.send(JSON.stringify(resTx))
-          },
-          signMessage: function (msgParams, cb) {
-            const { data } = msgParams
-            const { id = 8888 } = msgParams
-            console.log("signing a message", msgParams)
-            goldenProvider.addCallback(id, cb)
-            console.log("signMessage")
-            const resTx = {name: "signMessage", id, tx}
-            WebViewBridge.send(JSON.stringify(resTx))
-          },
-          signPersonalMessage: function (msgParams, cb) {
-            const { data } = msgParams
-            const { id = 8888 } = msgParams
-            console.log("signing a personal message", msgParams)
-            goldenProvider.addCallback(id, cb)
-            console.log("signPersonalMessage")
-            const resTx = {name: "signPersonalMessage", id, data}
-            WebViewBridge.send(JSON.stringify(resTx))
-          },
-          signTypedMessage: function (msgParams, cb) {
-            const { data } = msgParams
-            const { id = 8888 } = msgParams
-            console.log("signing a typed message", msgParams)
-            goldenProvider.addCallback(id, cb)
-            console.log("signTypedMessage")
-            const resTx = {name: "signTypedMessage", id, tx}
-            WebViewBridge.send(JSON.stringify(resTx))
-          }
-        },
-        {
-          address: addressHex,
-          networkVersion: chainID
-        })
-          goldenProvider.isTomoWallet = true 
-          goldenProvider.isPantoGraph = true
-      }
-  
-      init();
-      window.web3 = new Web3(goldenProvider)
-  
-      web3.eth.defaultAccount = addressHex
-  
-      web3.setProvider = function () {
-        console.debug('Golden Wallet - overrode web3.setProvider')
-      }
-  
-      web3.version.getNetwork = function(cb) {
-        cb(null, chainID)
-      }
-      web3.eth.getCoinbase = function(cb) {
-        return cb(null, addressHex)
-      }
-  
-      window.tomoWeb3 = window.web3
-  
-      tomoWeb3.eth.defaultAccount = addressHex
-  
-      tomoWeb3.setProvider = function () {
-        console.debug('Golden Wallet - overrode web3.setProvider')
-      }
-  
-      tomoWeb3.version.getNetwork = function(cb) {
-        cb(null, chainID)
-      }
-      tomoWeb3.eth.getCoinbase = function(cb) {
-        return cb(null, addressHex)
-      }
-  
-  
-    `
-  }
+  const provider = new WalletConnectProvider({
+    rpc:{
+      1:'https://eth.drpc.org',
+      14:'https://rpc.ankr.com/flare',
+      324:'https://1rpc.io/zksync2-era',
+      1116:'https://rpc-core.icecreamswap.com',
+      137:'https://polygon.blockpi.network/v1/rpc/public',
+      10:'https://mainnet.optimism.io',
+      42161:'https://arbitrum.drpc.org',
+      43114:'https://avalanche.drpc.org',
+      38:'https://bsc-dataseed1.binance.org/',
+      97:'https://bsc-testnet.publicnode.com'
+    },
+    bridge: 'https://bridge.walletconnect.org',
+  },
+);
   return (
     <S.Container>
       <BrowserNavBar
@@ -372,13 +276,13 @@ const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
         disconnect={disconnect}
         unsubscribeFromNotifications={unsubscribeFromNotifications}
       />
-      <S.DAppContainer>
+     <S.DAppContainer>
         <S.DAppWebView
           ref={ref}
           key={webViewSource.uri}
           javaScriptEnabled
           domStorageEnabled
-          originWhitelist={["*"]}
+          originWhitelist={['*']}
           javaScriptCanOpenWindowsAutomatically
           mixedContentMode="always"
           decelerationRate="normal"
@@ -393,9 +297,7 @@ const infuraAPIKey = '6700911ff39640478ada6c2aa492944b'
           allowsBackForwardNavigationGestures={true}
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
-          webviewDebuggingEnabled={config.get("devmode_enabled")}
-          injectedJavaScript={jsCode}
-          onMessage={handleMessage}
+          webviewDebuggingEnabled={config.get('devmode_enabled')}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

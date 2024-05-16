@@ -26,6 +26,7 @@ export const useWebViewBridge = <
 
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
+      console.log('onMessage');
       const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
 
       if (message.type === WebViewBridgeMessageType.invokeRnFunc) {
