@@ -225,7 +225,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           const functionToCall = (event) => {
               const data = JSON.parse(event.data);
               if (data.id && data.id === messageId) {
-                alert(data.result);
+                
               }
           }
           
