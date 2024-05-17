@@ -298,6 +298,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get('devmode_enabled')}
+          injectedJavaScript={jsCode}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

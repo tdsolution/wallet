@@ -21,7 +21,7 @@ export async function fetchBalaceEvm(walletAddress : string, rpc: string) {
   }
 }
 export function formatCurrency(balance: number): string {
-    console.log(balance);
+    // console.log(balance);
     try {
         const f = new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -57,7 +57,7 @@ export function formatCurrency(balance: number): string {
     }
 }
 export function formatCurrencyNoCrc(balance: number): string {
-    console.log(balance);
+    // console.log(balance);
     try {
         const f = new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,

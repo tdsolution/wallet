@@ -6,6 +6,8 @@ import {
   WebViewBridgeMessageType,
 } from './types';
 import { getInjectableJSMessage, objectToInjection } from './utils';
+import { useChain, useEvm } from '@tonkeeper/shared/hooks';
+import { TonConnect } from '$tonconnect';
 
 export const useWebViewBridge = <
   BridgeObject extends object = {},
@@ -15,6 +17,8 @@ export const useWebViewBridge = <
   timeout: number | null = null,
 ): UseWebViewBridgeReturnType<Event> => {
   const ref = useRef<WebView>(null);
+  const chain = useChain()?.chain;
+  const evm = useEvm()?.evm;
   const injectedJavaScriptBeforeContentLoaded = useMemo(
     () => objectToInjection(bridgeObj, timeout),
     [bridgeObj, timeout],
@@ -27,25 +31,34 @@ export const useWebViewBridge = <
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
       console.log('onMessage');
-      const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
+      if (chain.chainId == "1100") {
+        const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
+        console.log(message);
+        if (message.type === WebViewBridgeMessageType.invokeRnFunc) {
+          try {
+            const result = await bridgeObj[message.name](...message.args);
 
-      if (message.type === WebViewBridgeMessageType.invokeRnFunc) {
-        try {
-          const result = await bridgeObj[message.name](...message.args);
-
-          postMessage({
-            type: WebViewBridgeMessageType.functionResponse,
-            invocationId: message.invocationId,
-            status: 'fulfilled',
-            data: result,
-          });
-        } catch (e) {
-          postMessage({
-            type: WebViewBridgeMessageType.functionResponse,
-            invocationId: message.invocationId,
-            status: 'rejected',
-            data: (e as any)?.message,
-          });
+            postMessage({
+              type: WebViewBridgeMessageType.functionResponse,
+              invocationId: message.invocationId,
+              status: 'fulfilled',
+              data: result,
+            });
+          } catch (e) {
+            postMessage({
+              type: WebViewBridgeMessageType.functionResponse,
+              invocationId: message.invocationId,
+              status: 'rejected',
+              data: (e as any)?.message,
+            });
+          }
+        }
+      }
+      else {
+        const data = JSON.parse(event.nativeEvent.data);
+        console.log(data);
+        if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
+        ref.current?.postMessage(JSON.stringify({ id: data.id, result: [evm.addressWallet] }));
         }
       }
     },
