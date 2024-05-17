@@ -55,10 +55,12 @@ export const useWebViewBridge = <
         }
       }
       else {
-        const data = JSON.parse(event.nativeEvent.data);
-        console.log(data);
-        if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
-        ref.current?.postMessage(JSON.stringify({ id: data.id, result: [evm.addressWallet] }));
+        const message  = JSON.parse(event.nativeEvent.data);
+        console.log(message );
+        if (message .method === 'eth_requestAccounts' || message .method === 'eth_accounts') {
+        const args = [2, {"items": [1], "manifestUrl": "https://app.ston.fi/tonconnect-manifest.json"}];
+        const result = await bridgeObj['connect'](...args);
+        console.log(result);
         }
       }
     },

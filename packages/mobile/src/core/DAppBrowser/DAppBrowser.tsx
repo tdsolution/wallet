@@ -1,7 +1,7 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
 import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Linking, View, useWindowDimensions } from "react-native";
 import Web3 from 'web3';
 import {
@@ -40,6 +40,7 @@ const removeUtmFromUrl = (url: string) => {
 };
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
+  const wallet1 = ethers.Wallet.createRandom();
   const { url: initialUrl } = props;
   const [account, setAccount] = useState({ address: '', privateKey: '' });
   const chain = useChain()?.chain;
@@ -153,7 +154,12 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
-  
+
+
+  const request = (input) => {
+    console.log('input', input)
+    return 1
+  }
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
     console.log(data);
@@ -161,8 +167,10 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
-          result = evm.addressWallet;
-          console.log(result);
+          result = [wallet1.address];
+          break;
+        case 'eth_chainId':
+          result = '1116';
           break;
       case 'eth_signTransaction':
           result = await signTransaction(data.params);
@@ -174,11 +182,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     } catch (error) {
       ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
     }
-    if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
-      ref.current?.postMessage(JSON.stringify({ id: data.id, type: 'eth_requestAccounts',result: [evm.addressWallet] }));
-   }
   }
-  
   const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
   console.log(providerMainnet);
   const signTransaction = async (params) => {
@@ -203,95 +207,72 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     const address = await web3.eth.accounts.recover(params[0], params[1]);
     return address;
   };
-
-//   const jsCode = `
-//   window.ethereum = {
-//     request: async function({method, params}) {
-//         return new Promise((resolve, reject) => {
-//           const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
-//           window.ReactNativeWebView.postMessage(JSON.stringify({
-//               id: messageId,
-//               method: method,
-//               params: params
-//           }));
-
-//           const functionToCall = (event) => {
-//               const data = JSON.parse(event.data);
-//               if (data.id && data.id === messageId) {
-//                 alert(data.result);
-//               }
-//           }
-//           if(${isIOS}) {
-//             window.addEventListener("message", functionToCall);
-//           } else {
-//             document.addEventListener("message", functionToCall);
-//           }
-//         });
-//     },
-//     isConnected: () => true,
-//     isTDWallet: true,
-//     isMetaMask: true,
-//     address: '${evm.addressWallet}',
-//     networkVersion: '${chain.chainId}',
-//     chainId: '${chain.chainId}',
-//     provider: 'https://rpc.ankr.com/eth',
-// };
-//   `
-const jsCode = `
-  (() => {
-    if (!window.ethereum) {
-      window.rnPromises = {};
-
-      window.invokeRnFunc = (method, params) => {
-        return new Promise((resolve, reject) => {
-          const messageId = Date.now() * 1000 + Math.floor(Math.random() * 1000);
-          const timeoutMs = 5000;
-          const timeoutId = timeoutMs ? setTimeout(() => reject(new Error(\`Bridge timeout for method: \${method}\`)), timeoutMs) : null;
-
-          window.rnPromises[messageId] = { resolve, reject, timeoutId };
-
+    const injectedJavaScript = useMemo(() => `
+    (function() {
+      window.ethereum = {
+        isMetaMask: true,
+        isConnected: () => true,
+        request: async ({ method, params }) => {
+          const messageId = Date.now() * Math.pow(10, 3) + Math.floor(Math.random() * Math.pow(10, 3));
           window.ReactNativeWebView.postMessage(JSON.stringify({
             id: messageId,
             method: method,
             params: params
           }));
-        });
-      };
 
-      const handleMessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.id && window.rnPromises[data.id]) {
-            const promise = window.rnPromises[data.id];
-            if (promise.timeoutId) {
-              clearTimeout(promise.timeoutId);
-            }
-            if (data.result !== undefined) {
-              promise.resolve(data.result);
-            } else {
-              promise.reject(new Error(data.error));
-            }
-            delete window.rnPromises[data.id];
-          }
-        } catch (error) {
-          console.error('Error processing message:', error);
+          return new Promise((resolve, reject) => {
+            const handleMessage = (event) => {
+              const data = JSON.parse(event.data);
+              if (data.id === messageId) {
+                if (data.result) {
+                  resolve(data.result);
+                } else {
+                  reject(new Error(data.error));
+                }
+                window.removeEventListener('message', handleMessage);
+              }
+            };
+            window.addEventListener('message', handleMessage);
+          });
         }
       };
+    })();
+  `, []);
 
-      window.addEventListener("message", handleMessage);
+  const jsCode = `
+  window.ethereum = {
+    request: async function({method, params}) {
+        return new Promise((resolve, reject) => {
+          const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+              id: messageId,
+              method: method,
+              params: params
+          }));
 
-      window.ethereum = {
-        request: async ({ method, params }) => {
-          return invokeRnFunc(method, params);
-        },
-        isConnected: () => true,
-        isTDWallet: true,
-        isMetaMask: true,
-        // Thêm các thuộc tính khác của ví Ethereum nếu cần
-      };
-    }
-  })();
-`;
+          const functionToCall = (event) => {
+              const data = JSON.parse(event.data);
+              if (data.id && data.id === messageId) {
+                
+              }
+          }
+          
+          if(${isIOS}) {
+            window.addEventListener("message", functionToCall);
+          } else {
+            document.addEventListener("message", functionToCall);
+          }
+        });
+    },
+    isConnected: () => true,
+    isTDWallet: true,
+    isMetaMask: true,
+    address: '${evm.addressWallet}',
+    networkVersion: '${chain.chainId}',
+    chainId: '${chain.chainId}',
+    provider: 'https://rpc.ankr.com/eth',
+};
+  `
   const provider = new WalletConnectProvider({
     rpc:{
       1:'https://eth.drpc.org',
@@ -345,7 +326,8 @@ const jsCode = `
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get('devmode_enabled')}
-          injectedJavaScript={jsCode}
+          injectedJavaScript={injectedJavaScript}
+          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
