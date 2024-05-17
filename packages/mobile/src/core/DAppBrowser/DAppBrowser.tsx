@@ -72,7 +72,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
-    // onMessage,
+    onMessage,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
 
@@ -153,12 +153,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
 
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
-
-
-  const request = (input) => {
-    console.log('input', input)
-    return 1
-  }
+  
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
     console.log(data);
@@ -179,13 +174,11 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     } catch (error) {
       ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
     }
-    // if(data.method == 'enableEthereum'){
-      
-    // }
-  //   if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
-  //     ref.current?.postMessage(JSON.stringify({ id: data.id, type: 'eth_requestAccounts',result: [evm.addressWallet] }));
-  //  }
+    if (data.method === 'eth_requestAccounts' || data.method === 'eth_accounts') {
+      ref.current?.postMessage(JSON.stringify({ id: data.id, type: 'eth_requestAccounts',result: [evm.addressWallet] }));
+   }
   }
+  
   const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
   console.log(providerMainnet);
   const signTransaction = async (params) => {
@@ -211,40 +204,94 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     return address;
   };
 
-  const jsCode = `
-  window.ethereum = {
-    request: async function({method, params}) {
-        return new Promise((resolve, reject) => {
-          const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
-          window.ReactNativeWebView.postMessage(JSON.stringify({
-              id: messageId,
-              method: method,
-              params: params
-          }));
+//   const jsCode = `
+//   window.ethereum = {
+//     request: async function({method, params}) {
+//         return new Promise((resolve, reject) => {
+//           const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
+//           window.ReactNativeWebView.postMessage(JSON.stringify({
+//               id: messageId,
+//               method: method,
+//               params: params
+//           }));
 
-          const functionToCall = (event) => {
-              const data = JSON.parse(event.data);
-              if (data.id && data.id === messageId) {
-                alert(data.result);
-              }
-          }
-          
-          if(${isIOS}) {
-            window.addEventListener("message", functionToCall);
-          } else {
-            document.addEventListener("message", functionToCall);
-          }
+//           const functionToCall = (event) => {
+//               const data = JSON.parse(event.data);
+//               if (data.id && data.id === messageId) {
+//                 alert(data.result);
+//               }
+//           }
+//           if(${isIOS}) {
+//             window.addEventListener("message", functionToCall);
+//           } else {
+//             document.addEventListener("message", functionToCall);
+//           }
+//         });
+//     },
+//     isConnected: () => true,
+//     isTDWallet: true,
+//     isMetaMask: true,
+//     address: '${evm.addressWallet}',
+//     networkVersion: '${chain.chainId}',
+//     chainId: '${chain.chainId}',
+//     provider: 'https://rpc.ankr.com/eth',
+// };
+//   `
+const jsCode = `
+  (() => {
+    if (!window.ethereum) {
+      window.rnPromises = {};
+
+      window.invokeRnFunc = (method, params) => {
+        return new Promise((resolve, reject) => {
+          const messageId = Date.now() * 1000 + Math.floor(Math.random() * 1000);
+          const timeoutMs = 5000;
+          const timeoutId = timeoutMs ? setTimeout(() => reject(new Error(\`Bridge timeout for method: \${method}\`)), timeoutMs) : null;
+
+          window.rnPromises[messageId] = { resolve, reject, timeoutId };
+
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            id: messageId,
+            method: method,
+            params: params
+          }));
         });
-    },
-    isConnected: () => true,
-    isTDWallet: true,
-    isMetaMask: true,
-    address: '${evm.addressWallet}',
-    networkVersion: '${chain.chainId}',
-    chainId: '${chain.chainId}',
-    provider: 'https://rpc.ankr.com/eth',
-};
-  `
+      };
+
+      const handleMessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.id && window.rnPromises[data.id]) {
+            const promise = window.rnPromises[data.id];
+            if (promise.timeoutId) {
+              clearTimeout(promise.timeoutId);
+            }
+            if (data.result !== undefined) {
+              promise.resolve(data.result);
+            } else {
+              promise.reject(new Error(data.error));
+            }
+            delete window.rnPromises[data.id];
+          }
+        } catch (error) {
+          console.error('Error processing message:', error);
+        }
+      };
+
+      window.addEventListener("message", handleMessage);
+
+      window.ethereum = {
+        request: async ({ method, params }) => {
+          return invokeRnFunc(method, params);
+        },
+        isConnected: () => true,
+        isTDWallet: true,
+        isMetaMask: true,
+        // Thêm các thuộc tính khác của ví Ethereum nếu cần
+      };
+    }
+  })();
+`;
   const provider = new WalletConnectProvider({
     rpc:{
       1:'https://eth.drpc.org',
@@ -298,6 +345,8 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get('devmode_enabled')}
+          injectedJavaScript={jsCode}
+          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
