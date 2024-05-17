@@ -346,7 +346,6 @@ const jsCode = `
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get('devmode_enabled')}
           injectedJavaScript={jsCode}
-          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
