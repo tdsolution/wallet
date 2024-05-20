@@ -29,6 +29,16 @@ export const DataChains : any[]= [
     rpc: "https://eth.drpc.org",
     rpcBackup: "https://mainnet.infura.io/v3/b6673e63957344c1882a407f12e89bec",
   },
+   {
+    type: "eth",
+    chainId: "14",
+    name: "Flare",
+    id: "flare-networks",
+    logo: "https://assets.coingecko.com/coins/images/28624/standard/FLR-icon200x200.png?1696527609",
+    currency: "FLR",
+    rpc: "https://rpc.ankr.com/flare",
+    rpcBackup: "https://flare.rpc.thirdweb.com",
+  },
   {
     type: "eth",
     chainId: "324",
