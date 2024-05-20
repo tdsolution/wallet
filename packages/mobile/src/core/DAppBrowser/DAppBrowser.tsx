@@ -3,7 +3,7 @@ import { openDAppsSearch } from "$navigation";
 import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
 import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Linking, View, useWindowDimensions } from "react-native";
-import Web3 from 'web3';
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -21,8 +21,6 @@ import { useDAppBridge } from "./hooks/useDAppBridge";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { Address } from "@tonkeeper/shared/Address";
 import { config } from "$config";
-import {  ethers } from 'ethers';
-import  WalletConnectProvider  from '@walletconnect/web3-provider';
 export interface DAppBrowserProps {
   url: string;
 }
@@ -40,10 +38,9 @@ const removeUtmFromUrl = (url: string) => {
 };
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
-  const wallet1 = ethers.Wallet.createRandom();
+  const chain = useChain()?.chain;
   const { url: initialUrl } = props;
   const [account, setAccount] = useState({ address: '', privateKey: '' });
-  const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const wallet = useWallet();
   const walletAddress = (chain.chainId == '1100' ?(wallet
@@ -73,7 +70,6 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
-    onMessage,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
 
@@ -151,62 +147,9 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const handleTitlePress = useCallback(() => {
     const initialQuery =
       getSearchQuery(currentUrl) || currentUrl || getCorrectUrl(initialUrl);
-
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
 
-
-  const request = (input) => {
-    console.log('input', input)
-    return 1
-  }
-  const handleMessage = async (event) => {
-    const data = JSON.parse(event.nativeEvent.data);
-    console.log(data);
-    let result;
-    try {
-      switch (data.method) {
-        case 'eth_requestAccounts':
-          result = [wallet1.address];
-          break;
-        case 'eth_chainId':
-          result = '1116';
-          break;
-      case 'eth_signTransaction':
-          result = await signTransaction(data.params);
-          break;
-      default:
-          throw new Error('Method not supported');
-      }
-     ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
-    } catch (error) {
-      ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
-    }
-  }
-  const providerMainnet = new ethers.JsonRpcProvider(chain.rpcBackup);
-  console.log(providerMainnet);
-  const signTransaction = async (params) => {
-    const web3 = new Web3(provider);
-    const tx = await web3.eth.accounts.signTransaction(params[0], account.privateKey);
-    return tx.rawTransaction;
-  };
-   const signMessage = async (message, privateKey) => {
-    const web3 = new Web3(provider);
-    const signature = await web3.eth.accounts.sign(message, privateKey);
-    return signature.signature;
-  };
-
-  // const signTypedMessage = async (params, privateKey) => {
-  //   const web3 = new Web3(provider);
-  //   const signature = await web3.eth.accounts.signTypedData(params, privateKey);
-  //   return signature;
-  // };
-
-  const ecRecover = async (params) => {
-    const web3 = new Web3(provider);
-    const address = await web3.eth.accounts.recover(params[0], params[1]);
-    return address;
-  };
     const injectedJavaScript = useMemo(() => `
     (function() {
       window.ethereum = {
@@ -239,56 +182,7 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     })();
   `, []);
 
-  const jsCode = `
-  window.ethereum = {
-    request: async function({method, params}) {
-        return new Promise((resolve, reject) => {
-          const messageId = Date.now() * Math.pow(10, 3) +  Math.floor(Math.random() * Math.pow(10, 3));
-          window.ReactNativeWebView.postMessage(JSON.stringify({
-              id: messageId,
-              method: method,
-              params: params
-          }));
-
-          const functionToCall = (event) => {
-              const data = JSON.parse(event.data);
-              if (data.id && data.id === messageId) {
-                
-              }
-          }
-          
-          if(${isIOS}) {
-            window.addEventListener("message", functionToCall);
-          } else {
-            document.addEventListener("message", functionToCall);
-          }
-        });
-    },
-    isConnected: () => true,
-    isTDWallet: true,
-    isMetaMask: true,
-    address: '${evm.addressWallet}',
-    networkVersion: '${chain.chainId}',
-    chainId: '${chain.chainId}',
-    provider: 'https://rpc.ankr.com/eth',
-};
-  `
-  const provider = new WalletConnectProvider({
-    rpc:{
-      1:'https://eth.drpc.org',
-      14:'https://rpc.ankr.com/flare',
-      324:'https://1rpc.io/zksync2-era',
-      1116:'https://rpc-core.icecreamswap.com',
-      137:'https://polygon.blockpi.network/v1/rpc/public',
-      10:'https://mainnet.optimism.io',
-      42161:'https://arbitrum.drpc.org',
-      43114:'https://avalanche.drpc.org',
-      38:'https://bsc-dataseed1.binance.org/',
-      97:'https://bsc-testnet.publicnode.com'
-    },
-    bridge: 'https://bridge.walletconnect.org',
-  },
-);
+  
   return (
     <S.Container>
       <BrowserNavBar
@@ -327,7 +221,6 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           onShouldStartLoadWithRequest={handleOpenExternalLink}
           webviewDebuggingEnabled={config.get('devmode_enabled')}
           injectedJavaScript={injectedJavaScript}
-          onMessage={handleMessage}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

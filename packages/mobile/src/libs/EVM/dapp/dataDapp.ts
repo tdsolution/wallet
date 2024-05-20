@@ -12,30 +12,9 @@ export const DataDapp : any[] = [
             }
         ]
     },
-      {
-        chainId : '324',
-        dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            }
-        ]
-    },
     {
         chainId : '10',
         dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            },
              {
                 id: 'opsocialfi',
                 name:'OP Socialfi',
@@ -63,14 +42,6 @@ export const DataDapp : any[] = [
         chainId : '137',
         dapps : [
             {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            },
-            {
                 id: 'trendydefi',
                 name:'Trendy Defi',
                 logoDapp : 'https://i.imgur.com/fff3Qob.png',
@@ -80,60 +51,8 @@ export const DataDapp : any[] = [
             }
         ]
     },
-      {
-        chainId : '42161',
-        dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            }
-        ]
-    },
-     {
-        chainId : '43114',
-        dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            }
-        ]
-    },
-     {
-        chainId : '38',
-        dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            }
-        ]
-    },
     {
         chainId : '97',
-        dapps : [
-            {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
-                logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
-            }
-        ]
-    },
-     {
-        chainId : '250',
         dapps : [
             {
                 id: 'darknight',
