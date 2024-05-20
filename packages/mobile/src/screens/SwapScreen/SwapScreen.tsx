@@ -23,11 +23,12 @@ import { dataCoinOrg } from "./dataSwap/dataCoinOrg";
 import { dataCoinDes } from "./dataSwap/dataCoinDes";
 import {
   getTokenListByChainID,
-  getTokenListImportByChainID,
 } from "$libs/EVM/token/tokenEVM";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
-import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm } from "$libs/EVM/useBalanceEVM";
+import { ethers } from 'ethers';
+
 
 const SwapScreen = () => {
   const chain = useChain()?.chain;
@@ -56,7 +57,6 @@ const SwapScreen = () => {
       setIsDisable(true);
     }
   };
-  console.log(">>>>>>Đung ne: ", !isNaN(Number(inputValue)))
 
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
