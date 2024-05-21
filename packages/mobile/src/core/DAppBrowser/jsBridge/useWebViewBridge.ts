@@ -72,7 +72,7 @@ export const useWebViewBridge = <
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
-          result = [wallet.address];
+          result = wallet.address;
           break;
         case 'eth_chainId':
           result = chain.chainId;
