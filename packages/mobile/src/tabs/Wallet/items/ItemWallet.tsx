@@ -37,6 +37,7 @@ const ItemWallet = (props: Props) => {
   async function fetchBalance() {
     if (addressToken != "coin") {
       const balance = await getBalanceToken(rpc, addressToken, address);
+      console.log(">>>>>>Co balance toi: " + formatCurrencyNoCrc(parseFloat(balance)));
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
       const coinUsd24 = coinRate?.usdChange ?? "0";

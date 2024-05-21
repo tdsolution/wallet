@@ -35,6 +35,14 @@ export const DataDapp : any[] = [
                 logoChain: 'https://i.imgur.com/MRyPUEL.png',
                 linkDapp: 'https://darkknight.games/',
                 desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
+            },
+            {
+                id: 'corestake',
+                name:'Core stake',
+                logoDapp : 'https://i.imgur.com/MRyPUEL.png',
+                logoChain: 'https://i.imgur.com/MRyPUEL.png',
+                linkDapp: 'https://corestake.org/',
+                desp:'Before following the steps to stake your CORE, you will need to first Buy CORE coin...',
             }
         ]
     },
@@ -51,16 +59,16 @@ export const DataDapp : any[] = [
             }
         ]
     },
-    {
+     {
         chainId : '97',
         dapps : [
             {
-                id: 'darknight',
-                name:'Dark Knight',
-                logoDapp : 'https://i.imgur.com/uhr8feh.png',
+                id: 'corestake',
+                name:'Core stake',
+                logoDapp : 'https://i.imgur.com/MRyPUEL.png',
                 logoChain: 'https://i.imgur.com/MRyPUEL.png',
-                linkDapp: 'https://darkknight.games/',
-                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
+                linkDapp: 'https://demo.corestake.org/',
+                desp:'Before following the steps to stake your CORE, you will need to first Buy CORE coin...',
             }
         ]
     },

@@ -176,7 +176,7 @@ const DAppsExploreComponent: FC<DAppsExploreProps> = () => {
         </Screen.ScrollView>
       : <Screen.ScrollView>
         <View style={{marginHorizontal:20}}>
-          <Text style={{color:'#4871EA', fontWeight:'700', fontSize:14, marginVertical:12}}>Defi</Text>
+          <Text style={{color:'#4871EA', fontWeight:'700', fontSize:14, marginVertical:2}}>Defi</Text>
           <ListDapp dapps={dapps}/>
         </View>
       </Screen.ScrollView>

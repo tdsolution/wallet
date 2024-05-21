@@ -67,7 +67,7 @@ const ItemTransactionHistory = (props: Props) => {
   const truncatedString = TruncateString({ string: isSend  ? from : to, maxLength: 5 });
   const status = isError === "0" ? "Successful" : "Failed";
   const divided = Number(value) / Math.pow(10, 18);
-  const decimalNumber = Number(divided).toFixed(9); // Làm tròn đến 3 chữ số thập phân
+  const decimalNumber = Number(divided).toFixed(4); // Làm tròn đến 4 chữ số thập phân
   const formatDatestamp = (timestamp: string): string => {
     return moment.unix(parseInt(timestamp)).format("DD MMM");
 };
@@ -79,6 +79,7 @@ const formatTimestamp = (timestamp: string): string => {
   const onClose = () => {
     setModalVisible(false);
   };
+
   return (
     <Pressable
       onPress={() => setModalVisible(true)}
