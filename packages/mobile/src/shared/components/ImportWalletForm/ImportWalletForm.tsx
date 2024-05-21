@@ -1,24 +1,43 @@
-import React, { FC, useCallback, useMemo, useRef, useState } from 'react';
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
-} from 'react-native-reanimated';
-import { TapGestureHandler } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
+} from "react-native-reanimated";
+import { TapGestureHandler } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 
-import { deviceHeight, isAndroid, ns, parseLockupConfig } from '$utils';
-import { InputItem } from './InputItem';
-import { Button, Input, NavBarHelper, Text, TouchableOpacity, View } from '$uikit';
-import * as S from './ImportWalletForm.style';
-import { useReanimatedKeyboardHeight } from '$hooks/useKeyboardHeight';
-import { ImportWalletFormProps } from './ImportWalletForm.interface';
-import { useInputsRegistry } from './useInputRegistry';
-import { WordHintsPopup, WordHintsPopupRef } from './WordHintsPopup';
-import { Alert, Keyboard, ScrollView } from 'react-native';
-import { wordlist } from '$libs/Ton/mnemonic/wordlist';
-import { Toast } from '$store';
-import { t } from '@tonkeeper/shared/i18n';
+import { deviceHeight, isAndroid, ns, parseLockupConfig } from "$utils";
+import { InputItem } from "./InputItem";
+import {
+  Button,
+  Input,
+  NavBarHelper,
+  Text,
+  TouchableOpacity,
+  View,
+} from "$uikit";
+import * as S from "./ImportWalletForm.style";
+import { useReanimatedKeyboardHeight } from "$hooks/useKeyboardHeight";
+import { ImportWalletFormProps } from "./ImportWalletForm.interface";
+import { useInputsRegistry } from "./useInputRegistry";
+import { WordHintsPopup, WordHintsPopupRef } from "./WordHintsPopup";
+import { Alert, Keyboard, ScrollView } from "react-native";
+import { wordlist } from "$libs/Ton/mnemonic/wordlist";
+import { Toast } from "$store";
+import { t } from "@tonkeeper/shared/i18n";
+import {
+  addWalletFromMnemonic,
+  createWalletFromMnemonic,
+  generateMnemonic,
+} from "$libs/EVM/createWallet";
+import { CreateWalletStackRouteNames } from "$navigation/CreateWalletStack/types";
+// import { CreateWalletStackRouteNames } from './CreateWalletStack/types';
+import { MainStackRouteNames } from "$navigation";
+
+import { useNavigation } from "@tonkeeper/router";
+import { Wallet as WalletETH } from "ethers";
+import { walletActions } from "$store/wallet";
 
 export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
   const [isWord24, setIsWord24] = useState<boolean>(true);
@@ -27,13 +46,22 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
   const dispatch = useDispatch();
   const inputsRegistry = useInputsRegistry();
   const [inputs, setInputs] = useState(Array(24).fill(0));
+  const [inputs12, setInputs12] = useState(Array(12).fill(0));
   const scrollRef = useRef<Animated.ScrollView>(null);
   const wordHintsRef = useRef<WordHintsPopupRef>(null);
   const scrollY = useSharedValue(0);
+  const nav = useNavigation();
 
   const [isConfigInputShown, setConfigInputShown] = useState(false);
-  const [config, setConfig] = useState('');
+  const [config, setConfig] = useState("");
   const [isRestoring, setRestoring] = useState(false);
+  let Seed = [{ id: 1, hide: false, text: "" }];
+  const [selectedIndex, setIndex] = useState(0);
+  const [listSeed, setListSeed] = useState(Seed);
+  const [titleNoti, setTileNoti] = useState("");
+  const [descriptionNoti, setDescriptionNoti] = useState("");
+  const [modalNotification, setModalNotification] = useState(false);
+  const [status, setStatus] = useState(0);
 
   const deferredScrollToInput = useRef<((offset: number) => void) | null>(null);
   const { keyboardHeight } = useReanimatedKeyboardHeight({
@@ -46,25 +74,42 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
       }
     },
   });
+
+  const handleCreatePress = useCallback(async () => {
+    dispatch(walletActions.generateVault());
+    const mnemonic = await generateMnemonic();
+    await createWalletFromMnemonic(mnemonic);
+    nav.navigate(MainStackRouteNames.CreateWalletStack);
+    setRestoring(false)
+  }, [dispatch, nav]);
   const handle12Word = useCallback(() => {
-    Alert.alert(
-      'Warning',
-      'Selecting 12 words is not supported on the TON network.',
-      [
-        { text: 'OK', onPress: () => { setIsWord24(false);setInputs(inputs.slice(0, 12));}} // Hoặc thực hiện hành động mong muốn
-      ],
-      { cancelable: false }
-    );
+    // Alert.alert(
+    //   "Warning",
+    //   "Selecting 12 words is not supported on the TON network.",
+    //   [
+    //     {
+    //       text: "OK",
+    //       onPress: () => {
+    //         setIsWord24(false);
+    //         setInputs(inputs.slice(0, 12));
+    //       },
+    //     }, // Hoặc thực hiện hành động mong muốn
+    //   ],
+    //   { cancelable: false }
+
+    // );
+    setIsWord24(false);
+    setInputs(inputs.slice(0, 12));
   }, [inputs]);
- const handle24Word = useCallback(() => {
-     setIsWord24(true);
+  const handle24Word = useCallback(() => {
+    setIsWord24(true);
     if (inputs.length === 12) {
-    const newInputs = [...inputs];
-    for (let i = 12; i < 24; i++) {
-      newInputs.push(0); // Hoặc bạn có thể thay thế giá trị 0 bằng giá trị mong muốn
-    }
-    setInputs(newInputs);
-    }// Hoặc thực hiện hành động mong muốn
+      const newInputs = [...inputs];
+      for (let i = 12; i < 24; i++) {
+        newInputs.push(0); // Hoặc bạn có thể thay thế giá trị 0 bằng giá trị mong muốn
+      }
+      setInputs(newInputs);
+    } // Hoặc thực hiện hành động mong muốn
   }, [inputs]);
   const handleShowConfigInput = useCallback(() => {
     setConfigInputShown(true);
@@ -74,69 +119,70 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     setConfig(text);
   }, []);
 
-  const handleMultipleWords = useCallback((index: number, text: string) => {
-    if(!isWord24){
-     const words = text
-      .split(' ')
-      .map((word) => word.trim())
-      .filter((word) => word.length > 0);
-       let cursor = index;
-         for (const word of words) {
-        inputsRegistry.getRef(cursor)?.setValue(word);
-        cursor += 1;
-        if (cursor === 12) {
-          break;
+  const handleMultipleWords = useCallback(
+    (index: number, text: string) => {
+      if (!isWord24) {
+        const words = text
+          .split(" ")
+          .map((word) => word.trim())
+          .filter((word) => word.length > 0);
+        let cursor = index;
+        for (const word of words) {
+          inputsRegistry.getRef(cursor)?.setValue(word);
+          cursor += 1;
+          if (cursor === 12) {
+            break;
+          }
+        }
+      } else {
+        const words = text
+          .split(" ")
+          .map((word) => word.trim())
+          .filter((word) => word.length > 0);
+
+        let cursor = index;
+        for (const word of words) {
+          inputsRegistry.getRef(cursor)?.setValue(word);
+          cursor += 1;
+          if (cursor === 24) {
+            break;
+          }
+        }
+
+        if (cursor > 0) {
+          inputsRegistry.getRef(cursor - 1)?.focus();
         }
       }
-
-    }else{
-      const words = text
-      .split(' ')
-      .map((word) => word.trim())
-      .filter((word) => word.length > 0);
-
-      let cursor = index;
-      for (const word of words) {
-        inputsRegistry.getRef(cursor)?.setValue(word);
-        cursor += 1;
-        if (cursor === 24) {
-          break;
-        }
-      }
-
-      if (cursor > 0) {
-        inputsRegistry.getRef(cursor - 1)?.focus();
-      }
-    }
-  }, []);
+    },
+    [isWord24]
+  );
 
   const handleSpace = useCallback((index: number) => {
-    if(!isWord24 ){
-    if (index === 12) {
-      return;
-    }
-    inputsRegistry.getRef(index + 1)?.focus();
-    }else{
+    if (!isWord24) {
+      if (index === 12) {
+        return;
+      }
+      inputsRegistry.getRef(index + 1)?.focus();
+    } else {
       if (index === 24) {
-      return;
+        return;
+      }
+      inputsRegistry.getRef(index + 1)?.focus();
     }
-    inputsRegistry.getRef(index + 1)?.focus();
-    }
-   
   }, []);
 
-   const handleSend = useCallback(() => {
+  const handleSend = useCallback(() => {
     if (isRestoring) {
       return;
     }
     setRestoring(true);
     const values: string[] = [];
-    const totalInputs = isWord24 ? 24 : 12; 
+    const totalInputs = isWord24 ? 24 : 12;
     for (let key in inputsRegistry.refs) {
-      values.push(inputsRegistry.refs[key]?.getValue() ?? '');
+      values.push(inputsRegistry.refs[key]?.getValue() ?? "");
     }
     const words = values.slice(0, totalInputs); // Chỉ lấy số lượng từ cần thiết
-    console.log(words);
+    console.log("Work: ", words);
     let hasFailed = false;
     for (let i = 0; i < totalInputs; i++) {
       const isFailed = !words[i].length || !wordlist.enMap.has(words[i]);
@@ -151,7 +197,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     }
 
     if (hasFailed) {
-      Toast.fail(t('import_wallet_wrong_words_err'));
+      Toast.fail(t("import_wallet_wrong_words_err"));
       setRestoring(false);
       return;
     }
@@ -168,14 +214,46 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         return;
       }
     }
-    onWordsFilled(Object.values(words).join(' '), configParsed, () =>
-      setRestoring(false),
+    onWordsFilled(Object.values(words).join(" "), configParsed, () =>
+      setRestoring(false)
     );
   }, [isRestoring, isConfigInputShown, config, onWordsFilled, dispatch, t]);
 
+  const handleSend12 = useCallback(async () => {
+    setRestoring(true);
+    try {
+      const valueMnemonic = () => {
+        const values: string[] = [];
+        for (let key in inputsRegistry.refs) {
+          values.push(inputsRegistry.refs[key]?.getValue() ?? "");
+          console.log("alaoalaoao: ");
+        }
+        const words = values.slice(0, 12); // Chỉ lấy số lượng từ cần thiết
+        // const mnemonic = 'lunch panther exile clerk noodle keen debate silk explain outside subway scissors';
+        const mnemonic = words.join(" ");
+        return mnemonic;
+      };
+
+      const wallet = WalletETH.fromPhrase(valueMnemonic());
+      console.log("Add wallet: ", wallet);
+      if (wallet) {
+        console.log("Import wallet successfully");
+        handleCreatePress();
+        
+      } else {
+        Toast.fail("Mnemonic phrase is incorrect");
+        setRestoring(false);
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+      Toast.fail("Mnemonic phrase is incorrect");
+      setRestoring(false);
+    }
+  }, []);
+
   const handleInputSubmit = useCallback(
     (index: number) => () => {
-      if(!isWord24){
+      if (!isWord24) {
         const suggests = wordHintsRef.current?.getCurrentSuggests();
         if (suggests?.length === 1) {
           inputsRegistry.getRef(index)?.setValue(suggests[0]);
@@ -184,8 +262,8 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
           inputsRegistry.getRef(index + 1)?.focus();
         } else {
           handleSend();
-       } 
-      }else{
+        }
+      } else {
         const suggests = wordHintsRef.current?.getCurrentSuggests();
         if (suggests?.length === 1) {
           inputsRegistry.getRef(index)?.setValue(suggests[0]);
@@ -194,21 +272,24 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
           inputsRegistry.getRef(index + 1)?.focus();
         } else {
           handleSend();
-       } 
+        }
       }
     },
-    [handleSend],
+    [handleSend]
   );
 
-  const scrollToInput = useCallback((index: number, offsetBottom: number = 0) => {
-    const inputPos = inputsRegistry.getPosition(index);
-    if (inputPos !== undefined) {
-      scrollRef.current?.scrollTo({
-        y: inputPos - (deviceHeight - offsetBottom) / 2 + ns(10),
-        animated: true,
-      });
-    }
-  }, []);
+  const scrollToInput = useCallback(
+    (index: number, offsetBottom: number = 0) => {
+      const inputPos = inputsRegistry.getPosition(index);
+      if (inputPos !== undefined) {
+        scrollRef.current?.scrollTo({
+          y: inputPos - (deviceHeight - offsetBottom) / 2 + ns(10),
+          animated: true,
+        });
+      }
+    },
+    []
+  );
 
   const handleFocus = useCallback(
     (index: number) => () => {
@@ -220,7 +301,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         scrollToInput(index, keyboardHeight.value);
       }
     },
-    [scrollToInput],
+    [scrollToInput]
   );
 
   const handleBlur = useCallback(() => {
@@ -236,13 +317,14 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     });
   }, []);
 
-
-
   const handleChangeText = useCallback(
     (index: number) => (text: string) => {
       const overlap = 10;
-      const offsetTop = inputsRegistry.getPosition(index) + S.INPUT_HEIGHT - overlap;
-      const contentWidth = isAndroid ? 0 : inputsRegistry.getContentWidth(index);
+      const offsetTop =
+        inputsRegistry.getPosition(index) + S.INPUT_HEIGHT - overlap;
+      const contentWidth = isAndroid
+        ? 0
+        : inputsRegistry.getContentWidth(index);
       const offsetLeft = inputIndentLeft + contentWidth;
 
       wordHintsRef.current?.search({
@@ -256,7 +338,7 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         },
       });
     },
-    [],
+    []
   );
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -286,39 +368,124 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
       >
         <NavBarHelper />
         <S.Header>
-          <TapGestureHandler numberOfTaps={5} onActivated={handleShowConfigInput}>
-            <S.HeaderTitle>{t('import_wallet_title')}</S.HeaderTitle>
+          <TapGestureHandler
+            numberOfTaps={5}
+            onActivated={handleShowConfigInput}
+          >
+            <S.HeaderTitle>{t("import_wallet_title")}</S.HeaderTitle>
           </TapGestureHandler>
           <S.HeaderCaptionWrapper>
-            <Text color="foregroundSecondary" variant="body1" textAlign="center">
-              {t('import_wallet_caption')}
+            <Text
+              color="foregroundSecondary"
+              variant="body1"
+              textAlign="center"
+            >
+              {t("import_wallet_caption")}
             </Text>
           </S.HeaderCaptionWrapper>
-           <S.HeaderButton>
-              <Text style={{color:'#4871EA', marginBottom:4 }} variant="body1" textAlign="center">Choose the security with</Text>
-           <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-               <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+          <S.HeaderButton>
+            <Text
+              style={{ color: "#4871EA", marginBottom: 4 }}
+              variant="body1"
+              textAlign="center"
+            >
+              Choose the security with
+            </Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <TouchableOpacity onPress={handle24Word}>
-                <View style={{
-                  width:25, height:25, backgroundColor:'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:'#4871EA', justifyContent:'center',alignItems:'center'}}>
-                  <View style={{marginHorizontal:10, width:15, height:15, backgroundColor:isWord24 ? '#4871EA' :'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:isWord24 ? '#4871EA' :'#f9f9f9', alignItems:'center', textAlign:'center'}}>
-                 </View>
-                </View>
+                  <View
+                    style={{
+                      width: 25,
+                      height: 25,
+                      backgroundColor: "#f9f9f9",
+                      marginRight: 10,
+                      borderRadius: 20,
+                      borderWidth: 2,
+                      borderColor: "#4871EA",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        marginHorizontal: 10,
+                        width: 15,
+                        height: 15,
+                        backgroundColor: isWord24 ? "#4871EA" : "#f9f9f9",
+                        marginRight: 10,
+                        borderRadius: 20,
+                        borderWidth: 2,
+                        borderColor: isWord24 ? "#4871EA" : "#f9f9f9",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                    ></View>
+                  </View>
                 </TouchableOpacity>
-                <Text style={{color:'#4871EA'}} variant="body1" textAlign="center">24-words</Text>
+                <Text
+                  style={{ color: "#4871EA" }}
+                  variant="body1"
+                  textAlign="center"
+                >
+                  24-words
+                </Text>
               </View>
-               <View style={{flexDirection:'row', justifyContent:'space-between',alignItems:'center'}}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <TouchableOpacity onPress={handle12Word}>
-                <View style={{
-                  width:25, height:25, backgroundColor:'#f9f9f9', marginRight:10, borderRadius:20, borderWidth:2, borderColor:'#4871EA', justifyContent:'center',alignItems:'center'}}>
-                  <View style={{marginHorizontal:10, width:15, height:15, backgroundColor: isWord24 ? '#f9f9f9' :'#4871EA', marginRight:10, borderRadius:20, borderWidth:2, borderColor: isWord24 ? '#f9f9f9' :'#4871EA', alignItems:'center', textAlign:'center'}}>
-                 </View>
-                </View>
+                  <View
+                    style={{
+                      width: 25,
+                      height: 25,
+                      backgroundColor: "#f9f9f9",
+                      marginRight: 10,
+                      borderRadius: 20,
+                      borderWidth: 2,
+                      borderColor: "#4871EA",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        marginHorizontal: 10,
+                        width: 15,
+                        height: 15,
+                        backgroundColor: isWord24 ? "#f9f9f9" : "#4871EA",
+                        marginRight: 10,
+                        borderRadius: 20,
+                        borderWidth: 2,
+                        borderColor: isWord24 ? "#f9f9f9" : "#4871EA",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                    ></View>
+                  </View>
                 </TouchableOpacity>
-                <Text style={{color:'#4871EA'}} variant="body1" textAlign="center">12-words</Text>
+                <Text
+                  style={{ color: "#4871EA" }}
+                  variant="body1"
+                  textAlign="center"
+                >
+                  12-words
+                </Text>
               </View>
-          </View>
-        </S.HeaderButton>
+            </View>
+          </S.HeaderButton>
         </S.Header>
         {isConfigInputShown && (
           <Input
@@ -344,8 +511,12 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
           />
         ))}
         <S.ButtonWrap>
-          <Button onPress={handleSend} isLoading={isRestoring} style={{backgroundColor:'#4871EA'}}>
-            {t('continue')}
+          <Button
+            onPress={isWord24 ? handleSend : handleSend12}
+            isLoading={isRestoring}
+            style={{ backgroundColor: "#4871EA" }}
+          >
+            {t("continue")}
           </Button>
         </S.ButtonWrap>
       </ScrollView>

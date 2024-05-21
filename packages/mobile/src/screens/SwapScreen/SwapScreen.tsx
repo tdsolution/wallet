@@ -21,14 +21,11 @@ import ModalCoinDes from "./ModalCoinDes";
 import ModalCoinOrg from "./ModalCoinOrg";
 import { dataCoinOrg } from "./dataSwap/dataCoinOrg";
 import { dataCoinDes } from "./dataSwap/dataCoinDes";
-import {
-  getTokenListByChainID,
-} from "$libs/EVM/token/tokenEVM";
+import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { fetchBalaceEvm } from "$libs/EVM/useBalanceEVM";
-import { ethers } from 'ethers';
-
+import { ethers } from "ethers";
 
 const SwapScreen = () => {
   const chain = useChain()?.chain;
@@ -74,7 +71,7 @@ const SwapScreen = () => {
     setModalVisible(true);
   };
   const handleSwapCoin = () => {
-    isChangeCoinDes
+    !isChangeCoinDes
       ? setModalVisibleCoinDes(true)
       : setModalVisibleCoinOrg(true);
   };
@@ -170,7 +167,7 @@ const SwapScreen = () => {
                 <Image
                   style={[styles.imgCurrent]}
                   source={{
-                    uri: isChangeCoinDes
+                    uri: !isChangeCoinDes
                       ? itemFromData1.logo
                       : itemFromData2.logo,
                   }}
@@ -178,7 +175,7 @@ const SwapScreen = () => {
                 <Image
                   style={[styles.imgLogo]}
                   source={{
-                    uri: isChangeCoinDes
+                    uri: !isChangeCoinDes
                       ? itemFromData1.chainImg
                       : itemFromData2.chainImg,
                   }}
@@ -186,7 +183,7 @@ const SwapScreen = () => {
               </View>
 
               <Text style={[styles.text, {}]}>
-                {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+                {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
               </Text>
             </View>
             <Image
@@ -242,11 +239,13 @@ const SwapScreen = () => {
             >
               {!inputValue ? 0 : inputValue}
             </Text>
-            <Text style={[styles.priceUSD]}>$ {inputValue.length > 0 ? coin : 0}</Text>
+            <Text style={[styles.priceUSD]}>
+              $ {inputValue.length > 0 ? coin : 0}
+            </Text>
           </View>
           <TouchableOpacity
             onPress={() =>
-              !isChangeCoinDes
+              isChangeCoinDes
                 ? setModalVisibleCoinDes(true)
                 : setModalVisibleCoinOrg(true)
             }
@@ -262,7 +261,7 @@ const SwapScreen = () => {
                 <Image
                   style={[styles.imgCurrent]}
                   source={{
-                    uri: !isChangeCoinDes
+                    uri: isChangeCoinDes
                       ? itemFromData1.logo
                       : itemFromData2.logo,
                   }}
@@ -270,7 +269,7 @@ const SwapScreen = () => {
                 <Image
                   style={[styles.imgLogo]}
                   source={{
-                    uri: !isChangeCoinDes
+                    uri: isChangeCoinDes
                       ? itemFromData1.chainImg
                       : itemFromData2.chainImg,
                   }}
@@ -278,7 +277,7 @@ const SwapScreen = () => {
               </View>
 
               <Text style={[styles.text, {}]}>
-                {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+                {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
               </Text>
             </View>
             <Image
@@ -296,9 +295,9 @@ const SwapScreen = () => {
             { fontWeight: "500", fontSize: 16, fontFamily: "Popins-Medium" },
           ]}
         >
-          1 {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}{" "}
+          1 {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}{" "}
           {`\u2248`} 1{" "}
-          {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+          {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
         </Text>
       </View>
       <TouchableOpacity
@@ -318,8 +317,10 @@ const SwapScreen = () => {
         visible={modalVisible}
         closeModal={() => setModalVisible(false)}
         amount={inputValue}
-        assetFrom={isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
-        assetTo={!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
+        assetFrom={
+          !isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol
+        }
+        assetTo={isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
         from={addressEvm}
         to={
           isChangeCoinDes
@@ -327,7 +328,8 @@ const SwapScreen = () => {
             : itemFromData2.tokenAddress
         }
         network={isChangeCoinDes ? itemFromData1.name : itemFromData2.name}
-        coinUsd = {coin}
+        coinUsd={coin}
+        isTransfer = {isChangeCoinDes}
       />
       <ModalCoinDes
         visible={modalVisibleCoinDes}
