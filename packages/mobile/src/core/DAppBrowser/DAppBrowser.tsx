@@ -175,7 +175,11 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
                 window.removeEventListener('message', handleMessage);
               }
             };
-            window.addEventListener('message', handleMessage);
+            if(${isIOS}) {
+              window.addEventListener('message', handleMessage);
+            } else {
+              document.addEventListener('message', handleMessage);
+            }
           });
         }
       };
