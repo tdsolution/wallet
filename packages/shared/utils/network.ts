@@ -9,16 +9,6 @@ export const DataChains : any[]= [
     rpc: "https://toncenter.com/api/v2/jsonRPC",
     rpcBackup: "https://toncenter.com/api/v2/jsonRPC",
   },
-  // {
-  //   type: "tron",
-  //   chainId: "1000",
-  //   name: "Tron",
-  //   id: "tron",
-  //   logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png",
-  //   currency: "TRX",
-  //   rpc: "https://api.trongrid.io",
-  //   rpcBackup: "https://api.trongrid.io",
-  // },
   {
     type: "eth",
     chainId: "1",
@@ -121,8 +111,8 @@ export const DataChains : any[]= [
     id: "binancecoin",
     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
     currency: "tBNB",
-    rpc: "https://bsc-testnet.publicnode.com",
-    rpcBackup: "https://bsc-testnet.publicnode.com",
+    rpc: "https://bsc-testnet-rpc.publicnode.com",
+    rpcBackup: "https://bsc-testnet-rpc.publicnode.com",
     
   },
   {
