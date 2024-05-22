@@ -128,12 +128,12 @@ export const useWebViewBridge = <
          try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
-          const gasLimit = BigInt(txParams.gas);
+          // const gasLimit = BigInt(txParams.gas);
           const txSend = {
             to: txParams.to,
             from: txParams.from,
             data: txParams.data,
-            gasLimit: gasLimit,
+            gasLimit: txParams.gas,
             value: 0
           };
           const signedTx = await wallet.sendTransaction(txSend);
