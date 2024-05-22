@@ -95,14 +95,13 @@ export const useWebViewBridge = <
           const gasEstimateHex = '0x' + gasEstimate.toString(16);
           result = gasEstimateHex;
           break;
-           case 'eth_sendTransaction':
-           try {
+       case 'eth_sendTransaction':
+      try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
-          const gasLimit = ethers.BigNumber.from(txParams.gas);
-          const gasPrice = ethers.BigNumber.from(txParams.gasPrice);
-          const value = ethers.BigNumber.from(txParams.value);
-
+          const gasLimit = BigInt(txParams.gas);
+          const gasPrice = BigInt(txParams.gasPrice);
+          const value = BigInt(txParams.value);
           const txSend = {
             to: txParams.to,
             from: txParams.from,
@@ -111,12 +110,8 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
-
-          console.log('Transaction Parameters:', txSend);
-
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
-
           result = signedTx.hash;
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
@@ -126,8 +121,7 @@ export const useWebViewBridge = <
         result = 'Error sending transaction';
       }
       break;
-
-        default:
+          default:
             throw new Error('Method not supported');
       }
      ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
