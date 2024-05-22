@@ -120,6 +120,12 @@ export const useWebViewBridge = <
         console.error('Error sending transaction:', error);
         result = 'Error sending transaction';
       }
+       break;
+      case 'eth_getTransactionByHash':
+         result = 40547463;
+      break;
+      case 'eth_call':
+         result = 40547463;
       break;
           default:
             throw new Error('Method not supported');
