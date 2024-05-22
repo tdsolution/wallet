@@ -70,9 +70,7 @@ import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
-import {
-  shortenWalletAddress,
-} from "$libs/EVM/createWallet";
+import { shortenWalletAddress } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
@@ -88,12 +86,15 @@ import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { setWalletEVM } from "$libs/EVM/createWallet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
-  // console.log(addressEvm);
+  console.log(">>>>>>>>>>>>>Ví EVM:", evm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -107,11 +108,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const shouldUpdate =
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
-  const balanceEVM = useBalanceEVMDemo(
-    addressEvm,
-    chain.rpc,
-    chain.id
-  );
+  const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
 
   console.log("tokensEVM " + tokensEVM.length);
@@ -148,7 +145,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       dispatch(mainActions.mainStackInited());
     }, 500);
     return () => clearTimeout(timer);
-  }, [dispatch]);
+  }, [dispatch, setWalletEVM]);
   const handleGetTransaction = async () => {
     try {
       // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
@@ -156,12 +153,60 @@ export const WalletScreen = memo(({ navigation }: any) => {
       const dataChainId = result.filter(
         (data) => data.idxChain === chain.chainId
       );
-      const amount = dataChainId.filter((data) => data.isRead === false )
+      const amount = dataChainId.filter((data) => data.isRead === false);
       setAmountTransaction(amount.length);
     } catch (error) {
       console.error("Error saving sample transaction:", error);
     }
   };
+
+  async function getFirstAddress() {
+    try {
+      // Lấy chuỗi JSON từ AsyncStorage
+      const jsonString = await AsyncStorage.getItem("LIST_WALLET");
+
+      // Kiểm tra nếu chuỗi JSON không null
+      if (jsonString !== null) {
+        // Chuyển đổi chuỗi JSON thành mảng
+        const walletArray = JSON.parse(jsonString);
+
+        // Kiểm tra nếu mảng không rỗng và lấy phần tử đầu tiên
+        if (Array.isArray(walletArray) && walletArray.length > 0) {
+          const firstAddress = walletArray[0];
+          console.log(
+            ">>>>>>>>>>>>>>>>>>>>Addddddddddddddressss: ",
+            firstAddress
+          );
+          return firstAddress;
+        } else {
+          console.log("Mảng rỗng hoặc không phải là mảng");
+          return null;
+        }
+      } else {
+        console.log("Không có dữ liệu trong AsyncStorage");
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu từ AsyncStorage", error);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    // Gọi hàm và kiểm tra kết quả
+    getFirstAddress().then((address) => {
+      if (address) {
+        console.log("Địa chỉ đầu tiên: ", address.addressWallet);
+        setWalletEVM(evm.addressWallet == null ? address : evm);
+      } else {
+        console.log("Không lấy được địa chỉ đầu tiên");
+      }
+    });
+
+    return () => {
+      getFirstAddress();
+    };
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {

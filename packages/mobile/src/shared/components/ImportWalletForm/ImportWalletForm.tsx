@@ -32,7 +32,7 @@ import {
   generateMnemonic,
 } from "$libs/EVM/createWallet";
 import { CreateWalletStackRouteNames } from "$navigation/CreateWalletStack/types";
-// import { CreateWalletStackRouteNames } from './CreateWalletStack/types';
+import { ImportWalletStackRouteNames } from "$navigation/ImportWalletStack/types";
 import { MainStackRouteNames } from "$navigation";
 
 import { useNavigation } from "@tonkeeper/router";
@@ -41,7 +41,7 @@ import { walletActions } from "$store/wallet";
 
 export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
   const [isWord24, setIsWord24] = useState<boolean>(true);
-  const { onWordsFilled } = props;
+  const { onWordsFilled, onWordsFilled12 } = props;
   const { bottom: bottomInset } = useSafeAreaInsets();
   const dispatch = useDispatch();
   const inputsRegistry = useInputsRegistry();
@@ -75,12 +75,10 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
     },
   });
 
-  const handleCreatePress = useCallback(async () => {
+  const handleCreateTonPress = useCallback(async () => {
     dispatch(walletActions.generateVault());
-    const mnemonic = await generateMnemonic();
-    await createWalletFromMnemonic(mnemonic);
-    nav.navigate(MainStackRouteNames.CreateWalletStack);
-    setRestoring(false)
+    nav.navigate(ImportWalletStackRouteNames.CreatePasscode);
+    setRestoring(false);
   }, [dispatch, nav]);
   const handle12Word = useCallback(() => {
     // Alert.alert(
@@ -234,14 +232,27 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         return mnemonic;
       };
 
-      const wallet = WalletETH.fromPhrase(valueMnemonic());
-      console.log("Add wallet: ", wallet);
-      if (wallet) {
-        console.log("Import wallet successfully");
-        handleCreatePress();
-        
+      // const wallet = WalletETH.fromPhrase(valueMnemonic());
+      // console.log("Add wallet: ", wallet);
+      // if (wallet) {
+      //   console.log("Import wallet successfully");
+      //   handleCreatePress();
+
+      // } else {
+      //   Toast.fail("Mnemonic phrase is incorrect");
+      //   setRestoring(false);
+      // }
+      const a = await addWalletFromMnemonic(valueMnemonic());
+      if (a) {
+        if (a == 1) {
+          console.log("Import wallet successfully");
+          handleCreateTonPress();
+        } else {
+          console.log("Wallet already exists!");
+          setRestoring(false);
+        }
       } else {
-        Toast.fail("Mnemonic phrase is incorrect");
+        console.log("Seed phrase is wrong!");
         setRestoring(false);
       }
     } catch (error) {

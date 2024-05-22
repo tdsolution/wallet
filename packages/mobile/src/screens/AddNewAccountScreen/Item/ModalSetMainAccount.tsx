@@ -23,6 +23,7 @@ item: any;
 const ModalSetMainAccount = (props: Props) => {
   const {modalVisible, onClose, item} = props;
   const {evm, setEvm} = useEvm();
+  console.log('>>>>>>>>>Item: ', item);
 
   const handleSetEVM = () => {
     setWalletEVM(item);

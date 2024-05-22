@@ -57,6 +57,7 @@ export class Vault {
     // whether the password is required or not. We use password only for on-device storage,
     // and keep *this* password empty.
     const phrase = (await Ton.mnemonic.generateMnemonic(24)).join(' ');
+    console.log("Ton phrase: " , phrase);
     return await Vault.restore(name, phrase, [DEFAULT_VERSION]);
   }
 
