@@ -9,6 +9,7 @@ import { getInjectableJSMessage, objectToInjection } from './utils';
 import { useChain, useEvm } from '@tonkeeper/shared/hooks';
 import Web3 from 'web3';
 import  WalletConnectProvider  from '@walletconnect/web3-provider';
+import { JsonRpcProvider, formatUnits } from 'ethers';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -21,7 +22,10 @@ export const useWebViewBridge = <
   const ref = useRef<WebView>(null);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
-  const wallet = new ethers.Wallet(evm.privateKey);
+  const walletPrivateKey = new ethers.Wallet(evm.privateKey);
+  const provider =new JsonRpcProvider(chain.rpc);
+  let wallet = walletPrivateKey.connect(provider);
+
   const injectedJavaScriptBeforeContentLoaded = useMemo(
     () => objectToInjection(bridgeObj, timeout),
     [bridgeObj, timeout],
@@ -72,11 +76,57 @@ export const useWebViewBridge = <
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
-          result = wallet.address;
+          result = [wallet.address];
           break;
         case 'eth_chainId':
           result = chain.chainId;
           break;
+        case 'eth_blockNumber':
+          result = chain.chainId;
+          break;
+        case 'eth_estimateGas':
+           const tx = {
+            to: data.params[0].to,
+            from: data.params[0].from,
+            data: data.params[0].data,
+            value: data.params[0].value
+           };
+          const gasEstimate = await provider.estimateGas(tx);
+          const gasEstimateHex = '0x' + gasEstimate.toString(16);
+          result = gasEstimateHex;
+          break;
+           case 'eth_sendTransaction':
+           try {
+        if (data.params && data.params[0]) {
+          const txParams = data.params[0];
+          const gasLimit = ethers.BigNumber.from(txParams.gas);
+          const gasPrice = ethers.BigNumber.from(txParams.gasPrice);
+          const value = ethers.BigNumber.from(txParams.value);
+
+          const txSend = {
+            to: txParams.to,
+            from: txParams.from,
+            data: txParams.data,
+            gasLimit: gasLimit,
+            gasPrice: gasPrice,
+            value: value
+          };
+
+          console.log('Transaction Parameters:', txSend);
+
+          const signedTx = await wallet.sendTransaction(txSend);
+          console.log('Signed Transaction:', signedTx);
+
+          result = signedTx.hash;
+        } else {
+          throw new Error('Invalid parameters for eth_sendTransaction');
+        }
+      } catch (error) {
+        console.error('Error sending transaction:', error);
+        result = 'Error sending transaction';
+      }
+      break;
+
         default:
             throw new Error('Method not supported');
       }
@@ -86,22 +136,6 @@ export const useWebViewBridge = <
     }
   }
 
-  const provider = new WalletConnectProvider({
-    rpc:{
-      1:'https://eth.drpc.org',
-      14:'https://rpc.ankr.com/flare',
-      324:'https://1rpc.io/zksync2-era',
-      1116:'https://rpc-core.icecreamswap.com',
-      137:'https://polygon.blockpi.network/v1/rpc/public',
-      10:'https://mainnet.optimism.io',
-      42161:'https://arbitrum.drpc.org',
-      43114:'https://avalanche.drpc.org',
-      38:'https://bsc-dataseed1.binance.org/',
-      97:'https://bsc-testnet.publicnode.com'
-    },
-    bridge: 'https://bridge.walletconnect.org',
-  },
-);
 const signPersonalMessage = async (message) => {
      const messageBytes = ethers.utils.arrayify(message)
 };
