@@ -21,6 +21,7 @@ import { useDAppBridge } from "./hooks/useDAppBridge";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { Address } from "@tonkeeper/shared/Address";
 import { config } from "$config";
+import ModalConnect from "./components/ModalConnect";
 export interface DAppBrowserProps {
   url: string;
 }
@@ -36,6 +37,7 @@ const addUtmToUrl = (url: string) => {
 const removeUtmFromUrl = (url: string) => {
   return url.replace(new RegExp(`[?|&]${TONKEEPER_UTM}`), "");
 };
+
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const chain = useChain()?.chain;
@@ -70,9 +72,13 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
     disconnect,
     notificationsEnabled,
     unsubscribeFromNotifications,
+    isConnecting,
+    setIsConnecting,
     ...webViewProps
   } = useDAppBridge(walletAddress, currentUrl);
-
+  const handleCloseModalAccount = () => {
+  setIsConnecting(false);
+  };
   const dimensions = useWindowDimensions();
 
   const progress = useSharedValue(0);
@@ -143,14 +149,14 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const handleRefreshPress = useCallback(() => {
     ref.current?.reload();
   }, [ref]);
-
+ 
   const handleTitlePress = useCallback(() => {
     const initialQuery =
       getSearchQuery(currentUrl) || currentUrl || getCorrectUrl(initialUrl);
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
-
-    const injectedJavaScript = useMemo(() => `
+console.log(isConnecting)
+  const injectedJavaScript = useMemo(() => `
     (function() {
       window.ethereum = {
         isMetaMask: true,
@@ -229,6 +235,10 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
       </S.DAppContainer>
+      <ModalConnect
+        modalVisible={isConnecting} 
+        onClose={handleCloseModalAccount} 
+      />
     </S.Container>
   );
 };
