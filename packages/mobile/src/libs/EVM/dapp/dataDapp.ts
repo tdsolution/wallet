@@ -70,14 +70,14 @@ export const DataDapp : any[] = [
                 linkDapp: 'https://demo.corestake.org/',
                 desp:'Before following the steps to stake your CORE, you will need to first Buy CORE coin...',
             },
-             {
-                 id: 'opsocialfi',
-                name:'OP Socialfi',
-                logoDapp : 'https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385',
-                logoChain: 'https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385',
-                linkDapp: 'https://demo.opsocialfi.com/',
-                desp:'Before following the steps to stake your CORE, you will need to first Buy CORE coin...',
-            }
+            //  {
+            //      id: 'opsocialfi',
+            //     name:'OP Socialfi',
+            //     logoDapp : 'https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385',
+            //     logoChain: 'https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385',
+            //     linkDapp: 'https://demo.opsocialfi.com/',
+            //     desp:'Before following the steps to stake your CORE, you will need to first Buy CORE coin...',
+            // }
         ]
     },
 ]
