@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {
   UseWebViewBridgeReturnType,
@@ -24,6 +24,7 @@ export const useWebViewBridge = <
   const ref = useRef<WebView>(null);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
+  const [isConnecting, setIsConnecting]= useState(false);
   const walletPrivateKey = new ethers.Wallet(evm.privateKey);
   const provider =new JsonRpcProvider(chain.rpc);
   let wallet = walletPrivateKey.connect(provider);
@@ -78,6 +79,7 @@ export const useWebViewBridge = <
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
+          setIsConnecting(true);
           result = [wallet.address];
           break;
         case 'eth_chainId':
@@ -189,9 +191,6 @@ export const useWebViewBridge = <
     }
   }
 
-const signPersonalMessage = async (message) => {
-     const messageBytes = ethers.utils.arrayify(message)
-};
   const sendEvent = useCallback(
     (event: any) => {
       postMessage({ type: WebViewBridgeMessageType.event, event });
@@ -199,5 +198,5 @@ const signPersonalMessage = async (message) => {
     [postMessage],
   );
 
-  return [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent];
+  return [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent, isConnecting, setIsConnecting];
 };
