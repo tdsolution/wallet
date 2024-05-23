@@ -120,21 +120,38 @@ export const useWebViewBridge = <
         console.error('Error sending transaction:', error);
         result = 'Error sending transaction';
       }
+      //   if (data.params && data.params[0]) {
+      //     const txParams = data.params[0];
+      //     const gasLimit = BigInt(txParams.gas);
+      //     const txSend = {
+      //       to: txParams.to,
+      //       from: txParams.from,
+      //       data: txParams.data,
+      //       gasLimit: gasLimit,
+      //     };
+      //     const signedTx = await wallet.sendTransaction(txSend);
+      //     console.log('Signed Transaction:', signedTx);
+      //     result = signedTx.hash;
+      //   } else {
+      //     throw new Error('Invalid parameters for eth_sendTransaction');
+      //   }
+      // } catch (error) {
+      //   console.error('Error sending transaction:', error);
+      //   result = 'Error sending transaction';
+      // }
        break;
       case 'eth_getTransactionByHash':
          result = 40547463;
       break;
-      case 'eth_call':
-         try {
+     case 'eth_call':
+       try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
-          // const gasLimit = BigInt(txParams.gas);
           const txSend = {
             to: txParams.to,
             from: txParams.from,
-            data: txParams.data,
+            data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
             gasLimit: txParams.gas,
-            value: 0
           };
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
@@ -147,7 +164,7 @@ export const useWebViewBridge = <
         result = 'Error sending transaction';
       }
       break;
-          default:
+   default:
             throw new Error('Method not supported');
       }
      ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
