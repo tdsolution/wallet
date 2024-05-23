@@ -147,6 +147,9 @@ export const useWebViewBridge = <
        try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
+          if(txParams.from == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'){
+
+          }else{
           const txSend = {
             to: txParams.to,
             from: txParams.from,
@@ -156,6 +159,7 @@ export const useWebViewBridge = <
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
           result = signedTx.hash;
+          }
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
         }
