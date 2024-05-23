@@ -1,22 +1,28 @@
-import React, { FC, useCallback } from 'react';
-import * as S from './ImportWallet.style';
-import { NavBar } from '$uikit';
-import { useKeyboardHeight } from '$hooks/useKeyboardHeight';
-import { ImportWalletForm } from '$shared/components';
-import { RouteProp } from '@react-navigation/native';
+import React, { FC, useCallback } from "react";
+import * as S from "./ImportWallet.style";
+import { NavBar } from "$uikit";
+import { useKeyboardHeight } from "$hooks/useKeyboardHeight";
+import { ImportWalletForm } from "$shared/components";
+import { RouteProp } from "@react-navigation/native";
 import {
   ImportWalletStackParamList,
   ImportWalletStackRouteNames,
-} from '$navigation/ImportWalletStack/types';
-import { useNavigation } from '@tonkeeper/router';
-import { useImportWallet } from '$hooks/useImportWallet';
-import { tk } from '$wallet';
-import { ImportWalletInfo } from '$wallet/WalletTypes';
-import { DEFAULT_WALLET_VERSION } from '$wallet/constants';
-import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
+} from "$navigation/ImportWalletStack/types";
+import { useNavigation } from "@tonkeeper/router";
+import { useImportWallet } from "$hooks/useImportWallet";
+import { tk } from "$wallet";
+import { ImportWalletInfo } from "$wallet/WalletTypes";
+import { DEFAULT_WALLET_VERSION } from "$wallet/constants";
+import {
+  createWalletFromMnemonic,
+  generateMnemonic,
+} from "$libs/EVM/createWallet";
 
 export const ImportWallet: FC<{
-  route: RouteProp<ImportWalletStackParamList, ImportWalletStackRouteNames.ImportWallet>;
+  route: RouteProp<
+    ImportWalletStackParamList,
+    ImportWalletStackRouteNames.ImportWallet
+  >;
 }> = (props) => {
   const keyboardHeight = useKeyboardHeight();
   const nav = useNavigation();
@@ -24,13 +30,13 @@ export const ImportWallet: FC<{
 
   const isTestnet = !!props.route.params?.testnet;
 
-   const handleWordsFilled = useCallback(
+  const handleWordsFilled = useCallback(
     async (mnemonic: string, lockupConfig: any, onEnd: () => void) => {
       try {
         let walletsInfo: ImportWalletInfo[] | null = null;
 
         try {
-          const mnemonic1  = await generateMnemonic();
+          const mnemonic1 = await generateMnemonic();
           await createWalletFromMnemonic(mnemonic1);
           walletsInfo = await tk.getWalletsInfo(mnemonic, isTestnet);
         } catch {}
@@ -59,14 +65,51 @@ export const ImportWallet: FC<{
         onEnd();
       }
     },
-    [doImportWallet, isTestnet, nav],
+    [doImportWallet, isTestnet, nav]
   );
 
+  const handleWordsFilled12 = useCallback(
+    async (mnemonic: string, lockupConfig: any, onEnd: () => void) => {
+      try {
+        let walletsInfo: ImportWalletInfo[] | null = null;
+
+        try {
+          // const mnemonic1 = await generateMnemonic();
+          // await createWalletFromMnemonic(mnemonic1);
+          walletsInfo = await tk.getWalletsInfo(mnemonic, isTestnet);
+        } catch {}
+
+        const shouldChooseWallets =
+          !lockupConfig && walletsInfo && walletsInfo.length > 1;
+
+        if (shouldChooseWallets) {
+          nav.navigate(ImportWalletStackRouteNames.ChooseWallets, {
+            walletsInfo,
+            mnemonic,
+            lockupConfig,
+            isTestnet,
+          });
+          onEnd();
+          return;
+        }
+
+        const versions = walletsInfo
+          ? walletsInfo.map((item) => item.version)
+          : [DEFAULT_WALLET_VERSION];
+
+        await doImportWallet(mnemonic, lockupConfig, versions, isTestnet);
+        onEnd();
+      } catch {
+        onEnd();
+      }
+    },
+    [doImportWallet, isTestnet, nav]
+  );
 
   return (
     <S.Wrap style={{ paddingBottom: keyboardHeight }}>
       <NavBar isForceBackIcon />
-      <ImportWalletForm onWordsFilled={handleWordsFilled} />
+      <ImportWalletForm onWordsFilled={handleWordsFilled} onWordsFilled12 = {handleWordsFilled12} />
     </S.Wrap>
   );
 };

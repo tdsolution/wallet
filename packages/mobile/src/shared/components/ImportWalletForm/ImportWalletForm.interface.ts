@@ -3,6 +3,7 @@ import { LayoutChangeEvent } from 'react-native';
 
 export interface ImportWalletFormProps {
   onWordsFilled: (mnemonic: string, config: any, onEnd: () => void) => void;
+  onWordsFilled12: (mnemonic: string, config: any, onEnd: () => void) => void;
 }
 
 export interface InputItemRef {

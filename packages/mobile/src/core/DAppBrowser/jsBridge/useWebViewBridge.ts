@@ -10,6 +10,8 @@ import { useChain, useEvm } from '@tonkeeper/shared/hooks';
 import Web3 from 'web3';
 import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
+import ConnectModal from '../popup/ModalConnect';
+import { Alert } from 'react-native';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -151,10 +153,15 @@ export const useWebViewBridge = <
       case 'eth_call':
        try {
         if (data.params && data.params[0]) {
-          const txParams = data.params[0];
-          if(txParams.from == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'){
+          const txParams = data.params[0] ;
+          if(txParams.data == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'||
+            txParams.data == '0xd54ad2a1'||
+           txParams.data == '0x46b5887f' ||
+            txParams.data == '0x27d60f9b'||
+             txParams.data == '0xade58ee6'||
+             txParams.data == '0x5556db65'){
 
-          }else{
+          }else {
           const txSend = {
             to: txParams.to,
             from: txParams.from,

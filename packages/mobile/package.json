@@ -112,6 +112,7 @@
     "react-native-localize": "^2.2.4",
     "react-native-logs": "^5.1.0",
     "react-native-minimizer": "1.3.0",
+    "react-native-modal": "^13.0.1",
     "react-native-pager-view": "https://github.com/bogoslavskiy/react-native-pager-view#78c0bb573fce185f6f51bae6c1c566a1ec6294eb",
     "react-native-permissions": "3.6.1",
     "react-native-qrcode-scanner": "^1.5.5",
