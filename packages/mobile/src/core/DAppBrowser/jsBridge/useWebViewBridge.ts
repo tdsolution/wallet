@@ -139,11 +139,16 @@ export const useWebViewBridge = <
       //   console.error('Error sending transaction:', error);
       //   result = 'Error sending transaction';
       // }
-       break;
+        break;
       case 'eth_getTransactionByHash':
-         result = 40547463;
-      break;
-     case 'eth_call':
+        const txTransaction = await provider.getTransaction(data.params[0]);
+        result = txTransaction;
+        break;
+      case 'eth_getTransactionReceipt':
+        const txReceipt = await provider.getTransactionReceipt(data.params[0]);
+        result = txReceipt;
+        break;
+      case 'eth_call':
        try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
