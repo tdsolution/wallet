@@ -178,16 +178,16 @@ export const useWebViewBridge = <
            result = txReceipt;
           }
           else {
-          const txSend = {
-            to: txParams.to,
-            from: txParams.from,
-            data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
-            gasLimit: txParams.gas,
-          };
-          const signedTx = await wallet.sendTransaction(txSend);
-          console.log('Signed Transaction:', signedTx);
-          const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
-          result = txReceipt;
+          // const txSend = {
+          //   to: txParams.to,
+          //   from: txParams.from,
+          //   data: txParams.data,
+          //   gasLimit: txParams.gas,
+          // };
+          // const signedTx = await wallet.sendTransaction(txSend);
+          // console.log('Signed Transaction:', signedTx);
+          // const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
+          // result = txReceipt;
           }
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
