@@ -93,7 +93,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const {evm, setEvm} = useEvm();
   const addressEvm = evm.addressWallet;
-  console.log(">>>>>>>>>>>>>Ví EVM:", evm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();

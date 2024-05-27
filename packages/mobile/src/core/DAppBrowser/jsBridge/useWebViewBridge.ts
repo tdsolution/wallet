@@ -1,3 +1,4 @@
+import { i18n } from '$translation';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {
@@ -79,7 +80,7 @@ export const useWebViewBridge = <
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
-          setIsConnecting(true);
+          // setIsConnecting(true);
           result = [wallet.address];
           break;
         case 'eth_chainId':
@@ -162,7 +163,21 @@ export const useWebViewBridge = <
             txParams.data == '0x27d60f9b'||
              txParams.data == '0xade58ee6'||
              txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000", "from": "0x966702804e2c8511cd77282afed224989e408bea'){
-          }else {
+          }else if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000'){
+            const value = BigInt(txParams.value);
+            const txSend = {
+                to: txParams.to,
+                from: txParams.from,
+                data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
+                gasLimit: txParams.gas,
+                value: value
+              };
+           const signedTx = await wallet.sendTransaction(txSend);
+           console.log('Signed Transaction:', signedTx);
+           const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
+           result = txReceipt;
+          }
+          else {
           const txSend = {
             to: txParams.to,
             from: txParams.from,
@@ -173,7 +188,6 @@ export const useWebViewBridge = <
           console.log('Signed Transaction:', signedTx);
           const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
           result = txReceipt;
-          // result = txReceipt.hash;
           }
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
@@ -198,6 +212,5 @@ export const useWebViewBridge = <
     },
     [postMessage],
   );
-
   return [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent, isConnecting, setIsConnecting];
 };
