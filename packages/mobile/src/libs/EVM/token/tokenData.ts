@@ -39,6 +39,39 @@ export const DataTokens : any[] = [
         },
     ]
     },
+    {
+       chainId :'14',
+       tokens: [
+         {
+            id:"flare-networks", 
+            tokenAddress : "coin",
+            symbol : "FLR",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/28624/standard/FLR-icon200x200.png?1696527609",
+        },
+        {
+            id:"wrapped-flare", 
+            tokenAddress : "0x1d80c49bbbcd1c0911346656b529df9e5c2f783d",
+            symbol : "WFLR",
+            decimals: 18,
+            logo: "https://assets.coingecko.com/coins/images/28705/standard/flare.png?1696527687",
+        },
+        {
+            id:"tether", 
+            tokenAddress : "0xefaeee334f0fd1712f9a8cc375f427d9cdd40d73",
+            symbol : "USDT",
+            decimals: 6,
+            logo: "https://s2.coinmarketcap.com/static/img/coins/200x200/825.png",
+        },
+        {
+            id:"usd-coin", 
+            tokenAddress : "0xfa9343c3897324496a05fc75abed6bac29f8a40f",
+            symbol : "USDC",
+            decimals: 6,
+            logo: "https://s3.coinmarketcap.com/static-gravity/image/5a8229787b5e4c809b5914eef709b59a.png",
+        }
+    ]
+    },
      {
        chainId :'324',
        tokens: [
@@ -247,7 +280,7 @@ export const DataTokens : any[] = [
         },
          {
             id:"wbnb", 
-            tokenAddress : "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+            tokenAddress : "0xae13d989dac2f0debff460ac112a837c89baa7cd",
             symbol : "WBNB",
             decimals: 18,
             logo: "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png",

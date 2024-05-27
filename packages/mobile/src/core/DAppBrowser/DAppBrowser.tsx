@@ -1,8 +1,9 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
-import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy } from "$utils";
-import React, { FC, memo, useCallback, useState } from "react";
-import { Linking, useWindowDimensions } from "react-native";
+import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Linking, View, useWindowDimensions } from "react-native";
+
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -20,7 +21,6 @@ import { useDAppBridge } from "./hooks/useDAppBridge";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { Address } from "@tonkeeper/shared/Address";
 import { config } from "$config";
-
 export interface DAppBrowserProps {
   url: string;
 }
@@ -38,14 +38,17 @@ const removeUtmFromUrl = (url: string) => {
 };
 
 const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
+  const chain = useChain()?.chain;
   const { url: initialUrl } = props;
+  const [account, setAccount] = useState({ address: '', privateKey: '' });
+  const evm = useEvm()?.evm;
   const wallet = useWallet();
-  const walletAddress = wallet
+  const walletAddress = (chain.chainId == '1100' ?(wallet
     ? Address.parse(wallet.address.ton.raw).toFriendly({
         bounceable: true,
         testOnly: wallet.isTestnet,
       })
-    : '';
+    : '') : evm.addressWallet);
 
   const deeplinking = useDeeplinking();
 
@@ -144,10 +147,46 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
   const handleTitlePress = useCallback(() => {
     const initialQuery =
       getSearchQuery(currentUrl) || currentUrl || getCorrectUrl(initialUrl);
-
     openDAppsSearch(initialQuery, openUrl);
   }, [currentUrl, initialUrl, openUrl]);
 
+    const injectedJavaScript = useMemo(() => `
+    (function() {
+      window.ethereum = {
+        isMetaMask: true,
+        isConnected: () => true,
+        request: async ({ method, params }) => {
+          const messageId = Date.now() * Math.pow(10, 3) + Math.floor(Math.random() * Math.pow(10, 3));
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            id: messageId,
+            method: method,
+            params: params
+          }));
+
+          return new Promise((resolve, reject) => {
+            const handleMessage = (event) => {
+              const data = JSON.parse(event.data);
+              if (data.id === messageId) {
+                if (data.result) {
+                  resolve(data.result);
+                } else {
+                  reject(new Error(data.error));
+                }
+                window.removeEventListener('message', handleMessage);
+              }
+            };
+            if(${isIOS}) {
+              window.addEventListener('message', handleMessage);
+            } else {
+              document.addEventListener('message', handleMessage);
+            }
+          });
+        }
+      };
+    })();
+  `, []);
+
+  
   return (
     <S.Container>
       <BrowserNavBar
@@ -163,13 +202,13 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
         disconnect={disconnect}
         unsubscribeFromNotifications={unsubscribeFromNotifications}
       />
-      <S.DAppContainer>
+     <S.DAppContainer>
         <S.DAppWebView
           ref={ref}
           key={webViewSource.uri}
           javaScriptEnabled
           domStorageEnabled
-          originWhitelist={["*"]}
+          originWhitelist={['*']}
           javaScriptCanOpenWindowsAutomatically
           mixedContentMode="always"
           decelerationRate="normal"
@@ -184,7 +223,8 @@ const DAppBrowserComponent: FC<DAppBrowserProps> = (props) => {
           allowsBackForwardNavigationGestures={true}
           onNavigationStateChange={handleNavigationStateChange}
           onShouldStartLoadWithRequest={handleOpenExternalLink}
-          webviewDebuggingEnabled={config.get("devmode_enabled")}
+          webviewDebuggingEnabled={config.get('devmode_enabled')}
+          injectedJavaScript={injectedJavaScript}
           {...webViewProps}
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />

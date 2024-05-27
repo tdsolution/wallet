@@ -23,7 +23,7 @@ export const getConnectedAppByUrl = (
 
 export const getAllConnections = (state: IConnectedAppsStore) => {
   const allConnections: WithWalletIdentifier<IConnectedAppConnection>[] = [];
-
+    
   tk.wallets.forEach((wallet) => {
     const walletAddress = Address.parse(wallet.address.ton.raw).toFriendly({
       bounceable: true,

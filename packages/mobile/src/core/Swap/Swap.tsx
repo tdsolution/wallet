@@ -12,12 +12,12 @@ import { useWebViewBridge } from "$hooks/jsBridge";
 import { config } from "$config";
 import { tk } from "$wallet";
 import { ShouldStartLoadRequest } from "react-native-webview/lib/WebViewTypes";
-import { Linking, View } from "react-native";
+import { Linking, View,StyleSheet, Platform } from "react-native";
 import { useDeeplinking } from "$libs/deeplinking";
 import DeviceInfo from "react-native-device-info";
 import { useChain, useWallet } from "@tonkeeper/shared/hooks";
 import SwapScreen from "../../screens/SwapScreen/SwapScreen";
-
+// import { colors } from "constants/colors";
 interface Props {
   jettonAddress?: string;
   ft?: string;
@@ -148,43 +148,44 @@ export const Swap: FC<Props> = (props) => {
   );
 
   return (
-    <S.Container>
-      {chain.chainId == "1100" ? (
-        <S.Browser
-          ref={ref}
-          injectedJavaScriptBeforeContentLoaded={
-            injectedJavaScriptBeforeContentLoaded
-          }
-          onMessage={onMessage}
-          javaScriptEnabled
-          domStorageEnabled
-          source={webViewSource}
-          onLoadEnd={handleLoadEnd}
-          startInLoadingState={true}
-          originWhitelist={[`https://${getDomainFromURL(baseUrl)}`, "ton://"]}
-          decelerationRate="normal"
-          javaScriptCanOpenWindowsAutomatically
-          mixedContentMode="always"
-          hideKeyboardAccessoryView
-          thirdPartyCookiesEnabled={true}
-          keyboardDisplayRequiresUserAction={false}
-          mediaPlaybackRequiresUserAction={false}
-          onShouldStartLoadWithRequest={handleOpenExternalLink}
-          webviewDebuggingEnabled={config.get("devmode_enabled")}
-        />
-      ) : (
-        <SwapScreen />
-      )}
-
-      {overlayVisible ? (
-        <S.Overlay>
-          <S.BackButtonContainer onPress={nav.goBack}>
-            <S.BackButton>
-              <Icon name="ic-close-16" color="foregroundPrimary" />
-            </S.BackButton>
-          </S.BackButtonContainer>
-        </S.Overlay>
-      ) : null}
-    </S.Container>
+      chain.chainId  == "1100" ? 
+      <S.Browser
+      ref={ref}
+      injectedJavaScriptBeforeContentLoaded={
+        injectedJavaScriptBeforeContentLoaded
+      }
+      onMessage={onMessage}
+      javaScriptEnabled
+      domStorageEnabled
+      source={webViewSource}
+      onLoadEnd={handleLoadEnd}
+      startInLoadingState={true}
+      originWhitelist={[`https://${getDomainFromURL(baseUrl)}`, "ton://"]}
+      decelerationRate="normal"
+      javaScriptCanOpenWindowsAutomatically
+      mixedContentMode="always"
+      hideKeyboardAccessoryView
+      thirdPartyCookiesEnabled={true}
+      keyboardDisplayRequiresUserAction={false}
+      mediaPlaybackRequiresUserAction={false}
+      onShouldStartLoadWithRequest={handleOpenExternalLink}
+      webviewDebuggingEnabled={config.get("devmode_enabled")}
+      injectedJavaScript={`
+        document.querySelector('.bg-backgroundPage').style.backgroundColor = 'white';
+        document.querySelector('h3.truncate').style.color = '#10161F';
+        document.querySelector('div.mb-4 > h3.truncate').style.color = '#4871EA';
+        document.querySelector('.inset-0').style.backgroundColor = 'white';
+        document.querySelector('._modal-actions-gradient_1wavc_1').style.background = 'white';
+        document.querySelector('.rounded-full').style.backgroundColor = 'white';`}
+      >
+      </S.Browser> : 
+      <SwapScreen /> 
   );
 };
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    zIndex:100,
+    paddingHorizontal:20,
+  },
+})

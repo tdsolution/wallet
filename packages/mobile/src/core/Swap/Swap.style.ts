@@ -6,7 +6,8 @@ import WebView from 'react-native-webview';
 export const Container = styled.View`
   flex: 1;
   position: relative;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  // background: ${({ theme }) => theme.colors.backgroundPrimary
+};
 `;
 
 export const Browser = styled(WebView)`

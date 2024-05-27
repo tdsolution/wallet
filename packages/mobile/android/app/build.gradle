@@ -88,11 +88,11 @@ android {
 
     namespace "com.ton_keeper"
     defaultConfig {
-        applicationId "com.ton_keeper"
+        applicationId "com.mobile_1.tdwallet.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 433
-        versionName "4.1.0"
+        versionCode 24
+        versionName "1.1.9"
         missingDimensionStrategy 'react-native-camera', 'general'
         missingDimensionStrategy 'store', 'play'
     }
@@ -108,16 +108,22 @@ android {
 
     signingConfigs {
         release {
-            if (project.hasProperty('TONKEEPER_UPLOAD_STORE_FILE')) {
-                storeFile file(TONKEEPER_UPLOAD_STORE_FILE)
-                storePassword TONKEEPER_UPLOAD_STORE_PASSWORD
-                keyAlias TONKEEPER_UPLOAD_KEY_ALIAS
-                keyPassword TONKEEPER_UPLOAD_KEY_PASSWORD
-            } else if (project.hasProperty('android.injected.signing.store.file')) {
-                storeFile file(project.property('android.injected.signing.store.file'))
-                storePassword project.property('android.injected.signing.store.password')
-                keyAlias project.property('android.injected.signing.key.alias')
-                keyPassword project.property('android.injected.signing.key.password')
+            // if (project.hasProperty('TONKEEPER_UPLOAD_STORE_FILE')) {
+            //     storeFile file(TONKEEPER_UPLOAD_STORE_FILE)
+            //     storePassword TONKEEPER_UPLOAD_STORE_PASSWORD
+            //     keyAlias TONKEEPER_UPLOAD_KEY_ALIAS
+            //     keyPassword TONKEEPER_UPLOAD_KEY_PASSWORD
+            // } else if (project.hasProperty('android.injected.signing.store.file')) {
+            //     storeFile file(project.property('android.injected.signing.store.file'))
+            //     storePassword project.property('android.injected.signing.store.password')
+            //     keyAlias project.property('android.injected.signing.key.alias')
+            //     keyPassword project.property('android.injected.signing.key.password')
+            // }
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             }
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)

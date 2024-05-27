@@ -73,10 +73,11 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
         "0xfef17f1b207ef081566892220c65c63d4771d931dd2620d50589942275faccd3",
       contractAddress: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       amountInETH: "0.01",
-      minTokens: "10",
+      minTokens: "0",
     };
 
     // Gọi phương thức swapETHForTokens từ module hiện tại
+    console.log('Check');
     await swapETHForTokens(swapParams);
   };
 

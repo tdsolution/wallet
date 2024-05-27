@@ -44,7 +44,7 @@ const SendToken = ({ route }: any) => {
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
-  const [amount, setAmount] = useState("0.0");
+  const [amount, setAmount] = useState("");
   const [addressWallet, setAddressWallet] = useState<string>("");
   const deeplinking = useDeeplinking();
   const evm = useEvm()?.evm;
@@ -67,7 +67,7 @@ const SendToken = ({ route }: any) => {
     setAddressInput("");
   };
   const onCleanTextAmount = () => {
-    setAmount("0.0");
+    setAmount("");
   };
 
   const pasteText = async () => {
@@ -262,7 +262,7 @@ const SendToken = ({ route }: any) => {
                   <View style={styles.boxInput}>
                     <TextInput
                       style={styles.input}
-                      placeholder="0.0"
+                      placeholder="0"
                       keyboardType="numeric"
                       placeholderTextColor={colors.Gray_Light}
                       value={amount}

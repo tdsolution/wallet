@@ -86,13 +86,12 @@ import { openWallet } from "$core/Wallet/ToncoinScreen";
 import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
-import { setWalletEVM } from "$libs/EVM/createWallet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+// import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
-  const evm = useEvm()?.evm;
+  const {evm, setEvm} = useEvm();
   const addressEvm = evm.addressWallet;
   console.log(">>>>>>>>>>>>>Ví EVM:", evm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -145,7 +144,30 @@ export const WalletScreen = memo(({ navigation }: any) => {
       dispatch(mainActions.mainStackInited());
     }, 500);
     return () => clearTimeout(timer);
-  }, [dispatch, setWalletEVM]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if(!addressEvm) {
+    const fetchEvm = async () => {
+      try {
+        const address = await AsyncStorage.getItem("EVMAddress");
+        const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
+        const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
+        const name = await AsyncStorage.getItem("EVMMname");
+        const evmModal = {
+          addressWallet: address,
+          privateKey: privateKey,
+          mnemonic: mnemonic,
+          name: name,
+        }
+        setEvm(evmModal);
+      } catch (error) {
+        console.error('Error reading data from AsyncStorage:', error);
+      }
+    };
+    fetchEvm();};
+  }, []);
+
   const handleGetTransaction = async () => {
     try {
       // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
@@ -215,7 +237,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   );
   const handlePressSwap = useCallback(() => {
     if (wallet) {
-      nav.openModal("Swap");
+     nav.openModal("Swap");
     } else {
       openRequireWalletModal();
     }
@@ -237,6 +259,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       openRequireWalletModal();
     }
     // SendTokenEVM();
+    // swapTokenDeposit();
   }, [nav, wallet]);
 
   const handlePressRecevie = useCallback(() => {

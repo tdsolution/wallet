@@ -9,16 +9,6 @@ export const DataChains : any[]= [
     rpc: "https://toncenter.com/api/v2/jsonRPC",
     rpcBackup: "https://toncenter.com/api/v2/jsonRPC",
   },
-  // {
-  //   type: "tron",
-  //   chainId: "1000",
-  //   name: "Tron",
-  //   id: "tron",
-  //   logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png",
-  //   currency: "TRX",
-  //   rpc: "https://api.trongrid.io",
-  //   rpcBackup: "https://api.trongrid.io",
-  // },
   {
     type: "eth",
     chainId: "1",
@@ -28,6 +18,16 @@ export const DataChains : any[]= [
     currency: "ETH",
     rpc: "https://eth.drpc.org",
     rpcBackup: "https://mainnet.infura.io/v3/b6673e63957344c1882a407f12e89bec",
+  },
+   {
+    type: "eth",
+    chainId: "14",
+    name: "Flare",
+    id: "flare-networks",
+    logo: "https://assets.coingecko.com/coins/images/28624/standard/FLR-icon200x200.png?1696527609",
+    currency: "FLR",
+    rpc: "https://rpc.ankr.com/flare",
+    rpcBackup: "https://flare.rpc.thirdweb.com",
   },
   {
     type: "eth",
@@ -111,8 +111,8 @@ export const DataChains : any[]= [
     id: "binancecoin",
     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
     currency: "tBNB",
-    rpc: "https://bsc-testnet.publicnode.com",
-    rpcBackup: "https://bsc-testnet.publicnode.com",
+    rpc: "https://bsc-testnet-rpc.publicnode.com",
+    rpcBackup: "https://bsc-testnet-rpc.publicnode.com",
     
   },
   {

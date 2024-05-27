@@ -35,11 +35,10 @@ export const swapETHForTokens = async ({
       ethers.parseUnits(minTokens, 18),
       {
         value: ethers.parseEther(amountInETH), // Chuyển đổi số lượng ETH sang Wei
-        gasLimit: 200000, // Giới hạn gas (có thể cần điều chỉnh)
+        gasLimit: 30000, // Giới hạn gas (có thể cần điều chỉnh)
       }
     );
     console.log("Transaction sent:", transaction);
-
     // Chờ giao dịch được xác nhận
     const receipt = await transaction.wait();
     console.log("Transaction mined:", receipt);
