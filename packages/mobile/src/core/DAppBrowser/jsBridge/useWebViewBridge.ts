@@ -114,6 +114,7 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
+          console.log('txSend:', txSend);
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
           result = signedTx.hash;
@@ -163,8 +164,10 @@ export const useWebViewBridge = <
              txParams.data == '0xade58ee6'||
              txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000'){
               return;
-          }else if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000'){
-            const value = BigInt(txParams.value);
+          }else 
+          // if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000')
+            {
+            const value = txParams.value != null ? BigInt(txParams.value) : 0;
             const txSend = {
                 to: txParams.to,
                 from: txParams.from,
@@ -177,8 +180,8 @@ export const useWebViewBridge = <
            const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
            result = txReceipt;
           }
-          else {
-            return;
+          // else {
+          //   result = '1';
           // const txSend = {
           //   to: txParams.to,
           //   from: txParams.from,
@@ -189,7 +192,7 @@ export const useWebViewBridge = <
           // console.log('Signed Transaction:', signedTx);
           // const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
           // result = txReceipt;
-          }
+          // }
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
         }
@@ -207,15 +210,7 @@ export const useWebViewBridge = <
     }
   }
 // Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
-async function waitForTransactionReceipt(txHash, pollingInterval = 1000) {
-    while (true) {
-        const receipt = await provider.getTransactionReceipt(txHash);
-        if (receipt) {
-            return receipt;
-        }
-        await new Promise(resolve => setTimeout(resolve, pollingInterval));
-    }
-}
+
 
   const sendEvent = useCallback(
     (event: any) => {

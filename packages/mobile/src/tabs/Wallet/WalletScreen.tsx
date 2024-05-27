@@ -87,6 +87,7 @@ import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getABIFromAPI } from "$core/DAppBrowser/func";
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
@@ -257,7 +258,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     } else {
       openRequireWalletModal();
     }
-    // SendTokenEVM();
     // swapTokenDeposit();
   }, [nav, wallet]);
 
