@@ -26,6 +26,7 @@ export const useWebViewBridge = <
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const [isConnecting, setIsConnecting]= useState(false);
+  const [isRequestHandled, setIsRequestHandled]= useState(false);
   const walletPrivateKey = new ethers.Wallet(evm.privateKey);
   const provider =new JsonRpcProvider(chain.rpc);
   let wallet = walletPrivateKey.connect(provider);
@@ -43,7 +44,6 @@ export const useWebViewBridge = <
 
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
-      console.log('onMessage');
       if (chain.chainId == "1100") {
         const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
         console.log(message);
@@ -80,7 +80,6 @@ export const useWebViewBridge = <
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
-          // setIsConnecting(true);
           result = [wallet.address];
           break;
         case 'eth_chainId':
@@ -151,7 +150,7 @@ export const useWebViewBridge = <
         break;
       case 'eth_getTransactionReceipt':
         const txReceipt = await provider.getTransactionReceipt(data.params[0]);
-        result = txReceipt;
+        result = txReceipt?.blockHash;
         break;
       case 'eth_call':
        try {
@@ -162,7 +161,8 @@ export const useWebViewBridge = <
            txParams.data == '0x46b5887f' ||
             txParams.data == '0x27d60f9b'||
              txParams.data == '0xade58ee6'||
-             txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000", "from": "0x966702804e2c8511cd77282afed224989e408bea'){
+             txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000'){
+              return;
           }else if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000'){
             const value = BigInt(txParams.value);
             const txSend = {
@@ -178,6 +178,7 @@ export const useWebViewBridge = <
            result = txReceipt;
           }
           else {
+            return;
           // const txSend = {
           //   to: txParams.to,
           //   from: txParams.from,
@@ -205,6 +206,16 @@ export const useWebViewBridge = <
       ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
     }
   }
+// Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
+async function waitForTransactionReceipt(txHash, pollingInterval = 1000) {
+    while (true) {
+        const receipt = await provider.getTransactionReceipt(txHash);
+        if (receipt) {
+            return receipt;
+        }
+        await new Promise(resolve => setTimeout(resolve, pollingInterval));
+    }
+}
 
   const sendEvent = useCallback(
     (event: any) => {
