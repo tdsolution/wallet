@@ -165,7 +165,7 @@ export const useWebViewBridge = <
              txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000'){
               return;
           }else 
-          // if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000')
+          if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000' || txParams.data == '0xae169a50')
             {
             const value = txParams.value != null ? BigInt(txParams.value) : 0;
             const txSend = {
@@ -180,8 +180,8 @@ export const useWebViewBridge = <
            const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
            result = txReceipt;
           }
-          // else {
-          //   result = '1';
+          else {
+            result = '1';
           // const txSend = {
           //   to: txParams.to,
           //   from: txParams.from,
@@ -192,7 +192,7 @@ export const useWebViewBridge = <
           // console.log('Signed Transaction:', signedTx);
           // const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
           // result = txReceipt;
-          // }
+          }
         } else {
           throw new Error('Invalid parameters for eth_sendTransaction');
         }
