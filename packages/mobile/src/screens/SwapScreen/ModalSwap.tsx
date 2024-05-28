@@ -19,6 +19,9 @@ import {
 } from "./swapDataToken";
 import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
+import SaveTransaction, {
+  TransactionModel,
+} from "$libs/EVM/HistoryEVM/SaveTransaction";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -54,12 +57,51 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
   const swapCoinItem = useSwapCoin()?.swapCoinItem;
+  let evmAddressWallet = evm.addressWallet;
   let evmAddress = evm.privateKey;
   evmAddress = evmAddress.replace(/^"|"$/g, '');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const PRIVATE_KEY = evmAddress.toString();
   const PROVIDER_URL = chain.rpc;
+
+  const handleRandomId = () => {
+    let timestamp = Date.now();
+    let random = Math.floor(Math.random() * 100000);
+    return timestamp.toString() + random.toString();
+  };
+
+  const handleTimeStamp = () => {
+    let timestamp = Date.now();
+    return timestamp.toString();
+  };
+
+  const transactionSwap = () => {
+    const sampleTransaction: TransactionModel = {
+      id: handleRandomId(),
+      unSwap: true,
+      amount: amount.toString(),
+      fromAddress: evmAddressWallet,
+      toAddress: swapCoinItem.tokenAddress,
+      idxChain: chain.chainId,
+      isRead: false,
+      name: "Swap",
+      symbol: chain.currency,
+      time: handleTimeStamp(),
+    };
+    return sampleTransaction;
+  };
+
+  // Định nghĩa hàm xử lý thêm token
+  const handleAddTransaction = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      await SaveTransaction.fullFlowSaveData([transactionSwap()]);
+      console.log("Sample transaction saved successfully!");
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
+  };
   const handleConfirm = () => {
     setIsLoading(false);
     nav.navigate("SwapComplete", {
@@ -68,6 +110,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       assetFrom: assetFrom,
       assetTo: assetTo,
     });
+    handleAddTransaction()
     closeModal();
   };
 

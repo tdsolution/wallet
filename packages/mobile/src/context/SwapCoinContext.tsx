@@ -30,7 +30,7 @@ export const SwapCoinProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const dataIndex = dataCoinDes.findIndex((data) => data.chainId == chain.chainId);
       const finalIndex = dataIndex !== -1 ? dataIndex : dataCoinDes.length - 1;
       setSwapCoin(finalIndex);
-      console.log("Chain ID nè: ", finalIndex);
+      // console.log("Chain ID nè: ", chain);
       }
     } catch (error) {
       console.log("Lỗi trong SwapCoinProvider: ", error);
