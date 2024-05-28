@@ -49,6 +49,7 @@ const SendToken = ({ route }: any) => {
   const deeplinking = useDeeplinking();
   const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
+  console.log("Pricce: ", price);
 
   useEffect(() => {
     async function getdata() {
@@ -183,6 +184,11 @@ const SendToken = ({ route }: any) => {
     }
   }, []);
 
+  const handleMaxAmount = () => {
+    const amount = price - 0.001;
+    setAmount(amount.toFixed(5).toString())
+  }
+
   return (
     <SafeAreaView style={globalStyles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -284,7 +290,7 @@ const SendToken = ({ route }: any) => {
                       ) : (
                         <></>
                       )}
-                      <Text
+                      <Text onPress={handleMaxAmount}
                         style={[
                           styles.lable,
                           {
