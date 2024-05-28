@@ -13,6 +13,7 @@ import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
+import { sendRpcRequest } from './func';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -46,11 +47,9 @@ export const useWebViewBridge = <
     async (event: WebViewMessageEvent) => {
       if (chain.chainId == "1100") {
         const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
-        console.log(message);
         if (message.type === WebViewBridgeMessageType.invokeRnFunc) {
           try {
             const result = await bridgeObj[message.name](...message.args);
-
             postMessage({
               type: WebViewBridgeMessageType.functionResponse,
               invocationId: message.invocationId,
@@ -75,7 +74,6 @@ export const useWebViewBridge = <
   );
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    console.log(data);
     let result;
     try {
       switch (data.method) {
@@ -154,54 +152,57 @@ export const useWebViewBridge = <
         result = txReceipt?.blockHash;
         break;
       case 'eth_call':
-       try {
-        if (data.params && data.params[0]) {
-          const txParams = data.params[0] ;
-          if(txParams.data == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'||
-            txParams.data == '0xd54ad2a1'||
-           txParams.data == '0x46b5887f' ||
-            txParams.data == '0x27d60f9b'||
-             txParams.data == '0xade58ee6'||
-             txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000'){
-              return;
-          }else 
-          if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000' || txParams.data == '0xae169a50')
-            {
-            const value = txParams.value != null ? BigInt(txParams.value) : 0;
-            const txSend = {
-                to: txParams.to,
-                from: txParams.from,
-                data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
-                gasLimit: txParams.gas,
-                value: value
-              };
-           const signedTx = await wallet.sendTransaction(txSend);
-           console.log('Signed Transaction:', signedTx);
-           const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
-           result = txReceipt;
-          }
-          else {
-            result = '1';
-          // const txSend = {
-          //   to: txParams.to,
-          //   from: txParams.from,
-          //   data: txParams.data,
-          //   gasLimit: txParams.gas,
-          // };
-          // const signedTx = await wallet.sendTransaction(txSend);
-          // console.log('Signed Transaction:', signedTx);
-          // const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
-          // result = txReceipt;
-          }
-        } else {
-          throw new Error('Invalid parameters for eth_sendTransaction');
-        }
-      } catch (error) {
-        console.error('Error sending transaction:', error);
-        result = 'Error sending transaction';
-      }
+      //  try {
+        // if (data.params && data.params[0]) {
+        //   const txParams = data.params[0] ;
+        //   if(txParams.data == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'||
+        //     txParams.data == '0xd54ad2a1'||
+        //    txParams.data == '0x46b5887f' ||
+        //     txParams.data == '0x27d60f9b'||
+        //      txParams.data == '0xade58ee6'||
+        //      txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000'){
+        //       return;
+        //   }
+          // else 
+          // if (txParams.data == '0xae169a500000000000000000000000000000000000000000000000000000000000000000' || txParams.data == '0xae169a50')
+          //   {
+          //   const value = txParams.value != null ? BigInt(txParams.value) : 0;
+          //   const txSend = {
+          //       to: txParams.to,
+          //       from: txParams.from,
+          //       data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
+          //       gasLimit: txParams.gas,
+          //       value: value
+          //     };
+          //  const signedTx = await wallet.sendTransaction(txSend);
+          //  console.log('Signed Transaction:', signedTx);
+          //  const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
+          //  result = txReceipt;
+          // }
+          // else {
+            let demo;
+              sendRpcRequest(chain.rpc, 'eth_call', data.params, data.id, function (error, resultt) {
+                if (error) {
+                  console.error('Error sending RPC request:', error);
+                } else {
+                  demo = resultt.result;
+                  console.log('RPC Response:',demo);
+                }
+              });
+              result = demo;
+          // }
+        // } 
+        // else {
+        //   throw new Error('Invalid parameters for eth_sendTransaction');
+        // }
+      // } 
+      // catch (error) {
+      //   console.error('Error sending transaction:', error);
+      //   result = 'Error sending transaction';
+      // }
       break;
    default:
+    console.log('Method not supported', data)
             throw new Error('Method not supported');
       }
      ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
