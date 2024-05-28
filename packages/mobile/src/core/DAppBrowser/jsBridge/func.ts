@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export function sendRpcRequest(rpcUrl, method, params, id, callback) {
+export function sendRpcRequest(rpcUrl, method, params, id) {
   const options = {
     method: 'POST',
     url: rpcUrl,
@@ -15,11 +15,11 @@ export function sendRpcRequest(rpcUrl, method, params, id, callback) {
     }
   };
 
-  axios(options)
+  return axios(options)
     .then(response => {
-      callback(null, response.data);
+      return response.data;
     })
     .catch(error => {
-      callback(error, null);
+      throw error;
     });
 }
