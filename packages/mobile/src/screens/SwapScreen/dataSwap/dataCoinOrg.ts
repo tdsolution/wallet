@@ -6,6 +6,7 @@ interface PropCoinOrg {
   idxc?: number;
   chainImg?: string;
   name?: string;
+  chainId: string;
 }
 
 export const dataCoinOrg: PropCoinOrg[] = [
@@ -18,6 +19,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     chainImg:
       "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
     name: "Ethereum",
+    chainId: "1",
   },
   {
     logo: "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
@@ -27,6 +29,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     idxc: 1,
     chainImg: "https://static.okx.com/cdn/assets/imgs/233/304C4440A1D87D83.png",
     name: "zkSync Mainnet",
+    chainId: "324",
   },
   {
     logo: "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
@@ -37,6 +40,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     chainImg:
       "https://assets.coingecko.com/coins/images/25244/large/Optimism.png?1696524385",
     name: "OP Mainnet",
+    chainId: "10",
   },
   {
     logo: "https://seeklogo.com/images/E/ethereum-logo-EC6CDBA45B-seeklogo.com.png",
@@ -47,6 +51,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     chainImg:
       "https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg?169651610",
     name: "Arbitrum One",
+    chainId: "42161",
   },
   {
     logo: "https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png",
@@ -57,6 +62,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     chainImg:
       "https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png",
     name: "Polygon",
+    chainId: "137",
   },
   {
     logo: "https://i.imgur.com/MRyPUEL.png",
@@ -66,6 +72,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     idxc: 2,
     chainImg: "https://i.imgur.com/MRyPUEL.png",
     name: "Core Chain MainNet",
+    chainId: "1116",
   },
   {
     logo: "https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png?1696512369",
@@ -76,6 +83,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     chainImg:
       "https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png?1696512369",
     name: "Avalanche Network",
+    chainId: "43114",
   },
   {
     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
@@ -85,6 +93,7 @@ export const dataCoinOrg: PropCoinOrg[] = [
     idxc: 7,
     chainImg: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
     name: "BNB Smart Chain",
+    chainId: "38",
   },
   {
     logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
@@ -94,5 +103,6 @@ export const dataCoinOrg: PropCoinOrg[] = [
     idxc: 8,
     chainImg: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
     name: "BNB Testnet",
+    chainId: "97",
   },
 ];

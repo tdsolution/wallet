@@ -8,8 +8,8 @@ import {
 } from './types';
 import { getInjectableJSMessage, objectToInjection } from './utils';
 import { useChain, useEvm } from '@tonkeeper/shared/hooks';
-import Web3 from 'web3';
-import  WalletConnectProvider  from '@walletconnect/web3-provider';
+// import Web3 from 'web3';
+// import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
@@ -31,6 +31,7 @@ export const useWebViewBridge = <
   const walletPrivateKey = new ethers.Wallet(evm.privateKey);
   const provider =new JsonRpcProvider(chain.rpc);
   let wallet = walletPrivateKey.connect(provider);
+  const [isShow, setIsShow] = useState<boolean>(false);
 
   const injectedJavaScriptBeforeContentLoaded = useMemo(
     () => objectToInjection(bridgeObj, timeout),
@@ -41,7 +42,7 @@ export const useWebViewBridge = <
     ref.current?.injectJavaScript(getInjectableJSMessage(JSON.stringify(message)));
   }, []);
 
-
+  let showAlert = false;
 
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
@@ -67,6 +68,9 @@ export const useWebViewBridge = <
         }
       }
       else {
+        if(showAlert) {
+          return;
+        }
        handleMessage(event);
       }
     },
@@ -81,8 +85,8 @@ export const useWebViewBridge = <
         case 'eth_requestAccounts':
           result = [wallet.address];
           break;
-        case 'eth_chainId':
-          result = chain.chainId;
+          case 'eth_chainId':
+            result = chain.chainId;
           break;
         case 'eth_blockNumber':
           result = chain.chainId;

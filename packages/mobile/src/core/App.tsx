@@ -50,9 +50,9 @@ const TonThemeProvider = ({ children }) => {
 export function App() {
   return (
     // <KeyboardProvider>
-    <SwapCoinProvider>
-      <TransactionProvider>
-        <ChainProvider>
+    <TransactionProvider>
+      <ChainProvider>
+        <SwapCoinProvider>
           <WalletProvider>
             <EmvProvider>
               <StoreProvider {...{ store }}>
@@ -87,9 +87,9 @@ export function App() {
               </StoreProvider>
             </EmvProvider>
           </WalletProvider>
-        </ChainProvider>
-      </TransactionProvider>
-    </SwapCoinProvider>
+        </SwapCoinProvider>
+      </ChainProvider>
+    </TransactionProvider>
     // </KeyboardProvider>
   );
 }

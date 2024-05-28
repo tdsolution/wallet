@@ -2,7 +2,7 @@ import { useDeeplinking } from "$libs/deeplinking";
 import { openDAppsSearch } from "$navigation";
 import { getCorrectUrl, getSearchQuery, getUrlWithoutTonProxy, isIOS } from "$utils";
 import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Linking, View, useWindowDimensions } from "react-native";
+import { Linking, View, useWindowDimensions, Modal, ActivityIndicator, Text, Button } from "react-native";
 
 import {
   useAnimatedStyle,

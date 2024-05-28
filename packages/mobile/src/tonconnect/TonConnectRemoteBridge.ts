@@ -210,7 +210,7 @@ class TonConnectRemoteBridgeService {
         this.redirectIfNeeded();
       }
     } catch (e) {
-      console.log('handleMessage error');
+      console.log(' error');
       console.error(e);
     }
   }
