@@ -95,6 +95,7 @@ export const useWebViewBridge = <
           result = data.params[0].chainId;
         break;
         case 'eth_estimateGas':
+          
            const tx = {
             to: data.params[0].to,
             from: data.params[0].from,
