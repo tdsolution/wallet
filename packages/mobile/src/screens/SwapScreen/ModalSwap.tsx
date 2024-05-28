@@ -16,7 +16,8 @@ import {
   transfer,
   withdraw,
 } from "./swapDataToken";
-import { useEvm, useWalletSetup } from "@tonkeeper/shared/hooks";
+import { useEvm, useChain } from "@tonkeeper/shared/hooks";
+import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -50,11 +51,13 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   }
   const nav = useNavigation();
   const evm = useEvm()?.evm;
+  const chain = useChain()?.chain;
+  const swapCoinItem = useSwapCoin()?.swapCoinItem;
   let evmAddress = evm.privateKey;
   evmAddress = evmAddress.replace(/^"|"$/g, '');
 
   const PRIVATE_KEY = evmAddress.toString();
-  const PROVIDER_URL = 'https://bsc-testnet.publicnode.com/'
+  const PROVIDER_URL = chain.rpc;
   const handleConfirm = () => {
     nav.navigate("SwapComplete", {
       address: from,
@@ -86,7 +89,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     const transferParams = {
       providerUrl: PROVIDER_URL,
       privateKey: PRIVATE_KEY, // Thay bằng private key của ví nguồn
-      recipientAddress: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+      recipientAddress: swapCoinItem.tokenAddress,
       amount: amount.toLocaleString(), // Chuyển 0.01 BNB
     };
 
@@ -104,8 +107,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     const withdrawParams = {
       providerUrl: PROVIDER_URL,
       privateKey: PRIVATE_KEY, // Thay bằng private key của ví nguồn
-      contractAddress: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd", // Thay bằng địa chỉ hợp đồng token của bạn
-      recipientAddress: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+      contractAddress: swapCoinItem.tokenAddress, // Thay bằng địa chỉ hợp đồng token của bạn
+      recipientAddress: swapCoinItem.tokenAddress,
       amount: amount.toLocaleString(), // Số lượng token cần rút
     };
 
