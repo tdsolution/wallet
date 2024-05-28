@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import React,{ useCallback, useMemo, useRef, useState } from 'react';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {
   UseWebViewBridgeReturnType,
@@ -7,8 +7,8 @@ import {
 } from './types';
 import { getInjectableJSMessage, objectToInjection } from './utils';
 import { useChain, useEvm } from '@tonkeeper/shared/hooks';
-import Web3 from 'web3';
-import  WalletConnectProvider  from '@walletconnect/web3-provider';
+// import Web3 from 'web3';
+// import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
@@ -27,6 +27,7 @@ export const useWebViewBridge = <
   const walletPrivateKey = new ethers.Wallet(evm.privateKey);
   const provider =new JsonRpcProvider(chain.rpc);
   let wallet = walletPrivateKey.connect(provider);
+  const [isShow, setIsShow] = useState<boolean>(false);
 
   const injectedJavaScriptBeforeContentLoaded = useMemo(
     () => objectToInjection(bridgeObj, timeout),
@@ -37,7 +38,7 @@ export const useWebViewBridge = <
     ref.current?.injectJavaScript(getInjectableJSMessage(JSON.stringify(message)));
   }, []);
 
-
+  let showAlert = false;
 
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
@@ -66,6 +67,9 @@ export const useWebViewBridge = <
         }
       }
       else {
+        if(showAlert) {
+          return;
+        }
        handleMessage(event);
       }
     },
@@ -73,15 +77,21 @@ export const useWebViewBridge = <
   );
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    console.log(data);
+    console.log("Data: ",data);
     let result;
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
           result = [wallet.address];
+          console.log("Result: ", result)
+          Alert.alert("Connect success");
           break;
-        case 'eth_chainId':
-          result = chain.chainId;
+          case 'eth_chainId':
+            result = chain.chainId;
+            showAlert = true;
+            setTimeout(() => {
+              showAlert = false;
+            }, 500)
           break;
         case 'eth_blockNumber':
           result = chain.chainId;
@@ -151,6 +161,7 @@ export const useWebViewBridge = <
         result = txReceipt;
         break;
       case 'eth_call':
+        console.log("Alo Alo")
        try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0] ;
