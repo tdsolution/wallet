@@ -130,7 +130,7 @@ export const useWebViewBridge = <
               requestPromise: { resolve, reject },
               value: ethers.formatUnits(value),
               addressTo: txParams.to,
-              gas: ethers.formatUnits(gasLimit),
+              gas: ethers.formatUnits(gasPrice),
               balance: balance,
               reff: webViewUrl,
             })
@@ -179,7 +179,7 @@ export const useWebViewBridge = <
     }
   }
 // Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
-async function getTransactionReceiptWithRetry(chain, data, retries = 3) {
+async function getTransactionReceiptWithRetry(chain, data, retries = 5) {
     try {
         const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
         console.log('eth_getTransactionReceipt:', resultt.result);
