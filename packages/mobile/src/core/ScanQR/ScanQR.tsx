@@ -127,7 +127,7 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
       <S.Wrap>
         <S.CloseButtonWrap onPress={handleBack}>
           <S.CloseButton>
-            {isIOS && <S.BlurNode />}
+            {/* {!isIOS && <S.BlurNode />} */}
             <Icon
               name="ic-chevron-down-16"
               color="foregroundPrimary"
@@ -208,7 +208,7 @@ export const ScanQR: FC<ScanQRProps> = ({ route }) => {
               </S.FlashlightButtonCont>
             ) : (
               <S.FlashlightButtonContBlur>
-                {isIOS && <S.BlurNode />}
+                {/* {!isIOS && <S.BlurNode />} */}
                 <Icon
                   name="ic-flashlight-on-56"
                   color="foregroundPrimary"

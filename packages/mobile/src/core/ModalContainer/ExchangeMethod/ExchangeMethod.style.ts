@@ -43,7 +43,7 @@ export const Link = styled.TouchableOpacity.attrs({
 `;
 
 export const WarningContainer = styled.View`
-  background-color: ${({ theme }) => "gray"};
+  background-color: ${({ theme }) => "#eeeeee"};
   padding-horizontal: ${ns(16)}px;
   padding-vertical: ${ns(14)}px;
   margin-horizontal: ${ns(16)}px
