@@ -67,9 +67,9 @@ export const useDAppBridge = (walletAddress: string, webViewUrl: string) => {
         TonConnect.handleRequestFromInjectedBridge(request, webViewUrl),
     };
   }, [webViewUrl]);
-
+  
   const [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent, isConnecting, setIsConnecting] =
-    useWebViewBridge<TonConnectInjectedBridge, WalletEvent>(bridgeObject);
+    useWebViewBridge<TonConnectInjectedBridge, WalletEvent>(bridgeObject, webViewUrl);
 
   const disconnect = useCallback(async () => {
     try {

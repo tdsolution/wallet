@@ -235,10 +235,6 @@ console.log(isConnecting)
         />
         <S.LoadingBar style={loadingBarAnimatedStyle} />
       </S.DAppContainer>
-      <ModalConnect
-        modalVisible={isConnecting} 
-        onClose={handleCloseModalAccount} 
-      />
     </S.Container>
   );
 };

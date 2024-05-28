@@ -14,6 +14,8 @@ import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
 import { sendRpcRequest, sleep } from './func';
+import { openTDConnect } from '../components/ModalConnect';
+import { fetchBalaceEvm } from '$libs/EVM/useBalanceEVM';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -21,6 +23,7 @@ export const useWebViewBridge = <
   Event extends object = {},
 >(
   bridgeObj: BridgeObject,
+  webViewUrl: string,
   timeout: number | null = null,
 ): UseWebViewBridgeReturnType<Event> => {
   const ref = useRef<WebView>(null);
@@ -120,7 +123,18 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
-         
+
+          const balance = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
+          const accept = await new Promise((resolve, reject) =>
+            openTDConnect({
+              requestPromise: { resolve, reject },
+              value: ethers.formatUnits(value),
+              addressTo: txParams.to,
+              gas: ethers.formatUnits(gasLimit),
+              balance: balance,
+              reff: webViewUrl,
+            })
+          );
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
           result = signedTx.hash;
@@ -154,7 +168,7 @@ export const useWebViewBridge = <
           } catch (error) {
             console.error('Error sending RPC request:', error);
           }       
-      break;
+          break;
     default:
       console.log('Method not supported', data)
               throw new Error('Method not supported');
