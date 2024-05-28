@@ -13,7 +13,7 @@ import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
-import { sendRpcRequest } from './func';
+import { sendRpcRequest, sleep } from './func';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -135,14 +135,11 @@ export const useWebViewBridge = <
           }  
         break;
       case 'eth_getTransactionReceipt':
-        try {
-          const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
-           console.log('eth_getTransactionReceipt:', resultt.result);
-          result = resultt.result;
+          try {
+            result = await getTransactionReceiptWithRetry(chain, data);
           } catch (error) {
-            console.error('Error sending RPC request:', error);
-          }  
-        break;
+          }
+          break;
       case 'eth_call':
          try {
           const resultt = await sendRpcRequest(chain.rpc, 'eth_call', data.params, data.id);
@@ -161,7 +158,23 @@ export const useWebViewBridge = <
     }
   }
 // Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
-
+async function getTransactionReceiptWithRetry(chain, data, retries = 3) {
+    try {
+        const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
+        console.log('eth_getTransactionReceipt:', resultt.result);
+        if (resultt.result !== null) {
+            return resultt.result;
+        } else if (retries > 0) {
+            console.log('Result is null. Retrying...');
+            return await getTransactionReceiptWithRetry(chain, data, retries - 1);
+        } else {
+            return null; // Không còn lần thử nào nữa
+        }
+    } catch (error) {
+        console.error('Error sending RPC request:', error);
+        throw error;
+    }
+}
 
   const sendEvent = useCallback(
     (event: any) => {

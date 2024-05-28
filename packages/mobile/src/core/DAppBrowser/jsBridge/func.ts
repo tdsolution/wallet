@@ -23,3 +23,6 @@ export function sendRpcRequest(rpcUrl, method, params, id) {
       throw error;
     });
 }
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
