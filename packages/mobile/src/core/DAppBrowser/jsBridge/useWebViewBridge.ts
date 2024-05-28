@@ -91,6 +91,9 @@ export const useWebViewBridge = <
         case 'eth_blockNumber':
           result = chain.chainId;
           break;
+        case 'wallet_switchEthereumChain':
+          result = data.params[0].chainId;
+        break;
         case 'eth_estimateGas':
            const tx = {
             to: data.params[0].to,
