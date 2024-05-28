@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { ethers, JsonRpcProvider, formatUnits } from "ethers";
 import {
@@ -56,9 +57,11 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   let evmAddress = evm.privateKey;
   evmAddress = evmAddress.replace(/^"|"$/g, '');
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const PRIVATE_KEY = evmAddress.toString();
   const PROVIDER_URL = chain.rpc;
   const handleConfirm = () => {
+    setIsLoading(false);
     nav.navigate("SwapComplete", {
       address: from,
       amount: amount,
@@ -94,6 +97,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     };
 
     try {
+      setIsLoading(true);
       await transfer(transferParams);
       handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
     } catch (error) {
@@ -113,6 +117,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     };
 
     try {
+      setIsLoading(true);
       await withdraw(withdrawParams);
       handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
     } catch (error) {
@@ -178,8 +183,13 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
           <TouchableOpacity style={[styles.btnReject]} onPress={closeModal}>
             <Text style={styles.textReject}>Reject</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button]} onPress={isTransfer ? handleTransfer : handleWithdraw}>
-            <Text style={styles.textButton}>Confirm</Text>
+          <TouchableOpacity disabled={isLoading} style={[styles.button]} onPress={isTransfer ? handleTransfer : handleWithdraw}>
+            {
+              isLoading ? (<ActivityIndicator size={'small'} color={"#ffffff"} />) : 
+              (
+                <Text style={styles.textButton}>Confirm</Text>
+              )
+            }
           </TouchableOpacity>
         </View>
       </View>
