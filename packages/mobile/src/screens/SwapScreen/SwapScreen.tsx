@@ -148,6 +148,9 @@ const SwapScreen = () => {
               placeholder="0"
               placeholderTextColor={colors.Gray}
               keyboardType="numeric"
+              autoFocus
+              cursorColor = {colors.Primary}
+              
             />
             <Text style={[styles.priceUSD]}>
               $ {inputValue.length > 0 ? coin : 0}
