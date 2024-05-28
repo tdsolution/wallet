@@ -19,4 +19,6 @@ export type UseWebViewBridgeReturnType<Event> = [
   string,
   (e: WebViewMessageEvent) => void,
   (event: Event) => void,
+  boolean,
+  React.Dispatch<React.SetStateAction<boolean>>
 ];

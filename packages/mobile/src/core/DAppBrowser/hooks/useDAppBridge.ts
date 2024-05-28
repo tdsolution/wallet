@@ -68,7 +68,7 @@ export const useDAppBridge = (walletAddress: string, webViewUrl: string) => {
     };
   }, [webViewUrl]);
 
-  const [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent] =
+  const [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent, isConnecting, setIsConnecting] =
     useWebViewBridge<TonConnectInjectedBridge, WalletEvent>(bridgeObject);
 
   const disconnect = useCallback(async () => {
@@ -90,5 +90,7 @@ export const useDAppBridge = (walletAddress: string, webViewUrl: string) => {
     notificationsEnabled,
     disconnect,
     unsubscribeFromNotifications,
+    isConnecting,
+    setIsConnecting
   };
 };

@@ -87,13 +87,13 @@ import { SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getABIFromAPI } from "$core/DAppBrowser/func";
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const {evm, setEvm} = useEvm();
   const addressEvm = evm.addressWallet;
-  console.log(">>>>>>>>>>>>>Ví EVM:", evm);
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -258,7 +258,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     } else {
       openRequireWalletModal();
     }
-    // SendTokenEVM();
     // swapTokenDeposit();
   }, [nav, wallet]);
 

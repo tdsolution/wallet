@@ -1,4 +1,5 @@
-import React,{ useCallback, useMemo, useRef, useState } from 'react';
+import { i18n } from '$translation';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {
   UseWebViewBridgeReturnType,
@@ -12,6 +13,7 @@ import { useChain, useEvm } from '@tonkeeper/shared/hooks';
 import { JsonRpcProvider, formatUnits } from 'ethers';
 import ConnectModal from '../popup/ModalConnect';
 import { Alert } from 'react-native';
+import { sendRpcRequest, sleep } from './func';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -24,6 +26,8 @@ export const useWebViewBridge = <
   const ref = useRef<WebView>(null);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
+  const [isConnecting, setIsConnecting]= useState(false);
+  const [isRequestHandled, setIsRequestHandled]= useState(false);
   const walletPrivateKey = new ethers.Wallet(evm.privateKey);
   const provider =new JsonRpcProvider(chain.rpc);
   let wallet = walletPrivateKey.connect(provider);
@@ -42,14 +46,11 @@ export const useWebViewBridge = <
 
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
-      console.log('onMessage');
       if (chain.chainId == "1100") {
         const message = JSON.parse(event.nativeEvent.data) as WebViewBridgeMessage;
-        console.log(message);
         if (message.type === WebViewBridgeMessageType.invokeRnFunc) {
           try {
             const result = await bridgeObj[message.name](...message.args);
-
             postMessage({
               type: WebViewBridgeMessageType.functionResponse,
               invocationId: message.invocationId,
@@ -77,21 +78,15 @@ export const useWebViewBridge = <
   );
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    console.log("Data: ",data);
     let result;
+    console.log(data);
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
           result = [wallet.address];
-          console.log("Result: ", result)
-          Alert.alert("Connect success");
           break;
           case 'eth_chainId':
             result = chain.chainId;
-            showAlert = true;
-            setTimeout(() => {
-              showAlert = false;
-            }, 500)
           break;
         case 'eth_blockNumber':
           result = chain.chainId;
@@ -113,7 +108,7 @@ export const useWebViewBridge = <
           const txParams = data.params[0];
           const gasLimit = BigInt(txParams.gas);
           const gasPrice = BigInt(txParams.gasPrice);
-          const value = BigInt(txParams.value);
+          const value = txParams.value ? BigInt(txParams.value) : 0n;
           const txSend = {
             to: txParams.to,
             from: txParams.from,
@@ -122,6 +117,7 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
+         
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
           result = signedTx.hash;
@@ -132,84 +128,63 @@ export const useWebViewBridge = <
         console.error('Error sending transaction:', error);
         result = 'Error sending transaction';
       }
-      //   if (data.params && data.params[0]) {
-      //     const txParams = data.params[0];
-      //     const gasLimit = BigInt(txParams.gas);
-      //     const txSend = {
-      //       to: txParams.to,
-      //       from: txParams.from,
-      //       data: txParams.data,
-      //       gasLimit: gasLimit,
-      //     };
-      //     const signedTx = await wallet.sendTransaction(txSend);
-      //     console.log('Signed Transaction:', signedTx);
-      //     result = signedTx.hash;
-      //   } else {
-      //     throw new Error('Invalid parameters for eth_sendTransaction');
-      //   }
-      // } catch (error) {
-      //   console.error('Error sending transaction:', error);
-      //   result = 'Error sending transaction';
-      // }
         break;
       case 'eth_getTransactionByHash':
-        const txTransaction = await provider.getTransaction(data.params[0]);
-        result = txTransaction;
+         try {
+          const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionByHash', data.params, data.id);
+           console.log('eth_getTransactionByHash:', resultt.result);
+          result = resultt.result;
+          } catch (error) {
+            console.error('Error sending RPC request:', error);
+          }  
         break;
       case 'eth_getTransactionReceipt':
-        const txReceipt = await provider.getTransactionReceipt(data.params[0]);
-        result = txReceipt;
-        break;
-      case 'eth_call':
-        console.log("Alo Alo")
-       try {
-        if (data.params && data.params[0]) {
-          const txParams = data.params[0] ;
-          if(txParams.data == '0x70a08231000000000000000000000000ea5007831646fa01c7079b15cfa4c62748905b04'||
-            txParams.data == '0xd54ad2a1'||
-           txParams.data == '0x46b5887f' ||
-            txParams.data == '0x27d60f9b'||
-             txParams.data == '0xade58ee6'||
-             txParams.data == '0x5556db65' || txParams.data == '0xaca7b156000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047771777100000000000000000000000000000000000000000000000000000000", "from": "0x966702804e2c8511cd77282afed224989e408bea'){
-          }else {
-          const txSend = {
-            to: txParams.to,
-            from: txParams.from,
-            data: '0xae169a500000000000000000000000000000000000000000000000000000000000000000',
-            gasLimit: txParams.gas,
-          };
-          const signedTx = await wallet.sendTransaction(txSend);
-          console.log('Signed Transaction:', signedTx);
-          const txReceipt = await provider.getTransactionReceipt(signedTx.hash);
-          result = txReceipt;
-          // result = txReceipt.hash;
+          try {
+            result = await getTransactionReceiptWithRetry(chain, data);
+          } catch (error) {
           }
-        } else {
-          throw new Error('Invalid parameters for eth_sendTransaction');
-        }
-      } catch (error) {
-        console.error('Error sending transaction:', error);
-        result = 'Error sending transaction';
-      }
+          break;
+      case 'eth_call':
+         try {
+          const resultt = await sendRpcRequest(chain.rpc, 'eth_call', data.params, data.id);
+          result = resultt.result;
+          } catch (error) {
+            console.error('Error sending RPC request:', error);
+          }       
       break;
-   default:
-            throw new Error('Method not supported');
-      }
+    default:
+      console.log('Method not supported', data)
+              throw new Error('Method not supported');
+        }
      ref.current?.postMessage(JSON.stringify({ id: data.id, result }));
     } catch (error) {
       ref.current?.postMessage(JSON.stringify({ id: data.id, error: error.message }));
     }
   }
+// Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
+async function getTransactionReceiptWithRetry(chain, data, retries = 3) {
+    try {
+        const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
+        console.log('eth_getTransactionReceipt:', resultt.result);
+        if (resultt.result !== null) {
+            return resultt.result;
+        } else if (retries > 0) {
+            console.log('Result is null. Retrying...');
+            return await getTransactionReceiptWithRetry(chain, data, retries - 1);
+        } else {
+            return null; // Không còn lần thử nào nữa
+        }
+    } catch (error) {
+        console.error('Error sending RPC request:', error);
+        throw error;
+    }
+}
 
-const signPersonalMessage = async (message) => {
-     const messageBytes = ethers.utils.arrayify(message)
-};
   const sendEvent = useCallback(
     (event: any) => {
       postMessage({ type: WebViewBridgeMessageType.event, event });
     },
     [postMessage],
   );
-
-  return [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent];
+  return [ref, injectedJavaScriptBeforeContentLoaded, onMessage, sendEvent, isConnecting, setIsConnecting];
 };
