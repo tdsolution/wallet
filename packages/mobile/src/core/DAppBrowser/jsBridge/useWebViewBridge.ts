@@ -75,6 +75,7 @@ export const useWebViewBridge = <
   const handleMessage = async (event) => {
     const data = JSON.parse(event.nativeEvent.data);
     let result;
+    console.log(data);
     try {
       switch (data.method) {
         case 'eth_requestAccounts':
@@ -98,7 +99,6 @@ export const useWebViewBridge = <
           result = gasEstimateHex;
           break;
        case 'eth_sendTransaction':
-       console.log(data);
       try {
         if (data.params && data.params[0]) {
           const txParams = data.params[0];
@@ -113,7 +113,7 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
-          console.log('txSend:', txSend);
+         
           const signedTx = await wallet.sendTransaction(txSend);
           console.log('Signed Transaction:', signedTx);
           result = signedTx.hash;
@@ -124,33 +124,24 @@ export const useWebViewBridge = <
         console.error('Error sending transaction:', error);
         result = 'Error sending transaction';
       }
-      //   if (data.params && data.params[0]) {
-      //     const txParams = data.params[0];
-      //     const gasLimit = BigInt(txParams.gas);
-      //     const txSend = {
-      //       to: txParams.to,
-      //       from: txParams.from,
-      //       data: txParams.data,
-      //       gasLimit: gasLimit,
-      //     };
-      //     const signedTx = await wallet.sendTransaction(txSend);
-      //     console.log('Signed Transaction:', signedTx);
-      //     result = signedTx.hash;
-      //   } else {
-      //     throw new Error('Invalid parameters for eth_sendTransaction');
-      //   }
-      // } catch (error) {
-      //   console.error('Error sending transaction:', error);
-      //   result = 'Error sending transaction';
-      // }
         break;
       case 'eth_getTransactionByHash':
-        const txTransaction = await provider.getTransaction(data.params[0]);
-        result = txTransaction;
+         try {
+          const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionByHash', data.params, data.id);
+           console.log('eth_getTransactionByHash:', resultt.result);
+          result = resultt.result;
+          } catch (error) {
+            console.error('Error sending RPC request:', error);
+          }  
         break;
       case 'eth_getTransactionReceipt':
-        const txReceipt = await provider.getTransactionReceipt(data.params[0]);
-        result = txReceipt?.blockHash;
+        try {
+          const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
+           console.log('eth_getTransactionReceipt:', resultt.result);
+          result = resultt.result;
+          } catch (error) {
+            console.error('Error sending RPC request:', error);
+          }  
         break;
       case 'eth_call':
          try {
