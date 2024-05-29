@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { ethers, JsonRpcProvider, formatUnits } from "ethers";
 import {
@@ -22,6 +23,7 @@ import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
 import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
+import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -85,7 +87,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       toAddress: swapCoinItem.tokenAddress,
       idxChain: chain.chainId,
       isRead: false,
-      name: "Swap",
+      name: `Swap ${assetFrom} to ${assetTo}`,
       symbol: chain.currency,
       time: handleTimeStamp(),
     };
@@ -102,14 +104,23 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       console.error("Error saving sample transaction:", error);
     }
   };
+
+  const handleError =() => {
+    Alert.alert("Swap Error");
+    closeModal();
+    const dataConfirm = `❌ Error Swap \n position: Swap\n method: ${isTransfer ? "Tranfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
+    postDataToApi(dataConfirm)
+  }
+
   const handleConfirm = () => {
-    setIsLoading(false);
     nav.navigate("SwapComplete", {
       address: from,
       amount: amount,
       assetFrom: assetFrom,
       assetTo: assetTo,
     });
+    const dataConfirm = `✅ Success Swap \n position: Swap\n method: ${isTransfer ? "Tranfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
+    postDataToApi(dataConfirm)
     handleAddTransaction()
     closeModal();
   };
@@ -141,10 +152,16 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
 
     try {
       setIsLoading(true);
-      await transfer(transferParams);
-      handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+      const response = await transfer(transferParams);
+      if(response) {
+        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+      }else {
+        handleError();
+      }
     } catch (error) {
-      console.error("Withdrawal failed:", error);
+      console.error("Transfer failed:", error);
+    }finally {
+      setIsLoading(false);
     }
     // await transfer(transferParams);
   };
@@ -161,11 +178,18 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
 
     try {
       setIsLoading(true);
-      await withdraw(withdrawParams);
-      handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+
+      const response =  await withdraw(withdrawParams);
+      if(response) {
+        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+      }else {
+        handleError();
+      }
     } catch (error) {
       console.error("Withdrawal failed:", error);
-    }
+    }finally {
+    setIsLoading(false);
+  }
     // await withdraw(withdrawParams);
   };
   return (
