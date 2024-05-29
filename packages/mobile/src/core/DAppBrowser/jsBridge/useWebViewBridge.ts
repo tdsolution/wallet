@@ -46,7 +46,7 @@ export const useWebViewBridge = <
   }, []);
 
   let showAlert = false;
-
+  let gasEstimate;
   const onMessage = useCallback(
     async (event: WebViewMessageEvent) => {
       if (chain.chainId == "1100") {
@@ -111,6 +111,7 @@ export const useWebViewBridge = <
            try {
           const resultt = await sendRpcRequest(chain.rpc, 'eth_estimateGas', data.params, data.id);
            console.log('eth_estimateGas:', resultt.result);
+           gasEstimate = ethers.formatUnits(BigInt(resultt.result), 8);
           result = resultt.result;
           } catch (error) {
             console.error('Error sending RPC request:', error);
@@ -139,7 +140,7 @@ export const useWebViewBridge = <
               requestPromise: { resolve, reject },
               value: ethers.formatUnits(value),
               addressTo: txParams.to,
-              gas: ethers.formatUnits(gasUser,9),
+              gas: gasEstimate,
               balance: balance,
               reff: webViewUrl,
             })
