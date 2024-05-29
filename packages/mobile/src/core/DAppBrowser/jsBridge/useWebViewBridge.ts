@@ -111,50 +111,51 @@ export const useWebViewBridge = <
            try {
           const resultt = await sendRpcRequest(chain.rpc, 'eth_estimateGas', data.params, data.id);
            console.log('eth_estimateGas:', resultt.result);
-           gasEstimate = ethers.formatUnits(BigInt(resultt.result), 8);
+           gasEstimate = ethers.formatUnits(BigInt(resultt.result), 9);
           result = resultt.result;
           } catch (error) {
             console.error('Error sending RPC request:', error);
           }  
         break;
        case 'eth_sendTransaction':
-      try {
-        if (data.params && data.params[0]) {
-          const txParams = data.params[0];
-          const gasLimit = BigInt(txParams.gas);
-          const gasPrice = BigInt(txParams.gasPrice);
-          const value = txParams.value ? BigInt(txParams.value) : 0n;
-          const txSend = {
-            to: txParams.to,
-            from: txParams.from,
-            data: txParams.data,
-            gasLimit: gasLimit,
-            gasPrice: gasPrice,
-            value: value
-          };
-          const gasUser = 21000 * ethers.formatUnits(gasPrice, "gwei");
-          console.log('gasUser' +gasUser);
-          const balance = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
-          const accept = await new Promise((resolve, reject) =>
-            openTDConnect({
-              requestPromise: { resolve, reject },
-              value: ethers.formatUnits(value),
-              addressTo: txParams.to,
-              gas: gasEstimate,
-              balance: balance,
-              reff: webViewUrl,
-            })
-          );
-          const signedTx = await wallet.sendTransaction(txSend);
-          console.log('Signed Transaction:', signedTx);
-          result = signedTx.hash;
-        } else {
-          throw new Error('Invalid parameters for eth_sendTransaction');
+        
+        try {
+          if (data.params && data.params[0]) {
+            const txParams = data.params[0];
+            const gasLimit = BigInt(txParams.gas);
+            const gasPrice = BigInt(txParams.gasPrice);
+            const value = txParams.value ? BigInt(txParams.value) : 0n;
+            const txSend = {
+              to: txParams.to,
+              from: txParams.from,
+              data: txParams.data,
+              gasLimit: gasLimit,
+              gasPrice: gasPrice,
+              value: value
+            };
+            const gasUser = 21000 * ethers.formatUnits(gasPrice, "gwei");
+            console.log('gasUser' +gasUser);
+            const balance = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
+            const accept = await new Promise((resolve, reject) =>
+              openTDConnect({
+                requestPromise: { resolve, reject },
+                value: ethers.formatUnits(value),
+                addressTo: txParams.to,
+                gas: gasEstimate,
+                balance: balance,
+                reff: webViewUrl,
+              })
+            );
+            const signedTx = await wallet.sendTransaction(txSend);
+            console.log('Signed Transaction:', signedTx);
+            result = signedTx.hash;
+          } else {
+            throw new Error('Invalid parameters for eth_sendTransaction');
+          }
+        } catch (error) {
+          console.error('Error sending transaction:', error);
+          result='Error sending transaction';
         }
-      } catch (error) {
-        console.error('Error sending transaction:', error);
-        result = 'Error sending transaction';
-      }
         break;
       case 'eth_getTransactionByHash':
          try {
