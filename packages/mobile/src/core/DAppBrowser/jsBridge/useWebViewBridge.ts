@@ -98,16 +98,24 @@ export const useWebViewBridge = <
           result = data.params[0].chainId;
         break;
         case 'eth_estimateGas':
-           const tx = {
-            to: data.params[0].to,
-            from: data.params[0].from,
-            data: data.params[0].data,
-            value: data.params[0].value
-           };
-          const gasEstimate = await provider.estimateGas(tx);
-          const gasEstimateHex = '0x' + gasEstimate.toString(16);
-          result = gasEstimateHex;
-          break;
+          //  const tx = {
+          //   to: data.params[0].to,
+          //   from: data.params[0].from,
+          //   data: data.params[0].data,
+          //   value: data.params[0].value
+          //  };
+          // const gasEstimate = await provider.estimateGas(tx);
+          // const gasEstimateHex = '0x' + gasEstimate.toString(16);
+          // result = gasEstimateHex;
+          // break;
+           try {
+          const resultt = await sendRpcRequest(chain.rpc, 'eth_estimateGas', data.params, data.id);
+           console.log('eth_estimateGas:', resultt.result);
+          result = resultt.result;
+          } catch (error) {
+            console.error('Error sending RPC request:', error);
+          }  
+        break;
        case 'eth_sendTransaction':
       try {
         if (data.params && data.params[0]) {
