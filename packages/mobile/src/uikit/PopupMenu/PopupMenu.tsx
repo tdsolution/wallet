@@ -101,7 +101,7 @@ export function PopupMenuComponent(props: PopupMenuProps) {
     <>
       <View
         ref={childrenRef}
-        style={{ zIndex: 3 }} // fix for highlight
+        style={{ zIndex: 3,}} // fix for highlight
         collapsable={false} // fix measureInWindow on Android
       >
         {childrenPrepared}
@@ -109,7 +109,17 @@ export function PopupMenuComponent(props: PopupMenuProps) {
 
       <Modal animationType="none" transparent visible={visible}>
         <S.Overlay onPress={handleClose} />
-        <S.Wrap style={[{ top: offsetTop.current }, popupAnimation.style]}>
+        <S.Wrap style={[{
+          top: offsetTop.current, backgroundColor: '#fff', shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.20,
+          shadowRadius: 1.41,
+
+          elevation: 2,
+        }, popupAnimation.style]}>
           <S.Content>
             {itemsPrepared.map((item, index, arr) => (
               <View key={index}>

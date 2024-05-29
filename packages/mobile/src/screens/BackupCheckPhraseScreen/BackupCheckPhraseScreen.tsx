@@ -11,10 +11,11 @@ import {
   Text,
   Input,
   Spacer,
-  Button,
+  Button
 } from "@tonkeeper/uikit";
 import { tk } from "$wallet";
 import { colors } from "../../constants/colors";
+import { Pressable, TouchableOpacity } from "react-native";
 
 export const BackupCheckPhraseScreen = memo(() => {
   const { words } = useParams<{ words: { index: number; word: string }[] }>();
@@ -137,11 +138,18 @@ export const BackupCheckPhraseScreen = memo(() => {
         <Screen.ButtonSpacer />
       </Screen.ScrollView>
       <Screen.ButtonContainer>
-        <Button
+        {/* <Button
           title={t("backup_check.done_button")}
           onPress={handleSubmit}
           disabled={!isValid}
-        />
+          
+        /> */}
+        <TouchableOpacity 
+        disabled={!isValid}
+        onPress={handleSubmit}
+        style={{width: '100%', backgroundColor: colors.Primary, borderRadius: 16, height: 57, justifyContent: 'center', alignItems: 'center', opacity: isValid ? 1 : 0.5}}>
+          <Text style={{color: colors.White, fontSize: 16, fontWeight: 'bold', fontFamily: 'Popins-Medium'}}>{t("backup_check.done_button")}</Text>
+        </TouchableOpacity>
       </Screen.ButtonContainer>
     </Screen>
   );

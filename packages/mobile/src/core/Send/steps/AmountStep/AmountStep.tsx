@@ -11,6 +11,8 @@ import { CoinDropdown } from './CoinDropdown';
 import { t } from '@tonkeeper/shared/i18n';
 import { Steezy, View, Text } from '@tonkeeper/uikit';
 import { useWallet } from '@tonkeeper/shared/hooks';
+import { TouchableOpacity } from 'react-native';
+import { colors } from '../../../../constants/colors';
 
 const AmountStepComponent: FC<AmountStepProps> = (props) => {
   const {
@@ -104,6 +106,13 @@ const AmountStepComponent: FC<AmountStepProps> = (props) => {
       <Button disabled={!isReadyToContinue} isLoading={isPreparing} onPress={onContinue}>
         {t('continue')}
       </Button>
+       {/* <TouchableOpacity
+       
+            disabled={!isReadyToContinue}
+            onPress={onContinue}
+            style={{ width: '100%', backgroundColor: colors.Primary, borderRadius: 16, height: 57, justifyContent: 'center', alignItems: 'center', opacity: isReadyToContinue ? 1 : 0.5 }}>
+            <Text style={{ color: colors.White, fontSize: 16, fontWeight: 'bold', fontFamily: 'Popins-Medium' }}>{t('continue')}</Text>
+          </TouchableOpacity> */}
     </S.Container>
   );
 };

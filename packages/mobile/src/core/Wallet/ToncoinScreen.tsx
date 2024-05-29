@@ -25,6 +25,7 @@ import { navigate } from '$navigation/imperative';
 import { WalletCurrency } from '@tonkeeper/core';
 import { useWallet, useWalletCurrency } from '@tonkeeper/shared/hooks';
 import { config } from '$config';
+import { colors } from '../../constants/colors';
 
 export const ToncoinScreen = memo(() => {
   const activityList = useTonActivityList();
@@ -64,11 +65,11 @@ export const ToncoinScreen = memo(() => {
                     shouldCloseMenu
                     onPress={handleOpenExplorer}
                     text={t('jetton_open_explorer')}
-                    icon={<Icon name="ic-globe-16" color="accentBlue" />}
+                    icon={<Icon name="ic-globe-16" color="iconPrimary" colorHex="black" />}
                   />,
                 ]}
               >
-                <S.HeaderViewDetailsButton onPress={() => null}>
+                <S.HeaderViewDetailsButton onPress={() => null} style={{backgroundColor: colors.Primary}}>
                   <Icon name="ic-ellipsis-16" color="iconPrimary" />
                 </S.HeaderViewDetailsButton>
               </PopupMenu>
