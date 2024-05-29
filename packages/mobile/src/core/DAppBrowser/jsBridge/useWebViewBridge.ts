@@ -123,14 +123,15 @@ export const useWebViewBridge = <
             gasPrice: gasPrice,
             value: value
           };
-
+          const gasUser = 21000 * ethers.formatUnits(gasPrice, "gwei");
+          console.log('gasUser' +gasUser);
           const balance = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
           const accept = await new Promise((resolve, reject) =>
             openTDConnect({
               requestPromise: { resolve, reject },
               value: ethers.formatUnits(value),
               addressTo: txParams.to,
-              gas: ethers.formatUnits(gasPrice),
+              gas: ethers.formatUnits(gasUser,9),
               balance: balance,
               reff: webViewUrl,
             })
@@ -179,7 +180,7 @@ export const useWebViewBridge = <
     }
   }
 // Hàm đợi đến khi giao dịch được xác nhận và nhận biên nhận
-async function getTransactionReceiptWithRetry(chain, data, retries = 5) {
+async function getTransactionReceiptWithRetry(chain, data, retries = 10) {
     try {
         const resultt = await sendRpcRequest(chain.rpc, 'eth_getTransactionReceipt', data.params, data.id);
         console.log('eth_getTransactionReceipt:', resultt.result);
