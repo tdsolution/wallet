@@ -25,6 +25,7 @@ import { DataChains } from '@tonkeeper/shared/utils/network';
 import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
 import { CreateWalletStackRouteNames } from '$navigation/CreateWalletStack/types';
 import SaveListCoinRate from '$libs/EVM/api/get_exchange_rate';
+
 const bip39 = require('bip39')
 const HEIGHT_RATIO = deviceHeight / 844;
 const  WIDTH_RATIO = deviceWidth / 844;
@@ -32,7 +33,6 @@ export const StartScreen = memo(() => {
   const dimensions = useWindowDimensions();
   const dispatch = useDispatch();
   const nav = useNavigation();
-
   const origShapesWidth = 560;
   const origShapesHeight = 494;
   const origShapesScreenHeight = 844;
@@ -40,7 +40,6 @@ export const StartScreen = memo(() => {
   const logoShapesPosX = origShapesWidth / 2 - dimensions.width / 2;
   const logoShapesPosY =
     origShapesHeight / 2 - (origShapesHeight * ratioHeight) / 2;
-
   const handleCreatePress = useCallback(async () => {
     dispatch(walletActions.generateVault());
     const mnemonic  = await generateMnemonic();

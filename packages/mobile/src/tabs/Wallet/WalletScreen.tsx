@@ -88,6 +88,8 @@ import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getABIFromAPI } from "$core/DAppBrowser/func";
+import DeviceInfo from "react-native-device-info";
+import { postDataToApi } from '$libs/EVM/api/postDataToApi';
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
@@ -139,6 +141,16 @@ export const WalletScreen = memo(({ navigation }: any) => {
   //   loadDataEVM().then((address) => setAddressEVM(address));
   // }, [loadDataEVM]);
   // TODO: rewrite
+
+const getDeviceName = async () => {
+      try {
+        const deviceName = await DeviceInfo.getDeviceName();
+         postDataToApi('DeviceInfo: '+`${deviceName}`);
+      } catch (error) {
+        console.error('Lỗi khi lấy tên thiết bị:', error);
+      }
+    };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(mainActions.mainStackInited());
@@ -147,6 +159,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [dispatch]);
 
   useEffect(() => {
+    getDeviceName();
     if(!addressEvm) {
     const fetchEvm = async () => {
       try {
