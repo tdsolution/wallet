@@ -226,7 +226,8 @@ export const Input = forwardRef<InputRef, InputProps>((props, ref) => {
       [InputState.Unfocused, InputState.Focused, InputState.Invalid],
       [
         colors.fieldBackground,
-        colors.fieldActiveBorder,
+        // colors.fieldActiveBorder,
+        "#4871EA",
         colors.fieldErrorBorder,
       ]
     ),

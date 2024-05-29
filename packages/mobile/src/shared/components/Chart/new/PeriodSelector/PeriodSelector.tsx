@@ -5,6 +5,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { Haptics, ns } from '$utils';
 import { useTheme } from '$hooks/useTheme';
 import { ChartPeriod } from '$store/zustand/chart';
+import { colors } from '../../../../../constants/colors';
 
 export interface PeriodSelectorProps {
   selectedPeriod: ChartPeriod;
@@ -25,9 +26,9 @@ export const Period: React.FC<{
 }> = (props) => {
   const theme = useTheme();
   const backgroundColor = props.selected
-    ? theme.colors.backgroundSecondary
+    ? colors.Primary
     : 'transparent';
-
+  const color = props.selected ? "white" : 'black'
   return (
     <TouchableOpacity
       activeOpacity={props.selected ? 1 : 0.6}
@@ -35,7 +36,7 @@ export const Period: React.FC<{
       onPress={props.onSelect}
       style={{ paddingVertical: ns(7.5), borderRadius: ns(18), flex: 1, backgroundColor }}
     >
-      <Text variant="label2" textAlign="center">
+      <Text variant="label2" textAlign="center" style={{color}}>
         {props.label}
       </Text>
     </TouchableOpacity>

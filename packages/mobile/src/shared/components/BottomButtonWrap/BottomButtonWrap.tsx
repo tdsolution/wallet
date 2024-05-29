@@ -28,7 +28,7 @@ export const BottomButtonWrap: FC<{ children: ReactNode }> = ({ children }) => {
       }}
     >
       <S.Gradient
-        colors={['rgba(21, 28, 41, 0)', theme.colors.backgroundPrimary]}
+        colors={['rgba(225, 225, 225, 0)', theme.colors.backgroundPrimary]}
         locations={[0, 1]}
       />
       <S.Content>{children}</S.Content>

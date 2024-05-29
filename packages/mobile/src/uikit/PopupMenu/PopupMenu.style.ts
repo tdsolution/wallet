@@ -47,4 +47,6 @@ export const ItemCheckedWrap = styled.View`
   width: ${ns(16)}px;
   height: ${ns(16)}px;
   flex: 0 0 auto;
+  tintColor: ${({ theme }) => "black"};
+
 `;
