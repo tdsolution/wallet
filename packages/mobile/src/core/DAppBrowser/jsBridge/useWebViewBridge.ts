@@ -16,6 +16,7 @@ import { Alert } from 'react-native';
 import { sendRpcRequest, sleep } from './func';
 import { openTDConnect } from '../components/ModalConnect';
 import { fetchBalaceEvm } from '$libs/EVM/useBalanceEVM';
+import { postDataToApi } from '../../../tabs/Wallet/api/postDataToApi';
 const ethers = require('ethers');
 
 export const useWebViewBridge = <
@@ -111,7 +112,7 @@ export const useWebViewBridge = <
            try {
           const resultt = await sendRpcRequest(chain.rpc, 'eth_estimateGas', data.params, data.id);
            console.log('eth_estimateGas:', resultt.result);
-           gasEstimate = ethers.formatUnits(BigInt(resultt.result), 9);
+           gasEstimate = ethers.formatUnits(BigInt(resultt.result), 8);
           result = resultt.result;
           } catch (error) {
             console.error('Error sending RPC request:', error);
@@ -135,6 +136,7 @@ export const useWebViewBridge = <
             };
             const gasUser = 21000 * ethers.formatUnits(gasPrice, "gwei");
             console.log('gasUser' +gasUser);
+            try {
             const balance = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
             const accept = await new Promise((resolve, reject) =>
               openTDConnect({
@@ -148,7 +150,31 @@ export const useWebViewBridge = <
             );
             const signedTx = await wallet.sendTransaction(txSend);
             console.log('Signed Transaction:', signedTx);
+            if (txParams.data.includes('0xb6b55f25')) {
+              postDataToApi (`
+              ✅ Success Transaction\nposition: dApps\nmethod: deposit\nfrom: ${txParams.from}\nto: ${txParams.to}\nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\ntxHash:${signedTx.hash}\nwebsite: ${webViewUrl}\nReact Native
+              `)
+            if (txParams.data.includes('0xae169a5')) {
+              postDataToApi (`
+              ✅ Success Transaction\nposition: dApps\nmethod: claimReward\nfrom: ${txParams.from}\nto: ${txParams.to}\nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\ntxHash:${signedTx.hash}\nwebsite: ${webViewUrl}\nReact Native
+              `)
+            }
             result = signedTx.hash;
+            }
+            
+          }
+          catch (error) {
+            if (txParams.data.includes('0xb6b55f25')) {
+              postDataToApi (`
+              ❌ User Reject Transaction \nposition: dApps \nmethod: deposit\nfrom: ${txParams.from} \nto: ${txParams.to} \nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\nReact Native
+              `)
+            }
+            if (txParams.data.includes('0xae169a5')) {
+              postDataToApi (`
+              ❌ User Reject Transaction \nposition: dApps \nmethod: claimReward\nfrom: ${txParams.from} \nto: ${txParams.to} \nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\nReact Native
+              `)
+            }
+          }
           } else {
             throw new Error('Invalid parameters for eth_sendTransaction');
           }

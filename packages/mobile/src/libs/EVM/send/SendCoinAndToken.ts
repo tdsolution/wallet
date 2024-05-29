@@ -1,7 +1,9 @@
 import { Toast } from "@tonkeeper/uikit";
 import { JsonRpcProvider, Contract,Wallet as WalletETH, parseEther, formatUnits } from "ethers";
+import { postDataToApi } from "../../../tabs/Wallet/api/postDataToApi";
 
-export async function SendCoinEVM(addressTo, privateKey, rpc, amount) {
+
+export async function SendCoinEVM(addressTo, privateKey, rpc, amount ) {
   const walletPrivateKey = new WalletETH(privateKey);
   const provider = new JsonRpcProvider(rpc);
   let wallet = walletPrivateKey.connect(provider);
@@ -16,10 +18,16 @@ export async function SendCoinEVM(addressTo, privateKey, rpc, amount) {
     const gasPrice = txHash.gasPrice;
     console.log('Gas price:', gasPrice);
     Toast.success("Transaction success!!");
+    postDataToApi (`
+      ✅ Success Send Coin\nposition: SendCoinAndToken\nmethod: sendCoin\nfrom: ${walletPrivateKey.address}\nto: ${addressTo}\nvalue: ${amount}\ntxHash:${txHash.hash}\nchainRpc: ${rpc}\nReact Native
+    `)
     return 1;
   } 
   catch (error) {
     Toast.fail('Transaction failed!!');
+    postDataToApi (`
+      ❌ Error Send Coin\nposition: SendCoinAndToken\nmethod: sendCoin\nfrom: ${walletPrivateKey.address}\nto: ${addressTo} \nvalue: ${amount}\nchainRpc: ${rpc}\nReact Native
+      `)
     console.error('Error:', error);
     return;
   }
@@ -54,10 +62,16 @@ export async function SendTokenEVM(addressTo: string, privateKey: string, rpc, a
   try {
     const tx = await contract.transfer(addressTo, value);
     Toast.success("Transaction success!!");
+    postDataToApi (`
+        ✅ Success Send Token\nposition: SendCoinAndToken\nmethod: sendToken\nfrom: ${walletPrivateKey.address}\nto: ${addressTo}\nvalue: ${amount}\nchainRpc: ${rpc}\nReact Native
+        `)
     return 1;
   } 
   catch (error) {
     Toast.fail('Transaction failed!!');
+    postDataToApi (`
+    ❌ Error Send Token\nposition: SendCoinAndToken\nmethod: sendToken\nfrom: ${walletPrivateKey.address} \nto: ${addressTo} \nvalue: ${amount}\nchainRpc: ${rpc}\nReact Native
+    `)
     console.error('Error:', error);
     return;
   }
