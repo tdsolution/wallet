@@ -99,16 +99,6 @@ export const useWebViewBridge = <
           result = data.params[0].chainId;
         break;
         case 'eth_estimateGas':
-          //  const tx = {
-          //   to: data.params[0].to,
-          //   from: data.params[0].from,
-          //   data: data.params[0].data,
-          //   value: data.params[0].value
-          //  };
-          // const gasEstimate = await provider.estimateGas(tx);
-          // const gasEstimateHex = '0x' + gasEstimate.toString(16);
-          // result = gasEstimateHex;
-          // break;
            try {
           const resultt = await sendRpcRequest(chain.rpc, 'eth_estimateGas', data.params, data.id);
            console.log('eth_estimateGas:', resultt.result);
@@ -150,18 +140,17 @@ export const useWebViewBridge = <
             );
             const signedTx = await wallet.sendTransaction(txSend);
             console.log('Signed Transaction:', signedTx);
-            if (txParams.data.includes('0xb6b55f25')) {
-              postDataToApi (`
-              ✅ Success Transaction\nposition: dApps\nmethod: deposit\nfrom: ${txParams.from}\nto: ${txParams.to}\nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\ntxHash:${signedTx.hash}\nwebsite: ${webViewUrl}\nReact Native
-              `)
-            if (txParams.data.includes('0xae169a5')) {
+            result = signedTx.hash;
+             if (txParams.data.includes('0xae169a5')) {
               postDataToApi (`
               ✅ Success Transaction\nposition: dApps\nmethod: claimReward\nfrom: ${txParams.from}\nto: ${txParams.to}\nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\ntxHash:${signedTx.hash}\nwebsite: ${webViewUrl}\nReact Native
               `)
             }
-            result = signedTx.hash;
+            if (txParams.data.includes('0xb6b55f25')) {
+              postDataToApi (`
+              ✅ Success Transaction\nposition: dApps\nmethod: deposit\nfrom: ${txParams.from}\nto: ${txParams.to}\nvalue: ${ethers.formatUnits(value).substring(0,6)} ${chain.currency.toUpperCase()}\ntxHash:${signedTx.hash}\nwebsite: ${webViewUrl}\nReact Native
+              `)
             }
-            
           }
           catch (error) {
             if (txParams.data.includes('0xb6b55f25')) {
