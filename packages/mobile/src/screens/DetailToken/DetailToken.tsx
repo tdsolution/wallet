@@ -182,7 +182,7 @@ const DetailToken = ({ route }: any) => {
         )}
 
         <Text style={styles.price}>
-          {formatCurrencyNoCrc(parseFloat(price))} {symbol}
+          {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toFixed(7)} {symbol}
         </Text>
         <Text style={styles.priceDolla}>{formatCurrencyNoCrc(priceUsd)} $</Text>
       </View>
