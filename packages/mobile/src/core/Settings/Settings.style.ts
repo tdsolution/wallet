@@ -46,7 +46,7 @@ export const PopupTextWrapper = styled.View`
 
 export const SelectedCurrency = styled.Text`
   font-family: ${({ theme }) => theme.font.medium};
-  color: ${({ theme }) => theme.colors.accentPrimary};
+  color: ${({ theme }) => "#4871EA"};
   font-size: ${nfs(16)}px;
   line-height: 24px;
 `;
