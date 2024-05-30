@@ -40,7 +40,7 @@ export const ChooseCurrencyScreen: React.FC = () => {
               inlineContent={
                 <>
                   {fiatCurrency === currency && (
-                    <Icon name="ic-donemark-thin-28" color="accentPrimary" />
+                    <Icon name="ic-donemark-thin-28" colorHex={colors.Primary} />
                   )}
                 </>
               }
