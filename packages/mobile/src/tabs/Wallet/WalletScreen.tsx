@@ -61,6 +61,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import {
   useEvm,
   useChain,
+  useBalanceTD,
   useWallet,
   useWalletCurrency,
   useWalletStatus,
@@ -94,6 +95,8 @@ import { postDataToApi } from '$libs/EVM/api/postDataToApi';
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
+  const balanceTD = useBalanceTD()?.balance;
+  console.log('balanceTD', balanceTD);
   const {evm, setEvm} = useEvm();
   const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -581,7 +584,7 @@ const getDeviceName = async () => {
                   amount={
                     chain.chainId == "1100"
                       ? balance.total.fiat
-                      : formatCurrency(balanceEVM)
+                      : formatCurrency(balanceTD)
                   }
                 />
               </View>

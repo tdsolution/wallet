@@ -13,3 +13,4 @@ export * from './useLockSettings';
 export * from './useWalletSetup';
 export * from './useChain';
 export * from './useEvm';
+export * from './useBalance';

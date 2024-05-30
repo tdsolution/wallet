@@ -7,11 +7,13 @@ import {
   Image,
   Button
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import ItemWallet from "./ItemWallet";
-import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
-import { useChain } from "@tonkeeper/shared/hooks";
-import { navigation } from "@tonkeeper/router";
+import { getBalanceToken, getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
+import { useBalanceTD } from "@tonkeeper/shared/hooks";
+import { navigation, useFocusEffect } from "@tonkeeper/router";
+import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 
 const TabListToken = ({
   tokens,
@@ -19,6 +21,34 @@ const TabListToken = ({
   address,
   tokensImport,
 }) => {
+  
+  const {balance, setBalance} = useBalanceTD();
+  useFocusEffect(
+    React.useCallback(() => { 
+     let a = 0;
+      tokens.map((token, id)=> {
+        async function fetchBalance() {
+        if (token.tokenAddress != "coin") {
+          const balance2 = await getBalanceToken(chainActive.rpc, token.tokenAddress, address);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2); 
+          a = a + balanceUsd;
+        } else if (token.tokenAddress == "coin") {
+          const balance2 = await fetchBalaceEvm(address, chainActive.rpc);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2);
+          a = a + balanceUsd;
+        } 
+        setBalance(a);
+      }
+      fetchBalance();
+      });
+      
+    }, [tokens, address])
+  );
+
   return (
     <View
       style={{
@@ -86,7 +116,6 @@ const TabListToken = ({
     </View>
   );
 };
-
 export default TabListToken;
 
 const styles = StyleSheet.create({});
