@@ -8,11 +8,7 @@ import {
 } from './types';
 import { getInjectableJSMessage, objectToInjection } from './utils';
 import { useChain, useEvm } from '@tonkeeper/shared/hooks';
-// import Web3 from 'web3';
-// import  WalletConnectProvider  from '@walletconnect/web3-provider';
 import { JsonRpcProvider, formatUnits } from 'ethers';
-import ConnectModal from '../popup/ModalConnect';
-import { Alert } from 'react-native';
 import { sendRpcRequest, sleep } from './func';
 import { openTDConnect } from '../components/ModalConnect';
 import { fetchBalaceEvm } from '$libs/EVM/useBalanceEVM';
