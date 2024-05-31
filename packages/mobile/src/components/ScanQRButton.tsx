@@ -59,7 +59,7 @@ export const ScanQRButton = memo(() => {
         //   setAddressWallet(address.toString());
         //   return true;
         // }
-
+       
         const resolver = deeplinking.getResolver(address, {
           delay: 200,
           origin: DeeplinkOrigin.QR_CODE,

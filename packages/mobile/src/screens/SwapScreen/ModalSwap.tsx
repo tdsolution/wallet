@@ -108,7 +108,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   const handleError =() => {
     Alert.alert("Swap Error");
     closeModal();
-    const dataConfirm = `❌ Error Swap \n position: Swap\n method: ${isTransfer ? "Tranfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
+    const dataConfirm = `❌ Error Swap \n position: Swap\n method: ${isTransfer ? "Transfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
     postDataToApi(dataConfirm)
   }
 
@@ -119,7 +119,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       assetFrom: assetFrom,
       assetTo: assetTo,
     });
-    const dataConfirm = `✅ Success Swap \n position: Swap\n method: ${isTransfer ? "Tranfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
+    const dataConfirm = `✅ Success Swap \n position: Swap\n method: ${isTransfer ? "Transfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
     postDataToApi(dataConfirm)
     handleAddTransaction()
     closeModal();
