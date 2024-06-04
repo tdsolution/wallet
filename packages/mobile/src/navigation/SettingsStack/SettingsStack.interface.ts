@@ -12,4 +12,5 @@ export type SettingsStackParamList = {
   [SettingsStackRouteNames.RefillBattery]: {};
   [SettingsStackRouteNames.Language]: {};
   [SettingsStackRouteNames.Backup]: {};
+  [SettingsStackRouteNames.WalletConnect]: {};
 };

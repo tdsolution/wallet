@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import Rate, { AndroidMarket } from "react-native-rate";
 import { Alert, Linking, Platform, View } from "react-native";
@@ -177,7 +177,7 @@ export const Settings: FC = () => {
     //   ]
     // );
     dispatch(walletActions.cleanWallet());
-    
+
     setModalVisibleSignOut(false);
     handleClearToken();
   }, [dispatch]);
@@ -324,6 +324,7 @@ export const Settings: FC = () => {
         >
           {wallet ? (
             <>
+            <View style={[stylesButton.shadow]}>
               <List>
                 <WalletListItem
                   onPress={handleCustomizePress}
@@ -336,126 +337,148 @@ export const Settings: FC = () => {
                   }
                 />
               </List>
+              </View>
               <Spacer y={16} />
             </>
           ) : null}
-          <List>
-            {!!wallet && !wallet.isWatchOnly && (
-              <List.Item
-                value={
-                  <Icon
-                    style={styles.icon.static}
-                    color="primaryColor"
-                    name={"ic-key-28"}
-                  />
-                }
-                title={
-                  <View style={styles.backupTextContainer.static}>
-                    <Text
-                      style={{ color: "#2B2D42" }}
-                      variant="label1"
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {t("settings_backup_seed")}
-                    </Text>
-                    {backupIndicator}
-                  </View>
-                }
-                onPress={handleBackupSettings}
+          <View style={[stylesButton.shadow, {padding: 15}]}>
+            <Pressable style={[stylesButton.row]} onPress={() => nav.navigate(SettingsStackRouteNames.WalletConnect)}>
+              <Text
+                style={{ color: "#2B2D42" }}
+                variant="label1"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Wallet Connect
+              </Text>
+              <Icon
+                style={styles.icon.static}
+                color="primaryColor"
+                name="ic-lock-28"
               />
-            )}
-            {shouldShowTokensButton && (
-              <List.Item
-                value={
-                  <Icon
-                    style={styles.icon.static}
-                    color="primaryColor"
-                    name={"ic-jetton-28"}
-                  />
-                }
-                title={t("settings_jettons_list")}
-                onPress={handleManageTokens}
-              />
-            )}
-            {hasSubscriptions && (
-              <List.Item
-                value={
-                  <Icon
-                    style={styles.icon.static}
-                    color="primaryColor"
-                    name={"ic-ticket-28"}
-                  />
-                }
-                title={t("settings_subscriptions")}
-                onPress={handleSubscriptions}
-              />
-            )}
-            {!!wallet &&
-              wallet.notifications.isAvailable &&
-              !wallet.isTestnet && (
+            </Pressable>
+          </View>
+          <Spacer y={16} />
+          <View style={stylesButton.shadow}>
+            <List>
+              {!!wallet && !wallet.isWatchOnly && (
                 <List.Item
                   value={
-                    <Icon color="primaryColor" name={"ic-notification-28"} />
+                    <Icon
+                      style={styles.icon.static}
+                      color="primaryColor"
+                      name={"ic-key-28"}
+                    />
                   }
-                  title={t("settings_notifications")}
-                  onPress={handleNotifications}
+                  title={
+                    <View style={styles.backupTextContainer.static}>
+                      <Text
+                        style={{ color: "#2B2D42" }}
+                        variant="label1"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {t("settings_backup_seed")}
+                      </Text>
+                      {backupIndicator}
+                    </View>
+                  }
+                  onPress={handleBackupSettings}
                 />
               )}
-            {isAppearanceVisible && (
+              {shouldShowTokensButton && (
+                <List.Item
+                  value={
+                    <Icon
+                      style={styles.icon.static}
+                      color="primaryColor"
+                      name={"ic-jetton-28"}
+                    />
+                  }
+                  title={t("settings_jettons_list")}
+                  onPress={handleManageTokens}
+                />
+              )}
+              {hasSubscriptions && (
+                <List.Item
+                  value={
+                    <Icon
+                      style={styles.icon.static}
+                      color="primaryColor"
+                      name={"ic-ticket-28"}
+                    />
+                  }
+                  title={t("settings_subscriptions")}
+                  onPress={handleSubscriptions}
+                />
+              )}
+              {!!wallet &&
+                wallet.notifications.isAvailable &&
+                !wallet.isTestnet && (
+                  <List.Item
+                    value={
+                      <Icon color="primaryColor" name={"ic-notification-28"} />
+                    }
+                    title={t("settings_notifications")}
+                    onPress={handleNotifications}
+                  />
+                )}
+              {isAppearanceVisible && (
+                <List.Item
+                  value={
+                    <Icon
+                      style={styles.icon.static}
+                      color="primaryColor"
+                      name={"ic-appearance-28"}
+                    />
+                  }
+                  title={t("settings_appearance")}
+                  onPress={handleAppearance}
+                />
+              )}
               <List.Item
                 value={
-                  <Icon
-                    style={styles.icon.static}
-                    color="primaryColor"
-                    name={"ic-appearance-28"}
-                  />
+                  <S.SelectedCurrency>
+                    {fiatCurrency.toUpperCase()}
+                  </S.SelectedCurrency>
                 }
-                title={t("settings_appearance")}
-                onPress={handleAppearance}
+                title={t("settings_primary_currency")}
+                onPress={() => nav.navigate("ChooseCurrency")}
               />
-            )}
-            <List.Item
-              value={
-                <S.SelectedCurrency>
-                  {fiatCurrency.toUpperCase()}
-                </S.SelectedCurrency>
-              }
-              title={t("settings_primary_currency")}
-              onPress={() => nav.navigate("ChooseCurrency")}
-            />
-            {isBatteryVisible && (
-              <List.Item
-                value={
-                  <NewIcon
-                    style={styles.icon.static}
-                    color="accentBlue"
-                    name={"ic-battery-28"}
-                  />
-                }
-                title={t("battery.settings")}
-                onPress={handleBattery}
-              />
-            )}
-            {!config.get("disable_holders_cards") &&
-              !!wallet &&
-              !wallet.isWatchOnly && (
+              {isBatteryVisible && (
                 <List.Item
                   value={
                     <NewIcon
                       style={styles.icon.static}
                       color="accentBlue"
-                      name={"ic-creditcard-28"}
+                      name={"ic-battery-28"}
                     />
                   }
-                  title={t("settings_bank_card")}
-                  onPress={() =>
-                    nav.navigate(MainStackRouteNames.HoldersWebView)
-                  }
+                  title={t("battery.settings")}
+                  onPress={handleBattery}
                 />
               )}
-          </List>
+              {!config.get("disable_holders_cards") &&
+                !!wallet &&
+                !wallet.isWatchOnly && (
+                  <List.Item
+                    value={
+                      <NewIcon
+                        style={styles.icon.static}
+                        color="accentBlue"
+                        name={"ic-creditcard-28"}
+                      />
+                    }
+                    title={t("settings_bank_card")}
+                    onPress={() =>
+                      nav.navigate(MainStackRouteNames.HoldersWebView)
+                    }
+                  />
+                )}
+            </List>
+          </View>
           <Spacer y={16} />
+          <View style={[stylesButton.shadow]}>
           <List>
             {!!wallet && tk.walletForUnlock && (
               <List.Item
@@ -514,7 +537,9 @@ export const Settings: FC = () => {
               />
             ) : null}
           </List>
+          </View>
           <Spacer y={16} />
+          <View style={[stylesButton.shadow]}>
           <List>
             {!flags.disable_support_button ? (
               <List.Item
@@ -596,9 +621,11 @@ export const Settings: FC = () => {
               title={t("settings_legal_documents")}
             />
           </List>
+          </View>
           <Spacer y={16} />
           {!!wallet && (
             <>
+            <View style={[stylesButton.shadow]}>
               <List>
                 {wallet.isWatchOnly ? (
                   <CellSectionItem
@@ -633,6 +660,7 @@ export const Settings: FC = () => {
                   </View>
                 )}
               </List>
+              </View>
               <Spacer y={16} />
             </>
           )}
@@ -729,4 +757,25 @@ const stylesButton = StyleSheet.create({
     borderRadius: 30,
     resizeMode: "contain",
   },
+  row: {
+    width: '100%',
+    height: 56,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 16,
+    paddingHorizontal: 15,
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  }
 });

@@ -11,6 +11,7 @@ import { DevConfigScreen } from '$core/DevMenu/DevConfigScreen';
 import { RefillBattery } from '$core/RefillBattery/RefillBattery';
 import { SelectLanguage } from '../../components/Language/SelectLanguage';
 import { BackupScreen } from '../../screens';
+import WalletConnect from '../../screens/Web3Wallet/WalletConnect';
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
@@ -53,6 +54,7 @@ export const SettingsStack: FC = () => {
         component={ChooseCurrencyScreen}
       />
       <Stack.Screen name={SettingsStackRouteNames.Backup} component={BackupScreen} />
+      <Stack.Screen name={SettingsStackRouteNames.WalletConnect} component={WalletConnect} />
     </Stack.Navigator>
   );
 };

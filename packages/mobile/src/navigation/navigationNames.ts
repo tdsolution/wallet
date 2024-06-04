@@ -100,6 +100,7 @@ export enum SettingsStackRouteNames {
   RefillBattery = "RefillBattery",
   Language = "Language",
   Backup = "Backup",
+  WalletConnect = "WalletConnect",
 }
 
 export enum ActivityStackRouteNames {
