@@ -1,4 +1,4 @@
-import { Wallet as WalletE, JsonRpcProvider, TransactionRequest,} from 'ethers';
+import { JsonRpcProvider, Wallet, TransactionRequest } from 'ethers';
 
 /**
  * Types
@@ -11,16 +11,16 @@ interface IInitArgs {
  * Library
  */
 export default class EIP155Lib {
-  wallet: WalletE;
+  wallet: Wallet;
 
-  constructor(wallet: WalletE) {
+  constructor(wallet: Wallet) {
     this.wallet = wallet;
   }
 
-  static init({mnemonic}: IInitArgs) {
+  static init({ mnemonic }: IInitArgs) {
     const wallet = mnemonic
-      ? WalletE.fromPhrase(mnemonic)
-      : WalletE.createRandom();
+      ? Wallet.fromPhrase(mnemonic)  // Updated method name
+      : Wallet.createRandom();
 
     return new EIP155Lib(wallet);
   }
@@ -38,7 +38,7 @@ export default class EIP155Lib {
   }
 
   _signTypedData(domain: any, types: any, data: any) {
-    return this.wallet._signTypedData(domain, types, data);
+    return this.wallet.signTypedData(domain, types, data); // Updated method name
   }
 
   connect(provider: JsonRpcProvider) {

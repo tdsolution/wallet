@@ -1,7 +1,7 @@
 // import {COSMOS_MAINNET_CHAINS, TCosmosChain} from '@/data/COSMOSData';
 import {EIP155_CHAINS, TEIP155Chain} from '../data/EIP155';
 // import {SOLANA_CHAINS, TSolanaChain} from '@/data/SolanaData';
-import {isAddress, isHexString, toUtf8String} from 'ethers';
+import { isHexString, toUtf8String, isAddress } from 'ethers';
 
 /**
  * Truncates string (in the middle) via given lenght value

@@ -1,6 +1,7 @@
+import Reacr from 'react'
+import {View, Text, Button, StyleSheet, Modal, Image} from 'react-native'
+
 import { web3wallet } from "../utils/WalletConnectUtils";
-import React from "react";
-import {Text, View, Modal, StyleSheet, Button, Image} from 'react-native'
 
 interface SignModalProps {
   visible: boolean;

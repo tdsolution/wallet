@@ -1,4 +1,5 @@
-//Add these imports
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import React, { useEffect, useState, useCallback } from "react";
 import "fast-text-encoding";
 import "@walletconnect/react-native-compat";
 import useInitialization, {
@@ -6,16 +7,13 @@ import useInitialization, {
     web3wallet,
     web3WalletPair,
 } from "./utils/WalletConnectUtils";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
-import PairingModal from "./modals/PairingModal";
+import PairingModal from './screens/PairingModal';
+import { EIP155_SIGNING_METHODS } from "./utils/EIP155Lib";
+import SignModal from './screens/SignModal';
 import { SignClientTypes, SessionTypes } from "@walletconnect/types";
 import { getSdkError } from "@walletconnect/utils";
-import { EIP155_SIGNING_METHODS } from "./utils/EIP155Lib";
-import SignModal from "./modals/SignModal";
 
-
-function WalletConnect() {
+const WalletConnect = () => {
     const [currentWCURI, setCurrentWCURI] = useState("");
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,6 +26,8 @@ function WalletConnect() {
 
     //Add Initialization
     useInitialization();
+
+    console.log(">>>>>>>>>Initialization: ", useInitialization());
 
     //Add the pairing function from W3W
     async function pair() {
@@ -75,7 +75,6 @@ function WalletConnect() {
         }
     }
 
-
     async function disconnect() {
         const activeSessions = await web3wallet.getActiveSessions();
         const topic = Object.values(activeSessions)[0].topic;
@@ -104,6 +103,7 @@ function WalletConnect() {
         }
     }
 
+    // Add the following Callback listener after handleReject()
     const onSessionRequest = useCallback(
         async (requestEvent: SignClientTypes.EventArguments["session_request"]) => {
             const { topic, params } = requestEvent;
@@ -123,7 +123,11 @@ function WalletConnect() {
         []
     );
 
-    // Add useEffect
+
+
+
+    // Adjust your UseEffect
+
     useEffect(() => {
         web3wallet?.on("session_proposal", onSessionProposal);
         web3wallet?.on("session_request", onSessionRequest);
@@ -136,8 +140,6 @@ function WalletConnect() {
         onSessionProposal,
         successfulSession,
     ]);
-
-
     return (
         <View style={styles.container}>
             <View style={styles.container}>
@@ -158,15 +160,6 @@ function WalletConnect() {
                 ) : (
                     <Button onPress={() => disconnect()} title="Disconnect" />
                 )}
-                {/* <View>
-          <TextInput
-            style={styles.textInputContainer}
-            onChangeText={setCurrentWCURI}
-            value={currentWCURI}
-            placeholder="Enter WC URI (wc:1234...)"
-          />
-          <Button onPress={() => pair()} title="Pair Session" />
-        </View> */}
             </View>
             <PairingModal
                 handleAccept={handleAccept}
@@ -175,15 +168,18 @@ function WalletConnect() {
                 setModalVisible={setModalVisible}
                 currentProposal={currentProposal}
             />
+
             <SignModal
                 visible={signModalVisible}
                 setModalVisible={setSignModalVisible}
                 requestEvent={requestEventData}
                 requestSession={requestSession}
             />
-        </View >
-    );
+        </View>
+    )
 }
+
+export default WalletConnect
 
 //Add some styles
 const styles = StyleSheet.create({
@@ -217,6 +213,3 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
 });
-
-export default WalletConnect;
-
