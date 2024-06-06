@@ -147,7 +147,6 @@ const SwapScreen = () => {
               onChangeText={(text) => setInputValue(text)}
               placeholder="0"
               placeholderTextColor={colors.Gray}
-              keyboardType="numeric"
               autoFocus
               cursorColor = {colors.Primary}
               

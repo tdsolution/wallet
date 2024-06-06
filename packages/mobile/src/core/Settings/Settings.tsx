@@ -338,10 +338,10 @@ export const Settings: FC = () => {
                 />
               </List>
               </View>
-              <Spacer y={16} />
+              {/* <Spacer y={16} /> */}
             </>
           ) : null}
-          <View style={[stylesButton.shadow, {padding: 15, width: '100%'}]}>
+          {/* <View style={[stylesButton.shadow, {padding: 15, width: '100%'}]}>
             <Pressable style={[stylesButton.row]} onPress={() => nav.navigate(SettingsStackRouteNames.WalletConnect)}>
               <Text
                 style={{ color: "#2B2D42" }}
@@ -357,7 +357,7 @@ export const Settings: FC = () => {
                 name="ic-lock-28"
               />
             </Pressable>
-          </View>
+          </View> */}
           <Spacer y={16} />
           <View style={[stylesButton.shadow, {width: '100%'}]}>
             <List>
