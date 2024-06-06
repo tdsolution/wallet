@@ -7,6 +7,7 @@ import AnimatedLottieView from "lottie-react-native";
 
 export const Wrap = styled.View`
   flex: 1;
+  width: '100%';
 `;
 
 // Special width for tablets or big devices

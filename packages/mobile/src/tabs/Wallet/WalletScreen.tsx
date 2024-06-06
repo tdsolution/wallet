@@ -528,13 +528,14 @@ const getDeviceName = async () => {
             style={{ padding: 15 * HEIGHT_RATIO, margin: 1, borderRadius: 50 }}
           >
             <ImageBackground
-              source={require("../../assets/logo/bg_card.png")}
-              resizeMode="stretch"
+              source={require("../../assets/logo/bg_card2.png")}
+              resizeMode="cover"
               style={{
                 borderRadius: 16,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: "#7A6BFF",
+                overflow: 'hidden'
               }}
             >
               <View

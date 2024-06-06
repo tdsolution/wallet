@@ -324,7 +324,7 @@ export const Settings: FC = () => {
         >
           {wallet ? (
             <>
-            <View style={[stylesButton.shadow]}>
+            <View style={[stylesButton.shadow, {width: '100%'}]}>
               <List>
                 <WalletListItem
                   onPress={handleCustomizePress}
@@ -341,7 +341,7 @@ export const Settings: FC = () => {
               <Spacer y={16} />
             </>
           ) : null}
-          <View style={[stylesButton.shadow, {padding: 15}]}>
+          <View style={[stylesButton.shadow, {padding: 15, width: '100%'}]}>
             <Pressable style={[stylesButton.row]} onPress={() => nav.navigate(SettingsStackRouteNames.WalletConnect)}>
               <Text
                 style={{ color: "#2B2D42" }}
@@ -359,7 +359,7 @@ export const Settings: FC = () => {
             </Pressable>
           </View>
           <Spacer y={16} />
-          <View style={stylesButton.shadow}>
+          <View style={[stylesButton.shadow, {width: '100%'}]}>
             <List>
               {!!wallet && !wallet.isWatchOnly && (
                 <List.Item
@@ -478,7 +478,7 @@ export const Settings: FC = () => {
             </List>
           </View>
           <Spacer y={16} />
-          <View style={[stylesButton.shadow]}>
+          <View style={[stylesButton.shadow, {width: '100%'}]}>
           <List>
             {!!wallet && tk.walletForUnlock && (
               <List.Item
@@ -539,7 +539,7 @@ export const Settings: FC = () => {
           </List>
           </View>
           <Spacer y={16} />
-          <View style={[stylesButton.shadow]}>
+          <View style={[stylesButton.shadow, {width: '100%'}]}>
           <List>
             {!flags.disable_support_button ? (
               <List.Item
@@ -625,7 +625,7 @@ export const Settings: FC = () => {
           <Spacer y={16} />
           {!!wallet && (
             <>
-            <View style={[stylesButton.shadow]}>
+            <View style={[stylesButton.shadow, {width: '100%'}]}>
               <List>
                 {wallet.isWatchOnly ? (
                   <CellSectionItem
