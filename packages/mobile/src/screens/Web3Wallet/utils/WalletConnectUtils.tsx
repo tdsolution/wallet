@@ -11,42 +11,31 @@ export let currentETHAddress: string;
 
 import { useState, useCallback, useEffect } from "react";
 import { createOrRestoreEIP155Wallet } from "./EIP155Wallet";
-import {
-  useEvm,
-} from "@tonkeeper/shared/hooks";
-
 
 async function createWeb3Wallet() {
-  try {
-    // Here we create / restore an EIP155 wallet
-    console.log("Starting to create or restore EIP155 wallet...");
-    const { eip155Addresses } = await createOrRestoreEIP155Wallet();
-    currentETHAddress = eip155Addresses[0];
-    console.log("EIP155 wallet created/restored successfully:", currentETHAddress);
+  // Here we create / restore an EIP155 wallet
+  const { eip155Addresses } = await createOrRestoreEIP155Wallet();
+  currentETHAddress = eip155Addresses[0];
+  console.log(">>>>>>>>>>currentETHAddress: ", currentETHAddress)
 
-    // HardCoding it here for ease of tutorial
-    const ENV_PROJECT_ID = "aac7c0840bef3d3127aedb0da9cab988";
-    console.log("Initializing WalletConnect core...");
-    core = new Core({
-      projectId: ENV_PROJECT_ID,
-    });
+  // HardCoding it here for ease of tutorial
+  const ENV_PROJECT_ID = "aac7c0840bef3d3127aedb0da9cab988";
+  const core = new Core({
+    projectId: ENV_PROJECT_ID,
+  });
+  console.log(">>>>>>Core: ", core);
+  web3wallet = await Web3Wallet.init({
+    core,
+    metadata: {
+      name: "App Test",
+      description: "ReactNative Web3Wallet for TD Wallet",
+      url: "https://walletconnect.com/",
+      icons: ["https://avatars.githubusercontent.com/u/37784886"],
+    },
+  });
 
-    web3wallet = await Web3Wallet.init({
-      core,
-      metadata: {
-        name: "TD Wallet",
-        description: "ReactNative Web3Wallet for TD Wallet app",
-        url: "https://walletconnect.com/",
-        icons: ["https://avatars.githubusercontent.com/u/37784886"],
-      },
-    });
-    console.log("Web3Wallet initialized successfully");
-  } catch (err: unknown) {
-    console.error("Error during Web3Wallet creation:", err);
-    throw err;
-  }
+  console.log(">>>>>>>web3wallet: ", web3wallet);
 }
-
 
 // Initialize the Web3Wallet
 export default function useInitialization() {

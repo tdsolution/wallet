@@ -51,7 +51,7 @@ const WalletConnect = () => {
             const namespaces: SessionTypes.Namespaces = {};
             Object.keys(requiredNamespaces).forEach((key) => {
                 const accounts: string[] = [];
-                requiredNamespaces[key].chains.map((chain) => {
+                requiredNamespaces[key].chains.map((chain: any) => {
                     [currentETHAddress].map((acc) => accounts.push(`${chain}:${acc}`));
                 });
 
