@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -9,6 +8,7 @@ import {
   Keyboard,
   TextInput,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
@@ -17,12 +17,14 @@ import { Checkbox, Icon } from "$uikit";
 import ModalNotification from "./ModalNotification";
 import { addWalletFromMnemonic } from "$libs/EVM/createWallet";
 import Clipboard from "@react-native-community/clipboard";
+import { Text, deviceHeight } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
   callback: () => void;
 };
+const HEIGHT_RATIO = deviceHeight / 844;
 
 const ModalAddMnemonic = (props: Props) => {
   let Seed = [{"id": 1, "hide": false, "text": ""}]
@@ -33,6 +35,7 @@ const ModalAddMnemonic = (props: Props) => {
   const [descriptionNoti, setDescriptionNoti] = useState("");
   const [modalNotification, setModalNotification] = useState(false);
   const [status, setStatus] = useState(0);
+  
 
   useEffect(() => {
     let newList = [{"id": 1, "hide": false, "text": ""}]
@@ -154,80 +157,78 @@ const ModalAddMnemonic = (props: Props) => {
           onPress={Keyboard.dismiss}
           style={{backgroundColor: colors.Primary}}
         >
-          <View style={styles.rowHeader}>
+          <SafeAreaView style={styles.rowHeader}>
             <View>
               <TouchableOpacity style={styles.boxBack} onPress={onClose}>
                 <Icon name="ic-chevron-left-16" size={20}/>
               </TouchableOpacity>
             </View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { color: colors.White, fontSize: 16 , marginLeft: 0},
-              ]}
+             type="label1"
+             style={{marginRight: 22 * HEIGHT_RATIO}}
             >
               Add Account
             </Text>
             <View></View>
-          </View>
+          </SafeAreaView>
 
           <View style={styles.modalContent}>
             <View>
               <View style={{alignItems: "center",}}>
-                <Text style={[
-                      globalStyles.textHeader,
-                      { marginLeft: 0},
-                    ]}
+                <Text 
+                type="h3"
+                color="primaryColor"
+                style={{marginBottom: 10 * HEIGHT_RATIO}}
                 >
                   Confirm Seed Phrase
                 </Text>
               </View>
-              <Text style={styles.subtitle}>
+              <Text type="body1" color="textPrimaryAlternate">
                 TD Wallet cannot recover your password to validate 
                 your ownership, restore your wallet and set up a new
                 password. First, enter the Secret Recovery Phrase that
                 you were given when you created your wallet.
               </Text>
               <View>
-                <Text style={styles.subtitle}>Choose the security with:</Text>
+                <Text type="body1" color="textPrimaryAlternate" style={{marginTop: 10 * HEIGHT_RATIO}}>Choose the security with:</Text>
                 <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                   <View style={styles.choose}>
                     <Checkbox
                     checked={selectedIndex === 0}
                     onChange={() => setIndex(0)
                     }/>
-                    <Text style={selectedIndex ===0 ? [styles.chooseText, {color:colors.Primary}] : [styles.chooseText]}> 12-words</Text>
+                    <Text type="body1" style={selectedIndex ===0 ?  {color:colors.Primary} : {color:colors.Black}}> 12-words</Text>
                   </View>
                   <View style={styles.choose}>
                     <Checkbox
                     checked={selectedIndex === 1}
                     onChange={() => setIndex(1)}/>
-                    <Text style={selectedIndex ===1 ? [styles.chooseText, {color:colors.Primary}] : [styles.chooseText]}> 24-words</Text>
+                    <Text type="body1" style={selectedIndex ===1 ?  {color:colors.Primary} : {color:colors.Black}}> 24-words</Text>
                   </View>  
                 </View>
                 <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                   <TouchableOpacity style={[styles.button, {height: 40}]} onPress={pasteText}>
-                    <Icon name="ic-copy-16" style={{marginBottom: 2, marginRight: 4}} size={14}/>
-                    <Text style={styles.textButton2}>Paste seed phrase</Text>
+                    <Icon name="ic-copy-16" style={{marginBottom: 2 * HEIGHT_RATIO, marginRight: 4 * HEIGHT_RATIO}} size={14}/>
+                    <Text type="label2">Paste seed phrase</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.button, {height: 40, backgroundColor: "#f54949"}]} onPress={clearText} >
-                    <Icon name="ic-close-16" style={{marginBottom: 2, marginRight: 2}} size={14}/>
-                    <Text style={styles.textButton2}>Clear</Text>
+                    <Icon name="ic-close-16" style={{marginBottom: 2 * HEIGHT_RATIO, marginRight: 2 * HEIGHT_RATIO}} size={14}/>
+                    <Text type="label2">Clear</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.button, {height: 40}]} onPress={showAll}>
                   <Image
-                    style={[styles.icon, {marginBottom: 2, marginRight: 4}]}
+                    style={[styles.icon, {marginBottom: 2 * HEIGHT_RATIO, marginRight: 4 * HEIGHT_RATIO}]}
                     source={require("../../../assets/icons_v2/ic-view.png")}
                     tintColor={colors.White}
                   />
-                    <Text style={styles.textButton2}>Show all</Text>
+                    <Text type="label2">Show all</Text>
                   </TouchableOpacity>
                 </View>
                 
                 <View style={styles.inputContainer}>
                   {listSeed.map((item, index) => (
                     <View style={styles.textInputContainer} key={index}>
-                      <Text style={[styles.chooseText, {width: "15%"}]}>{item.id}.</Text>
+                      <Text type="body1" color="textPrimaryAlternate" style={{width: "15%", marginTop: 5 * HEIGHT_RATIO}}>{item.id}.</Text>
                       <TextInput 
                         secureTextEntry={item.hide}  
                         style={styles.textInput}
@@ -254,9 +255,9 @@ const ModalAddMnemonic = (props: Props) => {
           </View>
         </Pressable>
       </ScrollView>
-      <View style={{paddingHorizontal: 20, backgroundColor: "#fff",}}>
+      <View style={{paddingHorizontal: 20 * HEIGHT_RATIO, backgroundColor: "#fff",}}>
         <TouchableOpacity style={styles.buttonConfirm} onPress={confirmAddWallet}>
-          <Text style={styles.textButton}>Confirm Secret Recovery Phrase</Text>
+          <Text type="label1">Confirm Secret Recovery Phrase</Text>
         </TouchableOpacity>
       </View>
       <ModalNotification
@@ -271,7 +272,7 @@ const ModalAddMnemonic = (props: Props) => {
 
 export default ModalAddMnemonic;
 
-const styles = StyleSheet.create({
+const styles =  StyleSheet.create({
   modalContainer: {
     width: "100%",
     backgroundColor: "#fff",
@@ -282,8 +283,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginTop: 20,
-    paddingHorizontal: 15,
+    marginTop: 20 * HEIGHT_RATIO,
+    paddingHorizontal: 15 * HEIGHT_RATIO,
   },
   boxBack: {
     width: 26,
@@ -294,79 +295,54 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "100%",
     backgroundColor: "#fff",
-    marginTop: 10,
-    padding: 20,
+    marginTop: 10 * HEIGHT_RATIO,
+    padding: 20 * HEIGHT_RATIO,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     justifyContent: "space-between"
   },
-  subtitle: {
-    fontSize: 14,
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 5,
-  },
   choose: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  chooseText: {
-    marginTop: 5,
-    fontSize: 14,
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
+    marginTop: 10,
   },
   button: {
     flexDirection:"row",
     backgroundColor: colors.Primary,
     borderRadius: 20,
-    paddingHorizontal: 12,
+    paddingHorizontal: 12 * HEIGHT_RATIO,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 13,
+    marginTop: 13 * HEIGHT_RATIO,
   },
   buttonConfirm: {
     backgroundColor: colors.Primary,
     borderRadius: 25,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10 * HEIGHT_RATIO,
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 10 * HEIGHT_RATIO,
     width: "100%", 
     height: 40,  
   },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-  },
-  textButton2: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-  },
   inputContainer: {
-    marginTop: 20,
+    marginTop: 20 * HEIGHT_RATIO,
     borderWidth: 1,
     flexDirection: "row",
     flexWrap: "wrap",
     borderRadius: 15,
-    padding: 5,
+    padding: 5 * HEIGHT_RATIO,
     //height: 330,
     //borderColor: colors.Primary,
   },
   textInputContainer: {
-    padding: 9,
+    padding: 9 * HEIGHT_RATIO,
     width: "50%",
     flexDirection: "row",
     alignItems: "center",
   },
   textInput: {
-    paddingHorizontal:10,
+    paddingHorizontal:10 * HEIGHT_RATIO,
     borderWidth: 1,
     height: 35,
     width: "65%",

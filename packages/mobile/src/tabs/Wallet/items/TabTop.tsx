@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: colors.White,
+    backgroundColor: '#e8e8e8',
     paddingVertical: 1,
   },
   tabItem: {

@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -14,6 +13,7 @@ import ModalAddAccount from "./ModalAddAccount";
 import { Icon } from "$uikit";
 import ModalAddMnemonic from "./ModalAddMnemonic";
 import ModalCreateWallet from "./ModalCreateWallet";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -61,10 +61,7 @@ const ModalChooseAddWallet = (props: Props) => {
           <View style={styles.rowHeader}>
             <View></View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { color: colors.White, fontSize: 16 },
-              ]}
+             type="label1"
             >
              Add a secondary wallet
             </Text>
@@ -84,7 +81,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#68B984"}]}>
                 <Icon name="ic-key-28" size={20}/>
               </View>
-              <Text style={styles.textButton}>Add wallet with private key</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with private key</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -96,7 +93,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Icon name="ic-wallet-28" size={20}/>
               </View>
-              <Text style={styles.textButton}>Add wallet with mnemonic</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with mnemonic</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -111,7 +108,7 @@ const ModalChooseAddWallet = (props: Props) => {
                   source={require("../../../assets/icons/png/ic-plus-28.png")}
                 />
               </View>
-              <Text style={styles.textButton}>Create a new wallet</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Create a new wallet</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -214,15 +211,6 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    lineHeight: 26,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginLeft: 10,
   },
   boxImageModal: {
     width: 40,

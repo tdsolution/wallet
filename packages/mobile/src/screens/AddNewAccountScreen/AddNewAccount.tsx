@@ -6,9 +6,8 @@ import { openSetupNotifications, openSetupWalletDone } from "$navigation";
 import { walletActions } from "$store/wallet";
 import { tk } from "$wallet";
 import { useParams } from "@tonkeeper/router/src/imperative";
-import { BlockingLoader } from "@tonkeeper/uikit";
+import { BlockingLoader, Text } from "@tonkeeper/uikit";
 import {
-  Text,
   View,
   StyleSheet,
   Image,
@@ -27,6 +26,7 @@ import ModalAccount from "./Item/ModalAccount";
 import { addressEVMString, setWalletEVM } from "$libs/EVM/createWallet";
 import { useEvm } from "@tonkeeper/shared/hooks";
 import ModalSetMainAccount from "./Item/ModalSetMainAccount";
+import { Icon } from "$uikit";
 
 export const AddNewAccount = () => {
   const params = useParams<{ isImport?: boolean }>();
@@ -107,13 +107,13 @@ export const AddNewAccount = () => {
   );
 
   const renderItem = ({ item }) => (
-    <View style={{ marginBottom: 11 }}>
+    <View style={{ marginBottom: 20 }}>
       <View style={styles.headerItem}>
         <TouchableOpacity 
           onPress={() => {setModalSetMainAccount(true), setItem(item)}}
           style={{width: "80%"}}
         >
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", alignItems:"center" }}>
           <View>
             <Image
               source={require("../../assets/logo/img_td.png")}
@@ -128,8 +128,8 @@ export const AddNewAccount = () => {
             }
           </View>
           <View>
-            <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.body}>Multi-coin wallet</Text>
+            <Text type="label1" color="textPrimaryAlternate" style={{marginBottom:2}} >{item.name}</Text>
+            <Text type="body3" color="textSecondary">Multi-coin wallet</Text>
           </View>
         </View>
         </TouchableOpacity>
@@ -142,9 +142,9 @@ export const AddNewAccount = () => {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => setPopupVisible(true)}>
-        <Text style={styles.textbutton}>Backup to iCloud</Text>
-      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => setPopupVisible(true)}>
+        <Text type="label3" color="primaryColor" textAlign="right" style={{marginTop:8}}>Backup to iCloud</Text>
+      </TouchableOpacity> */}
       
     </View>
   );
@@ -156,12 +156,9 @@ export const AddNewAccount = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate(WalletStackRouteNames.Wallet)}
         >
-          <Image
-            source={require("../../assets/icons/png/ic_cancel.png")}
-            style={styles.icon}
-          />
+          <Icon name="ic-close-16" color="primaryColor" size={18} />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>Wallets</Text>
+        <Text type="h3" color="primaryColor">Wallets</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image
             // source={require("../../assets/icons/png/ic-done-84@4x.png")}
@@ -171,7 +168,11 @@ export const AddNewAccount = () => {
         </TouchableOpacity>
       </View>
       <View style={{ paddingHorizontal: 25, marginTop: 37 }}>
-        <Text style={styles.textBody}>Multi-coin wallets</Text>
+        <Text
+        fontSize={14}
+        color="textSecondary"
+       style={{marginBottom: 10}}
+        >Multi-coin wallets</Text>
         <FlatList
           data={data2}
           renderItem={renderItem}
@@ -215,23 +216,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 10,
   },
-  textHeader: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#4871EA",
-    lineHeight: 26,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-  },
-  textBody: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#909090",
-    lineHeight: 20,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginBottom: 10,
-  },
   icon: {
     width: 24,
     height: 24,
@@ -258,31 +242,6 @@ const styles = StyleSheet.create({
     width: 21,
     height: 21,
     resizeMode: "contain",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2B2D42",
-    lineHeight: 20,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-  },
-  body: {
-    fontSize: 12,
-    fontWeight: "400",
-    color: "#909090",
-    lineHeight: 16,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-  },
-  textbutton: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#4871EA",
-    lineHeight: 16,
-    textAlign: "right",
-    fontFamily: "Poppins-Bold",
-    marginTop: 8,
   },
   imageCheck: {
     width: 13.13,

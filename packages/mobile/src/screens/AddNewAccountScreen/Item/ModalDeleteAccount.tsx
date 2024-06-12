@@ -1,6 +1,5 @@
 import {
     StyleSheet,
-    Text,
     View,
     Modal,
     Pressable,
@@ -12,6 +11,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { Icon } from "$uikit";
 import ModalNotification from "./ModalNotification";
 import SaveListWallet from "$libs/EVM/SaveWallet";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -58,20 +58,23 @@ const ModalDeleteAccount = (props: Props) => {
             }}
           >
             <View></View>
-            <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
+            <Text 
+             type="h3"
+             color="primaryColor"         
+             style={{marginLeft:24}}>
               TD Wallet Notices
             </Text>
             <Icon name="ic-warning-28" color="accentRed"/>
           </View>
-          <Text style={styles.subtitle}>
+          <Text type="body2" color="textPrimaryAlternate" style={{marginVertical: 10}}>
             Are you sure to remove this wallet?
           </Text>
           <View style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center", width: "90%"}}>
           <TouchableOpacity style={[styles.button, {backgroundColor: "#f54949"}]} onPress={onClose}>
-              <Text style={styles.textButton}>Cancel</Text>
+              <Text type="label2">Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {backgroundColor: colors.Primary}]} onPress={handleDeleteWallet}>
-              <Text style={styles.textButton}>Delete</Text>
+              <Text type="label2">Delete</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,28 +109,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 25,
     alignItems: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-    width: "90%",
-  },
-  privateKey: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-  },
-  textButton: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
   button: {
     width: "30%",

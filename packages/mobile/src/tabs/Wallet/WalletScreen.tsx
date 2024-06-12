@@ -525,8 +525,10 @@ const getDeviceName = async () => {
         hideBackButton
         children={<LogoButton />}
       />
-      <ScrollView>
-        <View style={{ height: 120 * HEIGHT_RATIO, marginBottom: 10 }}>
+      <ScrollView 
+     style={{backgroundColor: "#fafafa"}}
+      >
+        <View style={{ height: 120 }}>
           <View
             style={{ padding: 15 * HEIGHT_RATIO, margin: 1, borderRadius: 50 }}
           >
@@ -644,7 +646,7 @@ const getDeviceName = async () => {
         </View>
 
         <View
-          style={{ alignItems: "flex-end", marginRight: 20, paddingTop: 10 }}
+          style={{ alignItems: "flex-end", paddingHorizontal: 15 * HEIGHT_RATIO, paddingVertical : 15 * HEIGHT_RATIO}}
         >
           {chain.chainId != "1100" ? (
             <TouchableOpacity
@@ -713,11 +715,12 @@ const getDeviceName = async () => {
           </IconButtonList>
         </View>
 
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1}}>
           <TabTop
             tabs={["Tokens", "Activities"]}
             initialTab="Tokens"
             onTabChange={handleTabChange}
+            
           />
           <View
             style={{
@@ -737,6 +740,7 @@ const getDeviceName = async () => {
                   style={{
                     width: "100%",
                     paddingBottom: 80,
+                    borderBottomWidth: 0,
                   }}
                 >
                   <WalletContentList
