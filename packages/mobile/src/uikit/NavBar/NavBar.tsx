@@ -103,7 +103,7 @@ export const NavBar: FC<NavBarProps> = (props) => {
         <S.RightContent>
           <S.BackButtonContainer onPress={onClosePress ?? handleBack}>
             <S.BackButton>
-              <Icon name="ic-close-16" color="foregroundPrimary" />
+              <Icon name="ic-close-16"  colorHex="#4871EA" />
             </S.BackButton>
           </S.BackButtonContainer>
         </S.RightContent>

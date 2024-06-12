@@ -31,7 +31,7 @@ export const Border = styled(Animated.View)<{ isFocused: boolean; isFailed: bool
       theme.colors[
         isFailed ? 'accentNegative' : isFocused ? 'accentPrimary' : 'backgroundSecondary'
       ]
-    }`};
+    }`}
   position: absolute;
   top: 0;
   left: 0;

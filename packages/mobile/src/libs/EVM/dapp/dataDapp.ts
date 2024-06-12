@@ -198,4 +198,30 @@ export const DataDapp : any[] = [
             },
         ]
     },
+    {
+        chainId : '56',
+        dapps : [
+              {
+                id: 'darknight',
+                name:'Dark Knight',
+                logoDapp : 'https://i.imgur.com/uhr8feh.png',
+                logoChain: 'https://i.imgur.com/MRyPUEL.png',
+                linkDapp: 'https://darkknight.games/',
+                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
+            },
+        ]
+    },
+    {
+        chainId : '1285',
+        dapps : [
+              {
+                id: 'darknight',
+                name:'Dark Knight',
+                logoDapp : 'https://i.imgur.com/uhr8feh.png',
+                logoChain: 'https://i.imgur.com/MRyPUEL.png',
+                linkDapp: 'https://darkknight.games/',
+                desp:'Destroy the monsters, craft and find collectibles, open Mystery Boxes, use new abilities, and much more to face powerful bosses!',
+            },
+        ]
+    },
 ]

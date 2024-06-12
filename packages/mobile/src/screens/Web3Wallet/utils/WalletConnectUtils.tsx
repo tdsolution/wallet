@@ -16,25 +16,23 @@ async function createWeb3Wallet() {
   // Here we create / restore an EIP155 wallet
   const { eip155Addresses } = await createOrRestoreEIP155Wallet();
   currentETHAddress = eip155Addresses[0];
-  console.log(">>>>>>>>>>currentETHAddress: ", currentETHAddress)
+  console.log("currentETHAddress: ", currentETHAddress);
 
-  // HardCoding it here for ease of tutorial
+  // Hardcoding the project ID here for ease of tutorial
   const ENV_PROJECT_ID = "aac7c0840bef3d3127aedb0da9cab988";
-  const core = new Core({
+  core = new Core({
     projectId: ENV_PROJECT_ID,
   });
-  console.log(">>>>>>Core: ", core);
+
   web3wallet = await Web3Wallet.init({
     core,
     metadata: {
-      name: "App Test",
+      name: "TD Wallet",
       description: "ReactNative Web3Wallet for TD Wallet",
       url: "https://walletconnect.com/",
       icons: ["https://avatars.githubusercontent.com/u/37784886"],
     },
   });
-
-  console.log(">>>>>>>web3wallet: ", web3wallet);
 }
 
 // Initialize the Web3Wallet

@@ -31,7 +31,7 @@ import { buildTransactionUrl } from "$libs/EVM/brower";
 
 const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
-  console.log('dau cho'+address);
+  console.log('dau cho' + address);
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [dataTransaction, setDataTransaction] = useState<any>([]);
@@ -157,7 +157,9 @@ const DetailToken = ({ route }: any) => {
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         {image ? (
-          <Image style={styles.image} source={{ uri: image }} />
+          <View style={[styles.boxImage]}>
+            <Image style={styles.image} source={{ uri: image }} />
+          </View>
         ) : (
           <View
             style={{
@@ -237,38 +239,40 @@ const DetailToken = ({ route }: any) => {
           <Text style={styles.textCheckExplorer}>Check explorer</Text>
         </TouchableOpacity>
       </View>
-      {isLoading ? (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 150,
-          }}
-        >
-          <ActivityIndicator size={"large"} color={"blue"} />
-        </View>
-      ) : (
-        <FlatList
-          data={dataTransaction}
-          renderItem={({ item }) => (
-            <ItemTransaction
-              unSwap={item.unSwap}
-              amount={item.amount}
-              fromAddress={item.fromAddress}
-              toAddress={item.toAddress}
-              idxChain={item.idxChain}
-              isRead={item.isRead}
-              name={item.name}
-              symbol={item.symbol}
-              time={item.time}
-            />
-          )}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={<View style={{ height: 450 }}></View>}
-        />
-      )}
-    </SafeAreaView>
+      {
+        isLoading ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 150,
+            }}
+          >
+            <ActivityIndicator size={"large"} color={"blue"} />
+          </View>
+        ) : (
+          <FlatList
+            data={dataTransaction}
+            renderItem={({ item }) => (
+              <ItemTransaction
+                unSwap={item.unSwap}
+                amount={item.amount}
+                fromAddress={item.fromAddress}
+                toAddress={item.toAddress}
+                idxChain={item.idxChain}
+                isRead={item.isRead}
+                name={item.name}
+                symbol={item.symbol}
+                time={item.time}
+              />
+            )}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={<View style={{ height: 450 }}></View>}
+          />
+        )
+      }
+    </SafeAreaView >
   );
 };
 
@@ -298,12 +302,27 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
     marginTop: 5,
   },
+  boxImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  },
   image: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    resizeMode: "contain",
-    marginTop: 10,
+    resizeMode: "cover",
   },
   caption: {
     fontSize: 14,

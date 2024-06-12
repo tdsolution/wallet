@@ -31,7 +31,7 @@ const ItemWallet = (props: Props) => {
   const [coinUsd24, setCoinUsd24] = useState(0);
   const [isCheckLevel, setIsCheckLevel] = useState(false);
   const navigation = useNavigation()
- 
+
   const logo =
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
   async function fetchBalance() {
@@ -64,18 +64,18 @@ const ItemWallet = (props: Props) => {
   }
   useFocusEffect(
     React.useCallback(() => {
-    fetchBalance();
+      fetchBalance();
     }, [address])
   );
-   const handlePress = useCallback(async () => {
-    navigation.navigate(WalletStackRouteNames.DetailToken, { 
-      id: id, 
+  const handlePress = useCallback(async () => {
+    navigation.navigate(WalletStackRouteNames.DetailToken, {
+      id: id,
       symbol: symbol,
       image: image,
       address: address,
       addressToken: addressToken,
       rpc: rpc,
-     });
+    });
   }, []);
   return (
     <TouchableOpacity onPress={handlePress}>
@@ -83,7 +83,9 @@ const ItemWallet = (props: Props) => {
         <View style={styles.row}>
           <View style={styles.bgLogo}>
             {image ? (
-              <Image style={styles.logo} source={{ uri: image }} />
+              <View style={[styles.boxImage]}>
+                <Image style={styles.logo} source={{ uri: image }} />
+              </View>
             ) : (
               <View
                 style={{
@@ -190,5 +192,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  boxImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
   },
 });

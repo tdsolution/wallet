@@ -46,10 +46,11 @@ export async function getTokenCST(){
         return 'error';
     }
 }
+// https://api.coingecko.com/api/v3/simple/price?ids=movr&vs_currencies=usd&include_24hr_change=true
 export async function fetchExchangeRate (){
     try {
         const toCurrency = 'usd'; // Loại tiền tệ cần chuyển đổi
-        const stringIds = 'wrapped-flare,flare-networks,orbit-bridge-klaytn-usdc,fantom,metis-token,celo,crypto-com-chain,the-open-network,tron,berachain-bera,optimism,wmatic,wrapped-core,weth,binancecoin,wbnb,ethereum,tether,usd-coin,shiba-inu,coredaoorg,matic-network,arbitrum,avalanche-2';
+        const stringIds = 'moonriver,wrapped-flare,flare-networks,orbit-bridge-klaytn-usdc,fantom,metis-token,celo,crypto-com-chain,the-open-network,tron,berachain-bera,optimism,wmatic,wrapped-core,weth,binancecoin,wbnb,ethereum,tether,usd-coin,shiba-inu,coredaoorg,matic-network,arbitrum,avalanche-2,bouncebit,bouncebit-usd,bouncebit-btc';
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${stringIds}&vs_currencies=${toCurrency}&include_24hr_change=true`;
         console.log("dau cho"+ url);
         const response = await axios.get(url);

@@ -200,6 +200,7 @@ const ImportToken = () => {
                 }}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View style={[styles.boxImage]} >
                   <Image
                     source={{ uri: chain.logo }}
                     style={{
@@ -209,6 +210,7 @@ const ImportToken = () => {
                       resizeMode: "contain",
                     }}
                   />
+                  </View>
                   <Text
                     style={{
                       fontSize: 16,
@@ -536,5 +538,20 @@ const styles = StyleSheet.create({
     height: 16,
     tintColor: colors.Primary,
     resizeMode: "contain",
+  },
+  boxImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
   },
 });

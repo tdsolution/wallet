@@ -4,7 +4,7 @@ import { useCurrencyToSend } from '$hooks/useCurrencyToSend';
 import { StepView, StepViewItem, StepViewRef } from '$shared/components';
 import { CryptoCurrencies, CryptoCurrency, Decimals } from '$shared/constants';
 import { walletActions } from '$store/wallet';
-import { NavBar, Text } from '$uikit';
+import { NavBar, Text, View } from '$uikit';
 import { parseLocaleNumber } from '$utils';
 import React, {
   FC,
@@ -469,7 +469,7 @@ export const Send: FC<SendProps> = ({ route }) => {
               setAmount={setAmount}
               onContinue={goToAmount}
               {...stepProps}
-            />
+              />
           )}
         </StepViewItem>
 

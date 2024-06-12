@@ -269,7 +269,7 @@ const AddressInputComponent: FC<Props> = (props) => {
         wrapperStyle={css`
           background-color: #f2f2f2;
         `}
-        style={{ color: "#000" }}
+        style={{ color: "#000"}}
         innerRef={textInputRef}
         autoComplete="off"
         returnKeyType="next"

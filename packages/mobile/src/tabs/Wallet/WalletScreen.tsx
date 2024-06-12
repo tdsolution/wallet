@@ -718,10 +718,7 @@ const getDeviceName = async () => {
           />
           <View
             style={{
-              flex: 1,
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
+              
             }}
           >
             {activeTab === "Tokens" ? (
