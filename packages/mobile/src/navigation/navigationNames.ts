@@ -86,6 +86,7 @@ export enum WalletStackRouteNames {
   SwapScreen = "SwapScreen",
   SwapComplete = "SwapComplete",
   YourComponent = "YourComponent",
+  Referral = "Referral",
 }
 
 export enum SettingsStackRouteNames {
