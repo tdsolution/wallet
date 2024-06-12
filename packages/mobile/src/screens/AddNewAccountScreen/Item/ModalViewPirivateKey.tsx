@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -13,6 +12,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { Icon } from "$uikit";
 import Clipboard from "@react-native-community/clipboard";
 import ModalNotification from "./ModalNotification";
+import { Text } from "@tonkeeper/uikit";
 interface Props {
   modalVisible: boolean;
   onClose: () => void;
@@ -58,8 +58,11 @@ const ModalViewPrivateKey = (props: Props) => {
             }}
           >
             <View></View>
-            <Text style={[globalStyles.textHeader, { fontSize: 16 }]}>
-              View Private Key
+            <Text
+             type="h3"
+             color="primaryColor"            
+             style={{marginLeft:24}}>
+              View private key
             </Text>
             <TouchableOpacity onPress={onClose}>
               <Image
@@ -71,20 +74,21 @@ const ModalViewPrivateKey = (props: Props) => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.subtitle}>
+          <Text type="body2" color="textPrimaryAlternate" style={{marginVertical: 10, width: "100%"}} textAlign="center">
             Never share your private key with anyone and securely store your seed phrase!
           </Text>
-          <View style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center", width: "90%"}}>
+          <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10, width: "95%"}}>
             <View style={{ 
               width: "80%", 
               borderWidth: 0.5,
               borderRadius: 10,
               padding: 10,
-              backgroundColor: "#fdfcfc"
+              backgroundColor: "#fdfcfc",
+              marginHorizontal: 10
               }}>
-            <Text style={styles.privateKey}>{item.privateKey} </Text>
+            <Text type="body1" color="textPrimaryAlternate" fontWeight="700">{item.privateKey} </Text>
             </View>
-            <TouchableOpacity onPress={handleCopy}>
+            <TouchableOpacity onPress={handleCopy} style={{marginRight: 10}}>
               <Icon name="ic-copy-16" color="primaryColor" size={24}/>
             </TouchableOpacity>
           </View>
@@ -120,21 +124,5 @@ const styles = StyleSheet.create({
       padding: 20,
       borderRadius: 25,
       alignItems: "center",
-    },
-    subtitle: {
-      fontSize: 14,
-      fontWeight: "500",
-      color: colors.Black,
-      textAlign: "center",
-      fontFamily: "Poppins-Medium",
-      marginVertical: 10,
-      width: "90%",
-    },
-    privateKey: {
-      fontSize: 14,
-      fontWeight: "800",
-      color: colors.Black,
-      textAlign: "left",
-      fontFamily: "Poppins-Medium",
     },
 });

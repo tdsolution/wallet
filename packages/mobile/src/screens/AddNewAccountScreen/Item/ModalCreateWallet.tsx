@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -14,6 +13,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import ModalNotification from "./ModalNotification";
 import { createNewWalletFromMnemonic, generateMnemonic } from "$libs/EVM/createWallet";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -68,12 +68,12 @@ const ModalCreateWallet = (props: Props) => {
           >
             <View></View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { fontSize: 16},
-              ]}
+              type="h3"
+             color="primaryColor"
+             //fontSize={18}             
+             style={{marginLeft:24}}
             >
-              Create Wallet
+              Create wallet
             </Text>
           <TouchableOpacity onPress={() => {onClose(); onCleanTextInput()}}>
             <Image
@@ -85,8 +85,8 @@ const ModalCreateWallet = (props: Props) => {
             />
           </TouchableOpacity>
           </View>
-          <Text style={styles.subtitle}>
-            Example: Private funds, Savings account, App account, Work funds, Airdrops
+          <Text type="body2" color="textPrimaryAlternate" style={{marginVertical: 10}}>
+            Example: Private funds, Savings account, App account, Work funds, Airdrops...
           </Text>
           <View style={{ width: "100%", marginTop: 5 }}>
             <TextInput
@@ -107,7 +107,7 @@ const ModalCreateWallet = (props: Props) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.button} onPress={handleCreateWallet}>
-            <Text style={styles.textButton}>Create</Text>
+            <Text type="label1">Create</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -143,14 +143,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
   },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-  },
   input: {
     width: "100%",
     height: 50,
@@ -184,12 +176,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-  },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
 });
   

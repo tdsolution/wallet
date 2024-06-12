@@ -79,7 +79,10 @@ export const StartScreen = memo(() => {
             />
         </View>
         <View style={styles.info}>
-          <Text type="body1" color="textSecondary" textAlign="center" style={{fontSize:20, color:'#1E1E1E'}}>
+          <Text type="body1" color="textSecondary" textAlign="center" 
+          style={{fontSize:20 * HEIGHT_RATIO, color:'#1E1E1E'}} 
+          lineHeight= {30 * HEIGHT_RATIO}
+          >
             Join 80M+ people sharing the future of the internet with us
           </Text>
         </View>
@@ -89,23 +92,22 @@ export const StartScreen = memo(() => {
           <TouchableOpacity onPress={handleCreatePress}>
             <View style={styles.buttonV}>
                 <View style={styles.iconButton}>
-                  <Image source={require('../../assets/icons/png/ic_baseline-plus.png')} style={{width:30,height:30}}/>
+                  <Image source={require('../../assets/icons/png/ic_baseline-plus.png')} style={{width:30 * HEIGHT_RATIO,height:30 * HEIGHT_RATIO}}/>
                 </View>
                 <View>
-                  <Text style={{color:'#4871EA', fontSize:14, fontWeight:'600'}}>{t("start_screen.create_wallet_button")}</Text>
-                  <Text style={{color:'#7C7C7C', fontSize:12, fontWeight:'400'}}>Secret phrase or swift wallet</Text>
+                  <Text style={{color:'#4871EA', fontSize:14 * HEIGHT_RATIO, fontWeight:'600', lineHeight: 25 * HEIGHT_RATIO}}>{t("start_screen.create_wallet_button")}</Text>
+                  <Text style={{color:'#7C7C7C', fontSize:12 * HEIGHT_RATIO, fontWeight:'400', lineHeight: 25 * HEIGHT_RATIO}}>Secret phrase or swift wallet</Text>
                 </View>
             </View>
           </TouchableOpacity>
-          <Spacer y={16}/>
-           <TouchableOpacity onPress={handleImportPress}>
+           <TouchableOpacity onPress={handleImportPress} style={{marginTop: 16 * HEIGHT_RATIO}}>
             <View style={styles.buttonV}>
                 <View style={styles.iconButton}>
-                  <Image source={require('../../assets/icons/png/ic_baseline-plus.png')} style={{width:30,height:30}}/>
+                  <Image source={require('../../assets/icons/png/ic_baseline-plus.png')} style={{width:30 * HEIGHT_RATIO,height:30 * HEIGHT_RATIO}}/>
                 </View>
                 <View>
-                  <Text style={{color:'#4871EA', fontSize:14, fontWeight:'600'}}>{t("start_screen.import_wallet_button")}</Text>
-                  <Text style={{color:'#7C7C7C', fontSize:12, fontWeight:'400'}}>Import, restore or view-only</Text>
+                  <Text style={{color:'#4871EA', fontSize:14 * HEIGHT_RATIO, fontWeight:'600', lineHeight: 25 * HEIGHT_RATIO}}>{t("start_screen.import_wallet_button")}</Text>
+                  <Text style={{color:'#7C7C7C', fontSize:12 * HEIGHT_RATIO, fontWeight:'400', lineHeight: 25 * HEIGHT_RATIO}}>Import, restore or view-only</Text>
                 </View>
             </View>
           </TouchableOpacity>
@@ -118,37 +120,29 @@ export const StartScreen = memo(() => {
 const styles = Steezy.create(({ safeArea }) => ({
   iconButton:{
    backgroundColor: 'rgba(72,113,234,0.14)',
-   width:40,
-   height:40,
+   width:40 * HEIGHT_RATIO,
+   height:40 * HEIGHT_RATIO,
    borderRadius:100,
    alignItems:'center',
    justifyContent:'center',
-   marginRight:10,
+   marginRight:10 * HEIGHT_RATIO,
   },
   buttonV:{
     backgroundColor:'#F2F2F2',
-    paddingTop:14,
-    paddingBottom:14,
+    paddingTop:14 * HEIGHT_RATIO,
+    paddingBottom:14 * HEIGHT_RATIO,
     borderRadius:10,
     flexDirection:'row',
     alignItems:'center',
-    paddingHorizontal:20,
+    paddingHorizontal:20 * HEIGHT_RATIO,
   },
   absolute: {
     position: "absolute",
     top: 0,
     left: 0,
   },
-  tinyLogo: {
-    width: 100,
-    height: 100,
-  },
   logoIcon: {
     position: "relative",
-  },
-  logoDemo: { 
-    width: 150, // Độ rộng của logo
-    height: 150, // Độ cao của logo
   },
   content: {
     backgroundColor:'#FAFAFA',
@@ -168,13 +162,13 @@ const styles = Steezy.create(({ safeArea }) => ({
     justifyContent: "center",
     alignItems: "center",
 
-    paddingHorizontal: 32,
-    paddingBottom: 8,
+    paddingHorizontal: 32 * HEIGHT_RATIO,
+    paddingBottom: 8 * HEIGHT_RATIO,
   },
   buttons: {
-    paddingHorizontal: 32,
-    paddingTop: 16,
-    paddingBottom: 32,
+    paddingHorizontal: 32 * HEIGHT_RATIO,
+    paddingTop: 16 * HEIGHT_RATIO,
+    paddingBottom: 32 * HEIGHT_RATIO,
   },
   bottomGradient: {
     position: "absolute",

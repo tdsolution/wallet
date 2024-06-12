@@ -10,12 +10,15 @@ import {
   ImportWalletStackParamList,
   ImportWalletStackRouteNames,
 } from '$navigation/ImportWalletStack/types';
-import { Button, Icon, Screen, Spacer, Steezy, Text, View } from '@tonkeeper/uikit';
+import { Button, Icon, Screen, Spacer, Steezy, Text, View, deviceHeight } from '@tonkeeper/uikit';
 import { delay } from '@tonkeeper/core';
+import { Image } from 'react-native';
 
 interface Props {
   route: RouteProp<ImportWalletStackParamList, ImportWalletStackRouteNames.Notifications>;
 }
+
+const HEIGHT_RATIO = deviceHeight / 844;
 
 export const SetupNotifications: React.FC<Props> = (props) => {
   const { identifiers } = props.route.params;
@@ -52,7 +55,7 @@ export const SetupNotifications: React.FC<Props> = (props) => {
             size="header"
             color="primary"
             title={t('later')}
-            style={{ marginRight: ns(16) }}
+            style={{ marginRight: ns(16) * HEIGHT_RATIO}}
             onPress={handleDone}
           />
         }
@@ -60,7 +63,7 @@ export const SetupNotifications: React.FC<Props> = (props) => {
       <Screen.Content>
         <View style={styles.container}>
           <View style={styles.iconContainer}>
-            <Icon name="ic-notification-128" color="accentBlue" />
+            <Icon name="ic-notification-128" colorHex="#4871EA" />
           </View>
           <Spacer y={16} />
           <Text textAlign="center" type="h2" style={{color:'#4871EA'}}>
@@ -88,8 +91,8 @@ const styles = Steezy.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 32,
-    marginTop: -24,
+    paddingHorizontal: 32 * HEIGHT_RATIO,
+    marginTop: -24 * HEIGHT_RATIO,
   },
   iconContainer: {
     alignItems: 'center',

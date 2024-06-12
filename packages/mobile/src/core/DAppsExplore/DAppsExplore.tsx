@@ -217,5 +217,6 @@ const styles = Steezy.create(({ colors }) => ({
   searchBarContainer: {
     padding: 16,
     position: "relative",
+    backgroundColor: '#fafafa'
   },
 }));

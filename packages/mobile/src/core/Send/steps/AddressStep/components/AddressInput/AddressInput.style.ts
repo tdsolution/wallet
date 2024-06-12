@@ -7,6 +7,7 @@ export const INPUT_HEIGHT = ns(56);
 export const InputContainer = styled.View`
   position: relative;
   margin-top: -${ns(8)}px;
+  flex: 1;
 `;
 
 export const ScanQRContainer = styled(Animated.View)`

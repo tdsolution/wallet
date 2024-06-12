@@ -13,7 +13,7 @@ import { SheetActions, navigation, useNavigation } from "@tonkeeper/router";
 import { colors } from "../../../constants/colors";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 import { push } from "$navigation/imperative";
- import { Modal } from "@tonkeeper/uikit";
+ import { Modal, deviceHeight } from "@tonkeeper/uikit";
  import * as S from '../../TonConnect/TonConnect.style';
 import { useTheme } from "$hooks/useTheme";
 import { shortenWalletAddress } from "$libs/EVM/createWallet";
@@ -22,7 +22,7 @@ interface Props {
 modalVisible: boolean;
 onClose: () => void;
 }
-
+const HEIGHT_RATIO = deviceHeight / 844;
 export interface TDConnectModalResponse {
   accept: boolean;
 }
@@ -82,9 +82,9 @@ const ModalConnect = (props: TDConnectModalProps) => {
           </TouchableOpacity>
         </View>
         <View style={styles.modalContent}>
-          <View style={{alignItems: "center", marginBottom: 15}}>
+          <View style={{alignItems: "center", marginBottom: 15 * HEIGHT_RATIO}}>
             <View style={styles.container3}>
-              <Icon name="ic-globe-16" color="constantDark" style={{margin: 3}}/>
+              <Icon name="ic-globe-16" color="constantDark" style={{margin: 3 * HEIGHT_RATIO}}/>
               <Text style={[styles.chainName, {marginBottom: -4}]}>{reff}</Text>
             </View>
             </View>
@@ -104,7 +104,7 @@ const ModalConnect = (props: TDConnectModalProps) => {
               <Text style={styles.title}>{balance.substring(0,6)} {chain.currency}</Text>
             </View>
            </View>
-           <View style={{alignItems: "center", margin: 10}}>
+           <View style={{alignItems: "center", margin: 10 * HEIGHT_RATIO}}>
            <Text style={{fontSize: 45, fontWeight: "600"}}>{value.substring(0,6)} {chain.currency.toUpperCase()}</Text>
            </View>
            <Text style={styles.title}>From:</Text>
@@ -118,7 +118,7 @@ const ModalConnect = (props: TDConnectModalProps) => {
               <Text style={styles.chainName}>Balance: {balance.substring(0,6)} {chain.currency}</Text>
             </View>
            </View>
-           <Text style={[styles.title, {marginTop: 10}]}>To:</Text>
+           <Text style={[styles.title, {marginTop: 10 * HEIGHT_RATIO}]}>To:</Text>
            <View style={styles.container1}>
             <Image
               style={styles.image}
@@ -133,7 +133,7 @@ const ModalConnect = (props: TDConnectModalProps) => {
               <Text style={styles.title}>Estimated gas fees:</Text>
               <Text style={[styles.title, {color: colors.Primary}]}>{gas.substring(0,9)} {chain.currency}</Text>
             </View>
-            <View style={{width: "100%", flexDirection: "row", justifyContent: "space-between", marginTop: 5}}>
+            <View style={{width: "100%", flexDirection: "row", justifyContent: "space-between", marginTop: 5 * HEIGHT_RATIO}}>
               <Text style={styles.title}>Total:</Text>
               <Text style={styles.title}>{total.toString().substring(0,7)} {chain.currency}</Text>
             </View>
@@ -173,9 +173,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff", 
   },
   modalContent: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    marginTop:10,
+    paddingHorizontal: 20 * HEIGHT_RATIO,
+    marginBottom: 20 * HEIGHT_RATIO,
+    marginTop:10 * HEIGHT_RATIO,
     justifyContent: "flex-end"
   },
   boxClose: {
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
      width: "100%",
     paddingHorizontal: 25,
     paddingVertical: 10,
-    marginTop: 5,
+    marginTop: 5 * HEIGHT_RATIO,
   },
   button: {
     width: "47%",
@@ -208,14 +208,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 10 * HEIGHT_RATIO,
   },
   textButton: {
     fontSize: 13,
     fontFamily: "Poppins-Bold",
   },
   container1: {
-    marginVertical: 5,
+    marginVertical: 5 * HEIGHT_RATIO,
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     borderColor: "#DDDDDD",
   },
   container3: {
-    marginVertical: 5,
+    marginVertical: 5 * HEIGHT_RATIO,
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -233,20 +233,20 @@ const styles = StyleSheet.create({
     borderColor: "#DDDDDD",
   },
   container2: {
-    marginBottom: 35,
+    marginBottom: 35 * HEIGHT_RATIO,
     borderWidth: 1,
     alignItems: "center",
     borderRadius: 8,
     padding: 10,
     borderColor: "#4871EA",
-    marginTop: 25,
+    marginTop: 25 * HEIGHT_RATIO,
   },
   image: {
     width: 40,
     height: 40,
     borderRadius: 20,
     resizeMode: "contain",
-    marginRight: 10,
+    marginRight: 10 * HEIGHT_RATIO,
   },
   title: {
     fontSize: 14,

@@ -6,6 +6,7 @@ import {  fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { trackEvent } from "@aptabase/react-native";
 import { openDAppBrowser } from "$navigation/helper";
+import { deviceHeight } from "@tonkeeper/uikit";
 
 
 const display12Words = (sentence) => {
@@ -19,13 +20,14 @@ const display12Words = (sentence) => {
 interface Props {
   dapp:any;
 }
+const HEIGHT_RATIO = deviceHeight / 844;
 const ItemApps = (props: Props) => {
   const {dapp} = props;
   const handlePress = useCallback(() => {
     openDAppBrowser(dapp.linkDapp);
   }, [dapp]);
   return (
-     <TouchableOpacity onPress={handlePress} style={{marginTop:10}}>
+     <TouchableOpacity onPress={handlePress} style={{marginTop:10  * HEIGHT_RATIO}}>
         <View style={styles.container}>
         <View style={{width: 60, height: 60, borderWidth:1, borderRadius:40, borderColor:'#F0F0F0'}}>
               <Image
@@ -38,7 +40,7 @@ const ItemApps = (props: Props) => {
               <Text style={styles.title}>{dapp.name}</Text>
               <Text style={styles.body}>{display12Words(dapp.desp)}</Text>
             </View>
-             <View style={{width: 25, height: 25,marginRight:10, borderWidth:1, borderRadius:40, borderColor:'#F0F0F0',justifyContent:'center', alignItems:'center' }}>
+             <View style={{width: 25, height: 25,marginRight:10 * HEIGHT_RATIO, borderWidth:1, borderRadius:40, borderColor:'#F0F0F0',justifyContent:'center', alignItems:'center' }}>
               <Image
                 source={{uri:dapp.logoChain}}
                 style={{ width: 18, height: 18, borderRadius:40,}}
@@ -54,7 +56,7 @@ export default ItemApps;
 
 const styles = StyleSheet.create({
   container:{
-    alignItems:'flex-end',
+    alignItems:'center',
     justifyContent:'center',
     backgroundColor:'#ffffff',
     paddingHorizontal:10,
