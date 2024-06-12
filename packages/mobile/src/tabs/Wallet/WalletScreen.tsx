@@ -91,6 +91,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getABIFromAPI } from "$core/DAppBrowser/func";
 import DeviceInfo from "react-native-device-info";
 import { postDataToApi } from '$libs/EVM/api/postDataToApi';
+import { ReferralButton } from "../../components/RefferalButton";
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
@@ -513,6 +514,8 @@ const getDeviceName = async () => {
               }}
             >
               <ScanQRButton />
+              <View style={{ width: 10 }}></View>
+              <ReferralButton />
               <View style={{ width: 10 }}></View>
               <NotificationButton amount={amountTransaction} />
               <View style={{ width: 10 }}></View>

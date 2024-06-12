@@ -31,6 +31,7 @@ import TransferScreen from "../../screens/TransferScreen/TransferScreen";
 import SwapScreen from "../../screens/SwapScreen/SwapScreen";
 import SwapComplete from "../../screens/SwapScreen/SwapComplete";
 import YourComponent from "../../screens/SwapScreen/YourComponent";
+import Referral from "../../screens/ReferralScreen/Referral";
 
 const Stack = createNativeStackNavigator<WalletStackParamList>();
 
@@ -96,6 +97,10 @@ export const WalletStack: FC = () => {
       <Stack.Screen
         name={WalletStackRouteNames.YourComponent}
         component={YourComponent}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.Referral}
+        component={Referral}
       />
     </Stack.Navigator>
   );

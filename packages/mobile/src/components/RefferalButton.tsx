@@ -7,7 +7,7 @@ import { useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../constants/colors";
 
-export const NotificationButton = memo((props: any) => {
+export const ReferralButton = memo((props: any) => {
   const { amount } = props;
   const navigation = useNavigation();
   const deeplinking = useDeeplinking();
@@ -22,7 +22,7 @@ export const NotificationButton = memo((props: any) => {
   );
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(WalletStackRouteNames.Notification)}
+      onPress={() => navigation.navigate(WalletStackRouteNames.Referral)}
       style={[styles.container]}
       activeOpacity={0.6}
       hitSlop={hitSlop}
@@ -36,8 +36,8 @@ export const NotificationButton = memo((props: any) => {
         }
       >
         <Image
-          source={require("../assets/icons_v1/icon_notification.png")}
-          style={{ width: 25, height: 25 }}
+          source={require("../assets/icons/png/ic_referral.png")}
+          style={{ width: 25, height: 25, tintColor: 'grey' }}
           resizeMode="contain"
         />
         {amount > 0 ? (

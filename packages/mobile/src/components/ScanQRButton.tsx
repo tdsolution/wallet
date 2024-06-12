@@ -88,7 +88,7 @@ export const ScanQRButton = memo(() => {
     <View>
       <TouchableOpacity
         onPress={handlePressScanQR}
-        style={style.container}
+        style={[style.container]}
         activeOpacity={0.6}
         hitSlop={hitSlop}
       >
@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
 const style = Steezy.create({
   container: {
     zIndex: 3,
-    padding: 10,
+    padding: 5
   },
 });
