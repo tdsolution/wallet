@@ -1,6 +1,5 @@
 import {
     StyleSheet,
-    Text,
     View,
     Modal,
     Pressable,
@@ -15,6 +14,7 @@ import ModalViewPrivateKey from "./ModalViewPirivateKey";
 import ModalDeleteAccount from "./ModalDeleteAccount";
 import ModalEditName from "./ModalEditName";
 import { navigation } from "@tonkeeper/router";
+import { Text } from "@tonkeeper/uikit";
   
 interface Props {
   modalVisible: boolean;
@@ -62,10 +62,8 @@ const ModalAccount = (props: Props) => {
           <View style={styles.rowHeader}>
             <View></View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { color: colors.White, fontSize: 16 },
-              ]}
+              type="label1"
+              style={{marginLeft: 10}}
             >
               {item.name}
             </Text>
@@ -88,7 +86,7 @@ const ModalAccount = (props: Props) => {
                   source={require("../../../assets/icons_v2/ic-view.png")}
                 />
               </View>
-              <Text style={styles.textButton}>View private key</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>View private key</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -100,7 +98,7 @@ const ModalAccount = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#ffe063"}]}>
                 <Icon name="ic-pencil-16"/>
               </View>
-              <Text style={styles.textButton}>Edit wallet name</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Edit wallet name</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -112,7 +110,7 @@ const ModalAccount = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Icon name="ic-trash-bin-28" size={18}/>
               </View>
-              <Text style={styles.textButton}>Delete wallet</Text>
+              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Delete wallet</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -218,15 +216,6 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    lineHeight: 26,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginLeft: 10,
   },
   boxImageModal: {
     width: 40,

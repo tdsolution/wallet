@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     position: "relative",
     zIndex: 10,
-    backgroundColor: "#f9f9f9s",
+    backgroundColor: "#fafafa",
   },
   absolute: {
     position: "absolute",

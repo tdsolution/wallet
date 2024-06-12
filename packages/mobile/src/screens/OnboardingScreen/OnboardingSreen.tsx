@@ -29,7 +29,7 @@ export const OnboardingScreen = memo (() => {
           <View
           style={{
             height:340 * HEIGHT_RATIO,
-            backgroundColor:'#4F72E2',
+            backgroundColor:"#4871EA",
             justifyContent: 'center', // căn giữa theo chiều dọc
             alignItems: 'center',
             display:'flex',
@@ -37,7 +37,7 @@ export const OnboardingScreen = memo (() => {
           }}
         >
           <View style={styles.info}>
-            <Text type="h2" textAlign="center">
+            <Text type="h2" textAlign="center" fontSize={28 * HEIGHT_RATIO} lineHeight= {30 * HEIGHT_RATIO}>
               TD Wallet
             </Text>
           </View>
@@ -45,16 +45,15 @@ export const OnboardingScreen = memo (() => {
              <Image source={require('../../assets/logo/ether.png')} resizeMode="contain" style={{height:160 * HEIGHT_RATIO, width:'40%'}}/>
           </View>
         </View>
-        <View style={{alignItems:'center', width: '100%', height:160 * HEIGHT_RATIO}}>
-           <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:160}}/>
+        <View style={{alignItems:'center', width: '100%'}}>
+           <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:180 * HEIGHT_RATIO}}/>
         </View>
         <View style={styles.contentText}>
-          <Text style={{color:'#4871EA', fontSize: 26 * HEIGHT_RATIO,fontWeight: "500",textAlign: "left", lineHeight:30 * HEIGHT_RATIO}}>Investing in cryptocurrency made easy.</Text>
+          <Text style={{color:'#4871EA', fontSize: 26* HEIGHT_RATIO,fontWeight: "500",textAlign: "left"}} lineHeight= {30 * HEIGHT_RATIO}>Investing in cryptocurrency made easy.</Text>
         </View>
         <View style={styles.content}>
           <View style={styles.buttons}>
             <Button
-            style={{backgroundColor:'#4871EA', borderRadius:100}}
             title={t("onboarding_screen.get_started")}
             onPress={handleCreatePress}
           />
@@ -69,7 +68,7 @@ const styles = Steezy.create(({ safeArea }) => ({
     paddingBottom: safeArea.bottom,
   },
   buttons:{
-    paddingHorizontal: 30 * HEIGHT_RATIO,
+    paddingHorizontal: 20 * HEIGHT_RATIO,
     paddingBottom: 30 * HEIGHT_RATIO,
   },
   introText:{
@@ -80,19 +79,19 @@ const styles = Steezy.create(({ safeArea }) => ({
   },
   contentText:{
     width: "100%",
-    paddingVertical: 80,
-    paddingHorizontal: 20,
+    paddingVertical: 80 * HEIGHT_RATIO,
+    paddingHorizontal: 20 * HEIGHT_RATIO,
   },
   imageEther: {
     width: '100%',
     height:180 * HEIGHT_RATIO,
-    paddingTop:20 * HEIGHT_RATIO,
+    paddingTop:80 * HEIGHT_RATIO,
     justifyContent:'center',
     alignItems:'center',
   },
   info: {
     lineHeight:10 * HEIGHT_RATIO,
-    marginTop:40 * HEIGHT_RATIO,
-    marginBottom:10 * HEIGHT_RATIO,
+    marginTop: 70 * HEIGHT_RATIO,
+    //marginBottom:10 * HEIGHT_RATIO,
   },
 }));

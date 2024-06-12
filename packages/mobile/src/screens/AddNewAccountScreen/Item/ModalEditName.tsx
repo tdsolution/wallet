@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -16,6 +15,7 @@ import ModalNotification from "./ModalNotification";
 import SaveListWallet from "$libs/EVM/SaveWallet";
 import { navigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -78,10 +78,9 @@ const ModalEditName = (props: Props) => {
           >
             <View></View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { fontSize: 16},
-              ]}
+             type="h3"
+             color="primaryColor"            
+             style={{marginLeft:24}}
             >
               Edit wallet name
             </Text>
@@ -114,7 +113,7 @@ const ModalEditName = (props: Props) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.button} onPress={() => handleEditName()}>
-            <Text style={styles.textButton}>Edit</Text>
+            <Text type="label1">Edit</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -150,14 +149,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
   },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-  },
   input: {
     width: "100%",
     height: 50,
@@ -191,12 +182,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-  },
-  textButton: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
 });
   

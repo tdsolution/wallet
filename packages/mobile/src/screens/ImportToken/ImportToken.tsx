@@ -152,7 +152,6 @@ const ImportToken = () => {
           {
             paddingHorizontal: 5,
             paddingVertical: 10,
-            backgroundColor: colors.Primary,
           },
         ]}
       >
@@ -171,7 +170,7 @@ const ImportToken = () => {
         </Text>
         <Text style={{ opacity: 0 }}>ascasac </Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: "#fff"}}>
         <View style={styles.content}>
           <View style={{ padding: 25 }}>
             <Text style={styles.textTitle}>Imports your custom Tokens</Text>
@@ -380,16 +379,19 @@ const ImportToken = () => {
               </View>
             ) : null}
 
-            <TouchableOpacity
+            
+          </View>
+        </View>
+      </ScrollView>
+      <View style={{paddingHorizontal: 20, backgroundColor: "#fff",}}>
+      <TouchableOpacity
               onPress={handleAddToken}
               disabled={!disabled()}
               style={[styles.button, { opacity: disabled() ? 1 : 0.1 }]}
             >
               <Text style={styles.textButton}>Import Token</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+            </View>
     </SafeAreaView>
   );
 };

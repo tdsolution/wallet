@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -13,9 +12,11 @@ import {
 import React, { useCallback, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
-import { TextInput } from "react-native-gesture-handler";
+//import { TextInput } from "react-native-gesture-handler";
 import ModalNotification from "./ModalNotification";
 import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
+import { Icon, Text } from "@tonkeeper/uikit";
+import { TextInput } from "@tonkeeper/uikit/src/components/TextInput";
 const { width, height } = Dimensions.get("window");
 
 interface Props {
@@ -97,10 +98,10 @@ const ModalAddAccount = (props: Props) => {
           >
             <View></View>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { fontSize: 16},
-              ]}
+             type="h3"
+             color="primaryColor"
+             //fontSize={18}             
+             style={{marginLeft:24}}
             >
               Add account
             </Text>
@@ -115,7 +116,7 @@ const ModalAddAccount = (props: Props) => {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.subtitle}>
+          <Text type="body2" color="textPrimaryAlternate" style={{marginVertical: 10}}>
             TD Wallet cannot recover your password. To validate your ownership,
             restore your wallet and set up a new password. First, enter the
             Private Key that you were given where you created your wallet.
@@ -139,7 +140,7 @@ const ModalAddAccount = (props: Props) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.buttonAdd} onPress={() => handleCreateWallet()}>
-            <Text style={styles.textButtonAdd}>Add</Text>
+            <Text type="label1">Add</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -175,14 +176,6 @@ modalContainerAdd: {
     borderRadius: 25,
     alignItems: "center",
   },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-  },
   input: {
     width: "100%",
     height: 50,
@@ -216,11 +209,5 @@ modalContainerAdd: {
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-  },
-  textButtonAdd: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
 });

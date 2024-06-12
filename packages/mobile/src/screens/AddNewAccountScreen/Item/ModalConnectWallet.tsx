@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, Modal, Pressable, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Modal, Pressable, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
+import { Text } from '@tonkeeper/uikit';
 
 interface Props {
     modalVisible: boolean, 
@@ -54,7 +55,7 @@ const ModalConnectWallet = (props: Props) => {
                   style={styles.icon}
                 />
               </TouchableOpacity>
-              <Text style={styles.textHeader}>Connect Wallet</Text>
+              <Text type="h3"color="primaryColor">Connect Wallet</Text>
               <Text></Text>
             </View>
             <View style={{ alignItems: "center", marginTop: 27 }}>
@@ -71,7 +72,7 @@ const ModalConnectWallet = (props: Props) => {
                 source={require("../../../assets/logo/img_create.png")}
                 style={styles.iconPlus}
               />
-              <View style={{ width: "80%" }}>
+              <View style={{ width: "80%"}}>
                 <Text style={styles.title}>Create new wallet</Text>
                 <Text style={styles.body}>Secret phrase or swift wallet</Text>
               </View>

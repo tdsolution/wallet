@@ -1098,8 +1098,8 @@
   },
   "start_screen": {
     "caption": "Create a new wallet or add \nan existing one",
-    "create_wallet_button": "Create New Wallet",
-    "import_wallet_button": "Import Existing Wallet"
+    "create_wallet_button": "Create new wallet",
+    "import_wallet_button": "Import existing wallet"
   },
   "choose_wallets": {
     "title": "Choose Wallets",

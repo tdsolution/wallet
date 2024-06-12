@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
@@ -13,6 +12,7 @@ import { globalStyles } from "$styles/globalStyles";
 import { setWalletEVM } from "$libs/EVM/createWallet";
 import { useEvm } from "@tonkeeper/shared/hooks";
 import { navigation } from "@tonkeeper/router";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
 modalVisible: boolean;
@@ -50,7 +50,7 @@ const ModalSetMainAccount = (props: Props) => {
               alignItems: "center",
             }}
           >
-            <Text style={[globalStyles.textHeader, { fontSize: 20, marginTop: 10, marginLeft: 8 }]}>
+            <Text type="h3"color="primaryColor" style={ { marginTop: 10, marginLeft: 8 }}>
               Connect Wallet
             </Text>
             <Image
@@ -61,10 +61,10 @@ const ModalSetMainAccount = (props: Props) => {
           
           <View style={{flexDirection: "row", justifyContent: "space-around", alignItems: "center", width: "90%"}}>
           <TouchableOpacity style={[styles.button, {borderColor: "#f54949"}]} onPress={onClose}>
-              <Text style={[styles.textButton, {color: "#f54949"}]}>Cancel</Text>
+              <Text type="label2" style={ {color: "#f54949"}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {borderColor: colors.Primary}]} onPress={handleSetEVM}>
-              <Text style={[styles.textButton, {color: colors.Primary}]}>Agree</Text>
+              <Text type="label2" color="primaryColor">Agree</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -94,20 +94,6 @@ const ModalSetMainAccount = (props: Props) => {
     padding: 20,
     borderRadius: 25,
     alignItems: "center",
-  },
-  privateKey: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-  },
-  textButton: {
-    fontSize: 13,
-    fontWeight: "500",
-    //color: colors.White,
-    fontFamily: "Poppins-Medium",
-    marginTop: 1,
   },
   button: {
     width: "30%",

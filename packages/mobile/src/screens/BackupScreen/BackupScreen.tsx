@@ -7,6 +7,7 @@ import {
   Steezy,
   Text,
   View,
+  deviceHeight,
 } from "@tonkeeper/uikit";
 import { useNavigation } from "@tonkeeper/router";
 import { memo } from "react";
@@ -15,6 +16,8 @@ import { getLocale } from "$utils/date";
 import { i18n, t } from "@tonkeeper/shared/i18n";
 import { useWalletSetup } from "@tonkeeper/shared/hooks";
 import { colors } from "../../constants/colors";
+
+const HEIGHT_RATIO = deviceHeight / 844;
 
 export const BackupScreen = memo(() => {
   const { lastBackupAt } = useWalletSetup();
@@ -28,8 +31,7 @@ export const BackupScreen = memo(() => {
           <Text style={{ color: colors.Primary }} type="h3">
             {t("backup_screen.manual_title")}
           </Text>
-          <Spacer y={4} />
-          <Text type="body2" color="textSecondary">
+          <Text type="body2" color="textSecondary" style={{marginTop: 4  * HEIGHT_RATIO}}>
             {t("backup_screen.manual_caption")}
           </Text>
         </View>
@@ -89,23 +91,23 @@ export const BackupScreen = memo(() => {
 
 const styles = Steezy.create(({ colors }) => ({
   info: {
-    paddingTop: 14,
-    marginHorizontal: 16,
-    marginBottom: 14,
+    paddingTop: 14 * HEIGHT_RATIO,
+    marginHorizontal: 16 * HEIGHT_RATIO,
+    marginBottom: 14 * HEIGHT_RATIO,
   },
   indentHorizontal: {
-    marginHorizontal: 16,
+    marginHorizontal: 16 * HEIGHT_RATIO,
   },
   checkmarkIcon: {
     backgroundColor: colors.accentGreen,
-    width: 44,
-    height: 44,
-    borderRadius: 44 / 2,
+    width: 44 * HEIGHT_RATIO,
+    height: 44 * HEIGHT_RATIO,
+    borderRadius: 44 / 2 * HEIGHT_RATIO,
     justifyContent: "center",
     alignItems: "center",
   },
   keyIcon: {
     position: "absolute",
-    right: 16,
+    right: 16 * HEIGHT_RATIO,
   },
 }));

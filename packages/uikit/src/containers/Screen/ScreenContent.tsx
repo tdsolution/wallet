@@ -21,5 +21,6 @@ export const ScreenContent = memo<ScreenContentProps>((props) => {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+    backgroundColor: '#fafafa'
   },
 });

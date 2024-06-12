@@ -1,6 +1,5 @@
 import {
     StyleSheet,
-    Text,
     View,
     Modal,
     Pressable,
@@ -9,6 +8,7 @@ import {
   } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -41,7 +41,7 @@ const ModalNotification = (props: Props) => {
             }}
           >
             <View></View>
-            <Text style={styles.title}>
+            <Text type="label1" color="primaryColor" textAlign="center" style={{ marginLeft: 24, marginBottom: 10, width: "80%"}}>
               {title}
             </Text>
             <TouchableOpacity onPress={onClose}>
@@ -54,11 +54,11 @@ const ModalNotification = (props: Props) => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.subtitle}>
+          <Text type="body2" color="textPrimaryAlternate">
             {description}
           </Text>
           <TouchableOpacity style={styles.buttonOk} onPress={onClose}>
-            <Text style={styles.textButton}>OK</Text>
+            <Text type="label1">OK</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -88,30 +88,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Primary,
-    lineHeight: 30,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-    marginLeft: 24,
-    width: "80%",
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginVertical: 10,
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-  },
   buttonOk: {
     width: "25%",
     height: 40,
@@ -119,6 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
 });
