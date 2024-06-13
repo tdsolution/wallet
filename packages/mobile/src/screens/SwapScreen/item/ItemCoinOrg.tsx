@@ -1,7 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
+import { Text } from "@tonkeeper/uikit";
 
 interface ItemCoinOrgProps {
   item: any;
@@ -38,7 +39,7 @@ const ItemCoinOrg = ({ item, index, onPress }: ItemCoinOrgProps) => {
           }}
         />
       </View>
-      <Text style={[styles.symbol, { color: color }]}>{item.symbol}</Text>
+      <Text type="label1" style={[{ color: color, marginLeft: 10 }]}>{item.symbol}</Text>
     </TouchableOpacity>
   );
 };
@@ -55,14 +56,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 45,
+    height: 45,
     resizeMode: "contain",
     borderRadius: 40,
   },
   chainImg: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
     resizeMode: "contain",
     borderRadius: 15,
     position: "absolute",
@@ -70,12 +71,5 @@ const styles = StyleSheet.create({
     right: 0,
     borderWidth: 2,
     borderColor: "white",
-  },
-  symbol: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.Black,
-    fontFamily: "Poppins-Bold",
-    marginLeft: 10,
   },
 });

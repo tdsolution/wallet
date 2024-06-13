@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -33,7 +32,7 @@ import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/Requi
 import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { Toast } from "@tonkeeper/uikit";
+import { Text, Toast } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
 import { isValidAddressEVM } from "$libs/EVM/createWallet";
 import { isAddress } from "ethers";
@@ -206,16 +205,17 @@ const SendToken = ({ route }: any) => {
               />
             </TouchableOpacity>
             <View style={{ alignItems: "center", width: "100%" }}>
-              <Text style={[globalStyles.textHeader, { marginLeft: -5 }]}>
+              <Text type="h3" color="primaryColor" style={ { marginLeft: -10 }}>
                 Send {symbol}
               </Text>
             </View>
+            <View></View>
           </View>
           <View style={{ flex: 1, justifyContent: "space-between" }}>
             <View>
-              <View style={{ gap: 25, paddingHorizontal: 25 }}>
+              <View style={{ gap: 20, paddingHorizontal: 25 }}>
                 <View>
-                  <Text style={styles.lable}>Address</Text>
+                  <Text type="label1" color="textPrimaryAlternate">Address</Text>
                   <View style={styles.boxInput}>
                     <TextInput
                       style={styles.input}
@@ -241,14 +241,14 @@ const SendToken = ({ route }: any) => {
                       )}
                       <TouchableOpacity onPress={pasteText}>
                         <Text
-                          style={[
-                            styles.lable,
+                        type="label1"
+                        color="primaryColor"
+                          style={
                             {
-                              color: colors.Primary,
                               marginLeft: 8,
                               marginBottom: -2,
-                            },
-                          ]}
+                            }
+                          }
                         >
                           Paste
                         </Text>
@@ -264,7 +264,7 @@ const SendToken = ({ route }: any) => {
                 </View>
 
                 <View>
-                  <Text style={styles.lable}>Amount</Text>
+                  <Text type="label1" color="textPrimaryAlternate">Amount</Text>
                   <View style={styles.boxInput}>
                     <TextInput
                       style={styles.input}
@@ -291,14 +291,13 @@ const SendToken = ({ route }: any) => {
                         <></>
                       )}
                       <Text onPress={handleMaxAmount}
-                        style={[
-                          styles.lable,
+                      type="label1" color="primaryColor"
+                        style={
                           {
-                            color: colors.Primary,
                             marginLeft: 8,
                             marginBottom: -2,
-                          },
-                        ]}
+                          }
+                        }
                       >
                         Max
                       </Text>
@@ -316,7 +315,7 @@ const SendToken = ({ route }: any) => {
                 }}
               ></View>
               <View style={{ paddingHorizontal: 25 }}>
-                <Text style={styles.title}>Your wallets</Text>
+                <Text type="label1" color="textPrimaryAlternate"style={{marginBottom: 10}} >Your wallets</Text>
                 {wallet?.map((item, index) =>
                   item.addressWallet == evm.addressWallet ? (
                     <></>
@@ -335,7 +334,7 @@ const SendToken = ({ route }: any) => {
       </ScrollView>
       <View style={{ paddingHorizontal: 25 }}>
         <TouchableOpacity style={[styles.button]} onPress={handleNext}>
-          <Text style={styles.textButton}>Next</Text>
+          <Text type="label1">Next</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -370,14 +369,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  lable: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-    marginBottom: 10,
-  },
   iconInput: {
     width: 20,
     height: 20,
@@ -400,14 +391,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-    marginBottom: 16,
+    marginVertical: 10,
   },
   button: {
     height: 50,
@@ -418,11 +402,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 80,
     width: "100%",
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
 });

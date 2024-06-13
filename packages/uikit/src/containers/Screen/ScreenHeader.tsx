@@ -254,7 +254,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     zIndex: 1,
     color: "#4871EA",
-    fontFamily: "Poppins-Bold",
     fontWeight: 'bold'
   },
   leftContainer: {

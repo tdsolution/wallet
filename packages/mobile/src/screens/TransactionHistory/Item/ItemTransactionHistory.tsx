@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, View, Image, Pressable } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import ModalTrasactionHistory from "./ModalTransactionHistory";
@@ -6,6 +6,7 @@ import { TransactionModel } from "$libs/EVM/HistoryEVM/DataHistory";
 import { format } from "date-fns";
 import { formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import moment from "moment";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   blockNumber?: string;
@@ -34,10 +35,10 @@ interface Props {
 
 const TruncateString = ({ string, maxLength }) => {
   if (string.length <= maxLength) {
-    return <Text>{string}</Text>;
+    return <Text type="body2" color="textGray">{string}</Text>;
   }
   return (
-    <Text>{`${string.substring(0, maxLength)}...${string.substring(
+    <Text type="body2" color="textGray">{`${string.substring(0, maxLength)}...${string.substring(
       string.length - 5
     )}`}</Text>
   );
@@ -87,8 +88,11 @@ const formatTimestamp = (timestamp: string): string => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 38,
+        paddingBottom: 15,
         paddingHorizontal: 25,
+        marginBottom: 15,
+        borderBottomWidth: 0.2,
+        borderColor: "#D0D0D0"
       }}
     >
       <View style={{ flexDirection: "row" }}>
@@ -97,30 +101,30 @@ const formatTimestamp = (timestamp: string): string => {
         </View>
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.title}>{isSend ? 'Send' : 'Receive'}</Text>
+            <Text type="label1" color="textPrimaryAlternate">{isSend ? 'Send' : 'Receive'}</Text>
             <View style={styles.dot}></View>
-            <Text style={styles.body}>{formatDatestamp(timeStamp ?? '')}</Text>
+            <Text type="body3" color="textPrimaryAlternate">{formatDatestamp(timeStamp ?? '')}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop:4}}>
             <Image
               style={styles.iconClock}
               source={require(`${image}/ic_clock.png`)}
             />
-            <Text style={[styles.body, { color: colors.Gray_Light }]}>
+            <Text type="body3" style={{ color: colors.Gray_Light }}>
               {formatTimestamp(timeStamp ?? '')}
             </Text>
             <View
               style={[styles.dot, { backgroundColor: colors.Gray_Light }]}
             ></View>
-            <Text style={styles.body}>{truncatedString}</Text>
+         {truncatedString}
           </View>
         </View>
       </View>
-      <View>
-        <Text style={[styles.bodyRight, { color: colorsAmount }]}>
+      <View style={{marginTop: -3}}>
+        <Text type="body2" textAlign="right" style={{ color: colorsAmount }}>
           {isSend ? '-' :'+'} {decimalNumber} {chainSymbol}
         </Text>
-        <Text style={[styles.bodyRight, { color: colorsStatus }]}>
+        <Text type="body3" textAlign="right" style={{ color: colorsStatus, marginTop:5}}>
           {status}
         </Text>
       </View>
@@ -151,22 +155,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.Primary,
     marginHorizontal: 10,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "left",
-    lineHeight: 25,
-    color: colors.Black,
-    fontFamily: "Poppins-Bold",
-  },
-  body: {
-    fontSize: 13,
-    fontWeight: "500",
-    textAlign: "left",
-    lineHeight: 21,
-    color: colors.Black,
-    fontFamily: "Poppins-Medium",
-  },
   iconClock: {
     width: 14,
     height: 14,
@@ -175,13 +163,13 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   iconUpDown: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     resizeMode: "contain",
   },
   cicle: {
-    width: 52,
-    height: 52,
+    width: 50,
+    height: 50,
     borderRadius: 26,
     backgroundColor: colors.Primary,
     justifyContent: "center",
@@ -196,13 +184,5 @@ const styles = StyleSheet.create({
 
     elevation: 2,
     marginRight: 12,
-  },
-  bodyRight: {
-    fontSize: 13,
-    fontWeight: "500",
-    textAlign: "right",
-    lineHeight: 21,
-    color: colors.Green,
-    fontFamily: "Poppins-Medium",
   },
 });

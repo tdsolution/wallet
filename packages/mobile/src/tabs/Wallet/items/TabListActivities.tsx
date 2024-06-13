@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   TouchableOpacity,
@@ -24,6 +23,7 @@ import moment from "moment";
 import { openDAppBrowser } from "$navigation";
 import { buildTransactionUrl } from "$libs/EVM/brower";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
+import { Text } from "@tonkeeper/uikit";
 const TabListActivities = ({ chainActive, address }) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const dataToShow = transactions.slice(-3);
@@ -33,8 +33,8 @@ const TabListActivities = ({ chainActive, address }) => {
   const evm = useEvm()?.evm;
 
   useEffect(() => {
-    console.log(address);
-    console.log(chainActive.chainId);
+    // console.log(address);
+    // console.log(chainActive.chainId);
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -90,7 +90,7 @@ const TabListActivities = ({ chainActive, address }) => {
               style={styles.image}
               source={require("../../../assets/icons/png/ic-globe-56.png")}
             />
-            <Text style={styles.textButtonBrower}>Visit Brower</Text>
+            <Text type="label3" color="primaryColor">Visit Brower</Text>
             <Image
               style={styles.icon}
               source={require("../../../assets/icons/png/ic-chevron-right-16.png")}
@@ -144,7 +144,7 @@ const TabListActivities = ({ chainActive, address }) => {
                   })
                 }
               >
-                <Text style={styles.textButton}>See all transactions</Text>
+                <Text type="label1" color="primaryColor">See all transactions</Text>
                 <Image
                   style={styles.icon}
                   source={require("../../../assets/icons/png/ic-chevron-right-16.png")}
@@ -164,10 +164,10 @@ const TabListActivities = ({ chainActive, address }) => {
                 style={styles.imageNotFound}
                 source={require("../../../assets/logo/logo_app.png")}
               />
-              <Text style={styles.title}>You have no activities</Text>
-              <Text style={styles.subtitle}>Make your transactions</Text>
+              <Text type="h3" color="textPrimaryAlternate">You have no activities</Text>
+              <Text type="body2" color="textTertiary" style={{marginVertical: 5}}>Make your transactions</Text>
               <TouchableOpacity style={[styles.buttonGoHead]}>
-                <Text style={[styles.textButton, { color: colors.White }]}>
+                <Text type="label1">
                   Go Ahead
                 </Text>
               </TouchableOpacity>
@@ -190,12 +190,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.Primary,
   },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Primary,
-    fontFamily: "Poppins-Medium",
-  },
   icon: {
     width: 16,
     height: 16,
@@ -212,12 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: colors.Primary,
-  },
-  textButtonBrower: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.Primary,
-    fontFamily: "Poppins-Medium",
   },
   image: {
     width: 24,
@@ -247,18 +235,6 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: "contain",
     borderRadius: 50,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: colors.Black,
-    fontFamily: "Poppins-Medium",
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Gray,
-    fontFamily: "Poppins-Medium",
   },
   buttonGoHead: {
     width: "100%",

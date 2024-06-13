@@ -5,6 +5,9 @@ export const DarkTheme = {
   textTertiary: "#556170",
   textAccent: "#45AEF5",
   textPrimaryAlternate: "#2B2D42",
+  textGray: "#7C7C7C",
+  textGrayLight: "#909090",
+  textBlack: "#2B2D42",
 
   backgroundPage: "#4871EA",
   backgroundPrimary: "#FFFFFF",

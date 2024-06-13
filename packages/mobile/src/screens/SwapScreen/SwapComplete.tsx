@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -12,6 +11,7 @@ import { useNavigation } from "@tonkeeper/router";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 import { useWallet } from "@tonkeeper/shared/hooks";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
+import { Text } from "@tonkeeper/uikit";
 
 const SwapComplete = ({ route } : any) => {
   const { address, amount, assetFrom, assetTo } = route.params;
@@ -36,15 +36,15 @@ const SwapComplete = ({ route } : any) => {
           source={require("../../assets/logo/logo_app.png")}
         />
       </View>
-      <Text style={[styles.title]}>Swap has been completed</Text>
+      <Text style={[styles.title]}>Swap has been completed!</Text>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={[styles.caption]}>
           You just swapped{" "}
-          <Text style={[styles.title, { color: colors.Primary }]}>
+          <Text type="label1" color="primaryColor">
             {amount} {assetFrom}
           </Text>{" "}
           to get{" "}
-          <Text style={[styles.title, { color: colors.Primary }]}>
+          <Text type="label1" color="primaryColor">
             {amount} {assetTo}
           </Text>{" "}
           successfully
@@ -88,17 +88,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   title: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
     marginTop: 20,
     color: colors.Black,
-    fontFamily: "Poppins-Bold",
   },
   caption: {
     width: 250,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     textAlign: "center",
     marginTop: 20,
     color: colors.Gray_Light,
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     textAlign: "left",
     color: colors.Gray_Light,
   },
@@ -132,7 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
   buttonOutline: {
     width: "100%",

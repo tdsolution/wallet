@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   id?: string;
@@ -98,11 +98,7 @@ const ItemWallet = (props: Props) => {
                 }}
               >
                 <Text
-                  style={{
-                    fontSize: 18,
-                    color: colors.White,
-                    fontWeight: "bold",
-                  }}
+                  type="h3"
                 >
                   {symbol.charAt(0)}
                 </Text>
@@ -178,7 +174,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "left",
     color: "#B6B6B6",
-    fontFamily: "Poppins-Light",
     lineHeight: 20,
   },
   container: {

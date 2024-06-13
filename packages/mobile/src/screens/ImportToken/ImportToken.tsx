@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TextInput,
@@ -24,6 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import { ListTokenModel } from "$libs/EVM/HistoryEVM/SaveToken";
 import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
+import { Text } from "@tonkeeper/uikit";
 
 const ImportToken = () => {
   const nav = useNavigation();
@@ -163,23 +163,23 @@ const ImportToken = () => {
             source={require("../../assets/icons/png/ic-chevron-left-16.png")}
             style={styles.iconBack}
           />
-          <Text style={styles.textBack}>Back</Text>
+          <Text type="body1">Back</Text>
         </TouchableOpacity>
-        <Text style={[globalStyles.textHeader, { color: colors.White }]}>
+        <Text type="h3">
           Import Token
         </Text>
-        <Text style={{ opacity: 0 }}>ascasac </Text>
+        <Text style={{ opacity: 0 }}>ascasa</Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: "#fff"}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor: "#fafafa"}}>
         <View style={styles.content}>
           <View style={{ padding: 25 }}>
-            <Text style={styles.textTitle}>Imports your custom Tokens</Text>
-            <Text style={styles.textBody}>
+            <Text type="label1" color="primaryColor" textAlign="center" fontSize={20}>Imports your custom Tokens</Text>
+            <Text type="body2" color="textTertiary" textAlign="center" style={{marginTop: 20}}>
               Please select the appropriate network with additional Tokens to
               include in your wallet
             </Text>
             <View style={{ marginTop: 25 }}>
-              <Text style={styles.textXChoose}>Choose your network</Text>
+              <Text type="body2" color="primaryColor">Choose your network</Text>
               <TouchableOpacity
                 onPress={() => {
                   nav.openModal("/select-network");
@@ -211,11 +211,9 @@ const ImportToken = () => {
                   />
                   </View>
                   <Text
+                    type="label1"
+                    color="textPrimaryAlternate"
                     style={{
-                      fontSize: 16,
-                      fontWeight: "600",
-                      color: colors.Black,
-                      fontFamily: "Poppins-Bold",
                       marginLeft: 10,
                     }}
                   >
@@ -246,7 +244,13 @@ const ImportToken = () => {
           ></View>
           <View style={{ paddingHorizontal: 25, gap: 20 }}>
             <View>
-              <Text style={styles.lable}>Token Address</Text>
+              <Text 
+                type="label1"
+                color="textPrimaryAlternate"
+                style={{
+                  marginBottom: 10,
+                }}
+              >Token Address</Text>
               <View>
                 <TextInput
                   style={styles.input}
@@ -269,7 +273,13 @@ const ImportToken = () => {
               </View>
             </View>
             <View>
-              <Text style={styles.lable}>Symbol</Text>
+              <Text 
+                type="label1"
+                color="textPrimaryAlternate"
+                style={{
+                  marginBottom: 10,
+                }}
+              >Symbol</Text>
               <View style={styles.boxInput}>
                 <Text
                   style={[
@@ -291,7 +301,13 @@ const ImportToken = () => {
               </View>
             </View>
             <View>
-              <Text style={styles.lable}>Decimals</Text>
+              <Text 
+                type="label1"
+                color="textPrimaryAlternate"
+                style={{
+                  marginBottom: 10,
+                }}
+              >Decimals</Text>
               <View style={styles.boxInput}>
                 <Text
                   style={[
@@ -331,12 +347,8 @@ const ImportToken = () => {
                   }}
                 >
                   <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "600",
-                      color: colors.Primary,
-                      fontFamily: "Poppins-Medium",
-                    }}
+                    type="label1"
+                    color="primaryColor"
                   >
                     Your token is
                   </Text>
@@ -347,11 +359,9 @@ const ImportToken = () => {
                 </TouchableOpacity>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
+                  type="label1"
+                  color="textPrimaryAlternate"
                     style={{
-                      fontSize: 16,
-                      fontWeight: "600",
-                      color: colors.Black,
-                      fontFamily: "Poppins-Bold",
                       marginRight: 10,
                     }}
                   >
@@ -368,11 +378,7 @@ const ImportToken = () => {
                     }}
                   >
                     <Text
-                      style={{
-                        fontSize: 20,
-                        color: colors.White,
-                        fontWeight: "bold",
-                      }}
+                      type="h2"
                     >
                       {symbol.charAt(0)}
                     </Text>
@@ -385,13 +391,13 @@ const ImportToken = () => {
           </View>
         </View>
       </ScrollView>
-      <View style={{paddingHorizontal: 20, backgroundColor: "#fff",}}>
+      <View style={{paddingHorizontal: 20, backgroundColor: "#fafafa",}}>
       <TouchableOpacity
               onPress={handleAddToken}
               disabled={!disabled()}
               style={[styles.button, { opacity: disabled() ? 1 : 0.1 }]}
             >
-              <Text style={styles.textButton}>Import Token</Text>
+              <Text type="label1">Import Token</Text>
             </TouchableOpacity>
             </View>
     </SafeAreaView>
@@ -405,13 +411,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.Primary,
   },
-  textBack: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-    marginLeft: 12,
-  },
   iconBack: {
     width: 16,
     height: 16,
@@ -424,39 +423,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-    marginBottom: 10,
-  },
-
-  textTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#4871EA",
-    lineHeight: 26,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-  },
-  textBody: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#909090",
-    lineHeight: 20,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginTop: 10,
-  },
-  textXChoose: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#4871EA",
-    lineHeight: 26,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-  },
   button: {
     width: "100%",
     height: 50,
@@ -466,12 +432,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     marginBottom: 100,
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
   input: {
     flex: 1,
@@ -513,16 +473,6 @@ const styles = StyleSheet.create({
     borderColor: colors.Gray_Light,
     paddingRight: 50,
     justifyContent: "center",
-  },
-  textInput: {},
-  lable: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    lineHeight: 20,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-    marginBottom: 5,
   },
   iconInput: {
     width: 20,

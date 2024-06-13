@@ -124,7 +124,7 @@ export const ExchangeModal = () => {
                         {category.title}
                       </Text>
                     </S.TitleContainer>
-                    <S.Contain>
+                    <S.Contain >
                       {category.items.map((item, idx, arr) => (
                         <ExchangeItem
                           topRadius={idx === 0}
@@ -157,11 +157,7 @@ export const ExchangeModal = () => {
                           onPress={handleShowAll}
                         >
                           <Text
-                            style={{
-                              color: colors.Black,
-                              fontWeight: "400",
-                              fontFamily: "Poppins-Medium",
-                            }}
+                           type="label2" color="textBlack"
                           >
                             {t(
                               showAll

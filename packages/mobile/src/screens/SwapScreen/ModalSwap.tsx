@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Pressable,
@@ -24,6 +23,7 @@ import SaveTransaction, {
   TransactionModel,
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi1";
+import { Text } from "@tonkeeper/uikit";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -202,10 +202,10 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       <Pressable style={styles.modalContainer} onPress={closeModal}></Pressable>
       <View style={styles.innerContainer}>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={[globalStyles.textHeader, { fontWeight: "bold" }]}>
+          <Text type="h3" textAlign="center" color="primaryColor">
             Confirm your Transaction
           </Text>
-          <Text style={styles.price}>
+          <Text type="h1" style={styles.price}>
             -{parseFloat(amount.toString())} {assetFrom}
           </Text>
           <Text style={styles.priceDolla}>
@@ -303,10 +303,8 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 35,
-    fontWeight: "bold",
     color: colors.Black,
     textAlign: "center",
-    fontFamily: "Poppins-Bold",
     marginTop: 20,
   },
   priceDolla: {
@@ -314,7 +312,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.Gray_Light,
     textAlign: "center",
-    fontFamily: "Poppins-Medium",
     marginTop: 5,
   },
   image: {
@@ -329,14 +326,12 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     color: colors.Gray_Light,
     textAlign: "center",
-    fontFamily: "Poppins-Medium",
   },
   textCheckExplorer: {
     fontSize: 14,
     fontWeight: "bold",
     color: colors.Primary,
     textAlign: "center",
-    fontFamily: "Poppins-Medium",
   },
   button: {
     width: "45%",
@@ -350,26 +345,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
   textToken: {
     fontSize: 14,
     fontWeight: "500",
     color: colors.Black,
     textAlign: "left",
-    fontFamily: "Poppins-Medium",
   },
   textTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: colors.Black,
     textAlign: "left",
-    fontFamily: "Poppins-Bold",
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginTop: -2,
   },
   box: {
     backgroundColor: "#eeeeee",
@@ -382,7 +375,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.Gray,
-    fontFamily: "Poppins-Medium",
   },
   btnReject: {
     width: "45%",
@@ -398,7 +390,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.Primary,
-    fontFamily: "Poppins-Medium",
   },
 });
 

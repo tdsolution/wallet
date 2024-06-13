@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   title: string;
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "left",
     color: "#B6B6B6",
-    fontFamily: "Poppins-Light",
     lineHeight: 20,
   },
   container: {
