@@ -1,6 +1,7 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 const ItemYourWallet = ({item, callback}) => {
   let truncatedAddress =
@@ -12,8 +13,8 @@ const ItemYourWallet = ({item, callback}) => {
         source={require("../../../assets/icons_v1/img_td.jpeg")}
       />
       <View>
-        <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.textToken}>{truncatedAddress}</Text>
+        <Text type="label1" color="textPrimaryAlternate">{item.name}</Text>
+        <Text type="body2" color="textPrimaryAlternate">{truncatedAddress}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -37,19 +38,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     resizeMode: "contain",
     marginRight: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-  },
-  textToken: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
   },
 });

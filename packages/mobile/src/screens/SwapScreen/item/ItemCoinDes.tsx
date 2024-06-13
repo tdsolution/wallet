@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 type ItemProps = {
   item: any;
@@ -61,7 +62,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: colors.Black,
-    fontFamily: "Poppins-Bold",
     marginLeft: 10,
   },
 });

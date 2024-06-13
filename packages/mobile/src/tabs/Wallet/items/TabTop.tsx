@@ -1,6 +1,7 @@
+import { Text } from "@tonkeeper/uikit";
 import { colors } from "../../../constants/colors";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 
 interface TabTopProps {
   tabs: string[];
@@ -24,14 +25,23 @@ const TabTop: React.FC<TabTopProps> = ({ tabs, initialTab, onTabChange }) => {
           style={[styles.tabItem, activeTab === tab ? styles.activeTab : null]}
           onPress={() => handleTabChange(tab)}
         >
+          {activeTab === tab
+          ?
           <Text
-            style={[
-              styles.tabText,
-              activeTab === tab ? styles.tabText : styles.text,
-            ]}
+            type= "label1"
+            color="primaryColor"
+            textAlign="center"
           >
             {tab}
           </Text>
+          : 
+          <Text
+            type= "body2"
+            color="textGray"
+            textAlign="center"
+          >
+            {tab}
+          </Text>}
         </TouchableOpacity>
       ))}
     </View>
@@ -56,18 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.White,
     borderBottomWidth: 1,
     borderBottomColor: colors.Primary,
-  },
-  tabText: {
-    color: colors.Primary,
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 14,
-    fontFamily: "Poppins-Medium",
-  },
-  text: {
-    color: '#7c7c7c',
-    fontWeight: "500",
-    textAlign: "center",
   },
 });
 

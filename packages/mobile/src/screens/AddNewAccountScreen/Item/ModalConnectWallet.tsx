@@ -99,14 +99,6 @@ const ModalConnectWallet = (props: Props) => {
 export default ModalConnectWallet
 
 const styles = StyleSheet.create({
-    textHeader: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: "#4871EA",
-      lineHeight: 26,
-      textAlign: "center",
-      fontFamily: "Poppins-Bold",
-    },
     icon: {
       width: 24,
       height: 24,

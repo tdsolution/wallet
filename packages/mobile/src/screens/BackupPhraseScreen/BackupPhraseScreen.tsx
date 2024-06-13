@@ -275,7 +275,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.Black,
     fontWeight: "600",
-    fontFamily: "Poppins-Bold",
     marginLeft: 16,
   },
   iconCopy: {
@@ -315,13 +314,11 @@ const styles = StyleSheet.create({
     color: colors.White,
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: "Poppins-Bold",
   },
   lable: {
     fontSize: 16,
     color: colors.Black,
     fontWeight: "bold",
-    fontFamily: "Poppins-Bold",
     marginBottom: 4,
   },
   input: {
@@ -334,7 +331,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.Black,
     fontWeight: "600",
-    fontFamily: "Poppins-Medium",
     marginBottom: 4,
   },
   hide: {

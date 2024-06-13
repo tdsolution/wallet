@@ -1,8 +1,7 @@
-import { IconButton, IconButtonList } from "@tonkeeper/uikit";
+import { IconButton, IconButtonList, Text } from "@tonkeeper/uikit";
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Image,
@@ -22,8 +21,6 @@ import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import ItemTransaction from "./Item/ItemTransaction";
-import moment from "moment";
-import { any } from "bluebird";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
@@ -31,7 +28,7 @@ import { buildTransactionUrl } from "$libs/EVM/brower";
 
 const DetailToken = ({ route }: any) => {
   const { id, symbol, image, address, addressToken, rpc } = route.params;
-  console.log('dau cho' + address);
+  //console.log('dau cho' + address);
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [dataTransaction, setDataTransaction] = useState<any>([]);
@@ -150,7 +147,7 @@ const DetailToken = ({ route }: any) => {
           />
         </TouchableOpacity>
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text style={[globalStyles.textHeader, { marginLeft: -45 }]}>
+          <Text type="h3" color="primaryColor" style={ {marginLeft: -45 }}>
             {chain.name}
           </Text>
         </View>
@@ -172,23 +169,27 @@ const DetailToken = ({ route }: any) => {
             }}
           >
             <Text
-              style={{
-                fontSize: 40,
-                color: colors.White,
-                fontWeight: "bold",
-              }}
+            type="h1"
+            fontSize={40}
+            style={{marginBottom:-5, marginRight:-2}}
             >
               {symbol.charAt(0)}
             </Text>
           </View>
         )}
 
-        <Text style={styles.price}>
+        <Text type="h1" color="textPrimaryAlternate" style={{marginTop: 20}}>
           {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toFixed(7)} {symbol}
         </Text>
-        <Text style={styles.priceDolla}>{formatCurrencyNoCrc(priceUsd)} $</Text>
+        <Text 
+        type="h3"
+        style={{
+          color: colors.Gray_Light,
+          marginTop: 5,}}
+        >≈ {formatCurrencyNoCrc(priceUsd)} $</Text>
       </View>
-      <View style={{ marginTop: 10 }}>
+      <View 
+      style={{ marginTop: 10 }}>
         <IconButtonList style={{ height: 100 }}>
           {!isWatchOnly ? (
             <IconButton
@@ -228,7 +229,7 @@ const DetailToken = ({ route }: any) => {
           marginBottom: 10,
         }}
       >
-        <Text style={styles.caption}>Can't find your transaction? </Text>
+        <Text type="body2" color="textTertiary">Can't find your transaction? </Text>
         <TouchableOpacity
           onPress={() =>
             openDAppBrowser(
@@ -236,7 +237,7 @@ const DetailToken = ({ route }: any) => {
             )
           }
         >
-          <Text style={styles.textCheckExplorer}>Check explorer</Text>
+          <Text type="label2" color="primaryColor">Check explorer</Text>
         </TouchableOpacity>
       </View>
       {
@@ -286,22 +287,6 @@ const styles = StyleSheet.create({
     tintColor: colors.Primary,
     transform: [{ rotate: "-90deg" }],
   },
-  price: {
-    fontSize: 35,
-    fontWeight: "bold",
-    color: colors.Black,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-    marginTop: 20,
-  },
-  priceDolla: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.Gray_Light,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-    marginTop: 5,
-  },
   boxImage: {
     width: 60,
     height: 60,
@@ -323,19 +308,5 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     resizeMode: "cover",
-  },
-  caption: {
-    fontSize: 14,
-    fontWeight: "normal",
-    color: colors.Gray_Light,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
-  },
-  textCheckExplorer: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: colors.Primary,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
   },
 });

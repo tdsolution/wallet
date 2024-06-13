@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet,TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { colors } from "../../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
@@ -6,6 +6,7 @@ import ModalNotification from "./ModalNotification";
 import moment from "moment";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import { useEvm } from "@tonkeeper/shared/hooks";
+import { Text } from "@tonkeeper/uikit";
 
 const ItemNotification = (props) => {
   const {
@@ -25,10 +26,10 @@ const ItemNotification = (props) => {
   
   const TruncateString = ({ string, maxLength }) => {
     if (string.length <= maxLength) {
-      return <Text>{string}</Text>;
+      return <Text type="body3" style={{color: colors.Gray}}>{string}</Text>;
     }
     return (
-      <Text>{`${string.substring(0, maxLength)}...${string.substring(
+      <Text type="body3" style={{color: colors.Gray}}>{`${string.substring(0, maxLength)}...${string.substring(
         string.length - 5
       )}`}</Text>
     );
@@ -69,34 +70,32 @@ const ItemNotification = (props) => {
         />
         <View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={styles.title}>
+          <Text type="label1" color="textPrimaryAlternate" style={{marginTop: -3}}>
             {fromAddress === evm.addressWallet
               ? name
               : (name === 'Send Coin' ? 'Receive Coin' : 'Receive Token')
             }  
           </Text>
             <View style={styles.dot}></View>
-            <Text style={styles.success}>Successful</Text>
+            <Text type="body3" style={{color: colors.Green}}>Successful</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5}}>
             <Image
               style={styles.icon}
               source={require("../../../assets/icons/png/ic_clock.png")}
             />
-            <Text style={styles.date}>{formatTimestamp(time)}</Text>
+            <Text type="body3" style={{color: colors.Gray}}>{formatTimestamp(time)}</Text>
             <View style={[styles.dot, {backgroundColor: colors.Gray}]}></View>
-            <Text style={styles.date}>
               {fromAddress === evm.addressWallet
                 ? TruncateString({ string: toAddress, maxLength: 8 })
                 : TruncateString({ string: fromAddress, maxLength: 8 })
               }
-              </Text>
           </View>
         </View>
       </View>
       <View>
-        <Text style={styles.price}>{amount + " " + symbol}</Text>
-        <Text style={[styles.date, { textAlign: "right" }]}>
+        <Text type="body3" color="textPrimaryAlternate">{amount + " " + symbol}</Text>
+        <Text type="body3" textAlign= "right" style={ {color: colors.Gray_Light, marginTop:5}}>
           {formatDatestamp(time)}
         </Text>
       </View>
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 20,
     borderBottomWidth: 0.2,
-    borderColor: colors.Gray,
+    borderColor: "#D0D0D0",
   },
   image: {
     width: 50,
@@ -146,25 +145,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     tintColor: colors.Gray,
     marginRight: 4,
-    marginBottom: 2,
-  },
-  date: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: colors.Gray,
-    fontFamily: "Poppins-Medium",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    fontFamily: "Poppins-Bold",
-  },
-  success: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: colors.Green,
-    fontFamily: "Poppins-Medium",
   },
   dot: {
     width: 5,
@@ -172,13 +152,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.Primary,
     marginHorizontal: 6,
-    marginBottom: 3,
-  },
-  price: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.Black,
-    fontFamily: "Poppins-Bold",
   },
   dotRed: {
     width: 10,

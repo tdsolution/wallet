@@ -743,7 +743,6 @@ const stylesButton = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.White,
-    fontFamily: "Poppins-Medium",
   },
   iconClose: {
     width: 28,

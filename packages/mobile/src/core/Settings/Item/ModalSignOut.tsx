@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   visible: boolean;
@@ -28,15 +29,15 @@ const ModalSignOut = (props: Props) => {
         <View
           style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
         >
-          <Text style={{ fontSize: 25, fontWeight: "bold", marginBottom: 10 }}>
+          <Text type="h3" color="textBlack" textAlign="center" style={{ marginBottom: 10 }}>
             Sign Out?
           </Text>
-          <Text>This will erase key to your wallet.</Text>
-          <Text>Make sure you have backed up your recovery phrase.</Text>
+          <Text type= "body2" color="textBlack">This will erase key to your wallet.</Text>
+          <Text type= "body2" color="textBlack">Make sure you have backed up your recovery phrase.</Text>
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "space-around",
               marginTop: 20,
             }}
           >
@@ -62,6 +63,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.Red,
-    fontFamily: "Poppins-Medium",
   },
 });
