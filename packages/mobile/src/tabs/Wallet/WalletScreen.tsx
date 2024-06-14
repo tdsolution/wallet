@@ -117,7 +117,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
 
-  console.log("tokensEVM " + tokensEVM.length);
+  //console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;

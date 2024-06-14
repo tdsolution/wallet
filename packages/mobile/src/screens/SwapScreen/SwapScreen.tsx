@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -26,6 +25,7 @@ import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { fetchBalaceEvm } from "$libs/EVM/useBalanceEVM";
 import { ethers } from "ethers";
+import { Text } from "@tonkeeper/uikit";
 
 const SwapScreen = () => {
   const chain = useChain()?.chain;
@@ -129,7 +129,7 @@ const SwapScreen = () => {
             source={require("../../assets/icons/png/ic-chevron-left-16.png")}
           />
         </TouchableOpacity>
-        <Text style={[globalStyles.textHeader]}>SwapScreen</Text>
+        <Text type="h3" color="primaryColor">SwapScreen</Text>
         <TouchableOpacity>
           <Image
             style={styles.icon}
@@ -233,6 +233,7 @@ const SwapScreen = () => {
           <View style={{ width: "48%" }}>
             <Text style={[styles.text]}>To</Text>
             <Text
+            type="h1"
               style={[
                 styles.price,
                 { color: inputValue ? colors.Primary : colors.Gray },
@@ -294,7 +295,7 @@ const SwapScreen = () => {
         <Text
           style={[
             styles.text,
-            { fontWeight: "500", fontSize: 16, fontFamily: "Popins-Medium" },
+            { fontWeight: "500", fontSize: 16 },
           ]}
         >
           1 {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}{" "}
@@ -383,7 +384,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: colors.Black,
-    fontFamily: "Poppins-Bold",
   },
   box: {
     width: "100%",
@@ -422,8 +422,8 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 30,
     fontWeight: "bold",
-    color: colors.Gray,
     fontFamily: "Poppins-Bold",
+    color: colors.Gray,
     marginVertical: Platform.OS === "android" ? 10 : 5,
     height: Platform.OS === "android" ? 40 : 40,
     backgroundColor: "white",
@@ -433,7 +433,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.Gray,
     lineHeight: 26,
-    fontFamily: "Poppins-Medium",
   },
   btnChange: {
     width: 50,
@@ -455,7 +454,6 @@ const styles = StyleSheet.create({
     color: colors.White,
     fontSize: 18,
     fontWeight: "bold",
-    fontFamily: "Poppins-Bold",
   },
   resetButton: {
     flexDirection: "row",
@@ -475,6 +473,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     color: colors.Primary,
-    fontFamily: "Poppins-Bold",
   },
 });

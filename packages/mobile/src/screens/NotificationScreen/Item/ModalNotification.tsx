@@ -1,23 +1,15 @@
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Pressable,
   Image,
   TouchableOpacity,
-  Dimensions,
-  Platform,
 } from "react-native";
 import React, { useState } from "react";
-import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../../../constants/colors";
-import { globalStyles } from "$styles/globalStyles";
-import { TextInput } from "react-native-gesture-handler";
-import { on } from "process";
-import { AnyActionPayload } from "$wallet/models/ActivityModel";
 import { useEvm } from "@tonkeeper/shared/hooks";
-const { width, height } = Dimensions.get("window");
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;
@@ -60,10 +52,10 @@ const ModalNotification = (props: Props) => {
 
     const TruncateString = ({ string, maxLength }) => {
       if (string.length <= maxLength) {
-        return <Text>{string}</Text>;
+        return <Text type="body2" color="textPrimaryAlternate">{string}</Text>;
       }
       return (
-        <Text>{`${string.substring(0, maxLength)}...${string.substring(
+        <Text type="body2" color="textPrimaryAlternate">{`${string.substring(0, maxLength)}...${string.substring(
           string.length - 5
         )}`}</Text>
       );
@@ -130,10 +122,9 @@ const ModalNotification = (props: Props) => {
             }
             </TouchableOpacity>
             <Text
-              style={[
-                globalStyles.textHeader,
-                { fontSize: 20, fontWeight: "bold", color: colors.Black },
-              ]}
+              type="h3"
+              color="textPrimaryAlternate"
+              style={{marginLeft:10}}
             >
               {fromAddress === evm.addressWallet
              ? name
@@ -152,17 +143,18 @@ const ModalNotification = (props: Props) => {
           </View>
           <View style={[styles.row, { marginTop: 20 }]}>
             <View>
-              <Text style={styles.title}>Status</Text>
+              <Text type="label1" color="textPrimaryAlternate">Status</Text>
               <View style={styles.buttonStatus}>
-                <Text style={styles.textStatus}>Successful</Text>
+                <Text type="body2">Successful</Text>
               </View>
             </View>
             <View>
-              <Text style={[styles.title, { textAlign: "right" }]}>Time</Text>
+              <Text type="label1" color="textPrimaryAlternate" textAlign="right">Time</Text>
               <Text
+              type="body3"
+              color="textPrimaryAlternate"
                 style={[
-                  styles.subtitle,
-                  { fontSize: 12, flex: 1, marginTop: 10 },
+                  { flex: 1, marginTop: 10 },
                 ]}
               >
                 {/* 10/03/2024 9:30:03 */}
@@ -173,8 +165,8 @@ const ModalNotification = (props: Props) => {
           <View style={styles.line}></View>
 
           <View style={styles.row}>
-            <Text style={styles.title}>From</Text>
-            <Text style={styles.title}>To</Text>
+            <Text type="label1" color="textPrimaryAlternate">From</Text>
+            <Text type="label1" color="textPrimaryAlternate">To</Text>
           </View>
           <View style={styles.row}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -185,9 +177,7 @@ const ModalNotification = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>
                 {TruncateString({ string: fromAddress, maxLength: 7 })}
-              </Text>
             </View>
             <Image
               style={[
@@ -209,23 +199,19 @@ const ModalNotification = (props: Props) => {
                 ]}
                 source={require("../../../assets/icons/png/ic-globe-56.png")}
               />
-              <Text style={styles.subtitle}>
                 {TruncateString({ string: toAddress, maxLength: 7 })}
-              </Text>
             </View>
           </View>
           <View style={styles.line}></View>
           <View style={{ width: "100%" }}>
             <Text
-              style={[
-                styles.title,
-                { textAlign: "center", marginTop: 10, marginBottom: 15 },
-              ]}
+            type="label1" color="textPrimaryAlternate"
+            textAlign="center"
             >
               Money amount
             </Text>
-            <Text style={styles.amount}>
-              {amount} <Text style={styles.currency}>{symbol}</Text>
+            <Text type="h2" color="textPrimaryAlternate" textAlign="center">
+              {amount} <Text type="label2" color="textPrimaryAlternate" fontSize={20}>{symbol}</Text>
             </Text>
           </View>
         </View>
@@ -255,65 +241,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
   },
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.White,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    paddingRight: 45,
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: colors.Gray_Light,
-  },
-  iconInput: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain",
-    tintColor: colors.Primary,
-  },
-  buttonAdd: {
-    width: "100%",
-    height: 50,
-    backgroundColor: colors.Primary,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  textButtonAdd: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-    fontFamily: "Poppins-Medium",
-  },
   row: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
   },
   line: {
     width: "100%",
@@ -331,34 +263,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 4,
-  },
-  textStatus: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.White,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
-  },
-  payment: {
-    backgroundColor: colors.White,
-    padding: 20,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.Primary,
-    marginTop: 10,
-  },
-  amount: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: colors.Black,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-  },
-  currency: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "center",
-    fontFamily: "Poppins-Medium",
   },
 });

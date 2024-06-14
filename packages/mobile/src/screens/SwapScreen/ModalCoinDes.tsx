@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import {
   Modal,
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Pressable,
@@ -17,6 +16,7 @@ import ItemCoinOrg from "./item/ItemCoinOrg";
 import { dataCoinDes } from "./dataSwap/dataCoinDes";
 import ItemCoinDes from "./item/ItemCoinDes";
 import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
+import { Text } from "@tonkeeper/uikit";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -68,7 +68,7 @@ const ModalCoinOrg: React.FC<SimpleModalProps> = ({ visible, closeModal, swapCoi
     >
       <Pressable style={styles.modalContainer} onPress={closeModal}></Pressable>
       <View style={styles.innerContainer}>
-        <Text style={[styles.title]}>Select A Coin</Text>
+        <Text type="label1" textAlign="center" style={{marginVertical: 16}}>Select A Coin</Text>
         <TouchableOpacity style={[styles.btnClose]} onPress={closeModal}>
           <Image
             style={[styles.icClose]}
@@ -130,14 +130,6 @@ const styles = StyleSheet.create({
     height: 16,
     resizeMode: "contain",
     tintColor: colors.Primary,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.White,
-    textAlign: "center",
-    fontFamily: "Poppins-Bold",
-    marginVertical: 16,
   },
 });
 

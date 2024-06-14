@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   Pressable,
   Image,
@@ -13,7 +12,7 @@ import { SheetActions, navigation, useNavigation } from "@tonkeeper/router";
 import { colors } from "../../../constants/colors";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 import { push } from "$navigation/imperative";
- import { Modal, deviceHeight } from "@tonkeeper/uikit";
+ import { Modal, Text, deviceHeight } from "@tonkeeper/uikit";
  import * as S from '../../TonConnect/TonConnect.style';
 import { useTheme } from "$hooks/useTheme";
 import { shortenWalletAddress } from "$libs/EVM/createWallet";
@@ -68,9 +67,7 @@ const ModalConnect = (props: TDConnectModalProps) => {
         <View style={styles.header}>
           <View></View>
           <Text
-            style={[
-              globalStyles.textHeader,
-            ]}
+            type="h3" color="primaryColor" style={{marginLeft:20}}
           >
           Confirm Transaction
           </Text>
@@ -85,7 +82,7 @@ const ModalConnect = (props: TDConnectModalProps) => {
           <View style={{alignItems: "center", marginBottom: 15 * HEIGHT_RATIO}}>
             <View style={styles.container3}>
               <Icon name="ic-globe-16" color="constantDark" style={{margin: 3 * HEIGHT_RATIO}}/>
-              <Text style={[styles.chainName, {marginBottom: -4}]}>{reff}</Text>
+              <Text type="body2" color="textBlack">{reff}</Text>
             </View>
             </View>
           <View style={[styles.container1, { justifyContent: "space-between"}]}>
@@ -95,55 +92,55 @@ const ModalConnect = (props: TDConnectModalProps) => {
               source={require("../../../assets/icons_v1/img_td.jpeg")}
             />
             <View>
-              <Text style={styles.chainName}>{chain.name}</Text>
-              <Text style={styles.title}>{evm.name}</Text>
+              <Text type="body2" color="textBlack">{chain.name}</Text>
+              <Text type="label1" color="textBlack">{evm.name}</Text>
             </View>
             </View>
             <View style={{alignItems: "flex-end"}}>
-              <Text style={styles.chainName}>Balance</Text>
-              <Text style={styles.title}>{balance.substring(0,6)} {chain.currency}</Text>
+              <Text type="body2" color="textBlack">Balance</Text>
+              <Text type="label1" color="textBlack">{balance.substring(0,6)} {chain.currency}</Text>
             </View>
            </View>
            <View style={{alignItems: "center", margin: 10 * HEIGHT_RATIO}}>
-           <Text style={{fontSize: 45, fontWeight: "600"}}>{value.substring(0,6)} {chain.currency.toUpperCase()}</Text>
+           <Text type="h1" color="textBlack">{value.substring(0,6)} {chain.currency.toUpperCase()}</Text>
            </View>
-           <Text style={styles.title}>From:</Text>
+           <Text type="label1" color="textBlack">From:</Text>
            <View style={styles.container1}>
             <Image
               style={styles.image}
               source={require("../../../assets/icons_v1/img_td.jpeg")}
             />
             <View>
-              <Text style={styles.title}>{evm.name}</Text>
-              <Text style={styles.chainName}>Balance: {balance.substring(0,6)} {chain.currency}</Text>
+              <Text type="label1" color="textBlack">{evm.name}</Text>
+              <Text type="body2" color="textBlack">Balance: {balance.substring(0,6)} {chain.currency}</Text>
             </View>
            </View>
-           <Text style={[styles.title, {marginTop: 10 * HEIGHT_RATIO}]}>To:</Text>
+           <Text type="label1" color="textBlack" style={{marginTop: 10 * HEIGHT_RATIO}}>To:</Text>
            <View style={styles.container1}>
             <Image
               style={styles.image}
               source={require("../../../assets/icons_v1/img_td.jpeg")}
             />
             <View>
-              <Text style={styles.title}>{truncatedAddress}</Text>
+              <Text type="label2" color="textBlack">{truncatedAddress}</Text>
             </View>
            </View>
            <View style={styles.container2}>
             <View style={{width: "100%", flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={styles.title}>Estimated gas fees:</Text>
-              <Text style={[styles.title, {color: colors.Primary}]}>{gas.substring(0,9)} {chain.currency}</Text>
+              <Text type="body2" color="textBlack">Estimated gas fees:</Text>
+              <Text type="body2" color="primaryColor">{gas.substring(0,9)} {chain.currency}</Text>
             </View>
             <View style={{width: "100%", flexDirection: "row", justifyContent: "space-between", marginTop: 5 * HEIGHT_RATIO}}>
-              <Text style={styles.title}>Total:</Text>
-              <Text style={styles.title}>{total.toString().substring(0,7)} {chain.currency}</Text>
+              <Text type="body2" color="textBlack">Total:</Text>
+              <Text type="body2" color="textBlack">{total.toString().substring(0,7)} {chain.currency}</Text>
             </View>
            </View>
           <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
             <TouchableOpacity style={[styles.button, {backgroundColor: "#fff", borderWidth: 1, borderColor: colors.Primary}]} onPress={createResponseReject}>
-              <Text style={[styles.textButton, {color: colors.Primary,}]}>Reject</Text>
+              <Text type="label1" color="primaryColor">Reject</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {backgroundColor: colors.Primary}]} onPress={createResponseAccept}>
-              <Text style={[styles.textButton, {color: colors.White,}]}>Confirm</Text>
+              <Text type="label1">Confirm</Text>
             </TouchableOpacity>
            </View>
            
@@ -170,7 +167,7 @@ export function openTDConnect(props: TDConnectModalProps) {
 
 const styles = StyleSheet.create({
   modal: {
-    backgroundColor: "#fff", 
+    backgroundColor: "#fafafa", 
   },
   modalContent: {
     paddingHorizontal: 20 * HEIGHT_RATIO,
@@ -182,7 +179,6 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 25,
-    backgroundColor: colors.White,
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
@@ -212,7 +208,6 @@ const styles = StyleSheet.create({
   },
   textButton: {
     fontSize: 13,
-    fontFamily: "Poppins-Bold",
   },
   container1: {
     marginVertical: 5 * HEIGHT_RATIO,
@@ -247,17 +242,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     resizeMode: "contain",
     marginRight: 10 * HEIGHT_RATIO,
-  },
-  title: {
-    fontSize: 14,
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Bold",
-  },
-  chainName: {
-    fontSize: 13,
-    color: colors.Black,
-    textAlign: "left",
-    fontFamily: "Poppins-Medium",
   },
 });

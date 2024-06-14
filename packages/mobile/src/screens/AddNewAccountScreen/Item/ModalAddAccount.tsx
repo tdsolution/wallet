@@ -5,19 +5,15 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
-  Dimensions,
   Platform,
   Keyboard,
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import { colors } from "../../../constants/colors";
-import { globalStyles } from "$styles/globalStyles";
-//import { TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import ModalNotification from "./ModalNotification";
 import { createWalletFromPrivateKey } from "$libs/EVM/createWallet";
-import { Icon, Text } from "@tonkeeper/uikit";
-import { TextInput } from "@tonkeeper/uikit/src/components/TextInput";
-const { width, height } = Dimensions.get("window");
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   modalVisible: boolean;

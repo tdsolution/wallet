@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
+import { StyleSheet, View, Image,TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
@@ -6,7 +6,7 @@ import {  fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { trackEvent } from "@aptabase/react-native";
 import { openDAppBrowser } from "$navigation/helper";
-import { deviceHeight } from "@tonkeeper/uikit";
+import { Text, deviceHeight } from "@tonkeeper/uikit";
 
 
 const display12Words = (sentence) => {
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
   body: {
     color:'#7C7C7C', 
    fontSize:12,
-    fontFamily: "Poppins-Light",
     lineHeight: 20
   },
   row: {

@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.Black,
-    fontFamily: "Poppins-Medium",
   },
   icon: {
     width: 16,

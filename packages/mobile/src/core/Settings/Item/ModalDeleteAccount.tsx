@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
 import React from "react";
 import { colors } from "../../../constants/colors";
+import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   visible: boolean;
@@ -28,10 +29,10 @@ const ModalDeleteAccount = (props: Props) => {
         <View
           style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
         >
-          <Text style={{ fontSize: 25, fontWeight: "bold", marginBottom: 10 }}>
+          <Text type="h3" color="textBlack" textAlign="center" style={{ marginBottom: 10 }}>
             Are you sure you want to delete your account?
           </Text>
-          <Text>
+          <Text type="body2" color="textBlack">
             This account will delete your account and all data from this
             application.
           </Text>
@@ -64,6 +65,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: colors.Red,
-    fontFamily: "Poppins-Medium",
   },
 });

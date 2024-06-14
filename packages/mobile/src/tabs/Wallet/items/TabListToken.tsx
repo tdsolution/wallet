@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import { useBalanceTD } from "@tonkeeper/shared/hooks";
 import { navigation, useFocusEffect } from "@tonkeeper/router";
 import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
+import { Text } from "@tonkeeper/uikit";
 
 const TabListToken = ({
   tokens,
@@ -94,9 +94,9 @@ const TabListToken = ({
               >
                 <View style={{ flexDirection: "row" }}>
                   <Text
+                  type="label2"
+                  color="primaryColor"
                     style={{
-                      color: "#4871EA",
-                      fontWeight: "600",
                       marginRight: 10,
                     }}
                   >
