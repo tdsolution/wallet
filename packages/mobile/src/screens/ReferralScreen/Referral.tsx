@@ -8,20 +8,22 @@ import { copyText } from "@tonkeeper/uikit";
 import { throttle } from '@tonkeeper/router';
 import { ethers } from 'ethers'
 import { ScrollView } from 'react-native';
+import { WalletStackRouteNames } from "$navigation";
+import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
+
 
 const { width, height } = Dimensions.get('window');
 
 
-const Referral = ({route}) => {
-    const {isReferrerAddress} = route.params;
-    console.log("isReferrer", isReferrerAddress);
+const Referral = () => {
     const navigation = useNavigation();
-    const { evm, setEvm } = useEvm();
+    const evm = useEvm()?.evm;
+    const { isReferrer, setIsReferrer } = useReferral();
     const chain = useChain()?.chain;
     const addressEvm = evm.addressWallet;
     const privateKey = evm.privateKey
     const [code, setCode] = useState<string>('');
-    const [isReferrer, setIsReferrer] = useState<boolean>(isReferrerAddress);
+    // const [isReferrer, setIsReferrer] = useState<boolean>(isReferrerAddress);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     let disable = code.length > 0 && isLoading == false;
@@ -89,6 +91,7 @@ const Referral = ({route}) => {
             console.log("Transactions: ", transaction);
 
             Alert.alert('Success', 'Registration successful!');
+            setIsReferrer(true);
         } catch (error) {
             console.log(error);
 
@@ -96,7 +99,8 @@ const Referral = ({route}) => {
             if (error.reason) {
                 Alert.alert('Error', 'Your wallet already registered!');
             } else {
-                Alert.alert('Error', 'Registration failed!');
+                Alert.alert('Error', "You do not have enough funds to cover the gas fee for registration. Please add more funds to your account and try again."
+);
             }
         } finally {
             setIsLoading(false);

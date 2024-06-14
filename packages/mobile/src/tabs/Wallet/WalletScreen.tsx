@@ -93,10 +93,12 @@ import DeviceInfo from "react-native-device-info";
 import { postDataToApi } from '$libs/EVM/api/postDataToApi';
 import { ReferralButton } from "../../components/RefferalButton";
 import { ethers } from 'ethers'
+import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
+  const {isReferrer, setIsReferrer} = useReferral();
   const balanceTD = useBalanceTD()?.balance;
   console.log('balanceTD', balanceTD);
   const { evm, setEvm } = useEvm() || {};
@@ -117,7 +119,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
 
-  //console.log("tokensEVM " + tokensEVM.length);
+  console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -233,8 +235,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     }
   }
 
-  const [isReferrer, setIsReferrer] = useState<boolean>(false);
-
   const URL_NETWORK = chain.rpc;
   const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
   // ABI của hợp đồng thông minh
@@ -267,6 +267,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
   useEffect(() => {
     checkIsReferrer();
   }, [isReferrer, chain, addressEvm]);
+
+  
   useEffect(() => {
     // Gọi hàm và kiểm tra kết quả
     getFirstAddress().then((address) => {
@@ -652,7 +654,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   activeOpacity={0.6}
                 >
                   <Text
+                    color="textSecondary"
                     type="body2"
+                    style={{ color: "#fff" }}
                   >
                     {chain.chainId == "1100"
                       ? wallet.address.ton.short
@@ -694,9 +698,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 resizeMode="contain"
               />
               <Text
-              type="h3"
-              color="primaryColor"
-              fontSize={14}
+                style={{
+                  color: theme.colors.primaryColor,
+                  fontWeight: "700",
+                  fontSize: 14,
+                }}
               >
                 {evm.name}
               </Text>
