@@ -36,9 +36,9 @@ const SwapComplete = ({ route } : any) => {
           source={require("../../assets/logo/logo_app.png")}
         />
       </View>
-      <Text style={[styles.title]}>Swap has been completed!</Text>
+      <Text type="h2" color="textBlack" textAlign="center" style={{ marginTop: 20}}>Swap has been completed!</Text>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text style={[styles.caption]}>
+        <Text type="body1" color="textGrayLight" textAlign="center" style={{ width: 250, marginTop: 20,}}>
           You just swapped{" "}
           <Text type="label1" color="primaryColor">
             {amount} {assetFrom}
@@ -52,18 +52,18 @@ const SwapComplete = ({ route } : any) => {
       </View>
 
       <View style={[styles.box]}>
-        <Text style={[styles.textBox]}>
+        <Text type="body1" color="textGray">
           Check your transaction when scanning with encrypted transaction as:{" "}
-          <Text style={[styles.textBox, { color: colors.Primary }]}>
+          <Text type="body1" color="primaryColor">
             {address}
           </Text>
         </Text>
       </View>
       <TouchableOpacity style={[styles.button]} onPress={handlePressSwap}>
-        <Text style={[styles.textButton]}>Swap again</Text>
+        <Text type="label1">Swap again</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.buttonOutline]} onPress={handleHome}>
-        <Text style={[styles.textButton, { color: colors.Primary }]}>
+        <Text type="label1" color="primaryColor">
           Continue to home
         </Text>
       </TouchableOpacity>
@@ -87,21 +87,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginTop: 40,
   },
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 20,
-    color: colors.Black,
-  },
-  caption: {
-    width: 250,
-    fontSize: 16,
-    fontWeight: "500",
-    textAlign: "center",
-    marginTop: 20,
-    color: colors.Gray_Light,
-  },
   box: {
     width: "100%",
     backgroundColor: "#eeeeee",
@@ -109,12 +94,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 20,
     borderRadius: 16,
-  },
-  textBox: {
-    fontSize: 16,
-    fontWeight: "500",
-    textAlign: "left",
-    color: colors.Gray_Light,
   },
   button: {
     width: "100%",
@@ -126,11 +105,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: "center",
     alignItems: "center",
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
   },
   buttonOutline: {
     width: "100%",

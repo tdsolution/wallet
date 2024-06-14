@@ -86,7 +86,7 @@ const ModalAccount = (props: Props) => {
                   source={require("../../../assets/icons_v2/ic-view.png")}
                 />
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>View private key</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>View private key</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -98,7 +98,7 @@ const ModalAccount = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#ffe063"}]}>
                 <Icon name="ic-pencil-16"/>
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Edit wallet name</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Edit wallet name</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -110,7 +110,7 @@ const ModalAccount = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Icon name="ic-trash-bin-28" size={18}/>
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Delete wallet</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Delete wallet</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>

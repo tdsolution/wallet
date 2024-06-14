@@ -646,7 +646,7 @@ export const Settings: FC = () => {
                       style={stylesButton.button}
                       onPress={() => setModalVisibleSignOut(true)}
                     >
-                      <Text style={stylesButton.textButton}>Sign Out</Text>
+                      <Text variant="label1" color="textPrimary">Sign Out</Text>
                       <Image
                         style={stylesButton.iconClose}
                         source={require("../../assets/icons/png/ic-door-28.png")}
@@ -738,11 +738,6 @@ const stylesButton = StyleSheet.create({
     backgroundColor: colors.Primary,
     flexDirection: "row",
     paddingHorizontal: 15,
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
   },
   iconClose: {
     width: 28,

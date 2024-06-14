@@ -34,7 +34,7 @@ export const ShowBalance: React.FC<{ amount: string }> = ({ amount }) => {
         </View>
       ) : (
         <TouchableOpacity activeOpacity={0.6} onPress={handleToggleHideAmounts}>
-          <Text type="num2" style={{fontSize:24, fontWeight:'700'}}>{amount}</Text>
+          <Text type="num2" fontSize={24}>{amount}</Text>
         </TouchableOpacity>
       )}
     </View>
