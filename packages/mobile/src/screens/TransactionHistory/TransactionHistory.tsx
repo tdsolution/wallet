@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   FlatList,
@@ -20,6 +19,8 @@ import {
   fetchTransactions,
 } from "$libs/EVM/HistoryEVM/DataHistory";
 import { useRoute } from '@react-navigation/native';
+import { Text } from "@tonkeeper/uikit";
+import { WalletStackRouteNames } from "$navigation";
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -99,13 +100,13 @@ const TransactionHistory = () => {
     <Container>
       <HeaderBar title={"Transactions"} onBack={handleBack} />
       <View style={{ paddingHorizontal: 25 }}>
-        <Text style={styles.title}>
+        <Text type="body2" color="textGray" style={{marginTop:5}}>
           Summary of transactions in your wallet, click to see their details
           including fees,...
         </Text>
         <View style={{ alignItems: "flex-end" }}>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>Download</Text>
+            <Text type="body2">Download</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -138,31 +139,15 @@ const TransactionHistory = () => {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 15,
-    fontWeight: "500",
-    textAlign: "left",
-    lineHeight: 22,
-    color: colors.Gray,
-    marginTop: 5,
-  },
   button: {
-    width: 110,
     height: 34,
     backgroundColor: colors.Primary,
     borderRadius: 6,
     paddingHorizontal: 19,
-    // paddingVertical: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 7,
+    marginTop: 10,
     marginBottom: 27,
-  },
-  textButton: {
-    fontSize: 15,
-    fontWeight: "500",
-    lineHeight: 22,
-    color: colors.White,
   },
 });
 

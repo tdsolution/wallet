@@ -21,9 +21,9 @@ import {
 } from "$libs/EVM/HistoryEVM/DataHistory";
 import moment from "moment";
 import { openDAppBrowser } from "$navigation";
-import { buildTransactionUrl } from "$libs/EVM/brower";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 import { Text } from "@tonkeeper/uikit";
+import { buildAddressUrl } from "$libs/EVM/brower";
 const TabListActivities = ({ chainActive, address }) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const dataToShow = transactions.slice(-3);
@@ -82,7 +82,7 @@ const TabListActivities = ({ chainActive, address }) => {
             style={styles.buttonBrower}
             onPress={() =>
               openDAppBrowser(
-                buildTransactionUrl(evm.addressWallet, chain.chainId)
+                buildAddressUrl(evm.addressWallet, chain.chainId)
               )
             }
           >
@@ -132,7 +132,7 @@ const TabListActivities = ({ chainActive, address }) => {
               style={{
                 width: "100%",
                 alignItems: "center",
-                marginBottom: Platform.OS === "android" ? 80 : 0,
+                marginBottom: 80,
               }}
             >
               <TouchableOpacity

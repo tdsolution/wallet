@@ -208,34 +208,34 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
           <Text type="h1" style={styles.price}>
             -{parseFloat(amount.toString())} {assetFrom}
           </Text>
-          <Text style={styles.priceDolla}>
+          <Text type="label1" color="textGrayLight" fontSize={20} style={{ marginTop: 5}}>
             {`\u2248`} {coinUsd} $
           </Text>
         </View>
         <View style={styles.box}>
           <View style={styles.row}>
-            <Text style={styles.text}>Asset</Text>
-            <Text style={styles.text}>
+            <Text type="body1" color="textGray">Asset</Text>
+            <Text type="body1" color="textGray">
               {network} ({assetFrom})
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.text}>From</Text>
-            <Text style={styles.text}>{formatHexString(from)}</Text>
+            <Text type="body1" color="textGray">From</Text>
+            <Text type="body1" color="textGray">{formatHexString(from)}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.text}>To</Text>
-            <Text style={styles.text}>{formatHexString(to)}</Text>
+            <Text type="body1" color="textGray">To</Text>
+            <Text type="body1" color="textGray">{formatHexString(to)}</Text>
           </View>
         </View>
         <View style={styles.box}>
           <View style={styles.row}>
-            <Text style={styles.text}>Network fee</Text>
-            <Text style={[styles.text]}>0.0005 tBNB</Text>
+            <Text type="body1" color="textGray">Network fee</Text>
+            <Text type="body1" color="textGray">0.0005 tBNB</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.text}>Max total</Text>
-            <Text style={styles.text}>0.0005 {assetFrom}</Text>
+            <Text type="body1" color="textGray">Max total</Text>
+            <Text type="body1" color="textGray">0.0005 {assetFrom}</Text>
           </View>
         </View>
 
@@ -248,13 +248,13 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
           }}
         >
           <TouchableOpacity style={[styles.btnReject]} onPress={closeModal}>
-            <Text style={styles.textReject}>Reject</Text>
+            <Text type="label1" color="primaryColor">Reject</Text>
           </TouchableOpacity>
           <TouchableOpacity disabled={isLoading} style={[styles.button]} onPress={isTransfer ? handleTransfer : handleWithdraw}>
             {
               isLoading ? (<ActivityIndicator size={'small'} color={"#ffffff"} />) : 
               (
-                <Text style={styles.textButton}>Confirm</Text>
+                <Text type="label1">Confirm</Text>
               )
             }
           </TouchableOpacity>
@@ -290,10 +290,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: "flex-end",
   },
-  closeButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   iconClose: {
     width: 24,
     height: 24,
@@ -307,31 +303,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
-  priceDolla: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.Gray_Light,
-    textAlign: "center",
-    marginTop: 5,
-  },
   image: {
     width: 60,
     height: 60,
     borderRadius: 30,
     resizeMode: "contain",
     marginTop: 10,
-  },
-  caption: {
-    fontSize: 14,
-    fontWeight: "normal",
-    color: colors.Gray_Light,
-    textAlign: "center",
-  },
-  textCheckExplorer: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: colors.Primary,
-    textAlign: "center",
   },
   button: {
     width: "45%",
@@ -340,23 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-  },
-  textButton: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.White,
-  },
-  textToken: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.Black,
-    textAlign: "left",
-  },
-  textTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Black,
-    textAlign: "left",
   },
   row: {
     flexDirection: "row",
@@ -371,11 +331,6 @@ const styles = StyleSheet.create({
     gap: 20,
     marginTop: 30,
   },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Gray,
-  },
   btnReject: {
     width: "45%",
     height: 50,
@@ -385,11 +340,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: colors.Primary,
-  },
-  textReject: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.Primary,
   },
 });
 

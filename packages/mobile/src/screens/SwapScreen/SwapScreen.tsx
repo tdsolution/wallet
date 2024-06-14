@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  Pressable,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import HeaderBar from "../../components/HeaderBar";
@@ -122,6 +124,7 @@ const SwapScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Pressable onPress={Keyboard.dismiss}>
       <View style={[styles.row]}>
         <TouchableOpacity onPress={() => nav.goBack()}>
           <Image
@@ -140,18 +143,18 @@ const SwapScreen = () => {
       <View>
         <View style={[styles.box]}>
           <View style={{ width: "48%" }}>
-            <Text style={[styles.text]}>From</Text>
+            <Text type="label1" color="textBlack">From</Text>
             <TextInput
               style={[styles.input]}
               value={inputValue}
-              onChangeText={(text) => setInputValue(text)}
+              onChangeText={(text) => setInputValue(text.replace(/[^0-9 .]/g, ""))}
               placeholder="0"
               placeholderTextColor={colors.Gray}
               autoFocus
               cursorColor = {colors.Primary}
               
             />
-            <Text style={[styles.priceUSD]}>
+            <Text type="body1" color="textGray">
               $ {inputValue.length > 0 ? coin : 0}
             </Text>
           </View>
@@ -184,7 +187,7 @@ const SwapScreen = () => {
                 />
               </View>
 
-              <Text style={[styles.text, {}]}>
+              <Text type="label1" color="textBlack">
                 {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
               </Text>
             </View>
@@ -231,7 +234,7 @@ const SwapScreen = () => {
 
         <View style={[styles.box]}>
           <View style={{ width: "48%" }}>
-            <Text style={[styles.text]}>To</Text>
+            <Text type="label1" color="textBlack">To</Text>
             <Text
             type="h1"
               style={[
@@ -242,7 +245,7 @@ const SwapScreen = () => {
             >
               {!inputValue ? 0 : inputValue}
             </Text>
-            <Text style={[styles.priceUSD]}>
+            <Text type="body1" color="textGray">
               $ {inputValue.length > 0 ? coin : 0}
             </Text>
           </View>
@@ -279,7 +282,7 @@ const SwapScreen = () => {
                 />
               </View>
 
-              <Text style={[styles.text, {}]}>
+              <Text type="label1" color="textBlack">
                 {isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}
               </Text>
             </View>
@@ -291,12 +294,9 @@ const SwapScreen = () => {
         </View>
       </View>
       <View style={[styles.resetButton]}>
-        <Text style={[styles.text]}>Quote</Text>
+        <Text type="label1" color="textBlack">Quote</Text>
         <Text
-          style={[
-            styles.text,
-            { fontWeight: "500", fontSize: 16 },
-          ]}
+          type="body1" color="textBlack"
         >
           1 {!isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol}{" "}
           {`\u2248`} 1{" "}
@@ -314,8 +314,9 @@ const SwapScreen = () => {
         ]}
         onPress={handleSwap}
       >
-        <Text style={[styles.buttonText]}>Swap</Text>
+        <Text type="label1">Swap</Text>
       </TouchableOpacity>
+      </Pressable>
       <ModalSwap
         visible={modalVisible}
         closeModal={() => setModalVisible(false)}
@@ -334,6 +335,7 @@ const SwapScreen = () => {
         coinUsd={coin}
         isTransfer = {isChangeCoinDes}
       />
+      
       <ModalCoinDes
         visible={modalVisibleCoinDes}
         closeModal={() => setModalVisibleCoinDes(false)}
@@ -344,6 +346,7 @@ const SwapScreen = () => {
         closeModal={() => setModalVisibleCoinOrg(false)}
         swapCoin={swapCoin}
       />
+      
     </View>
   );
 };
@@ -379,11 +382,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     borderRadius: 24,
     marginRight: 10,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.Black,
   },
   box: {
     width: "100%",
@@ -428,12 +426,6 @@ const styles = StyleSheet.create({
     height: Platform.OS === "android" ? 40 : 40,
     backgroundColor: "white",
   },
-  priceUSD: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: colors.Gray,
-    lineHeight: 26,
-  },
   btnChange: {
     width: 50,
     height: 50,
@@ -449,11 +441,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
-  },
-  buttonText: {
-    color: colors.White,
-    fontSize: 18,
-    fontWeight: "bold",
   },
   resetButton: {
     flexDirection: "row",

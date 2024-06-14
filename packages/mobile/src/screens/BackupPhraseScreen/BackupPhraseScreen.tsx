@@ -8,7 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@tonkeeper/router";
 import { t } from "@tonkeeper/shared/i18n";
 import { useEvm, useWalletSetup } from "@tonkeeper/shared/hooks";
@@ -41,8 +41,14 @@ export const BackupPhraseScreen = memo(() => {
   let evmAddress = evm.privateKey;
   evmAddress = evmAddress.replace(/^"|"$/g, '');
   const str = evm.mnemonic;
-  const arrStringSecurity = str.split(" ");
-  const [dataSecurity, setDataSecurity] = useState<string[]>(arrStringSecurity);
+  const [dataSecurity, setDataSecurity] = useState<string[]>();
+    useEffect(() => {
+    if (str) {
+    const arrStringSecurity = str.split(" ");
+    setDataSecurity(arrStringSecurity)
+  }
+  }, []);
+  
   const [dataPhrase, setDataPhrase] = useState<string[]>(phrase);
   const [privateKey, setprivateKey] = useState<string>(evmAddress);
   const [isShowPrivateKey, setIsShowPrivateKey] = useState<boolean>(true);
@@ -52,6 +58,8 @@ export const BackupPhraseScreen = memo(() => {
   const handleShow = () => {
     setIsShowPrivateKey(!isShowPrivateKey);
   };
+
+  
 
   const { lastBackupAt } = useWalletSetup();
 
@@ -115,8 +123,8 @@ export const BackupPhraseScreen = memo(() => {
               numColumns={2}
               renderItem={({ item, index }) => (
                 <View style={styles.row}>
-                  <Text style={styles.textSecurity}>{index + 1}. </Text>
-                  <Text style={styles.textSecurity}>{item}</Text>
+                  <Text type="body1">{index + 1}. </Text>
+                  <Text type="body1">{item}</Text>
                 </View>
               )}
               scrollEnabled={false}
@@ -130,7 +138,7 @@ export const BackupPhraseScreen = memo(() => {
                 source={require("../../assets/icons_v1/icon_eye_2.png")}
               />
               <TouchableOpacity onPress={() => setIsShowPhrase(true)}>
-                <Text style={[styles.title, { color: colors.Primary }]}>
+                <Text type="body1" color="primaryColor" style={{ marginLeft: 16}}>
                   Tap to see
                 </Text>
               </TouchableOpacity>
@@ -143,12 +151,15 @@ export const BackupPhraseScreen = memo(() => {
             paddingVertical: 5,
           }}
         >
-          <Text style={styles.title}>EVM Networks</Text>
+          <Text type="label1" color="textBlack" fontSize={18} style={{ marginLeft: 16}}>EVM Networks</Text>
         </View>
         <View style={{ paddingHorizontal: 16 }}>
+          {str
+          ?
+          <View>
           <View style={[styles.right, { paddingVertical: 16 }]}>
             <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={copyText(str)}>
-            <Text style={[styles.title, { color: colors.Primary }]}>Copy</Text>
+            <Text type="body1" color="primaryColor" style={{ marginLeft: 16}}>Copy</Text>
               <Image
                 style={styles.iconCopy}
                 source={require("../../assets/icons/png/ic-copy-16.png")}
@@ -162,8 +173,8 @@ export const BackupPhraseScreen = memo(() => {
               numColumns={2}
               renderItem={({ item, index }) => (
                 <View style={styles.row}>
-                  <Text style={styles.textSecurity}>{index + 1}. </Text>
-                  <Text style={styles.textSecurity}>{item}</Text>
+                  <Text type="body1">{index + 1}. </Text>
+                  <Text type="body1">{item}</Text>
                 </View>
               )}
               scrollEnabled={false}
@@ -180,14 +191,17 @@ export const BackupPhraseScreen = memo(() => {
                 source={require("../../assets/icons_v1/icon_eye_2.png")}
               />
               <TouchableOpacity onPress={() => setIsShowSecurity(true)}>
-                <Text style={[styles.title, { color: colors.Primary }]}>
+                <Text type="body1" color="primaryColor" style={{ marginLeft: 16}}>
                   Tap to see
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
+          </View>
+          :<></>
+          }
           <View style={{ marginTop: 16 }}>
-            <Text style={styles.lable}>*Your private key EVM</Text>
+            <Text type="label1" color="textBlack" style={{marginBottom:10}}>*Your private key EVM</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -197,7 +211,7 @@ export const BackupPhraseScreen = memo(() => {
               <TextInput
                 style={styles.input}
                 value={privateKey}
-                onChangeText={(text) => setprivateKey(text)}
+                onChangeText={(text) => setprivateKey(privateKey)}
                 placeholder="Private key"
                 placeholderTextColor={colors.Gray_Light}
                 secureTextEntry={isShowPrivateKey}
@@ -271,12 +285,6 @@ const styles = StyleSheet.create({
     position: "relative",
     top: 3,
   },
-  title: {
-    fontSize: 18,
-    color: colors.Black,
-    fontWeight: "600",
-    marginLeft: 16,
-  },
   iconCopy: {
     width: 24,
     height: 24,
@@ -309,17 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 8,
     overflow: "hidden",
-  },
-  textSecurity: {
-    color: colors.White,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  lable: {
-    fontSize: 16,
-    color: colors.Black,
-    fontWeight: "bold",
-    marginBottom: 4,
   },
   input: {
     flex: 1,

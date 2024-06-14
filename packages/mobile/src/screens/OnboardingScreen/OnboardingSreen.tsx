@@ -46,10 +46,10 @@ export const OnboardingScreen = memo (() => {
           </View>
         </View>
         <View style={{alignItems:'center', width: '100%'}}>
-           <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:180 * HEIGHT_RATIO}}/>
+           <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:175 * HEIGHT_RATIO}}/>
         </View>
         <View style={styles.contentText}>
-          <Text style={{color:'#4871EA', fontSize: 26* HEIGHT_RATIO,fontWeight: "500",textAlign: "left"}} lineHeight= {30 * HEIGHT_RATIO}>Investing in cryptocurrency made easy.</Text>
+          <Text style={{color:'#4871EA', fontSize: 26* HEIGHT_RATIO,textAlign: "left"}} lineHeight= {30 * HEIGHT_RATIO}>Investing in cryptocurrency made easy.</Text>
         </View>
         <View style={styles.content}>
           <View style={styles.buttons}>
@@ -70,12 +70,6 @@ const styles = Steezy.create(({ safeArea }) => ({
   buttons:{
     paddingHorizontal: 20 * HEIGHT_RATIO,
     paddingBottom: 30 * HEIGHT_RATIO,
-  },
-  introText:{
-   color: "#4871EA",
-    fontSize: 26 * HEIGHT_RATIO ,
-    fontWeight: "500",
-    textAlign: "left",
   },
   contentText:{
     width: "100%",

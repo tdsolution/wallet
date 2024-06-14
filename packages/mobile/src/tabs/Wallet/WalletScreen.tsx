@@ -652,9 +652,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   activeOpacity={0.6}
                 >
                   <Text
-                    color="textSecondary"
                     type="body2"
-                    style={{ color: "#fff" }}
                   >
                     {chain.chainId == "1100"
                       ? wallet.address.ton.short
@@ -696,11 +694,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 resizeMode="contain"
               />
               <Text
-                style={{
-                  color: theme.colors.primaryColor,
-                  fontWeight: "700",
-                  fontSize: 14,
-                }}
+              type="h3"
+              color="primaryColor"
+              fontSize={14}
               >
                 {evm.name}
               </Text>

@@ -81,7 +81,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#68B984"}]}>
                 <Icon name="ic-key-28" size={20}/>
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with private key</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with private key</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -93,7 +93,7 @@ const ModalChooseAddWallet = (props: Props) => {
               <View style={[styles.boxImageModal, {backgroundColor: "#f54949"}]}>
                 <Icon name="ic-wallet-28" size={20}/>
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with mnemonic</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Add wallet with mnemonic</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>
@@ -108,7 +108,7 @@ const ModalChooseAddWallet = (props: Props) => {
                   source={require("../../../assets/icons/png/ic-plus-28.png")}
                 />
               </View>
-              <Text type="label2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Create a new wallet</Text>
+              <Text type="body2" color="textPrimaryAlternate" style={{marginLeft: 10}}>Create a new wallet</Text>
               </View>
               <Icon name="ic-chevron-right-16" color="constantDark"/>
             </TouchableOpacity>

@@ -48,7 +48,21 @@ const SendToken = ({ route }: any) => {
   const deeplinking = useDeeplinking();
   const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
+  const [isDisable, setIsDisable] = useState<boolean>(true);
+
   console.log("Pricce: ", price);
+
+    const checkValue = () => {
+    if (amount !== "" && !isNaN(Number(amount))) {
+      setIsDisable(false);
+    } else if (amount !== "" && isNaN(Number(amount))){
+      setAmount("");
+      setIsDisable(true);
+    }
+  };
+   useEffect(() => {
+    checkValue(); // Gọi hàm checkValue trong useEffect
+  }, [amount]);
 
   useEffect(() => {
     async function getdata() {
