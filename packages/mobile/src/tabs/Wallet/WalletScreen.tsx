@@ -71,7 +71,7 @@ import { useInscriptionBalances } from "$hooks/useInscriptionBalances";
 import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
-import { shortenWalletAddress } from "$libs/EVM/createWallet";
+import { setWalletEVM, shortenWalletAddress } from "$libs/EVM/createWallet";
 import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
@@ -92,13 +92,14 @@ import { getABIFromAPI } from "$core/DAppBrowser/func";
 import DeviceInfo from "react-native-device-info";
 import { postDataToApi } from '$libs/EVM/api/postDataToApi';
 import { ReferralButton } from "../../components/RefferalButton";
+import { ethers } from 'ethers'
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const balanceTD = useBalanceTD()?.balance;
-  //console.log('balanceTD', balanceTD);
-  const {evm, setEvm} = useEvm();
+  console.log('balanceTD', balanceTD);
+  const { evm, setEvm } = useEvm() || {};
   const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
@@ -146,14 +147,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
   // }, [loadDataEVM]);
   // TODO: rewrite
 
-const getDeviceName = async () => {
-      try {
-        const deviceName = await DeviceInfo.getDeviceName();
-         postDataToApi('DeviceInfo: '+`${deviceName}`);
-      } catch (error) {
-        console.error('Lỗi khi lấy tên thiết bị:', error);
-      }
-    };
+  const getDeviceName = async () => {
+    try {
+      const deviceName = await DeviceInfo.getDeviceName();
+      postDataToApi('DeviceInfo: ' + `${deviceName}`);
+    } catch (error) {
+      console.error('Lỗi khi lấy tên thiết bị:', error);
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -164,25 +165,26 @@ const getDeviceName = async () => {
 
   useEffect(() => {
     getDeviceName();
-    if(!addressEvm) {
-    const fetchEvm = async () => {
-      try {
-        const address = await AsyncStorage.getItem("EVMAddress");
-        const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
-        const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
-        const name = await AsyncStorage.getItem("EVMMname");
-        const evmModal = {
-          addressWallet: address,
-          privateKey: privateKey,
-          mnemonic: mnemonic,
-          name: name,
+    if (!addressEvm) {
+      const fetchEvm = async () => {
+        try {
+          const address = await AsyncStorage.getItem("EVMAddress");
+          const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
+          const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
+          const name = await AsyncStorage.getItem("EVMMname");
+          const evmModal = {
+            addressWallet: address,
+            privateKey: privateKey,
+            mnemonic: mnemonic,
+            name: name,
+          }
+          setEvm(evmModal);
+        } catch (error) {
+          console.error('Error reading data from AsyncStorage:', error);
         }
-        setEvm(evmModal);
-      } catch (error) {
-        console.error('Error reading data from AsyncStorage:', error);
-      }
+      };
+      fetchEvm();
     };
-    fetchEvm();};
   }, []);
 
   const handleGetTransaction = async () => {
@@ -231,6 +233,40 @@ const getDeviceName = async () => {
     }
   }
 
+  const [isReferrer, setIsReferrer] = useState<boolean>(false);
+
+  const URL_NETWORK = chain.rpc;
+  const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
+  // ABI của hợp đồng thông minh
+  const contractABI = [
+    "function isReferrer(address _address) view returns (bool)"
+  ];
+  const checkIsReferrer = async () => {
+    try {
+      // Tạo provider
+      const provider = new ethers.JsonRpcProvider(URL_NETWORK);
+
+      // Kết nối đến contract
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      // Gọi hàm isReferrer
+      const isReferrer = await contract.isReferrer(addressEvm);
+
+      console.log("isReferrer: ", isReferrer);
+      // Hiển thị kết quả
+      if (isReferrer) {
+        setIsReferrer(true);
+      } else {
+        setIsReferrer(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    checkIsReferrer();
+  }, [isReferrer, chain, addressEvm]);
   useEffect(() => {
     // Gọi hàm và kiểm tra kết quả
     getFirstAddress().then((address) => {
@@ -254,7 +290,7 @@ const getDeviceName = async () => {
   );
   const handlePressSwap = useCallback(() => {
     if (wallet) {
-     nav.openModal("Swap");
+      nav.openModal("Swap");
     } else {
       openRequireWalletModal();
     }
@@ -515,7 +551,7 @@ const getDeviceName = async () => {
             >
               <ScanQRButton />
               <View style={{ width: 10 }}></View>
-              <ReferralButton />
+              <ReferralButton isReferrerAddress={isReferrer} />
               <View style={{ width: 10 }}></View>
               <NotificationButton amount={amountTransaction} />
               <View style={{ width: 10 }}></View>
@@ -525,8 +561,8 @@ const getDeviceName = async () => {
         hideBackButton
         children={<LogoButton />}
       />
-      <ScrollView 
-     style={{backgroundColor: "#fafafa"}}
+      <ScrollView
+        style={{ backgroundColor: "#fafafa" }}
       >
         <View style={{ height: 120 }}>
           <View
@@ -646,7 +682,7 @@ const getDeviceName = async () => {
         </View>
 
         <View
-          style={{ alignItems: "flex-end", paddingHorizontal: 15 * HEIGHT_RATIO, paddingVertical : 15 * HEIGHT_RATIO}}
+          style={{ alignItems: "flex-end", paddingHorizontal: 15 * HEIGHT_RATIO, paddingVertical: 15 * HEIGHT_RATIO }}
         >
           {chain.chainId != "1100" ? (
             <TouchableOpacity
@@ -715,16 +751,16 @@ const getDeviceName = async () => {
           </IconButtonList>
         </View>
 
-        <View style={{ flex: 1}}>
+        <View style={{ flex: 1 }}>
           <TabTop
             tabs={["Tokens", "Activities"]}
             initialTab="Tokens"
             onTabChange={handleTabChange}
-            
+
           />
           <View
             style={{
-              
+
             }}
           >
             {activeTab === "Tokens" ? (
