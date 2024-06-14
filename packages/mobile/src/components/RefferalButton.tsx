@@ -8,7 +8,7 @@ import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../constants/colors";
 
 export const ReferralButton = memo((props: any) => {
-  const { amount } = props;
+  const { amount, isReferrerAddress } = props;
   const navigation = useNavigation();
   const deeplinking = useDeeplinking();
   const hitSlop = useMemo(
@@ -22,7 +22,7 @@ export const ReferralButton = memo((props: any) => {
   );
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(WalletStackRouteNames.Referral)}
+      onPress={() => navigation.navigate(WalletStackRouteNames.Referral, {isReferrerAddress})}
       style={[styles.container]}
       activeOpacity={0.6}
       hitSlop={hitSlop}

@@ -30,7 +30,7 @@ export const TransactionProvider = ({ children }) => {
       );
       setTransactionData(dataChainId);
     } catch (error) {
-      console.error("Error saving sample transaction:", error);
+      console.log("Error saving sample transaction:", error);
     }
   };
     fetchData();

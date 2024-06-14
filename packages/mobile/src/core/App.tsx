@@ -54,46 +54,46 @@ export function App() {
   return (
     // <KeyboardProvider>
     <BalanceProvider>
-    <TransactionProvider>
       <ChainProvider>
-        <SwapCoinProvider>
-          <WalletProvider>
-            <EmvProvider>
-              <StoreProvider {...{ store }}>
-                <ActionSheetProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <TonThemeProvider>
-                      <SafeAreaProvider>
-                        <ScrollPositionProvider>
-                          <HideableAmountProvider>
-                            <AppNavigator />
-                          </HideableAmountProvider>
-                        </ScrollPositionProvider>
-                        {/* <MobilePasscodeScreen locked={tonkeeper.securitySettings.locked} /> */}
-                        <ToastComponent />
-                        <BlockingLoaderView />
-                        {isAndroid ? (
-                          <View
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                            }}
-                          >
-                            <PortalDestination name="popupPortal" />
-                          </View>
-                        ) : null}
-                      </SafeAreaProvider>
-                    </TonThemeProvider>
-                  </QueryClientProvider>
-                </ActionSheetProvider>
-              </StoreProvider>
-            </EmvProvider>
-          </WalletProvider>
-        </SwapCoinProvider>
+        <TransactionProvider>
+          <SwapCoinProvider>
+            <WalletProvider>
+              <EmvProvider>
+                <StoreProvider {...{ store }}>
+                  <ActionSheetProvider>
+                    <QueryClientProvider client={queryClient}>
+                      <TonThemeProvider>
+                        <SafeAreaProvider>
+                          <ScrollPositionProvider>
+                            <HideableAmountProvider>
+                              <AppNavigator />
+                            </HideableAmountProvider>
+                          </ScrollPositionProvider>
+                          {/* <MobilePasscodeScreen locked={tonkeeper.securitySettings.locked} /> */}
+                          <ToastComponent />
+                          <BlockingLoaderView />
+                          {isAndroid ? (
+                            <View
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                              }}
+                            >
+                              <PortalDestination name="popupPortal" />
+                            </View>
+                          ) : null}
+                        </SafeAreaProvider>
+                      </TonThemeProvider>
+                    </QueryClientProvider>
+                  </ActionSheetProvider>
+                </StoreProvider>
+              </EmvProvider>
+            </WalletProvider>
+          </SwapCoinProvider>
+        </TransactionProvider>
       </ChainProvider>
-    </TransactionProvider>
     </BalanceProvider>
     // </KeyboardProvider>
   );
