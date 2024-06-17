@@ -1,12 +1,12 @@
 
-import { SafeAreaView, StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Share, Platform, TextInput, Button, Alert, ActivityIndicator } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Image, TouchableOpacity, Dimensions, Share, Platform, TextInput, Button, Alert, ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../../constants/colors'
 import { useNavigation } from '@tonkeeper/router'
 import { useEvm, useChain } from "@tonkeeper/shared/hooks";
-import { copyText } from "@tonkeeper/uikit";
+import { Text, copyText } from "@tonkeeper/uikit";
 import { throttle } from '@tonkeeper/router';
-import { ethers } from 'ethers'
+import { ethers, formatUnits, formatEther } from 'ethers'
 import { ScrollView } from 'react-native';
 import { WalletStackRouteNames } from "$navigation";
 import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
@@ -23,6 +23,8 @@ const Referral = () => {
     const addressEvm = evm.addressWallet;
     const privateKey = evm.privateKey
     const [code, setCode] = useState<string>('');
+    const [userList, setUserList] = useState([]);
+    const [totalItems, setTotalItems] = useState<number>(0);
     // const [isReferrer, setIsReferrer] = useState<boolean>(isReferrerAddress);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -42,20 +44,23 @@ const Referral = () => {
     const contractABI = [
         "function register(address _referrer, string memory _code) external",
         "function userInfosByCode(string code) view returns (address, address, uint256, uint256, uint256, bool, string)",
-        "function isReferrer(address _address) view returns (bool)"
+        "function isReferrer(address _address) view returns (bool)",
+        // "function getTotalUserByUp(address _referrer, uint256 _limit, uint256 _skip) view returns (tuple(address userAddress, address referByAddress, uint256 dateTime, uint256 totalRefer, uint256 totalRefer10, bool top10Refer, string code)[], uint256)"
+        "function getTotalUserByUp(address _referrer, uint256 _limit, uint256 _skip) view returns ((address, address, uint256, uint256, uint256, bool, string)[], uint256)"
+
     ];
 
     const checkIsReferrer = async () => {
         try {
             // Tạo provider
             const provider = new ethers.JsonRpcProvider(URL_NETWORK);
-    
+
             // Kết nối đến contract
             const contract = new ethers.Contract(contractAddress, contractABI, provider);
-    
+
             // Gọi hàm isReferrer
             const isReferrer = await contract.isReferrer(addressEvm);
-    
+
             console.log("isReferrer: ", isReferrer);
             // Hiển thị kết quả
             if (isReferrer) {
@@ -67,6 +72,36 @@ const Referral = () => {
             }
         } catch (error) {
             console.log(error);
+        }
+    };
+    const fetchUsers = async (_referrer: string, _limit: number, _skip: number) => {
+        try {
+            const provider = new ethers.JsonRpcProvider(URL_NETWORK);
+            const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+            const [users, totalItems] = await contract.getTotalUserByUp(_referrer, _limit, _skip);
+
+            // Convert totalItems from BigNumber to number
+
+            // Map users array to formattedUsers
+            const formattedUsers = users.map(user => ({
+                userAddress: user[1],
+                referByAddress: user[0],
+                dateTime: user[2].toString(), // Convert to string if needed
+                totalRefer: user[3].toString(), // Convert to string if needed
+                totalRefer10: user[4].toString(), // Convert to string if needed
+                top10Refer: user[5],
+                code: user[6],
+            }));
+
+            console.log("Formatted Users: ", formattedUsers);
+            console.log("Total Items: ", totalItems);
+
+            // Set state with formattedUsers and totalItems
+            setUserList(formattedUsers);
+            setTotalItems(Number(totalItems.toString()) * 10);
+        } catch (error) {
+            console.error("Error fetching users: ", error);
         }
     };
 
@@ -100,7 +135,7 @@ const Referral = () => {
                 Alert.alert('Error', 'Your wallet already registered!');
             } else {
                 Alert.alert('Error', "You do not have enough funds to cover the gas fee for registration. Please add more funds to your account and try again."
-);
+                );
             }
         } finally {
             setIsLoading(false);
@@ -155,10 +190,10 @@ const Referral = () => {
         [],
     );
 
-    // useEffect(() => {
-    //     checkIsReferrer();
-    //     console.log("checkIsReferrer", checkIsReferrer());
-    // }, [isReferrer])
+    useEffect(() => {
+        fetchUsers(addressEvm, 10, 0);
+    }, [totalItems])
+
     return (
         <SafeAreaView style={[styles.container]}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -166,16 +201,19 @@ const Referral = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image style={[styles.btnBack]} source={require('../../assets/icons/png/ic_back.png')} />
                     </TouchableOpacity>
-                    <Text style={[styles.header]}>
+                    <Text fontSize={20} color='primaryColor' type='h3'>
                         Referral
                     </Text>
                     <View style={{ width: 15 }}></View>
                 </View>
-
                 <View style={{ paddingHorizontal: 20, paddingTop: 20, height: height * 0.65 }}>
-                    {/* <Text style={[styles.subTitle]}>your friends: 50 - mined: 500 TDS</Text> */}
+                    {
+                        isReferrer ? (
+                            <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>{totalItems} $TDS</Text>
+                        ) : null
+                    }
                     <Image style={[styles.image]} source={require("../../assets/logo/img_referral.png")} />
-                    <Text style={[styles.title]}>Invite friends to mine $TDS <Text style={[styles.title, { color: colors.Primary }]}>(10TDS / per)</Text></Text>
+                    <Text type="h1" color="textBlack" fontSize={30} textAlign='center'>Invite friends to mine $TDS <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>(10TDS / per)</Text></Text>
 
                     {
                         !isReferrer ? (
@@ -192,7 +230,7 @@ const Referral = () => {
                                     style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
                                     {
                                         isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
-                                            <Text style={{ color: 'white', fontWeight: 'bold' }}>Register</Text>
+                                            <Text color='constantWhite' fontSize={16} type='h3'>Register</Text>
                                         )
                                     }
                                 </TouchableOpacity>
@@ -205,9 +243,9 @@ const Referral = () => {
                     isReferrer ? (
                         <View style={{ paddingHorizontal: 20, height: height * 0.20, alignItems: 'flex-end' }}>
                             <View style={[styles.referralId]}>
-                                <Text style={[styles.referralID, { color: colors.Gray }]}>Your referral code:</Text>
+                                <Text color='textGray' fontSize={16} type='label1'>Your referral code:</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={[styles.referralID]}>{formatAddress(addressEvm).toLocaleLowerCase()}</Text>
+                                    <Text color='constantBlack' fontSize={16} type='label1'>{formatAddress(addressEvm).toLocaleLowerCase()}</Text>
                                     <View style={{ width: 10 }}></View>
                                     <TouchableOpacity onPress={copyText(formatAddress(addressEvm).toLocaleLowerCase())}>
                                         <Image style={[styles.btnCopy]} source={require("../../assets/icons_v1/icon_copy.png")} />
@@ -215,13 +253,12 @@ const Referral = () => {
                                 </View>
                             </View>
                             <TouchableOpacity style={[styles.btnShare]} onPress={share(Platform.OS === 'android' ? CHPLAY : APPSTORE)}>
-                                <Image style={[styles.btnCopy, { tintColor: colors.White }]} source={require("../../assets/icons/png/ic_gift.png")} />
-                                <Text style={[styles.txtShare]}>Share</Text>
+                                <Image style={[styles.btnCopy, { tintColor: colors.White, marginRight: 4 }]} source={require("../../assets/icons/png/ic_gift.png")} />
+                                <Text color='constantWhite' fontSize={16} type='h3'>Share</Text>
                             </TouchableOpacity>
                         </View>
                     ) : null
                 }
-
 
             </ScrollView>
         </SafeAreaView>
@@ -261,11 +298,7 @@ const styles = StyleSheet.create({
         borderRadius: 16
     },
     title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        fontFamily: 'Poppins-Bold',
-        color: colors.Black,
-        textAlign: 'center',
+
         // width: '70%',
     },
     subTitle: {
