@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Image } from 'react-native'
 import React, { useEffect, useState, useCallback } from "react";
 import "fast-text-encoding";
 import "@walletconnect/react-native-compat";
@@ -182,6 +182,7 @@ const WalletConnect = () => {
     return (
         <View style={styles.container}>
             <View style={styles.container}>
+                <Image source={{uri: 'https://firebasestorage.googleapis.com/v0/b/tiktokclone-135bf.appspot.com/o/tiktokclone%2Fimages%2Favatar16.png?alt=media&token=2ef3f3d6-4054-4435-b232-4fc43d8d3e27'}} resizeMode='cover' width={100} height={100} /> 
                 <Text>Web3Wallet Tutorial</Text>
                 <Text style={styles.addressContent}>
                     ETH Address: {currentETHAddress ? currentETHAddress : "Loading..."}

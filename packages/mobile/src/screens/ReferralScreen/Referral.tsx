@@ -10,6 +10,7 @@ import { ethers, formatUnits, formatEther } from 'ethers'
 import { ScrollView } from 'react-native';
 import { WalletStackRouteNames } from "$navigation";
 import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
+import ModalReferral from './item/ModalReferral';
 
 
 const { width, height } = Dimensions.get('window');
@@ -25,6 +26,9 @@ const Referral = () => {
     const [code, setCode] = useState<string>('');
     const [userList, setUserList] = useState([]);
     const [totalItems, setTotalItems] = useState<number>(0);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [titleModal, setTitleModal] = useState<string>('Success');
+    const [subtitleModal, setSubtitleModal] = useState<string>('Registration successful!');
     // const [isReferrer, setIsReferrer] = useState<boolean>(isReferrerAddress);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,7 +43,8 @@ const Referral = () => {
     const URL_NETWORK = chain.rpc;
     const PRIVATE_KEY = privateKey;
 
-    const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
+    // const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
+    const contractAddress = '0xC02a02471B491689D79c59116FBCeAfdB9eA554a';
     // ABI của hợp đồng thông minh
     const contractABI = [
         "function register(address _referrer, string memory _code) external",
@@ -49,6 +54,10 @@ const Referral = () => {
         "function getTotalUserByUp(address _referrer, uint256 _limit, uint256 _skip) view returns ((address, address, uint256, uint256, uint256, bool, string)[], uint256)"
 
     ];
+
+    const handleCloseModal = () => {
+        setIsVisible(false);
+    }
 
     const checkIsReferrer = async () => {
         try {
@@ -94,16 +103,19 @@ const Referral = () => {
                 code: user[6],
             }));
 
-            console.log("Formatted Users: ", formattedUsers);
-            console.log("Total Items: ", totalItems);
+            // console.log("Formatted Users: ", formattedUsers);
+            // console.log("Total Items: ", totalItems);
 
             // Set state with formattedUsers and totalItems
             setUserList(formattedUsers);
-            setTotalItems(Number(totalItems.toString()) * 10);
+            setTotalItems(Number(totalItems.toString()));
         } catch (error) {
             console.error("Error fetching users: ", error);
         }
     };
+    const handleDefaultCore = () => {
+        setCode('d9cbfe0a');
+    }
 
     const register = async (referrer: string) => {
         try {
@@ -113,29 +125,39 @@ const Referral = () => {
             // Lấy private key của người dùng
             const privateKey = PRIVATE_KEY;
             const wallet = new ethers.Wallet(privateKey, provider);
+            const value = ethers.parseEther('0.1');
 
             // Kết nối đến contract
             const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
             const referralCode = addressEvm.slice(-8).toLocaleLowerCase();
             // Gọi hàm register
-            const tx = await contract.register(referrer, referralCode);
+            const tx = await contract.register(referrer, referralCode, { value });
 
             // Chờ giao dịch được xác nhận
             const transaction = await tx.wait();
             console.log("Transactions: ", transaction);
-
-            Alert.alert('Success', 'Registration successful!');
+            setTitleModal("Success");
+            setSubtitleModal("Registration successful!");
+            setIsVisible(true);
+            // Alert.alert('Success', 'Registration successful!');
             setIsReferrer(true);
         } catch (error) {
             console.log(error);
 
             // Hiển thị thông báo lỗi chi tiết hơn
             if (error.reason) {
-                Alert.alert('Error', 'Your wallet already registered!');
+                setTitleModal("Oops");
+                setSubtitleModal("Your wallet already registered!");
+                setIsVisible(true);
+                // Alert.alert('Error', 'Your wallet already registered!');
             } else {
-                Alert.alert('Error', "You do not have enough funds to cover the gas fee for registration. Please add more funds to your account and try again."
-                );
+                // Alert.alert('Error', "You do not have enough funds to cover the gas fee for registration. Please add more funds to your account and try again."
+                // Alert.alert('Error', "Not enough core for gas fee"
+                setTitleModal("Oops");
+                setSubtitleModal("Not enough core for gas fee");
+                setIsVisible(true);
+            
             }
         } finally {
             setIsLoading(false);
@@ -167,7 +189,10 @@ const Referral = () => {
                 }
                 console.log('userInfo: ', userInfo);
             } else {
-                Alert.alert("Error", "Please enter exactly 8 characters!");
+                // Alert.alert("Error", "Please enter exactly 8 characters!");
+                setTitleModal("Oops");
+                setSubtitleModal("Please enter exactly 8 characters!");
+                setIsVisible(true);
                 setIsLoading(false);
 
             }
@@ -209,7 +234,7 @@ const Referral = () => {
                 <View style={{ paddingHorizontal: 20, paddingTop: 20, height: height * 0.65 }}>
                     {
                         isReferrer ? (
-                            <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>{totalItems} $TDS</Text>
+                            <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>{totalItems * 10} $TDS</Text>
                         ) : null
                     }
                     <Image style={[styles.image]} source={require("../../assets/logo/img_referral.png")} />
@@ -217,25 +242,34 @@ const Referral = () => {
 
                     {
                         !isReferrer ? (
-                            <View style={[styles.boxInput]}>
-                                <TextInput
-                                    autoFocus
-                                    placeholder='Referral id'
-                                    placeholderTextColor={"grey"} value={code}
-                                    style={[styles.input]}
-                                    onChangeText={(t) => setCode(t)} />
+                            <View>
+                                <View style={[styles.boxInput]}>
+                                    <TextInput
+                                        autoFocus
+                                        placeholder='Referral id'
+                                        placeholderTextColor={"grey"} value={code}
+                                        style={[styles.input]}
+                                        onChangeText={(t) => setCode(t)} />
+                                    <TouchableOpacity
+                                        onPress={handleDefaultCore}
+                                        style={[styles.btnDefaultCode,]}>
+                                        <Text color='constantWhite' fontSize={16} type='label1'>User default code</Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <TouchableOpacity
                                     disabled={disable ? false : true}
                                     onPress={handleGetUserInfo}
                                     style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
                                     {
                                         isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
-                                            <Text color='constantWhite' fontSize={16} type='h3'>Register</Text>
+                                            <Text color='constantWhite' fontSize={16} type='label1'>Register</Text>
                                         )
                                     }
                                 </TouchableOpacity>
+
                             </View>
-                        ) : null
+
+                        ) : (<Text color='primaryColor' fontSize={16} type='body1' textAlign='center' style={{ marginTop: 10 }}>Your friend: {totalItems}</Text>)
                     }
 
                 </View>
@@ -260,6 +294,7 @@ const Referral = () => {
                     ) : null
                 }
 
+                <ModalReferral isVisible={isVisible} onClose={handleCloseModal} title={titleModal} subtitle={subtitleModal} />
             </ScrollView>
         </SafeAreaView>
     )
@@ -364,8 +399,19 @@ const styles = StyleSheet.create({
     btnRegister: {
         backgroundColor: colors.Primary,
         height: 44,
-        width: 100,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 8,
+        borderRadius: 16,
+        marginTop: 20
+    },
+    btnDefaultCode: {
+        backgroundColor: colors.Primary,
+        height: 44,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 8
     }
 })
