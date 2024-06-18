@@ -21,7 +21,7 @@ import {
 } from 'react-native-reanimated';
 import { StepViewItemProps, StepViewProps } from './StepView.interface';
 import * as S from './StepView.style';
-import { deviceHeight } from '$utils';
+import { deviceHeight, deviceWidth } from '$utils';
 
 export interface StepViewRef<T = string | number> {
   goNext: () => void;
@@ -48,6 +48,14 @@ const StepViewComponent = forwardRef<StepViewRef, StepViewProps>((props, ref) =>
   const {
     window: { width },
   } = useDimensions();
+  let width2;
+  if (deviceWidth >= 1024) 
+  {width2 = width * 0.69;}
+  else {
+    if (deviceWidth >= 820) 
+      {width2 = width *0.85;}
+    else width2 = width;
+  }
 
   const [layouts, setLayouts] = useState<{
     [key: StepViewItemProps['id']]: LayoutRectangle;
@@ -87,7 +95,7 @@ const StepViewComponent = forwardRef<StepViewRef, StepViewProps>((props, ref) =>
   //   [currentIndex, width],
   // );
 
-  const position = useSharedValue(currentIndex * width * -1);
+  const position = useSharedValue(currentIndex * width2 * -1);
 
   const containerStyle = useAnimatedStyle(() => {
     const maxHeight = layouts[currentStepId]?.height || 0;
@@ -123,7 +131,7 @@ const StepViewComponent = forwardRef<StepViewRef, StepViewProps>((props, ref) =>
 
       setCurrentStepId(nextStepId);
 
-      position.value = withSpring(nextIndex * width * -1, {
+      position.value = withSpring(nextIndex * width2 * -1, {
         velocity,
         damping: 15,
         mass: velocity ? 0.07 : 0.25,
@@ -242,11 +250,11 @@ const StepViewComponent = forwardRef<StepViewRef, StepViewProps>((props, ref) =>
   return (
     <GestureDetector gesture={gesture}>
       <S.Container style={containerStyle}>
-        {steps.map((step) => (
+        {steps.map((step) => (   
           <S.Step
             hitSlop={{ bottom: deviceHeight }}
             key={step.id}
-            width={width}
+            width={width2}
             autoHeight={autoHeight}
             onLayout={autoHeight ? (event) => handleStepLayout(step, event) : undefined}
           >

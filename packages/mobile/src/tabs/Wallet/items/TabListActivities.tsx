@@ -29,8 +29,6 @@ const TabListActivities = ({ chainActive, address }) => {
   const dataToShow = transactions.slice(-3);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const chain = useChain()?.chain;
-  const evm = useEvm()?.evm;
 
   useEffect(() => {
     // console.log(address);
@@ -82,7 +80,7 @@ const TabListActivities = ({ chainActive, address }) => {
             style={styles.buttonBrower}
             onPress={() =>
               openDAppBrowser(
-                buildAddressUrl(evm.addressWallet, chain.chainId)
+                buildAddressUrl(address, chainActive.chainId)
               )
             }
           >

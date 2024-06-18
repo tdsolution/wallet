@@ -39,10 +39,10 @@ export const Button = styled(Animated.View)<{
       return `
         background: ${
           disabled
-            ? theme.colors.accentPrimaryDark
+            ? '#7694ef'
             : isPressed
-            ? theme.colors.accentPrimaryLight
-            : theme.colors.accentPrimary
+            ? '#325fe7'
+            : theme.colors.primaryColor
         };
       `;
     }

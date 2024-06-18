@@ -17,8 +17,8 @@ export const buildAddressUrl = (address: string, blockchainType: string): string
       return `https://polygonscan.com/address/${address}`;
     // case '1000':
     //   return `https://tronscan.org/#/address/${AppDataGlobal.ADDRESS_TRON}`;
-    // case '1100':
-    //   return `https://tonscan.org/address/${AppDataGlobal.ADDRESS_TON}`;
+    case '1100':
+      return `https://tonscan.org/address/${address}`;
     case '43114':
       return `https://avascan.info/blockchain/dfk/address/${address}/transactions`;
     case '42161':
@@ -58,8 +58,8 @@ export const buildTransactionUrl = (hash: string, blockchainType: string): strin
       return `https://polygonscan.com/tx/${hash}`;
     // case '1000':
     //   return `https://tronscan.org/#/address/${AppDataGlobal.ADDRESS_TRON}`;
-    // case '1100':
-    //   return `https://tonscan.org/address/${AppDataGlobal.ADDRESS_TON}`;
+    //case '1100':
+    //   return `https://tonscan.org/tx/${hash}`;
     case '43114':
       return `https://avascan.info/blockchain/dfk/address/${hash}/transactions`;
     case '42161':

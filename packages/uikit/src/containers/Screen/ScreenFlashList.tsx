@@ -77,7 +77,7 @@ export const ScreenScrollList = memo<ScreenScrollListProps>(
           ref={setRef}
           {...other}
         />
-        {!hideBottomSeparator && <ScreenBottomSeparator />}
+        {hideBottomSeparator && <ScreenBottomSeparator />}
       </View>
     );
   })
