@@ -72,12 +72,13 @@ import { LogoButton } from "../../components/LogoButton";
 import { NotificationButton } from "../../components/NotificationButton";
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 import { setWalletEVM, shortenWalletAddress } from "$libs/EVM/createWallet";
-import { formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrency, useBalanceEVMDemo } from "$libs/EVM/useBalanceEVM";
 import TabTop from "./items/TabTop";
 import TabListToken from "./items/TabListToken";
 import TabActivities from "./items/TabListActivities";
 import TabListActivities from "./items/TabListActivities";
 import {
+  getBalanceToken,
   getTokenListByChainID,
   getTokenListImportByChainID,
 } from "$libs/EVM/token/tokenEVM";
@@ -118,7 +119,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const balance = useBalance(tokens.total.fiat);
   const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
-
+  const [balanceToken, setBalanceToken] = useState<any>();
   console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
@@ -165,6 +166,15 @@ export const WalletScreen = memo(({ navigation }: any) => {
     return () => clearTimeout(timer);
   }, [dispatch]);
 
+  async function fetchBalanceToken() {
+    if (tokensEVM[0].tokenAddress != "coin") {
+      const balance1 = await getBalanceToken(chain.rpc, tokensEVM[0].tokenAddress, evm.addressWallet);
+      setBalanceToken(parseFloat(balance1));
+    } else if (tokensEVM[0].tokenAddress == "coin") {
+      const balance1 = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
+      setBalanceToken(parseFloat(balance1));
+    }
+  }
   useEffect(() => {
     getDeviceName();
     if (!addressEvm) {
@@ -268,6 +278,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
     checkIsReferrer();
   }, [isReferrer, chain, addressEvm]);
 
+  useEffect(() => {
+    fetchBalanceToken();
+    console.log('balanceToken: ', balanceToken);
+  }, [addressEvm, chain, tokensEVM, balanceTD]);
+
   
   useEffect(() => {
     // Gọi hàm và kiểm tra kết quả
@@ -307,11 +322,24 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [nav, wallet]);
 
   const handlePressSend = useCallback(async () => {
+    if ( chain.chainId == "1100") {
     if (wallet) {
       trackEvent(Events.SendOpen, { from: SendAnalyticsFrom.WalletScreen });
       nav.go("Send", { from: SendAnalyticsFrom.WalletScreen });
     } else {
       openRequireWalletModal();
+    }
+    }
+    else {
+      navigation.navigate(WalletStackRouteNames.SendToken, {
+        id: tokensEVM[0].id,
+        symbol: tokensEVM[0].symbol,
+        image: tokensEVM[0].logo,
+        address: evm.addressWallet,
+        addressToken: tokensEVM[0].tokenAddress,
+        rpc: chain.rpc,
+        price: balanceToken,
+      });
     }
     // swapTokenDeposit();
   }, [nav, wallet]);
@@ -778,7 +806,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   style={{
                     width: "100%",
                     paddingBottom: 80,
-                    borderBottomWidth: 0,
                   }}
                 >
                   <WalletContentList

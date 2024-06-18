@@ -39,7 +39,7 @@ const DetailToken = ({ route }: any) => {
   const addressEvm = evm.addressWallet;
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.navigate(WalletStackRouteNames.Wallet);
   };
 
   const flags = useFlags(["disable_swap"]);
