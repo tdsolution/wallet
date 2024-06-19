@@ -216,7 +216,9 @@ const Referral = () => {
     );
 
     useEffect(() => {
-        fetchUsers(addressEvm, 10, 0);
+        if(isReferrer) {
+            fetchUsers(addressEvm, 10, 0);
+        }
     }, [totalItems])
 
     return (
