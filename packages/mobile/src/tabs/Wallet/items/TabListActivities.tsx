@@ -155,7 +155,7 @@ const TabListActivities = ({ chainActive, address }) => {
             <View
               style={[
                 styles.container,
-                { marginBottom: Platform.OS === "android" ? 50 : 0 },
+                { marginBottom: 50},
               ]}
             >
               <Image

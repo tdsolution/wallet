@@ -101,7 +101,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const chain = useChain()?.chain;
   const {isReferrer, setIsReferrer} = useReferral();
   const balanceTD = useBalanceTD()?.balance;
-  console.log('balanceTD', balanceTD);
   const { evm, setEvm } = useEvm() || {};
   const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -120,7 +119,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
   const [balanceToken, setBalanceToken] = useState<any>();
-  console.log("tokensEVM " + tokensEVM.length);
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -280,7 +278,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useEffect(() => {
     fetchBalanceToken();
-    console.log('balanceToken: ', balanceToken);
   }, [addressEvm, chain, tokensEVM, balanceTD]);
 
   
