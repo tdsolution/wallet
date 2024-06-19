@@ -68,6 +68,7 @@ const SwapScreen = () => {
 
   // Lấy phần tử từ mảng thứ hai
   const itemFromData2 = dataCoinOrgIndex[swapCoin];
+  console.log(">>>>>>>>>>>>>>>dataCoinDesIndex: ", dataCoinOrgIndex[swapCoin])
 
   const handleSwap = () => {
     setModalVisible(true);
@@ -334,6 +335,7 @@ const SwapScreen = () => {
         network={isChangeCoinDes ? itemFromData1.name : itemFromData2.name}
         coinUsd={coin}
         isTransfer = {isChangeCoinDes}
+        chainRPC = {dataCoinDesIndex[swapCoin].rpc}
       />
       
       <ModalCoinDes
