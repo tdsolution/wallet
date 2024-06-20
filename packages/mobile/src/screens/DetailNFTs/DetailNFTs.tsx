@@ -7,11 +7,12 @@ import ItemDetail from './Item/ItemDetail';
 import { Text } from '@tonkeeper/uikit';
 import { useNavigation } from '@tonkeeper/router';
 const { width, height } = Dimensions.get('window');
+import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 
 const DetailNFTs = ({route}) => {
-    const {id} = route.params;
+    const {data} = route.params;
     const navigation = useNavigation();
-    const [data, setData] = useState([
+    const [properties, setProperties] = useState([
         {
             id: '1',
             title: 'Background',
@@ -52,7 +53,7 @@ const DetailNFTs = ({route}) => {
         <View style={[styles.container]}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ position: 'relative' }}>
-                    <Image source={require("../../assets/nfts/01.png")} style={[styles.image]} />
+                    <Image source={{uri: data.image}} style={[styles.image]} />
 
                     <TouchableOpacity style={[styles.btnBack]} onPress={() => navigation.goBack()}>
                         <LinearGradient colors={['#4CA4E4', '#0C73B5', '#004FA0']} style={[styles.linearGradient]}>
@@ -64,16 +65,16 @@ const DetailNFTs = ({route}) => {
                 </View>
                 <View style={[styles.safeArea, {flex: 1}]}>
                     <View>
-                        <Text fontSize={20} color='textBlack' fontWeight='600'>#000{id}</Text>
-                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 6 }}>TD Identification</Text>
+                        <Text fontSize={20} color='textBlack' fontWeight='600'>#{data.tokenId}</Text>
+                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 6 }}>{data.name}</Text>
                         <Text fontSize={14} color='textBlack' fontWeight='500' style={{ marginTop: 16, alignItems: 'center', }}>TD Wallet NFT is one of the first NFT projects on The Open Network blockchain. Robots from the resistance, as a symbol of DEX, who fight for absolute freedom...
                             <Text fontSize={14} color='primaryColor' fontWeight='600'>   Uncover</Text>
                             <Image style={[styles.icDown, { tintColor: colors.Primary }]} source={require('../../assets/icons/png/ic_chevron_down.png')} />
                         </Text>
                     </View>
                     <View style={[styles.box]}>
-                        <Text fontSize={16} color='textBlack' fontWeight='600'>More about TD Identification</Text>
-                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 16, alignItems: 'center' }}>TD Identification is one of the first NFT projects on The Open Network blockchain. Robots from the resistance, as a symbol of DEX, who fight for...
+                        <Text fontSize={16} color='textBlack' fontWeight='600'>More about {data.name}</Text>
+                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 16, alignItems: 'center' }}>{data.description}
                             <Text fontSize={14} color='primaryColor' fontWeight='600'>   Uncover</Text>
                             <Image style={[styles.icDown, { tintColor: colors.Primary }]} source={require('../../assets/icons/png/ic_chevron_down.png')} />
                         </Text>
@@ -82,7 +83,7 @@ const DetailNFTs = ({route}) => {
                         <Text fontSize={16} color='textBlack' fontWeight='600' style={{ marginBottom: 16, marginTop: 24 }}>Properties</Text>
                         <FlatList
                             contentContainerStyle={{ gap: 16 }}
-                            data={data}
+                            data={properties}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => <ItemPropoties item={item} />}
                             horizontal
@@ -94,14 +95,14 @@ const DetailNFTs = ({route}) => {
                             Details
                         </Text>
                         <View style={[styles.box, { gap: 8 }]}>
-                            <ItemDetail title='Contract Address' subtitle='0xDHirLoO...AYIhpl' color={true} />
-                            <ItemDetail title='Token ID' subtitle='0001' />
+                            <ItemDetail title='Contract Address' subtitle='0xBaF2c860B9746B9e6dc86b39cD048DC4211C0Fd7' color={true} />
+                            <ItemDetail title='Token ID' subtitle={data.tokenId} />
                             <ItemDetail title='Token Standard' subtitle='ERC-721' />
                             <ItemDetail title='Blockchain' subtitle='Ethereum' />
                             <ItemDetail title='Limited' subtitle='9999' />
                         </View>
                     </View>
-                    <TouchableOpacity style={[styles.btnTranfer]}>
+                    <TouchableOpacity style={[styles.btnTranfer]} onPress={() => navigation.navigate(WalletStackRouteNames.SendNFT, {tokenId: data.tokenId, image: data.image})}>
                         <Text fontSize={16} color='constantWhite' fontWeight='600' >Transfer</Text>
                     </TouchableOpacity>
                 </View>
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width,
-        height: Platform.OS === 'ios' ? 420 : 380,
+        height: Platform.OS === 'ios' ? height * 0.5 : height * 0.5,
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
         resizeMode: 'cover'

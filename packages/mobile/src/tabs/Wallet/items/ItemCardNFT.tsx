@@ -6,12 +6,19 @@ import LinearGradient from 'react-native-linear-gradient';
 import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
 
 import { useNavigation } from '@tonkeeper/router';
+const { width, height } = Dimensions.get('window');
 
 const ItemCardNFT = (props) => {
     const {item} = props;
     const navigation = useNavigation();
+    const data = {
+        tokenId : item.tokenId,
+        name: item.name,
+        description: item.description,
+        image: item.image
+    }
   return (
-    <Pressable style={[styles.card]} onPress={() => navigation.navigate(WalletStackRouteNames.DetailNFT, {id : item.id})}>
+    <Pressable style={[styles.card]} onPress={() => navigation.navigate(WalletStackRouteNames.DetailNFT, {data : data})}>
                 <LinearGradient colors={['#A9A9A9', '#ffffff', '#A9A9A9']} style={styles.linearGradient1}>
                     <LinearGradient colors={['#626262', '#EDEDED', '#626262']} style={styles.linearGradient2}>
                         <LinearGradient colors={['#A9A9A9', '#ffffff', '#A9A9A9']} style={styles.linearGradient3}>
@@ -19,10 +26,10 @@ const ItemCardNFT = (props) => {
                                 position: 'relative', width: '100%',
                                 height: '100%'
                             }}>
-                                <Image style={[styles.image]} source={item.image} />
+                                <Image style={[styles.image]} source={{ uri: item.image}} />
 
                                 <ImageBackground
-                                    source={item.image}
+                                    source={{ uri: item.image}}
                                     // style={[styles.textBox]}
                                     blurRadius={60}
                                     style={{
@@ -34,8 +41,8 @@ const ItemCardNFT = (props) => {
                                     }}
                                 >
                                     <View style={[styles.textBox]}>
-                                        <Text color='constantWhite' type='h3' fontSize={24} >#000{item.id}</Text>
-                                        <Text color='constantWhite' type='body3' fontSize={14} style={{ marginTop: 6 }} >TD Identification</Text>
+                                        <Text color='constantWhite' type='h3' fontSize={24} >#{item.tokenId}</Text>
+                                        <Text color='constantWhite' type='body3' fontSize={14} style={{ marginTop: 6 }} >{item.name}</Text>
                                     </View>
                                 </ImageBackground>
                             </View>
@@ -70,7 +77,7 @@ const styles = StyleSheet.create({
     },
     linearGradient1: {
         width: '100%',
-        height: 300, // chiều rộng của mỗi item
+        height: height * 0.3, // chiều rộng của mỗi item
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 16,
@@ -109,9 +116,8 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 6
     },
     card: {
-        flex: 1,
-        // width: width * 0.5,
-        height: 300, // chiều rộng của mỗi item
+        width: (width / 2) - 24,
+        height: height * 0.3, // chiều rộng của mỗi item
         marginHorizontal: 8, // khoảng cách giữa các item
         marginBottom: 16, // khoảng cách dưới cùng của mỗi item
         alignItems: 'center',

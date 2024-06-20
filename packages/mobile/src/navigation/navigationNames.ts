@@ -88,6 +88,7 @@ export enum WalletStackRouteNames {
   YourComponent = "YourComponent",
   Referral = "Referral",
   DetailNFT = "DetailNFT",
+  SendNFT = "SendNFT",
 }
 
 export enum SettingsStackRouteNames {
