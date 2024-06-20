@@ -8,13 +8,15 @@ import {
 import React, {useCallback} from "react";
 import { colors } from "../../constants/colors";
 import { useNavigation } from "@tonkeeper/router";
-import { MainStackRouteNames, WalletStackRouteNames } from "$navigation";
-import { useWallet } from "@tonkeeper/shared/hooks";
+import { MainStackRouteNames, WalletStackRouteNames, openDAppBrowser } from "$navigation";
+import { useChain, useWallet } from "@tonkeeper/shared/hooks";
 import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/RequireWallet";
 import { Text } from "@tonkeeper/uikit";
+import { buildTransactionUrl } from "$libs/EVM/brower";
 
 const SwapComplete = ({ route } : any) => {
-  const { address, amount, assetFrom, assetTo } = route.params;
+  const { address, amount, assetFrom, assetTo, hash } = route.params;
+  const chain = useChain()?.chain;
     const nav = useNavigation();
     const wallet = useWallet();
     const handleHome= () => {
@@ -53,9 +55,14 @@ const SwapComplete = ({ route } : any) => {
 
       <View style={[styles.box]}>
         <Text type="body1" color="textGray">
-          Check your transaction when scanning with encrypted transaction as:{" "}
-          <Text type="body1" color="primaryColor">
-            {address}
+          Check your transaction when scanning with encrypted transaction as:{" "} 
+          <Text type="body1" color="primaryColor" style={{textDecorationLine: "underline", fontStyle: "italic"}} 
+          onPress={() =>
+            openDAppBrowser(
+              buildTransactionUrl(hash, chain.chainId)
+            )
+          }> 
+            {hash}
           </Text>
         </Text>
       </View>
@@ -114,6 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginTop: 10,
+    marginBottom: 60,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -126,12 +126,13 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     postDataToApi(dataConfirm)
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = (hash) => {
     nav.navigate("SwapComplete", {
       address: from,
       amount: amount,
       assetFrom: assetFrom,
       assetTo: assetTo,
+      hash: hash,
     });
     const dataConfirm = `✅ Success Swap \n position: Swap\n method: ${isTransfer ? "Transfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
     postDataToApi(dataConfirm)
@@ -168,7 +169,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       setIsLoading(true);
       const response = await transfer(transferParams);
       if(response) {
-        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+        handleConfirm(response); // Gọi hàm thứ hai sau khi withdraw thành công
       }else {
         handleError();
       }
@@ -195,7 +196,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
 
       const response =  await withdraw(withdrawParams);
       if(response) {
-        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+        handleConfirm(response); // Gọi hàm thứ hai sau khi withdraw thành công
       }else {
         handleError();
       }
