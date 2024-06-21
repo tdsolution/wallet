@@ -61,6 +61,7 @@ const TabListNFTs = () => {
             setNftList(nftDataList);
             setBalanceOf(true);
         } catch (error) {
+            setBalanceOf(false);
             console.log("Error fetching NFT list:", error);
         } finally {
             setLoading(false);
@@ -80,7 +81,7 @@ const TabListNFTs = () => {
                     <ActivityIndicator size={'small'} color={colors.Primary} style={{ width: '100%', height: 300 }} />
                 ) : balanceOf ? (
                     <FlatList
-                    scrollEnabled={false}
+                        scrollEnabled={false}
                         data={nftList}
                         numColumns={2}
                         keyExtractor={(item) => item.tokenId.toString()}
@@ -89,13 +90,14 @@ const TabListNFTs = () => {
                         contentContainerStyle={{ marginTop: 16, paddingHorizontal: 8 }}
                     />
                 ) : (
-                    <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: 300, paddingHorizontal: 50 }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', width: 300, paddingHorizontal: 50 }}>
                         <Image style={styles.image} source={require('../../../assets/logo/img_not_found.png')} />
                         <Text type='h3' color='textBlack' fontSize={20} style={{ marginTop: 24 }}>No NFT found</Text>
                         <Text type='body2' color='textGray' fontSize={14} style={{ marginTop: 8 }}>Buy NFT stuff to your collection!</Text>
                         <TouchableOpacity style={styles.btn}>
                             <Text type='h3' color='constantWhite' fontSize={14}>Open NFT marketplace</Text>
                         </TouchableOpacity>
+                        <View style={{height: 100}}></View>
                     </View>
                 )
             }

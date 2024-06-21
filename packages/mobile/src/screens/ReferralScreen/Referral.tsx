@@ -42,9 +42,10 @@ const Referral = () => {
     const APPSTORE = 'https://apps.apple.com/vn/app/td-wallet-app/id6471485477?l=vi&platform=iphone';
     const URL_NETWORK = chain.rpc;
     const PRIVATE_KEY = privateKey;
+    const CONTRACT_ADDRESS = chain.contractAddressReferrer;
 
     // const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
-    const contractAddress = '0xC02a02471B491689D79c59116FBCeAfdB9eA554a';
+    const contractAddress = CONTRACT_ADDRESS;
     // ABI của hợp đồng thông minh
     const contractABI = [
         "function register(address _referrer, string memory _code) external",
@@ -90,8 +91,6 @@ const Referral = () => {
 
             const [users, totalItems] = await contract.getTotalUserByUp(_referrer, _limit, _skip);
 
-            // Convert totalItems from BigNumber to number
-
             // Map users array to formattedUsers
             const formattedUsers = users.map(user => ({
                 userAddress: user[1],
@@ -102,19 +101,22 @@ const Referral = () => {
                 top10Refer: user[5],
                 code: user[6],
             }));
-
-            // console.log("Formatted Users: ", formattedUsers);
-            // console.log("Total Items: ", totalItems);
-
             // Set state with formattedUsers and totalItems
             setUserList(formattedUsers);
             setTotalItems(Number(totalItems.toString()));
         } catch (error) {
-            console.error("Error fetching users: ", error);
+            setIsReferrer(false);
+            console.log("Error fetching users: ", error);
         }
     };
     const handleDefaultCore = () => {
-        setCode('d9cbfe0a');
+        if (chain.chainId == "97") {
+            setCode('d9cbfe0a');
+        } else if (chain.chainId == '1116') {
+            setCode('d9cbfe0a');
+        } else {
+            setCode('');
+        }
     }
 
     const register = async (referrer: string) => {
@@ -132,32 +134,44 @@ const Referral = () => {
 
             const referralCode = addressEvm.slice(-8).toLocaleLowerCase();
             // Gọi hàm register
-            const tx = await contract.register(referrer, referralCode, { value });
+            if (chain.chainId == '97') {
+                const tx = await contract.register(referrer, referralCode);
 
-            // Chờ giao dịch được xác nhận
-            const transaction = await tx.wait();
-            console.log("Transactions: ", transaction);
-            setTitleModal("Success");
-            setSubtitleModal("Registration successful!");
-            setIsVisible(true);
-            // Alert.alert('Success', 'Registration successful!');
-            setIsReferrer(true);
+
+                // Chờ giao dịch được xác nhận
+                const transaction = await tx.wait();
+                console.log("Transactions: ", transaction);
+                setTitleModal("Success");
+                setSubtitleModal("Registration successful!");
+                setIsVisible(true);
+                setIsReferrer(true);
+            } else if (chain.chainId == '1116') {
+                const tx = await contract.register(referrer, referralCode, { value });
+                // Chờ giao dịch được xác nhận
+                const transaction = await tx.wait();
+                console.log("Transactions: ", transaction);
+                setTitleModal("Success");
+                setSubtitleModal("Registration successful!");
+                setIsVisible(true);
+                setIsReferrer(true);
+            } else {
+                setTitleModal("Oops");
+                setSubtitleModal("Network no support!");
+                setIsVisible(true);
+            }
+
         } catch (error) {
             console.log(error);
-
-            // Hiển thị thông báo lỗi chi tiết hơn
             if (error.reason) {
                 setTitleModal("Oops");
                 setSubtitleModal("Your wallet already registered!");
                 setIsVisible(true);
-                // Alert.alert('Error', 'Your wallet already registered!');
             } else {
                 // Alert.alert('Error', "You do not have enough funds to cover the gas fee for registration. Please add more funds to your account and try again."
-                // Alert.alert('Error', "Not enough core for gas fee"
                 setTitleModal("Oops");
                 setSubtitleModal("Not enough core for gas fee");
                 setIsVisible(true);
-            
+
             }
         } finally {
             setIsLoading(false);
@@ -181,7 +195,10 @@ const Referral = () => {
                 const userInfo = await contract.userInfosByCode(code);
                 const lastItem = userInfo.length - 1;
                 if (userInfo[lastItem] === '') {
-                    Alert.alert("Error", "Referral ID don't exist!");
+                    // Alert.alert("Error", "Referral ID don't exist!");
+                    setTitleModal("Oops");
+                    setSubtitleModal("Referral ID don't exist!");
+                    setIsVisible(true);
                     setIsLoading(false);
                 } else {
                     register(userInfo[0])
@@ -199,6 +216,9 @@ const Referral = () => {
 
         } catch (err) {
             console.log('Error getting user info:', err.message);
+            setTitleModal("Oops");
+            setSubtitleModal("Error getting user info!");
+            setIsVisible(true);
             setIsLoading(false);
         }
     };
@@ -216,7 +236,7 @@ const Referral = () => {
     );
 
     useEffect(() => {
-        if(isReferrer) {
+        if (isReferrer) {
             fetchUsers(addressEvm, 10, 0);
         }
     }, [totalItems])
@@ -251,7 +271,9 @@ const Referral = () => {
                                         placeholder='Referral id'
                                         placeholderTextColor={"grey"} value={code}
                                         style={[styles.input]}
-                                        onChangeText={(t) => setCode(t)} />
+                                        onChangeText={(t) => setCode(t)}
+                                        keyboardType='default' />
+
                                     <TouchableOpacity
                                         onPress={handleDefaultCore}
                                         style={[styles.btnDefaultCode,]}>
