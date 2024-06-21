@@ -17,6 +17,7 @@ import { Toast } from "$store";
 import SaveTransaction, { TransactionModel } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { Text } from "@tonkeeper/uikit";
+import ModalEditGas from "./item/ModalEditGas";
 
 const TransferScreen = ({route}) => {
   const {id, symbol, image, address, addressToken, rpc, addressTo, amount} = route.params;
@@ -24,8 +25,12 @@ const TransferScreen = ({route}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
-  const [networkFee, setNetworkFee] = useState<string>('0');
+  const [gas, setGas] = useState({});
+  const [gasLimit, setGasLimit] = useState<number>(0);
+  const [gasPrice, setGasPrice] = useState<number>(0);
+ // const [networkFee, setNetworkFee] = useState<string>('0');
   const [coinRate, setCoinRate] = useState<string>('0');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -115,11 +120,15 @@ const TransferScreen = ({route}) => {
       }
     }
   };
- useEffect(() => {
+  useEffect(() => {
     async function fetchNetworkFee() {
       try {
         const networkFee = await getNetworkFee(addressTo, evm.addressWallet, chain.rpc, amount);
-        setNetworkFee(networkFee);
+        setGas(networkFee);
+        setGasPrice(Number(networkFee.gasPrice));
+        setGasLimit(Number(networkFee.gasLimit));
+        console.log('gas1', gas);
+        console.log('gaslimi1t', gasLimit);
       } catch (error) {
         console.error('Error fetching network fee:', error);
       }
@@ -134,7 +143,14 @@ const TransferScreen = ({route}) => {
     }
     fetchNetworkFee();
     fetchCoinRate();
-  }, [navigation]);
+  }, [addressTo,amount]);
+  console.log('gaslimit', gasLimit);
+  console.log('gas price', gasPrice);
+  const handleSave = (gasLimit, gasPrice) => {
+    setGasLimit(gasLimit);
+    setGasPrice(gasPrice);
+    setModalVisible(false);
+  }; 
   return (
     <SafeAreaView style={globalStyles.container}>
       <View
@@ -174,17 +190,21 @@ const TransferScreen = ({route}) => {
       <View style={styles.box}>
         <View style={styles.row}>
           <Text type="body1" color="textGray">Network fee</Text>
-          <Text type="body1" color="textGray">{(parseFloat(networkFee)).toFixed(6)} {chain.currency}</Text>
+          <Text type="body1" color="primaryColor" style={{textDecorationLine: "underline"}}
+          onPress={() => setModalVisible(true)}
+          >
+            {(parseFloat(gas.networkFee)).toFixed(6)} {chain.currency}
+          </Text>
         </View>
         <View style={styles.row}>
           <Text type="body1" color="textGray" style={{marginRight:5}}>Max total</Text>
           {chain.currency == symbol
           ? 
-          <Text type="body1" color="textGray">{ (parseFloat(networkFee) + parseFloat(amount)).toFixed(6) + ' ' + chain.currency }</Text>
+          <Text type="body1" color="textGray">{ (parseFloat(gas.networkFee) + parseFloat(amount)).toFixed(6) + ' ' + chain.currency }</Text>
           : 
           <View style={{ alignItems:"flex-end"}}>
             <Text type="body1" color="textGray" textAlign="right">{(parseFloat(amount) + ' ' + symbol)}</Text>
-            <Text type="body1" color="textGray" textAlign="right">+ {(parseFloat(networkFee).toFixed(6) + ' ' + chain.currency )}</Text>
+            <Text type="body1" color="textGray" textAlign="right">+ {(parseFloat(gas.networkFee).toFixed(6) + ' ' + chain.currency )}</Text>
           </View>
           }     
         </View>
@@ -206,6 +226,15 @@ const TransferScreen = ({route}) => {
       >
       <ActivityIndicator size="large" color={colors.Primary}/>
     </View>}
+    <ModalEditGas
+    visible={modalVisible}
+    closeModal={() => setModalVisible(false)}
+    gasLimit0={gas.gasLimit}
+    gasLimit={gasLimit}
+    gasPrice0={gas.gasPrice}
+    gasPrice={gasPrice}
+    handleSave={(a, b) => handleSave(a,b)}
+    />
     </SafeAreaView>
   );
 };

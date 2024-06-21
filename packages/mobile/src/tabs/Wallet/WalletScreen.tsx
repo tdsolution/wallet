@@ -102,7 +102,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const {isReferrer, setIsReferrer} = useReferral();
   const balanceTD = useBalanceTD()?.balance;
   const { evm, setEvm } = useEvm() || {};
-  const addressEvm = evm.addressWallet;
+  //const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
   const tabBarHeight = useBottomTabBarHeight();
@@ -116,7 +116,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const shouldUpdate =
     useUpdatesStore((state) => state.update.state) !== UpdateState.NOT_STARTED;
   const balance = useBalance(tokens.total.fiat);
-  const balanceEVM = useBalanceEVMDemo(addressEvm, chain.rpc, chain.id);
+  //const balanceEVM = useBalanceEVMDemo(evm.addressWallet, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
   const [balanceToken, setBalanceToken] = useState<any>();
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
@@ -175,7 +175,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }
   useEffect(() => {
     getDeviceName();
-    if (!addressEvm) {
+    if (!evm) {
       const fetchEvm = async () => {
         try {
           const address = await AsyncStorage.getItem("EVMAddress");
@@ -258,7 +258,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
       // Gọi hàm isReferrer
-      const isReferrer = await contract.isReferrer(addressEvm);
+      const isReferrer = await contract.isReferrer(evm.addressWallet);
 
       console.log("isReferrer: ", isReferrer);
       // Hiển thị kết quả
@@ -274,11 +274,11 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useEffect(() => {
     checkIsReferrer();
-  }, [isReferrer, chain, addressEvm]);
+  }, [isReferrer, chain, evm.addressWallet]);
 
   useEffect(() => {
     fetchBalanceToken();
-  }, [addressEvm, chain, tokensEVM, balanceTD]);
+  }, [evm.addressWallet, chain, tokensEVM, balanceTD]);
 
   
   useEffect(() => {
@@ -671,7 +671,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                     copyText(
                       chain.chainId == "1100"
                         ? wallet.address.ton.friendly
-                        : addressEvm,
+                        : evm.addressWallet,
                       undefined, // Khi không cần thiết truyền tham số duration, sử dụng undefined
                       "green" // Tham số color cho toast
                     )()
@@ -685,14 +685,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   >
                     {chain.chainId == "1100"
                       ? wallet.address.ton.short
-                      : shortenWalletAddress(addressEvm)}
+                      : shortenWalletAddress(evm.addressWallet)}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={copyText(
                     chain.chainId == "1100"
                       ? wallet.address.ton.friendly
-                      : addressEvm
+                      : evm.addressWallet
                   )}
                   activeOpacity={0.6}
                   style={{ marginLeft: 10 }}
@@ -796,7 +796,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   tokensImport={tokensImportEVM}
                   tokens={tokensEVM}
                   chainActive={chain}
-                  address={addressEvm}
+                  address={evm.addressWallet}
                 />
               ) : (
                 <View
@@ -824,7 +824,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 chainActive={chain}
                 address={
                   chain.chainId != "1100"
-                    ? addressEvm
+                    ? evm.addressWallet
                     : wallet.address.ton.friendly
                 }
               />

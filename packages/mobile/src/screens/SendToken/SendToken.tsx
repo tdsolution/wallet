@@ -287,7 +287,7 @@ const SendToken = ({ route }: any) => {
                     <TextInput
                       style={styles.input}
                       placeholder="0"
-                      keyboardType="numeric"
+                      //keyboardType="numeric"
                       placeholderTextColor={colors.Gray_Light}
                       value={amount}
                       onChangeText={(text) => [

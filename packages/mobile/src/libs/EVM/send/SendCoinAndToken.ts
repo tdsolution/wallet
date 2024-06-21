@@ -36,7 +36,7 @@ export async function getNetworkFee(addressTo: string, addressFrom: string, rpc,
   // const walletPrivateKey = new WalletETH(privateKey);
     const provider = new JsonRpcProvider(rpc);
     const feeData = await provider.getFeeData();
-    const gasPrice = feeData.gasPrice;
+    const gasPrice = feeData.gasPrice ? feeData.gasPrice : 0n;
   //let wallet = walletPrivateKey.connect(provider);
   try {
     const tx = {
@@ -45,11 +45,18 @@ export async function getNetworkFee(addressTo: string, addressFrom: string, rpc,
     value: parseEther(amount),
     };
     const gasLimit = await provider.estimateGas(tx);
+    const gas = {
+      gasLimit: Number(gasLimit),
+      gasPrice: formatUnits(gasPrice, 'gwei'),
+      networkFee: formatUnits(gasLimit*gasPrice, 18),
+    }
     //const gasLimit = await gasLimitPromise; // Chờ Prom
-    return formatUnits(gasLimit*gasPrice, 18);
+    return gas;
   }
   catch (error) {
-    return '0';
+    return {gasLimit: 0,
+      gasPrice: 0,
+      networkFee: 0};
   }
 }
 
