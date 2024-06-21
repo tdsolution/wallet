@@ -45,11 +45,18 @@ export const OnboardingScreen = memo (() => {
              <Image source={require('../../assets/logo/ether.png')} resizeMode="contain" style={{height:160 * HEIGHT_RATIO, width:'40%'}}/>
           </View>
         </View>
+        {deviceHeight >= 1024
+        ?
         <View style={{alignItems:'center', width: '100%'}}>
            <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:175 * HEIGHT_RATIO}}/>
         </View>
+        : 
+        <View style={{alignItems:'center', width: '100%'}}>
+           <ImageBackground source={require('../../assets//logo/path.png')} resizeMode="cover" style={{width:'100%', height:135 * HEIGHT_RATIO}}/>
+        </View>
+      }     
         <View style={styles.contentText}>
-          <Text style={{color:'#4871EA', fontSize: 26* HEIGHT_RATIO,textAlign: "left"}} lineHeight= {30 * HEIGHT_RATIO}>Investing in cryptocurrency made easy.</Text>
+          <Text style={{color:'#4871EA', fontSize: 25 * HEIGHT_RATIO,textAlign: "left"}} lineHeight= {30 * HEIGHT_RATIO}>Investing in cryptocurrency made easy.</Text>
         </View>
         <View style={styles.content}>
           <View style={styles.buttons}>

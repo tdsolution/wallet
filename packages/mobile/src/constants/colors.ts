@@ -6,4 +6,6 @@ export const colors = {
   White: "#FAFAFA",
   Black: "#2B2D42",
   Gray_Light: "#909090",
+  PrimaryDisable: "#7694ef",
+  PrimaryPress: "#325fe7",
 };

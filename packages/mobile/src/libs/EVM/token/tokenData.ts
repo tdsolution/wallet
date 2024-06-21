@@ -274,7 +274,7 @@ export const DataTokens: any[] = [
             {
                 id: "binancecoin",
                 tokenAddress: "coin",
-                symbol: "BNB",
+                symbol: "tBNB",
                 decimals: 18,
                 logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png",
             },

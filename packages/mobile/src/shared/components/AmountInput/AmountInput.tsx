@@ -237,7 +237,7 @@ const AmountInputComponent: React.FC<Props> = (props) => {
               <S.AmountInput
                 ref={handleRef}
                 autoCorrect={false}
-                selectionColor={theme.colors.accentPrimary}
+                selectionColor={theme.colors.constantDark}
                 keyboardType="numeric"
                 value={value}
                 onChangeText={handleChangeAmount}
@@ -269,7 +269,7 @@ const AmountInputComponent: React.FC<Props> = (props) => {
       {!isLockup ? (
         <S.SendAllContainer>
           <Button
-            mode={amount.all ? 'primary' : 'secondary'}
+            mode={amount.all ? 'primary' : 'primary'}
             size="small"
             onPress={handleSwitchAll}
           >

@@ -152,7 +152,7 @@ const ModalAddMnemonic = (props: Props) => {
       visible={modalVisible} // Trạng thái của modal (true: hiển thị, false: ẩn)
       onRequestClose={onClose}
     >
-      <ScrollView  showsVerticalScrollIndicator={false} style={{backgroundColor: "#fff"}}>
+      <ScrollView  showsVerticalScrollIndicator={false} style={{backgroundColor: "#fafafa"}}>
         <Pressable
           onPress={Keyboard.dismiss}
           style={{backgroundColor: colors.Primary}}

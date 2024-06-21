@@ -39,7 +39,7 @@ const ModalViewPrivateKey = (props: Props) => {
 
   return (
       <Modal
-      // animationType="slide" // Loại animation khi mở/closed modal
+      animationType="slide" // Loại animation khi mở/closed modal
       transparent={true} // Cho phép modal trở nên trong suốt
       visible={modalVisible} // Trạng thái của modal (true: hiển thị, false: ẩn)
       onRequestClose={onClose}

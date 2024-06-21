@@ -12,8 +12,10 @@ export const Content = styled.View`
 `;
 
 export const Table = styled.View`
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => theme.colors.constantLight};
   border-radius: ${({ theme }) => ns(theme.radius.normal)}px;
+  border-width: 1;
+  border-color: ${({ theme }) => theme.colors.textSecondary};
   overflow: hidden;
 `;
 

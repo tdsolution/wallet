@@ -12,7 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Keyboard, Text } from 'react-native';
+import { Keyboard } from 'react-native';
 import * as S from './AddressStep.style';
 import {
   BottomButtonWrap,
@@ -37,6 +37,7 @@ import { t } from '@tonkeeper/shared/i18n';
 import { Address } from '@tonkeeper/core';
 import { TouchableOpacity } from 'react-native';
 import { colors } from '../../../../constants/colors';
+import { Text } from '@tonkeeper/uikit';
 
 const TonWeb = require('tonweb');
 
@@ -317,16 +318,16 @@ const AddressStepComponent: FC<AddressStepProps> = (props) => {
         </StepScrollView>
 
         <BottomButtonWrap>
-          {/* <Button disabled={!isReadyToContinue} onPress={onContinue}>
+          <Button disabled={!isReadyToContinue} onPress={onContinue}>
             {t('continue')}
-          </Button> */}
+          </Button>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             disabled={!isReadyToContinue}
             onPress={onContinue}
             style={{ width: '100%', backgroundColor: colors.Primary, borderRadius: 16, height: 57, justifyContent: 'center', alignItems: 'center', opacity: isReadyToContinue ? 1 : 0.5 }}>
-            <Text style={{ color: colors.White, fontSize: 16, fontWeight: 'bold', fontFamily: 'Popins-Medium' }}>{t('continue')}</Text>
-          </TouchableOpacity>
+            <Text type='label1'>{t('continue')}</Text>
+          </TouchableOpacity> */}
         </BottomButtonWrap>
       </S.Container>
     </>
