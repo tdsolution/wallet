@@ -32,6 +32,8 @@ import SwapScreen from "../../screens/SwapScreen/SwapScreen";
 import SwapComplete from "../../screens/SwapScreen/SwapComplete";
 import YourComponent from "../../screens/SwapScreen/YourComponent";
 import Referral from "../../screens/ReferralScreen/Referral";
+import DetailNFTs from "../../screens/DetailNFTs/DetailNFTs";
+import SendNFT from "../../screens/SendNFT/SendNFT";
 
 const Stack = createNativeStackNavigator<WalletStackParamList>();
 
@@ -101,6 +103,14 @@ export const WalletStack: FC = () => {
       <Stack.Screen
         name={WalletStackRouteNames.Referral}
         component={Referral}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.DetailNFT}
+        component={DetailNFTs}
+      />
+      <Stack.Screen
+        name={WalletStackRouteNames.SendNFT}
+        component={SendNFT}
       />
     </Stack.Navigator>
   );

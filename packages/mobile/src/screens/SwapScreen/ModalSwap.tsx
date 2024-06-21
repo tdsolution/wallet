@@ -36,6 +36,7 @@ interface SimpleModalProps {
   network: string;
   coinUsd: number;
   isTransfer: boolean;
+  chainRPC: string;
 }
 
 const ModalSwap: React.FC<SimpleModalProps> = ({
@@ -48,7 +49,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   to,
   network,
   coinUsd,
-  isTransfer
+  isTransfer,
+  chainRPC
 }) => {
   function formatHexString(hexString: string) {
     const prefix = hexString.slice(0, 10); // Lấy các ký tự đầu tiên (bao gồm cả "0x" và 6 ký tự tiếp theo)
@@ -66,7 +68,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [networkFee, setNetworkFee] = useState<string>('0');
   const PRIVATE_KEY = evmAddress.toString();
-  const PROVIDER_URL = chain.rpc;
+  const PROVIDER_URL = chainRPC;
 
   async function fetchNetworkFee() {
     try {
