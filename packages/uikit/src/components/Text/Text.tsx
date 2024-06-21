@@ -23,6 +23,7 @@ export type TextColors =
   | "accentOrange"
   | "accentGreen"
   | "accentBlue"
+  | "accentRed"
   | "constantWhite"
   | "constantBlack";
 

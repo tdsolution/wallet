@@ -60,7 +60,7 @@ export const transfer = async ({
   privateKey,
   recipientAddress,
   amount,
-}: TransferParams): Promise<boolean> => {
+}: TransferParams): Promise<any> => {
   // Kết nối với mạng Ethereum thông qua URL của provider
   const provider = new ethers.JsonRpcProvider(providerUrl);
 
@@ -84,7 +84,7 @@ export const transfer = async ({
     // Chờ giao dịch được xác nhận
     const receipt = await tx.wait();
     console.log("Transaction confirmed:", receipt);
-    return true;
+    return receipt ? receipt?.hash : false;
   } catch (error) {
     console.error("Transaction failed:", error);
     return false;
@@ -130,7 +130,7 @@ export const withdraw = async ({
     // Chờ giao dịch được xác nhận
     const receipt = await transaction.wait();
     console.log("Transaction mined:", receipt);
-    return true;
+    return receipt.hash;
   } catch (error) {
     console.error("Error during withdrawal:", error);
     return false;

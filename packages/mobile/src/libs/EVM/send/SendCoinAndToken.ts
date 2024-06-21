@@ -32,21 +32,31 @@ export async function SendCoinEVM(addressTo, privateKey, rpc, amount ) {
     return;
   }
 }
-export async function GasLimitPromise(addressTo: string, privateKey: string, rpc, amount) {
-  const walletPrivateKey = new WalletETH(privateKey);
+export async function getNetworkFee(addressTo: string, addressFrom: string, rpc, amount) {
+  // const walletPrivateKey = new WalletETH(privateKey);
     const provider = new JsonRpcProvider(rpc);
-  let wallet = walletPrivateKey.connect(provider);
+    const feeData = await provider.getFeeData();
+    const gasPrice = feeData.gasPrice ? feeData.gasPrice : 0n;
+  //let wallet = walletPrivateKey.connect(provider);
   try {
     const tx = {
     to: addressTo,
+    from: addressFrom,
     value: parseEther(amount),
     };
-    const gasLimitPromise = wallet.estimateGas(tx);
-    const gasLimit = await gasLimitPromise; // Chờ Prom
-    return formatUnits(gasLimit, 9);
+    const gasLimit = await provider.estimateGas(tx);
+    const gas = {
+      gasLimit: Number(gasLimit),
+      gasPrice: formatUnits(gasPrice, 'gwei'),
+      networkFee: formatUnits(gasLimit*gasPrice, 18),
+    }
+    //const gasLimit = await gasLimitPromise; // Chờ Prom
+    return gas;
   }
   catch (error) {
-    return '0';
+    return {gasLimit: 0,
+      gasPrice: 0,
+      networkFee: 0};
   }
 }
 
@@ -57,7 +67,7 @@ export async function SendTokenEVM(addressTo: string, privateKey: string, rpc, a
   const walletPrivateKey = new WalletETH(privateKey);
   const provider = new JsonRpcProvider(rpc);
   let wallet = walletPrivateKey.connect(provider);
-  const contract = new Contract(addressToken, abi, wallet)
+  const contract = new Contract(addressToken, abi, wallet);
   const value = parseEther(amount);
   try {
     const tx = await contract.transfer(addressTo, value);

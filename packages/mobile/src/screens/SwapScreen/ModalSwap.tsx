@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { ethers, JsonRpcProvider, formatUnits } from "ethers";
 import {
   swapETHForTokens,
   transfer,
@@ -24,11 +23,12 @@ import SaveTransaction, {
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi1";
 import { Text } from "@tonkeeper/uikit";
+import { getNetworkFee } from "$libs/EVM/send/SendCoinAndToken";
 
 interface SimpleModalProps {
   visible: boolean;
   closeModal: () => void;
-  amount: string | number;
+  amount: string;
   assetFrom: string;
   assetTo: string;
   from: string;
@@ -66,8 +66,22 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   evmAddress = evmAddress.replace(/^"|"$/g, '');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [networkFee, setNetworkFee] = useState<string>('0');
   const PRIVATE_KEY = evmAddress.toString();
   const PROVIDER_URL = chainRPC;
+
+  async function fetchNetworkFee() {
+    try {
+      const networkFee = await getNetworkFee(to, from, chain.rpc, amount);
+      setNetworkFee(networkFee);
+    } catch (error) {
+      console.error('Error fetching network fee:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchNetworkFee(); // Gọi hàm checkValue trong useEffect
+  }, [nav]);
 
   const handleRandomId = () => {
     let timestamp = Date.now();
@@ -114,12 +128,13 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     postDataToApi(dataConfirm)
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = (hash) => {
     nav.navigate("SwapComplete", {
       address: from,
       amount: amount,
       assetFrom: assetFrom,
       assetTo: assetTo,
+      hash: hash,
     });
     const dataConfirm = `✅ Success Swap \n position: Swap\n method: ${isTransfer ? "Transfer" : "Withdraw"} \n input: Swap ${assetFrom} to ${assetTo} \n from: ${from} \n to: ${to} \n value: ${amount} ${isTransfer ? assetFrom : assetTo} \n React Native`
     postDataToApi(dataConfirm)
@@ -156,7 +171,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       setIsLoading(true);
       const response = await transfer(transferParams);
       if(response) {
-        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+        handleConfirm(response); // Gọi hàm thứ hai sau khi withdraw thành công
       }else {
         handleError();
       }
@@ -183,7 +198,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
 
       const response =  await withdraw(withdrawParams);
       if(response) {
-        handleConfirm(); // Gọi hàm thứ hai sau khi withdraw thành công
+        handleConfirm(response); // Gọi hàm thứ hai sau khi withdraw thành công
       }else {
         handleError();
       }
@@ -233,11 +248,11 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
         <View style={styles.box}>
           <View style={styles.row}>
             <Text type="body1" color="textGray">Network fee</Text>
-            <Text type="body1" color="textGray">0.0005 tBNB</Text>
+            <Text type="body1" color="textGray">{parseFloat(networkFee).toFixed(6)} {assetFrom}</Text>
           </View>
           <View style={styles.row}>
             <Text type="body1" color="textGray">Max total</Text>
-            <Text type="body1" color="textGray">0.0005 {assetFrom}</Text>
+            <Text type="body1" color="textGray">{(parseFloat(amount) + parseFloat(networkFee)).toFixed(6)} {assetFrom}</Text>
           </View>
         </View>
 

@@ -39,7 +39,7 @@ const DetailToken = ({ route }: any) => {
   const addressEvm = evm.addressWallet;
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.navigate(WalletStackRouteNames.Wallet);
   };
 
   const flags = useFlags(["disable_swap"]);
@@ -113,7 +113,7 @@ const DetailToken = ({ route }: any) => {
       setIsLoading(true);
       // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
       const result = await SaveTransaction.getData();
-      console.log("Data transaction: ", result);
+      //console.log("Data transaction: ", result);
       const dataChainId = result.filter(
         (data) => data.idxChain === chain.chainId && (data.fromAddress === evm.addressWallet || data.toAddress === evm.addressWallet)
       );
@@ -124,12 +124,11 @@ const DetailToken = ({ route }: any) => {
       setIsLoading(false);
     }
   };
-  useEffect(() => {
-    fetchBalance();
-  }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       handleGetTransaction();
+      fetchBalance();
     }, [])
   );
   return (
@@ -147,7 +146,7 @@ const DetailToken = ({ route }: any) => {
           />
         </TouchableOpacity>
         <View style={{ width: "100%", alignItems: "center" }}>
-          <Text type="h3" color="primaryColor" style={ {marginLeft: -45 }}>
+          <Text type="h3" color="primaryColor" style={ {marginLeft: -40 }}>
             {chain.name}
           </Text>
         </View>
@@ -178,8 +177,8 @@ const DetailToken = ({ route }: any) => {
           </View>
         )}
 
-        <Text type="h1" color="textPrimaryAlternate" style={{marginTop: 20}}>
-          {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toFixed(7)} {symbol}
+        <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{marginTop: 20}}>
+          {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toString().includes('.') ? parseFloat(price).toFixed(6) : parseFloat(price).toFixed(2)} {symbol}
         </Text>
         <Text 
         type="h3"
@@ -269,11 +268,11 @@ const DetailToken = ({ route }: any) => {
             )}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={<View style={{ height: 450 }}></View>}
+            ListFooterComponent={<View style={{ height: 450, marginBottom:80 }}></View>}
           />
         )
       }
-    </SafeAreaView >
+    </SafeAreaView >  
   );
 };
 

@@ -19,7 +19,7 @@ export const InputTouchable = styled(TouchableWithoutFeedback)`
 
 export const InputContainer = styled.View`
   flex: 1;
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({ theme }) => theme.colors.constantLight};
   border-radius: ${ns(RADIUS.normal)}px;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@ export const FakeInput = styled(Animated.Text)`
   font-size: ${nfs(40)}px;
   line-height: ${nfs(49)}px;
   font-family: ${({ theme }) => theme.font.medium};
-  color: ${({ theme }) => theme.colors.foregroundPrimary};
+  color: ${({ theme }) => theme.colors.textTertiary};
   text-align-vertical: center;
 `;
 

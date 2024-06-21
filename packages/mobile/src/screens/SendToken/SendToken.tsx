@@ -49,14 +49,18 @@ const SendToken = ({ route }: any) => {
   const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
   const [isDisable, setIsDisable] = useState<boolean>(true);
+  const max = price - 0.001;
 
   console.log("Pricce: ", price);
 
-    const checkValue = () => {
+  const checkValue = () => {
     if (amount !== "" && !isNaN(Number(amount))) {
-      setIsDisable(false);
+        setIsDisable(false);
     } else if (amount !== "" && isNaN(Number(amount))){
       setAmount("");
+      setIsDisable(true);
+    }
+    else if (amount == "") {
       setIsDisable(true);
     }
   };
@@ -94,7 +98,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if (isAddress(addressInput)) {
-      if (price > 0) {
+      if (price > 0 && Number(amount) <= max) {
         navigation.navigate(WalletStackRouteNames.Transfer, {
           id: id,
           symbol: symbol,
@@ -198,8 +202,8 @@ const SendToken = ({ route }: any) => {
   }, []);
 
   const handleMaxAmount = () => {
-    const amount = price - 0.001;
-    setAmount(amount.toFixed(5).toString())
+    
+    setAmount(max.toFixed(5).toString())
   }
 
   return (
@@ -215,11 +219,11 @@ const SendToken = ({ route }: any) => {
             <TouchableOpacity onPress={handleBack}>
               <Image
                 style={styles.iconClose}
-                source={require("../../assets/icons/png/ic-close-16.png")}
+                source={require("../../assets/icons/png/ic-arrow-up-16.png")}
               />
             </TouchableOpacity>
             <View style={{ alignItems: "center", width: "100%" }}>
-              <Text type="h3" color="primaryColor" style={ { marginLeft: -10 }}>
+              <Text type="h3" color="primaryColor" style={ { marginLeft: -40 }}>
                 Send {symbol}
               </Text>
             </View>
@@ -283,7 +287,7 @@ const SendToken = ({ route }: any) => {
                     <TextInput
                       style={styles.input}
                       placeholder="0"
-                      keyboardType="numeric"
+                      //keyboardType="numeric"
                       placeholderTextColor={colors.Gray_Light}
                       value={amount}
                       onChangeText={(text) => [
@@ -347,7 +351,10 @@ const SendToken = ({ route }: any) => {
         </Pressable>
       </ScrollView>
       <View style={{ paddingHorizontal: 25 }}>
-        <TouchableOpacity style={[styles.button]} onPress={handleNext}>
+        <TouchableOpacity disabled={isDisable} style={[styles.button, {
+            backgroundColor:
+              isDisable ? colors.PrimaryDisable : colors.Primary,
+          },]} onPress={handleNext}>
           <Text type="label1">Next</Text>
         </TouchableOpacity>
       </View>
@@ -359,10 +366,11 @@ export default SendToken;
 
 const styles = StyleSheet.create({
   iconClose: {
-    width: 16,
-    height: 16,
+    width: 24,
+    height: 24,
     resizeMode: "contain",
     tintColor: colors.Primary,
+    transform: [{ rotate: "-90deg" }],
   },
   iconQR: {
     width: 20,
@@ -409,7 +417,6 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: "#4871EA",
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",

@@ -37,7 +37,7 @@ const ItemWallet = (props: Props) => {
   async function fetchBalance() {
     if (addressToken != "coin") {
       const balance = await getBalanceToken(rpc, addressToken, address);
-      console.log(">>>>>>Co balance toi: " + formatCurrencyNoCrc(parseFloat(balance)));
+      //console.log(">>>>>>Co balance toi: " + (parseFloat(balance)));
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
       const coinUsd24 = coinRate?.usdChange ?? "0";
@@ -106,10 +106,10 @@ const ItemWallet = (props: Props) => {
             )}
           </View>
           <View>
-            <Text style={styles.title}>{symbol}</Text>
+            <Text style={styles.title}>{symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
             <View style={styles.row}>
               <Text style={styles.body}>
-                {"$" + formatCurrencyNoCrc(coinUsd)}
+                {"$" + (coinUsd)}
               </Text>
               <View
                 style={{
@@ -136,10 +136,10 @@ const ItemWallet = (props: Props) => {
         </View>
         <View>
           <Text style={[styles.title, { textAlign: "right" }]}>
-            {formatCurrencyNoCrc(parseFloat(price))}
+            {(parseFloat(price).toFixed(2))}
           </Text>
           <Text style={[styles.body, { textAlign: "right" }]}>
-            ${formatCurrencyNoCrc(priceUsd)}
+            ${(priceUsd).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   boxImage: {
     width: 36,

@@ -55,8 +55,11 @@ const SwapScreen = () => {
       setInputValue("");
       setIsDisable(true);
     }
+    else if (inputValue == "") {
+      setIsDisable(true);
+    }
   };
-
+  
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [coinUsd, setCoinUsd] = useState(0);
@@ -65,7 +68,7 @@ const SwapScreen = () => {
   let coin = coinUsd * parseFloat(inputValue);
   // Lấy phần tử từ mảng thứ nhất
   const itemFromData1 = dataCoinDesIndex[swapCoin];
-
+  console.log('itemFromData1:', itemFromData1)
   // Lấy phần tử từ mảng thứ hai
   const itemFromData2 = dataCoinOrgIndex[swapCoin];
   console.log(">>>>>>>>>>>>>>>dataCoinDesIndex: ", dataCoinOrgIndex[swapCoin])
@@ -150,7 +153,7 @@ const SwapScreen = () => {
               value={inputValue}
               onChangeText={(text) => setInputValue(text.replace(/[^0-9 .]/g, ""))}
               placeholder="0"
-              placeholderTextColor={colors.Gray}
+              placeholderTextColor={colors.Gray_Light}
               autoFocus
               cursorColor = {colors.Primary}
               
@@ -240,7 +243,7 @@ const SwapScreen = () => {
             type="h1"
               style={[
                 styles.price,
-                { color: inputValue ? colors.Primary : colors.Gray },
+                { color: inputValue ? colors.Primary : colors.Gray_Light },
               ]}
               numberOfLines={0}
             >
@@ -310,7 +313,7 @@ const SwapScreen = () => {
           styles.button,
           {
             backgroundColor:
-              inputValue.length > 0 ? colors.Primary : colors.Gray,
+              isDisable ? colors.PrimaryDisable : colors.Primary,
           },
         ]}
         onPress={handleSwap}

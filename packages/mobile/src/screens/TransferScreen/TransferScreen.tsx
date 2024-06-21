@@ -11,12 +11,13 @@ import { useNavigation } from "@tonkeeper/router";
 import { colors } from "../../constants/colors";
 import { globalStyles } from "$styles/globalStyles";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
-import { GasLimitPromise, SendCoinEVM, SendTokenEVM } from "$libs/EVM/send/SendCoinAndToken";
+import { SendCoinEVM, SendTokenEVM, getNetworkFee } from "$libs/EVM/send/SendCoinAndToken";
 import { WalletStackRouteNames } from "$navigation";
 import { Toast } from "$store";
 import SaveTransaction, { TransactionModel } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { Text } from "@tonkeeper/uikit";
+import ModalEditGas from "./item/ModalEditGas";
 
 const TransferScreen = ({route}) => {
   const {id, symbol, image, address, addressToken, rpc, addressTo, amount} = route.params;
@@ -24,8 +25,12 @@ const TransferScreen = ({route}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
-  const [gasLimit, setGasLimit] = useState<string>('0');
+  const [gas, setGas] = useState({});
+  const [gasLimit, setGasLimit] = useState<number>(0);
+  const [gasPrice, setGasPrice] = useState<number>(0);
+ // const [networkFee, setNetworkFee] = useState<string>('0');
   const [coinRate, setCoinRate] = useState<string>('0');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -115,13 +120,17 @@ const TransferScreen = ({route}) => {
       }
     }
   };
- useEffect(() => {
-    async function fetchGasLimit() {
+  useEffect(() => {
+    async function fetchNetworkFee() {
       try {
-        const gasLimit = await GasLimitPromise(addressTo, evm.privateKey, chain.rpc, amount);
-        setGasLimit(gasLimit);
+        const networkFee = await getNetworkFee(addressTo, evm.addressWallet, chain.rpc, amount);
+        setGas(networkFee);
+        setGasPrice(Number(networkFee.gasPrice));
+        setGasLimit(Number(networkFee.gasLimit));
+        console.log('gas1', gas);
+        console.log('gaslimi1t', gasLimit);
       } catch (error) {
-        console.error('Error fetching gas limit:', error);
+        console.error('Error fetching network fee:', error);
       }
     }
      async function fetchCoinRate() {
@@ -129,12 +138,19 @@ const TransferScreen = ({route}) => {
         const coinRate = await SaveListCoinRate.getCoinRateById(id);
         setCoinRate(coinRate?.usd ?? '0');
       } catch (error) {
-        console.error('Error fetching gas limit:', error);
+        console.error('Error fetching coin rate:', error);
       }
     }
-    fetchGasLimit();
+    fetchNetworkFee();
     fetchCoinRate();
-  }, []);
+  }, [addressTo,amount]);
+  console.log('gaslimit', gasLimit);
+  console.log('gas price', gasPrice);
+  const handleSave = (gasLimit, gasPrice) => {
+    setGasLimit(gasLimit);
+    setGasPrice(gasPrice);
+    setModalVisible(false);
+  }; 
   return (
     <SafeAreaView style={globalStyles.container}>
       <View
@@ -153,32 +169,44 @@ const TransferScreen = ({route}) => {
         <Text type="h2" color="primaryColor" style={{marginLeft: -40}}>Transfer</Text>
         </View>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text type="h1" color="textPrimaryAlternate" style={{ marginTop: 20}}>{amount} {chain.currency}</Text>
-        <Text type="label1" color="textGrayLight" style={{marginTop: 5}}>= 0.0 $</Text>
+      <View style={{ justifyContent: "center", alignItems: "center", marginHorizontal: 25 }}>
+        <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{ marginTop: 10}}>{amount} {symbol}</Text>
+        <Text type="label1" color="textGrayLight" style={{marginTop: 5}}>= {(parseFloat(amount) * parseFloat(coinRate)).toFixed(6)} $</Text>
       </View>
       <View style={styles.box}>
         <View style={styles.row}>
-          <Text type="label1" color="textGray">Asset</Text>
-          <Text type="label1" color="textGray">{chain.name}</Text>
+          <Text type="body1" color="textGray">Asset</Text>
+          <Text type="body1" color="textGray">{chain.name} ({symbol}) </Text>
         </View>
         <View style={styles.row}>
-          <Text type="label1" color="textGray">From</Text>
-          <Text type="label1" color="textGray">{formatHexString(evm.addressWallet)}</Text>
+          <Text type="body1" color="textGray">From</Text>
+          <Text type="body1" color="textGray">{formatHexString(evm.addressWallet)}</Text>
         </View>
         <View style={styles.row}>
-          <Text type="label1" color="textGray">To</Text>
-          <Text type="label1" color="textGray">{formatHexString(addressTo)}</Text>
+          <Text type="body1" color="textGray">To</Text>
+          <Text type="body1" color="textGray">{formatHexString(addressTo)}</Text>
         </View>
       </View>
       <View style={styles.box}>
         <View style={styles.row}>
-          <Text type="label1" color="textGray">Network fee</Text>
-          <Text type="label1" color="textGray">{gasLimit} {chain.currency} {'('+(parseFloat(gasLimit) * parseFloat(coinRate)).toFixed(6)+'$)'}</Text>
+          <Text type="body1" color="textGray">Network fee</Text>
+          <Text type="body1" color="primaryColor" style={{textDecorationLine: "underline"}}
+          onPress={() => setModalVisible(true)}
+          >
+            {(parseFloat(gas.networkFee)).toFixed(6)} {chain.currency}
+          </Text>
         </View>
         <View style={styles.row}>
-          <Text type="label1" color="textGray">Max total</Text>
-          <Text type="label1" color="textGray">{((parseFloat(gasLimit) * parseFloat(coinRate))+(parseFloat(amount) * parseFloat(coinRate))).toFixed(6)} $</Text>
+          <Text type="body1" color="textGray" style={{marginRight:5}}>Max total</Text>
+          {chain.currency == symbol
+          ? 
+          <Text type="body1" color="textGray">{ (parseFloat(gas.networkFee) + parseFloat(amount)).toFixed(6) + ' ' + chain.currency }</Text>
+          : 
+          <View style={{ alignItems:"flex-end"}}>
+            <Text type="body1" color="textGray" textAlign="right">{(parseFloat(amount) + ' ' + symbol)}</Text>
+            <Text type="body1" color="textGray" textAlign="right">+ {(parseFloat(gas.networkFee).toFixed(6) + ' ' + chain.currency )}</Text>
+          </View>
+          }     
         </View>
       </View>
       <TouchableOpacity style={[styles.button]} onPress={handleContinue}>
@@ -198,6 +226,15 @@ const TransferScreen = ({route}) => {
       >
       <ActivityIndicator size="large" color={colors.Primary}/>
     </View>}
+    <ModalEditGas
+    visible={modalVisible}
+    closeModal={() => setModalVisible(false)}
+    gasLimit0={gas.gasLimit}
+    gasLimit={gasLimit}
+    gasPrice0={gas.gasPrice}
+    gasPrice={gasPrice}
+    handleSave={(a, b) => handleSave(a,b)}
+    />
     </SafeAreaView>
   );
 };
@@ -226,7 +263,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
-    marginBottom: 100,
+    marginBottom: 80,
     position: "absolute",
     bottom: 0,
     left: 25,
@@ -234,7 +271,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
   },
   box: {
