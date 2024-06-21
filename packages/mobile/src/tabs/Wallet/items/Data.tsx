@@ -86,3 +86,30 @@ export const DATA_ACTIVITIES = [
     isUp: true,
   },
 ];
+
+export const DATA_NFTS = [
+  {
+    id: '1',
+    image: require("../../../assets/nfts/01.png")
+  },
+  {
+    id: '2',
+    image: require("../../../assets/nfts/02.png")
+  },
+  {
+    id: '3',
+    image: require("../../../assets/nfts/03.png")
+  },
+  {
+    id: '4',
+    image: require("../../../assets/nfts/04.png")
+  },
+  {
+    id: '5',
+    image: require("../../../assets/nfts/05.png")
+  },
+  {
+    id: '6',
+    image: require("../../../assets/nfts/06.png")
+  },
+]

@@ -94,11 +94,12 @@ import { postDataToApi } from '$libs/EVM/api/postDataToApi';
 import { ReferralButton } from "../../components/RefferalButton";
 import { ethers } from 'ethers'
 import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
+import TabListNFTs from "./items/TabListNFTs";
 // import { swapTokenDeposit } from "$libs/EVM/swap/swapEvm";
 export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
-  const {isReferrer, setIsReferrer} = useReferral();
+  const { isReferrer, setIsReferrer } = useReferral();
   const balanceTD = useBalanceTD()?.balance;
   console.log('balanceTD', balanceTD);
   const { evm, setEvm } = useEvm() || {};
@@ -236,7 +237,8 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }
 
   const URL_NETWORK = chain.rpc;
-  const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
+  // const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
+  const contractAddress = '0xC02a02471B491689D79c59116FBCeAfdB9eA554a';
   // ABI của hợp đồng thông minh
   const contractABI = [
     "function isReferrer(address _address) view returns (bool)"
@@ -268,7 +270,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
     checkIsReferrer();
   }, [isReferrer, chain, addressEvm]);
 
-  
+
   useEffect(() => {
     // Gọi hàm và kiểm tra kết quả
     getFirstAddress().then((address) => {
@@ -755,7 +757,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
         <View style={{ flex: 1 }}>
           <TabTop
-            tabs={["Tokens", "Activities"]}
+            tabs={["Tokens", "NFTs", "Activities"]}
             initialTab="Tokens"
             onTabChange={handleTabChange}
 
@@ -765,46 +767,49 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
             }}
           >
-            {activeTab === "Tokens" ? (
-              chain.chainId != "1100" ? (
-                <TabListToken
-                  tokensImport={tokensImportEVM}
-                  tokens={tokensEVM}
-                  chainActive={chain}
-                  address={addressEvm}
-                />
-              ) : (
-                <View
-                  style={{
-                    width: "100%",
-                    paddingBottom: 80,
-                    borderBottomWidth: 0,
-                  }}
-                >
-                  <WalletContentList
-                    inscriptions={inscriptions}
-                    currency={currency}
-                    tronBalances={tronBalances}
-                    handleRefresh={handleRefresh}
-                    isRefreshing={isRefreshing}
-                    isFocused={isFocused}
-                    balance={balance}
-                    tokens={tokens}
-                    tonPrice={tonPrice}
-                    nfts={nfts}
+            {
+              activeTab === "Tokens" ? (
+                chain.chainId != "1100" ? (
+                  <TabListToken
+                    tokensImport={tokensImportEVM}
+                    tokens={tokensEVM}
+                    chainActive={chain}
+                    address={addressEvm}
                   />
-                </View>
-              )
-            ) : (
-              <TabListActivities
-                chainActive={chain}
-                address={
-                  chain.chainId != "1100"
-                    ? addressEvm
-                    : wallet.address.ton.friendly
-                }
-              />
-            )}
+                ) : (
+                  <View
+                    style={{
+                      width: "100%",
+                      paddingBottom: 80,
+                      borderBottomWidth: 0,
+                    }}
+                  >
+                    <WalletContentList
+                      inscriptions={inscriptions}
+                      currency={currency}
+                      tronBalances={tronBalances}
+                      handleRefresh={handleRefresh}
+                      isRefreshing={isRefreshing}
+                      isFocused={isFocused}
+                      balance={balance}
+                      tokens={tokens}
+                      tonPrice={tonPrice}
+                      nfts={nfts}
+                    />
+                  </View>
+                )
+              ) : activeTab === "NFTs" ? (
+                <TabListNFTs />
+              ) : (
+                <TabListActivities
+                  chainActive={chain}
+                  address={
+                    chain.chainId != "1100"
+                      ? addressEvm
+                      : wallet.address.ton.friendly
+                  }
+                />
+              )}
           </View>
         </View>
       </ScrollView>

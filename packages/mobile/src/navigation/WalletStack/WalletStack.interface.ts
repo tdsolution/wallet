@@ -15,4 +15,6 @@ export type WalletStackParamList = {
   [WalletStackRouteNames.SwapComplete]: {};
   [WalletStackRouteNames.YourComponent]: {};
   [WalletStackRouteNames.Referral]: {};
+  [WalletStackRouteNames.DetailNFT]: {};
+  [WalletStackRouteNames.SendNFT]: {};
 };
