@@ -12,9 +12,7 @@ import { WalletStackRouteNames } from "$navigation";
 import { useReferral } from "@tonkeeper/shared/hooks/useReferral";
 import ModalReferral from './item/ModalReferral';
 
-
 const { width, height } = Dimensions.get('window');
-
 
 const Referral = () => {
     const navigation = useNavigation();
@@ -29,7 +27,7 @@ const Referral = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [titleModal, setTitleModal] = useState<string>('Success');
     const [subtitleModal, setSubtitleModal] = useState<string>('Registration successful!');
-    // const [isReferrer, setIsReferrer] = useState<boolean>(isReferrerAddress);
+    const [userInfo, setUserInfo] = useState<string>('')
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     let disable = code.length > 0 && isLoading == false;
@@ -51,7 +49,7 @@ const Referral = () => {
         "function register(address _referrer, string memory _code) external",
         "function userInfosByCode(string code) view returns (address, address, uint256, uint256, uint256, bool, string)",
         "function isReferrer(address _address) view returns (bool)",
-        // "function getTotalUserByUp(address _referrer, uint256 _limit, uint256 _skip) view returns (tuple(address userAddress, address referByAddress, uint256 dateTime, uint256 totalRefer, uint256 totalRefer10, bool top10Refer, string code)[], uint256)"
+        "function userInfos(address _address) view returns (address, address, uint256, uint256, uint256, bool, string)",
         "function getTotalUserByUp(address _referrer, uint256 _limit, uint256 _skip) view returns ((address, address, uint256, uint256, uint256, bool, string)[], uint256)"
 
     ];
@@ -59,37 +57,14 @@ const Referral = () => {
     const handleCloseModal = () => {
         setIsVisible(false);
     }
-
-    const checkIsReferrer = async () => {
-        try {
-            // Tạo provider
-            const provider = new ethers.JsonRpcProvider(URL_NETWORK);
-
-            // Kết nối đến contract
-            const contract = new ethers.Contract(contractAddress, contractABI, provider);
-
-            // Gọi hàm isReferrer
-            const isReferrer = await contract.isReferrer(addressEvm);
-
-            console.log("isReferrer: ", isReferrer);
-            // Hiển thị kết quả
-            if (isReferrer) {
-                setIsReferrer(true);
-                return true;
-            } else {
-                setIsReferrer(false);
-                return false;
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const fetchUsers = async (_referrer: string, _limit: number, _skip: number) => {
         try {
             const provider = new ethers.JsonRpcProvider(URL_NETWORK);
             const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
             const [users, totalItems] = await contract.getTotalUserByUp(_referrer, _limit, _skip);
+
+            console.log("User: ", users)
 
             // Map users array to formattedUsers
             const formattedUsers = users.map(user => ({
@@ -111,11 +86,27 @@ const Referral = () => {
     };
     const handleDefaultCore = () => {
         if (chain.chainId == "97") {
-            setCode('d9cbfe0a');
+            setCode('48905b04');
         } else if (chain.chainId == '1116') {
             setCode('d9cbfe0a');
         } else {
             setCode('');
+        }
+    }
+
+    const getUserInfos = async () => {
+        try {
+            // Tạo provider từ URL RPC của mạng BSC Testnet
+            const provider = new ethers.JsonRpcProvider(URL_NETWORK);
+
+            // Tạo đối tượng contract từ ABI và địa chỉ contract
+            const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+            // Gọi phương thức userInfosByCode
+            const userInfo = await contract.userInfos(addressEvm);
+            setUserInfo(userInfo[6]);
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -177,11 +168,8 @@ const Referral = () => {
             setIsLoading(false);
         }
     };
-
-    // Mã code giới thiệu cần chuyển đổi thành địa chỉ ví
-    // const referrerCode = "66d97f88";
     // Hàm xử lý khi nhấn nút lấy thông tin
-    const handleGetUserInfo = async () => {
+    const handleGetUserInfosByCode = async () => {
         setIsLoading(true);
         try {
             if (code.length == 8) {
@@ -238,8 +226,9 @@ const Referral = () => {
     useEffect(() => {
         if (isReferrer) {
             fetchUsers(addressEvm, 10, 0);
+            getUserInfos();
         }
-    }, [totalItems])
+    }, [totalItems, isReferrer])
 
     return (
         <SafeAreaView style={[styles.container]}>
@@ -282,7 +271,7 @@ const Referral = () => {
                                 </View>
                                 <TouchableOpacity
                                     disabled={disable ? false : true}
-                                    onPress={handleGetUserInfo}
+                                    onPress={handleGetUserInfosByCode}
                                     style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
                                     {
                                         isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
@@ -303,7 +292,7 @@ const Referral = () => {
                             <View style={[styles.referralId]}>
                                 <Text color='textGray' fontSize={16} type='label1'>Your referral code:</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text color='constantBlack' fontSize={16} type='label1'>{formatAddress(addressEvm).toLocaleLowerCase()}</Text>
+                                    <Text color='constantBlack' fontSize={16} type='label1'>{userInfo}</Text>
                                     <View style={{ width: 10 }}></View>
                                     <TouchableOpacity onPress={copyText(formatAddress(addressEvm).toLocaleLowerCase())}>
                                         <Image style={[styles.btnCopy]} source={require("../../assets/icons_v1/icon_copy.png")} />
