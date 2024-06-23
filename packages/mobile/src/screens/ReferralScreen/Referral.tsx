@@ -123,7 +123,7 @@ const Referral = () => {
             // Kết nối đến contract
             const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
-            const referralCode = addressEvm.slice(-8).toLocaleLowerCase();
+            const referralCode = addressEvm.trim().slice(-8).toLocaleLowerCase();
             // Gọi hàm register
             if (chain.chainId == '97') {
                 const tx = await contract.register(referrer, referralCode);
@@ -172,7 +172,7 @@ const Referral = () => {
     const handleGetUserInfosByCode = async () => {
         setIsLoading(true);
         try {
-            if (code.length == 8) {
+            if (code.trim().length == 8) {
                 // Tạo provider từ URL RPC của mạng BSC Testnet
                 const provider = new ethers.JsonRpcProvider(URL_NETWORK);
 
@@ -180,7 +180,7 @@ const Referral = () => {
                 const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
                 // Gọi phương thức userInfosByCode
-                const userInfo = await contract.userInfosByCode(code);
+                const userInfo = await contract.userInfosByCode(code.trim());
                 const lastItem = userInfo.length - 1;
                 if (userInfo[lastItem] === '') {
                     // Alert.alert("Error", "Referral ID don't exist!");
