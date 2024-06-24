@@ -37,21 +37,21 @@ import { WalletStackRouteNames } from "$navigation";
 import { isValidAddressEVM } from "$libs/EVM/createWallet";
 import { isAddress } from "ethers";
 import { useEvm, useChain } from "@tonkeeper/shared/hooks";
+import { fetchBalanceToken } from "$libs/EVM/token/tokenEVM";
 
 const SendToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc, price } = route.params;
+  const { id, symbol, image, address, addressToken, rpc } = route.params;
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
   const [amount, setAmount] = useState("");
   const [addressWallet, setAddressWallet] = useState<string>("");
+  const [balanceToken, setBalanceToken] = useState<any>();
   const deeplinking = useDeeplinking();
   const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
   const [isDisable, setIsDisable] = useState<boolean>(true);
-  const max = price - 0.001;
-
-  console.log("Pricce: ", price);
+  const [max, setMax] =  useState(0);
 
   const checkValue = () => {
     if (amount !== "" && !isNaN(Number(amount))) {
@@ -64,15 +64,26 @@ const SendToken = ({ route }: any) => {
       setIsDisable(true);
     }
   };
+
+  async function fetchBalance() {
+    const balance = await fetchBalanceToken(addressToken, rpc, evm.addressWallet);
+    setBalanceToken(balance);
+    if (balance >= 0.001) {
+      setMax(balance - 0.001);
+    }
+  };
+ console.log('balance', balanceToken);
+
+  async function getdata() {
+    const data = await SaveListWallet.getData();
+    setWallet(data);
+  }
    useEffect(() => {
     checkValue(); // Gọi hàm checkValue trong useEffect
   }, [amount]);
 
   useEffect(() => {
-    async function getdata() {
-      const data = await SaveListWallet.getData();
-      setWallet(data);
-    }
+    fetchBalance();
     getdata();
   }, []);
 
@@ -98,7 +109,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if (isAddress(addressInput)) {
-      if (price > 0 && Number(amount) <= max) {
+      if (max > 0 && Number(amount) <= max) {
         navigation.navigate(WalletStackRouteNames.Transfer, {
           id: id,
           symbol: symbol,
@@ -106,7 +117,6 @@ const SendToken = ({ route }: any) => {
           address: address,
           addressToken: addressToken,
           rpc: rpc,
-          price: price,
           addressTo: addressInput,
           amount: amount,
         });
@@ -201,9 +211,8 @@ const SendToken = ({ route }: any) => {
     }
   }, []);
 
-  const handleMaxAmount = () => {
-    
-    setAmount(max.toFixed(5).toString())
+  const handleMaxAmount = () => {  
+    setAmount((Math.round(max*100000)/100000).toString().toString())
   }
 
   return (
@@ -224,7 +233,7 @@ const SendToken = ({ route }: any) => {
             </TouchableOpacity>
             <View style={{ alignItems: "center", width: "100%" }}>
               <Text type="h3" color="primaryColor" style={ { marginLeft: -40 }}>
-                Send {symbol}
+                Send {symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}
               </Text>
             </View>
             <View></View>

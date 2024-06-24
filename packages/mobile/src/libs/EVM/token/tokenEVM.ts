@@ -1,6 +1,7 @@
 import { Contract, JsonRpcProvider, formatUnits } from "ethers";
 import { DataTokens } from "./tokenData"
 import SaveListToken from "../HistoryEVM/SaveToken";
+import { fetchBalaceEvm } from "../useBalanceEVM";
 
 export const getTokenListByChainID = (chainId : string) => {
     const selectedChain = DataTokens.find(chain => chain.chainId === chainId);
@@ -28,3 +29,13 @@ export async function getBalanceToken(rpc:string, addressToken : string, address
       return '0.0';
     }
 }
+
+export async function fetchBalanceToken(tokenAddress, rpc, addressWallet) {
+    if (tokenAddress != "coin") {
+      const balance1 = await getBalanceToken(rpc, tokenAddress, addressWallet);
+     return parseFloat(balance1);
+    } else {
+      const balance1 = await fetchBalaceEvm(addressWallet, rpc);
+       return parseFloat(balance1);
+    }
+  }

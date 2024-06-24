@@ -198,13 +198,13 @@ const TransferScreen = ({route}) => {
         </View>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center", marginHorizontal: 25 }}>
-        <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{ marginTop: 10}}>{amount} {symbol}</Text>
+        <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{ marginTop: 10}}>{amount} {symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
         <Text type="label1" color="textGrayLight" style={{marginTop: 5}}>= {(parseFloat(amount) * parseFloat(coinRate)).toFixed(6)} $</Text>
       </View>
       <View style={styles.box}>
         <View style={styles.row}>
           <Text type="body1" color="textGray">Asset</Text>
-          <Text type="body1" color="textGray">{chain.name} ({symbol}) </Text>
+          <Text type="body1" color="textGray">{chain.name} ({symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}) </Text>
         </View>
         <View style={styles.row}>
           <Text type="body1" color="textGray">From</Text>
@@ -241,7 +241,7 @@ const TransferScreen = ({route}) => {
           <Text type="body1" color="textGray">{ (networkFee + parseFloat(amount)).toFixed(6) + ' ' + chain.currency }</Text>
           : 
           <View style={{ alignItems:"flex-end"}}>
-            <Text type="body1" color="textGray" textAlign="right">{(parseFloat(amount) + ' ' + symbol)}</Text>
+            <Text type="body1" color="textGray" textAlign="right">{(parseFloat(amount) + ' ' + (symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'))}</Text>
             <Text type="body1" color="textGray" textAlign="right">+ {(networkFee.toFixed(6) + ' ' + chain.currency )}</Text>
           </View>
           }     

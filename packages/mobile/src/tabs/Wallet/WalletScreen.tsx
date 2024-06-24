@@ -119,7 +119,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const balance = useBalance(tokens.total.fiat);
   //const balanceEVM = useBalanceEVMDemo(evm.addressWallet, chain.rpc, chain.id);
   const tokensEVM = getTokenListByChainID(chain.chainId);
-  const [balanceToken, setBalanceToken] = useState<any>();
   const tonPrice = useTokenPrice(CryptoCurrencies.Ton);
   const currency = useWalletCurrency();
   const HEIGHT_RATIO = deviceHeight / 844;
@@ -165,15 +164,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
     return () => clearTimeout(timer);
   }, [dispatch]);
 
-  async function fetchBalanceToken() {
-    if (tokensEVM[0].tokenAddress != "coin") {
-      const balance1 = await getBalanceToken(chain.rpc, tokensEVM[0].tokenAddress, evm.addressWallet);
-      setBalanceToken(parseFloat(balance1));
-    } else if (tokensEVM[0].tokenAddress == "coin") {
-      const balance1 = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
-      setBalanceToken(parseFloat(balance1));
-    }
-  }
   const fetchEvm = async () => {
     try {
       const address = await AsyncStorage.getItem("EVMAddress");
@@ -285,11 +275,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }, [isReferrer, chain, evm.addressWallet]);
 
   useEffect(() => {
-    fetchBalanceToken();
-  }, [evm.addressWallet, chain, tokensEVM, balanceTD]);
-
-
-  useEffect(() => {
     // Gọi hàm và kiểm tra kết quả
     getFirstAddress().then((address) => {
       if (address) {
@@ -342,8 +327,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
         image: tokensEVM[0].logo,
         address: evm.addressWallet,
         addressToken: tokensEVM[0].tokenAddress,
-        rpc: chain.rpc,
-        price: balanceToken,
+        rpc: chain.rpc
       });
     }
     // swapTokenDeposit();
