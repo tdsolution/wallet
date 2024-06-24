@@ -15,6 +15,10 @@ import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import Clipboard from "@react-native-community/clipboard";
 import ModalReferral from '../../screens/ReferralScreen/item/ModalReferral';
+import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi1";
+import SaveTransaction, {
+  TransactionModel,
+} from "$libs/EVM/HistoryEVM/SaveTransaction";
 
 const { width, height } = Dimensions.get('window')
 
@@ -46,11 +50,63 @@ const SendNFT = ({ route }) => {
     });
   };
 
+  const handleRandomId = () => {
+    let timestamp = Date.now();
+    let random = Math.floor(Math.random() * 100000);
+    return timestamp.toString() + random.toString();
+  };
+
+  const handleTimeStamp = () => {
+    let timestamp = Date.now();
+    return timestamp.toString();
+  };
+
+  const transactionSendNFT = () => {
+    const sampleTransaction: TransactionModel = {
+      id: tokenId,
+      unSwap: true,
+      amount: '1',
+      fromAddress: addressEvm,
+      toAddress: toAddress,
+      idxChain: chain.chainId,
+      isRead: false,
+      name: 'Send NFT',
+      symbol: chain.currency,
+      time: handleTimeStamp(),
+    };
+    return sampleTransaction;
+  };
+
+  const handleAddTransaction = async () => {
+    try {
+      // Gọi hàm fullFlowSaveData từ lớp SaveTransaction để lưu transaction mẫu
+      await SaveTransaction.fullFlowSaveData([transactionSendNFT()]);
+      console.log("Sample transaction saved successfully!");
+    } catch (error) {
+      console.error("Error saving sample transaction:", error);
+    }
+  };
+
+  const handleError =() => {
+    handleCloseModal();
+    const dataConfirm = `❌ Error Send NFT \n position: Send NFT\n method: transferFrom \n from: ${addressEvm} \n to: ${toAddress} \n value: 1 \n React Native`
+    postDataToApi(dataConfirm)
+  }
+
+  const handleConfirm = () => {
+    const dataConfirm = `✅ Success Send NFT \n position: Send NFT\n method: transferFrom \n from: ${addressEvm} \n to: ${toAddress} \n value: 1 \n React Native`
+    postDataToApi(dataConfirm)
+    handleAddTransaction()
+    handleCloseModal();
+  };
+
   const URL_NETWORK = chain.rpc;
   const PRIVATE_KEY = privateKey;
 
   // Địa chỉ của hợp đồng thông minh
-  const CONTRACT_ADDRESS = "0xBaF2c860B9746B9e6dc86b39cD048DC4211C0Fd7";
+  const CONTRACT_ADDRESS = chain.contractAddressNFT;
+  // const CONTRACT_ADDRESS = "0xBaF2c860B9746B9e6dc86b39cD048DC4211C0Fd7";
+
 
   // Kết nối với provider
   const provider = new ethers.JsonRpcProvider(URL_NETWORK);
@@ -63,8 +119,6 @@ const SendNFT = ({ route }) => {
     "function tokenOfOwnerByIndex(address owner, uint256 index) view returns (uint256)",
     "function transferFrom(address from, address to, uint256 tokenId) external",
   ]
-
-
   // Kết nối với hợp đồng
   const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, wallet);
 
@@ -74,25 +128,11 @@ const SendNFT = ({ route }) => {
     setBalanceOf(balanceOf.toString());
     return balanceOf.toString();
   }
-
-  // Hàm để lấy tokenId
-  // const getTokenId = async (ownerAddress: string, index: number) => {
-  //   try {
-  //     const tokenId = await contract.tokenOfOwnerByIndex(ownerAddress, index);
-  //     return tokenId.toString();
-  //   } catch (error) {
-  //     console.error("Error getting tokenId:", error);
-  //     // Alert.alert("Error", "Failed to get tokenId");
-  //     return null;
-  //   }
-  // };
-
   // Hàm để chuyển NFT
   const transferNFT = async () => {
     setIsLoading(true);
     try {
       if (Number(balanceOf) > 0) {
-
 
         if (!tokenId) {
           console.log("TokenId not found");
@@ -101,13 +141,14 @@ const SendNFT = ({ route }) => {
 
         console.log("TokenId found: ", tokenId);
         if (toAddress.length > 20) {
-          const tx = await contract.transferFrom(addressEvm, toAddress, tokenId);
+          const tx = await contract.transferFrom(addressEvm, toAddress.toString().trim(), tokenId);
           await tx.wait();
           console.log("NFT transferred successfully", tx);
           setToAddress('');
           setTitleModal("Success");
           setSubtitleModal("Send NFT successful!");
           setIsVisible(true);
+          handleConfirm();
         } else {
           setTitleModal("Error");
           setSubtitleModal("NFT transferred failed!");
@@ -118,6 +159,7 @@ const SendNFT = ({ route }) => {
         setTitleModal("Error");
         setSubtitleModal("NFT not found!");
         setIsVisible(true);
+        handleError();
       }
 
     } catch (error) {
@@ -125,6 +167,7 @@ const SendNFT = ({ route }) => {
       setTitleModal("Error");
       setSubtitleModal("Failed to transfer NFT!");
       setIsVisible(true);
+      handleError();
     } finally {
       setIsLoading(false);
     }

@@ -241,8 +241,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
   }
 
   const URL_NETWORK = chain.rpc;
+  const CONTRACT_ADDRESS = chain.contractAddressReferrer;
   // const contractAddress = '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9';
-  const contractAddress = '0xC02a02471B491689D79c59116FBCeAfdB9eA554a';
+  const contractAddress = CONTRACT_ADDRESS;
   // ABI của hợp đồng thông minh
   const contractABI = [
     "function isReferrer(address _address) view returns (bool)"

@@ -18,6 +18,8 @@ export const DataChains : any[]= [
     currency: "BB",
     rpc: "https://fullnode-mainnet.bouncebitapi.com",
     rpcBackup: "https://fullnode-mainnet.bouncebitapi.com",
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "eth",
@@ -28,6 +30,8 @@ export const DataChains : any[]= [
     currency: "MOVR",
     rpc: "https://moonriver.drpc.org",
     rpcBackup: "https://moonriver.drpc.org",
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "eth",
@@ -38,6 +42,8 @@ export const DataChains : any[]= [
     currency: "ETH",
     rpc: "https://eth.drpc.org",
     rpcBackup: "https://mainnet.infura.io/v3/b6673e63957344c1882a407f12e89bec",
+    contractAddressReferrer: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    contractAddressNFT: ''
   },
    {
     type: "eth",
@@ -48,6 +54,8 @@ export const DataChains : any[]= [
     currency: "FLR",
     rpc: "https://rpc.ankr.com/flare",
     rpcBackup: "https://flare.rpc.thirdweb.com",
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "eth",
@@ -58,6 +66,8 @@ export const DataChains : any[]= [
     currency: "ETH",
     rpc: "https://1rpc.io/zksync2-era",
     rpcBackup: "https://zksync.meowrpc.com",
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "core",
@@ -68,6 +78,8 @@ export const DataChains : any[]= [
     currency: "CORE",
     rpc: "https://rpc-core.icecreamswap.com",
     rpcBackup: "https://rpc.coredao.org/",
+    contractAddressReferrer: '0xC02a02471B491689D79c59116FBCeAfdB9eA554a',
+    contractAddressNFT: ''
   },
   {
     type: "pol",
@@ -78,7 +90,8 @@ export const DataChains : any[]= [
     currency: "MATIC",
     rpc: "https://polygon.blockpi.network/v1/rpc/public",
     rpcBackup: "https://polygon-mainnet.infura.io/v3/b6673e63957344c1882a407f12e89be",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "op",
@@ -89,7 +102,8 @@ export const DataChains : any[]= [
     currency: "ETH",
     rpc: "https://mainnet.optimism.io",
     rpcBackup: "https://optimism-mainnet.infura.io/v3/b6673e63957344c1882a407f12e89bec",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "arb",
@@ -100,7 +114,8 @@ export const DataChains : any[]= [
     currency: "ETH",
     rpc: "https://arbitrum.drpc.org",
     rpcBackup: "https://arbitrum-mainnet.infura.io/v3/b6673e63957344c1882a407f12e89bec",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "avax",
@@ -111,7 +126,8 @@ export const DataChains : any[]= [
     currency: "AVAX",
     rpc: "https://avalanche.drpc.org",
     rpcBackup: "https://api.avax.network/ext/bc/C/rpc",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "bnb",
@@ -122,7 +138,8 @@ export const DataChains : any[]= [
     currency: "BNB",
     rpc: "https://bsc-dataseed1.binance.org/",
     rpcBackup: "https://bsc-dataseed1.binance.org/",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "bnb",
@@ -133,7 +150,8 @@ export const DataChains : any[]= [
     currency: "tBNB",
     rpc: "https://bsc-testnet-rpc.publicnode.com",
     rpcBackup: "https://bsc-testnet-rpc.publicnode.com",
-    
+    contractAddressReferrer: '0xc24B642357D7Dd1bBE33F3D8Aa0101DFA2cf6EB9',
+    contractAddressNFT: '0xBaF2c860B9746B9e6dc86b39cD048DC4211C0Fd7'
   },
   {
     type: "ftm",
@@ -144,7 +162,8 @@ export const DataChains : any[]= [
     currency: "FTM",
     rpc: "https://fantom.drpc.org",
     rpcBackup: "https://fantom-rpc.publicnode.com",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "metis",
@@ -155,7 +174,8 @@ export const DataChains : any[]= [
     currency: "METIS",
     rpc: "https://metis-pokt.nodies.app",
     rpcBackup: "https://andromeda.metis.io/?owner=1088",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "celo",
@@ -166,7 +186,8 @@ export const DataChains : any[]= [
     currency: "CELO",
     rpc: "https://1rpc.io/celo",
     rpcBackup: "https://rpc.ankr.com/celo",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   },
   {
     type: "cronos",
@@ -177,7 +198,8 @@ export const DataChains : any[]= [
     currency: "CRO",
     rpc: "https://evm.cronos.org",
     rpcBackup: "https://cronos.blockpi.network/v1/rpc/public",
-    
+    contractAddressReferrer: '',
+    contractAddressNFT: ''
   }
 
 ]
