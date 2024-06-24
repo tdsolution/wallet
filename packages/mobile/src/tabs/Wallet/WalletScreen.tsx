@@ -61,7 +61,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import {
   useEvm,
   useChain,
-  useBalanceTD,
   useWallet,
   useWalletCurrency,
   useWalletStatus,
@@ -101,7 +100,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const { isReferrer, setIsReferrer } = useReferral();
-  const balanceTD = useBalanceTD()?.balance;
   const { evm, setEvm } = useEvm() || {};
   //const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -130,6 +128,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const { isConnected } = useNetInfo();
   const [activeTab, setActiveTab] = useState("Tokens");
   const [amountTransaction, setAmountTransaction] = useState<number>(0);
+  const [balanceTD, setBalanceTD] = useState(0);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -181,6 +180,31 @@ export const WalletScreen = memo(({ navigation }: any) => {
       console.error('Error reading data from AsyncStorage:', error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => { 
+     let a = 0;
+      tokensEVM.map((token1)=> {
+        async function fetchBalance(token) {
+        if (token.tokenAddress != "coin") {
+          const balance2 = await getBalanceToken(chain.rpc, token.tokenAddress, evm.addressWallet);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2); 
+          a = a + balanceUsd;
+        } else if (token.tokenAddress == "coin") {
+          const balance2 = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2);
+          a = a + balanceUsd;
+        } 
+        setBalanceTD(a);
+      }
+      fetchBalance(token1);
+      }); 
+    }, [tokensEVM, evm.addressWallet])
+  );
 
   useFocusEffect(
     React.useCallback(() => {

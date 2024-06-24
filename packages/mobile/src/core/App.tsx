@@ -22,7 +22,6 @@ import { queryClient } from "@tonkeeper/shared/queryClient";
 import {
   ChainProvider,
   EmvProvider,
-  BalanceProvider,
   TransactionProvider,
   WalletProvider,
 } from "../context";
@@ -54,7 +53,6 @@ const TonThemeProvider = ({ children }) => {
 export function App() {
   return (
     // <KeyboardProvider>
-    <BalanceProvider>
       <ChainProvider>
         <TransactionProvider>
           <SwapCoinProvider>
@@ -97,7 +95,6 @@ export function App() {
           </SwapCoinProvider>
         </TransactionProvider>
       </ChainProvider>
-    </BalanceProvider>
     // </KeyboardProvider>
   );
 }
