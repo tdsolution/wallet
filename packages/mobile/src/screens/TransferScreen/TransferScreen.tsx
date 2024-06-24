@@ -130,6 +130,7 @@ const TransferScreen = ({route}) => {
       }
     }
   };
+  
   async function fetchDataFee() {
     try {
       let dataFee;
@@ -156,7 +157,7 @@ const TransferScreen = ({route}) => {
       console.error('Error fetching coin rate:', error);
     }
   };
-  console.log(parseUnits(gasLimit.toString(),0));
+
   const fetchNetworkFee = () => {
     setNetworkFee(Number(formatEther(parseUnits(gasPrice.toString(), "gwei")*(parseUnits(gasLimit.toString(),0)))));
   }; 
