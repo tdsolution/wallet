@@ -231,85 +231,88 @@ const Referral = () => {
     }, [totalItems, isReferrer])
 
     return (
-        <SafeAreaView style={[styles.container]}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={[styles.headerBar]}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image style={[styles.btnBack]} source={require('../../assets/icons/png/ic_back.png')} />
-                    </TouchableOpacity>
-                    <Text fontSize={20} color='primaryColor' type='h3'>
-                        Referral
-                    </Text>
-                    <View style={{ width: 15 }}></View>
-                </View>
-                <View style={{ paddingHorizontal: 20, paddingTop: 20, height: height * 0.65 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+            <SafeAreaView style={[styles.container]}>
+                <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+                    <View style={[styles.headerBar]}>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Image style={[styles.btnBack]} source={require('../../assets/icons/png/ic_back.png')} />
+                        </TouchableOpacity>
+                        <Text fontSize={20} color='primaryColor' type='h3'>
+                            Referral
+                        </Text>
+                        <View style={{ width: 15 }}></View>
+                    </View>
+                    <View style={{ paddingHorizontal: 20, paddingTop: 20, }}>
+                        {
+                            isReferrer ? (
+                                <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>{totalItems * 10} $TDS</Text>
+                            ) : null
+                        }
+                        <Image style={[styles.image]} source={require("../../assets/logo/img_referral.png")} />
+                        <Text type="h1" color="textBlack" fontSize={30} textAlign='center'>Invite friends to mine $TDS <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>(10TDS / per)</Text></Text>
+
+                        {
+                            !isReferrer ? (
+                                <View>
+                                    <View style={[styles.boxInput]}>
+                                        <TextInput
+                                            autoFocus
+                                            placeholder='Referral id'
+                                            placeholderTextColor={"grey"} value={code}
+                                            style={[styles.input]}
+                                            onChangeText={(t) => setCode(t)}
+                                            keyboardType='default' />
+
+                                        <TouchableOpacity
+                                            onPress={handleDefaultCore}
+                                            style={[styles.btnDefaultCode,]}>
+                                            <Text color='constantWhite' fontSize={16} type='label1'>User default code</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <TouchableOpacity
+                                        disabled={disable ? false : true}
+                                        onPress={handleGetUserInfosByCode}
+                                        style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
+                                        {
+                                            isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
+                                                <Text color='constantWhite' fontSize={16} type='label1'>Register</Text>
+                                            )
+                                        }
+                                    </TouchableOpacity>
+
+                                </View>
+
+                            ) : (<Text color='primaryColor' fontSize={16} type='body1' textAlign='center' style={{ marginTop: 10 }}>Your friend: {totalItems}</Text>)
+                        }
+
+                    </View>
                     {
                         isReferrer ? (
-                            <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>{totalItems * 10} $TDS</Text>
+                            <View style={{ paddingHorizontal: 20, marginTop: 50, marginBottom: 80 }}>
+                                <View style={[styles.referralId]}>
+                                    <Text color='textGray' fontSize={16} type='label1'>Your referral code:</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Text color='constantBlack' fontSize={16} type='label1'>{userInfo}</Text>
+                                        <View style={{ width: 10 }}></View>
+                                        <TouchableOpacity onPress={copyText(formatAddress(addressEvm).toLocaleLowerCase())}>
+                                            <Image style={[styles.btnCopy]} source={require("../../assets/icons_v1/icon_copy.png")} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={[styles.btnShare]} onPress={share(Platform.OS === 'android' ? CHPLAY : APPSTORE)}>
+                                    <Image style={[styles.btnCopy, { tintColor: colors.White, marginRight: 4 }]} source={require("../../assets/icons/png/ic_gift.png")} />
+                                    <Text color='constantWhite' fontSize={16} type='h3'>Share</Text>
+                                </TouchableOpacity>
+                            </View>
                         ) : null
                     }
-                    <Image style={[styles.image]} source={require("../../assets/logo/img_referral.png")} />
-                    <Text type="h1" color="textBlack" fontSize={30} textAlign='center'>Invite friends to mine $TDS <Text type="h1" color='primaryColor' fontSize={30} textAlign='center'>(10TDS / per)</Text></Text>
 
-                    {
-                        !isReferrer ? (
-                            <View>
-                                <View style={[styles.boxInput]}>
-                                    <TextInput
-                                        autoFocus
-                                        placeholder='Referral id'
-                                        placeholderTextColor={"grey"} value={code}
-                                        style={[styles.input]}
-                                        onChangeText={(t) => setCode(t)}
-                                        keyboardType='default' />
+                    <ModalReferral isVisible={isVisible} onClose={handleCloseModal} title={titleModal} subtitle={subtitleModal} />
+                </ScrollView>
+            </SafeAreaView>
+        </KeyboardAvoidingView>
 
-                                    <TouchableOpacity
-                                        onPress={handleDefaultCore}
-                                        style={[styles.btnDefaultCode,]}>
-                                        <Text color='constantWhite' fontSize={16} type='label1'>User default code</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <TouchableOpacity
-                                    disabled={disable ? false : true}
-                                    onPress={handleGetUserInfosByCode}
-                                    style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
-                                    {
-                                        isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
-                                            <Text color='constantWhite' fontSize={16} type='label1'>Register</Text>
-                                        )
-                                    }
-                                </TouchableOpacity>
-
-                            </View>
-
-                        ) : (<Text color='primaryColor' fontSize={16} type='body1' textAlign='center' style={{ marginTop: 10 }}>Your friend: {totalItems}</Text>)
-                    }
-
-                </View>
-                {
-                    isReferrer ? (
-                        <View style={{ paddingHorizontal: 20, height: height * 0.20, alignItems: 'flex-end' }}>
-                            <View style={[styles.referralId]}>
-                                <Text color='textGray' fontSize={16} type='label1'>Your referral code:</Text>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text color='constantBlack' fontSize={16} type='label1'>{userInfo}</Text>
-                                    <View style={{ width: 10 }}></View>
-                                    <TouchableOpacity onPress={copyText(formatAddress(addressEvm).toLocaleLowerCase())}>
-                                        <Image style={[styles.btnCopy]} source={require("../../assets/icons_v1/icon_copy.png")} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <TouchableOpacity style={[styles.btnShare]} onPress={share(Platform.OS === 'android' ? CHPLAY : APPSTORE)}>
-                                <Image style={[styles.btnCopy, { tintColor: colors.White, marginRight: 4 }]} source={require("../../assets/icons/png/ic_gift.png")} />
-                                <Text color='constantWhite' fontSize={16} type='h3'>Share</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ) : null
-                }
-
-                <ModalReferral isVisible={isVisible} onClose={handleCloseModal} title={titleModal} subtitle={subtitleModal} />
-            </ScrollView>
-        </SafeAreaView>
     )
 }
 
@@ -342,7 +345,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 300,
-        resizeMode: 'cover',
+        resizeMode: 'contain',
         borderRadius: 16
     },
     title: {
