@@ -74,7 +74,7 @@ const DetailNFTs = ({route}) => {
                     </View>
                     <View style={[styles.box]}>
                         <Text fontSize={16} color='textBlack' fontWeight='600'>More about {data.name}</Text>
-                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 16, alignItems: 'center' }}>{data.description}
+                        <Text fontSize={14} color='textGray' fontWeight='500' style={{ marginTop: 16, alignItems: 'center' }}>{data.description}...
                             <Text fontSize={14} color='primaryColor' fontWeight='600'>   Uncover</Text>
                             <Image style={[styles.icDown, { tintColor: colors.Primary }]} source={require('../../assets/icons/png/ic_chevron_down.png')} />
                         </Text>
