@@ -174,28 +174,34 @@ export const WalletScreen = memo(({ navigation }: any) => {
       setBalanceToken(parseFloat(balance1));
     }
   }
-  useEffect(() => {
-    getDeviceName();
-    if (!evm) {
-      const fetchEvm = async () => {
-        try {
-          const address = await AsyncStorage.getItem("EVMAddress");
-          const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
-          const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
-          const name = await AsyncStorage.getItem("EVMMname");
-          const evmModal = {
-            addressWallet: address,
-            privateKey: privateKey,
-            mnemonic: mnemonic,
-            name: name,
-          }
-          setEvm(evmModal);
-        } catch (error) {
-          console.error('Error reading data from AsyncStorage:', error);
-        }
-      };
+  const fetchEvm = async () => {
+    try {
+      const address = await AsyncStorage.getItem("EVMAddress");
+      const privateKey = await AsyncStorage.getItem("EVMPrivateKey");
+      const mnemonic = await AsyncStorage.getItem("EVMMnemonic");
+      const name = await AsyncStorage.getItem("EVMMname");
+      const evmModal = {
+        addressWallet: address,
+        privateKey: privateKey,
+        mnemonic: mnemonic,
+        name: name,
+      }
+      setEvm(evmModal);
+    } catch (error) {
+      console.error('Error reading data from AsyncStorage:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+     if (!evm) {
       fetchEvm();
     };
+    }, [])
+  );
+  
+  useEffect(() => {
+    getDeviceName();
   }, []);
 
   const handleGetTransaction = async () => {

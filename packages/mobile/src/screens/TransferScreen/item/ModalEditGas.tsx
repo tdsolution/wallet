@@ -12,10 +12,10 @@ import {
 } from "react-native";
 import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 import { Text } from "@tonkeeper/uikit";
-import { getNetworkFee } from "$libs/EVM/send/SendCoinAndToken";
 import { colors } from "../../../constants/colors";
 import { Icon } from "$uikit";
 import { TextInput } from "@tonkeeper/uikit/src/components/TextInput";
+import { formatEther, parseUnits } from "ethers";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -36,15 +36,14 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
   gasPrice,
   handleSave,
 }) => {
-  const nav = useNavigation();
-  const evm = useEvm()?.evm;
   const chain = useChain()?.chain;
-  const [gasLimit1, setGasLimit1] = useState(gasLimit.toString());
-  const [gasPrice1, setGasPrice1] = useState(gasPrice.toString());
+  const [gasLimit1, setGasLimit1] = useState("0");
+  const [gasPrice1, setGasPrice1] = useState("0");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLower, setIsLower] = useState<boolean>(false);
+  const [isLimitLower, setIsLimitLower] = useState<boolean>(false);
   const [isHigher, setIsHigher] = useState<boolean>(false);
-  const [networkFee, setNetworkFee] = useState<string>("0");
+  const [networkFee, setNetworkFee] = useState<number>(0);
   const [isDisable, setIsDisable] = useState<boolean>(true);
 
   useEffect(() => {
@@ -52,19 +51,44 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
       setGasPrice1(gasPrice.toString());
   },[gasLimit, gasPrice, visible]);
 
-   const checkValue = () => {
-   if (gasLimit1 == "" || gasPrice1 == "") {
+  const fetchNetworkFee = () => {
+   if (gasLimit1 != "" && gasPrice1 != "" && !isNaN(Number(gasLimit1)) && !isNaN(Number(gasPrice1)) ) {
+    setNetworkFee(Number(formatEther(parseUnits(gasPrice1.toString(), "gwei")*(parseUnits(gasLimit1.toString(),0)))));
+   }
+  }; 
+
+  const checkValue = () => {
+    if (gasLimit1 == "" || gasPrice1 == "" || isNaN(Number(gasLimit1)) || isNaN(Number(gasPrice1)) ) {
+      if (gasLimit1 == "" || isNaN(Number(gasLimit1)) ) {
+        setGasLimit1(gasLimit.toString());
+      }
+      if (gasPrice1 == "" || isNaN(Number(gasPrice1))) {
+        setGasPrice1(gasPrice.toString());
+      }
       setIsDisable(true);
+      fetchNetworkFee();
     }
     else {
+      if( parseFloat(gasLimit1) < gasLimit0 || parseFloat(gasPrice1) == 0) {
+       if (parseFloat(gasLimit1) < gasLimit0) {
+        setIsLimitLower(true);
+       } else {
+        setIsLimitLower(false);
+       }
+        setIsDisable(true);
+      } else {
+        setIsDisable(false);
+        setIsLimitLower(false);
+      }
       Number(gasPrice1) > (gasPrice0 * 1.5) ? setIsHigher(true) : setIsHigher(false);
       Number(gasPrice1) < gasPrice0 ? setIsLower(true) : setIsLower(false);
-      setIsDisable(false);
+      fetchNetworkFee();
     }
+    
   };
 
   useEffect(() => {
-    checkValue(); // Gọi hàm checkValue trong useEffect
+    checkValue(); 
   }, [gasLimit1, gasPrice1]);
   
   const minusGasLimit = () => {
@@ -79,11 +103,10 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
   };
 
   const minusGasPrice = () => {
-    Number(gasPrice1) >=1 ? setGasPrice1((Number(gasPrice1)-1).toString()) : <></>;
+    Number(gasPrice1) >=1 ? setGasPrice1((Math.round((parseFloat(gasPrice1)-1)*10000)/10000).toString()) : <></>;
   }
-
   const plusGasPrice = () => {
-    setGasPrice1((Number(gasPrice1)+1).toString());
+    setGasPrice1((Math.round((parseFloat(gasPrice1)+1)*10000)/10000).toString());
   }
 
   return (
@@ -100,7 +123,7 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
             Edit Priority
           </Text>
           <Text type="label1" color="textBlack" fontSize={35} lineHeight={35} style={{marginTop: 20}}>
-           ~ 0.000
+           ~ {networkFee.toFixed(6)} {chain.currency}
           </Text>
           <Text type="label1" color="textGrayLight" fontSize={20} style={{ marginTop: 5}}>
             $0.00
@@ -123,6 +146,14 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
               <Icon name="ic-plus-28" color="primaryColor" size={18}/>
             </TouchableOpacity>
           </View>
+          {isLimitLower
+          ?
+          <Text type="body3" color="accentRed" lineHeight={18}>
+            <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
+            {} Gas limit must be higher than {gasLimit0}</Text>
+          : 
+          <Text lineHeight={18}></Text>
+          }
           </View>
           <View style={{marginTop: 20}}>
           <Text type="label1" color="textBlack">Gas price</Text>
@@ -143,13 +174,13 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
           </View>
           {isHigher
           ?
-          <Text type="body3" color="accentRed">
+          <Text type="body3" color="accentRed" lineHeight={18}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
             {} Gas price is higher than necessary</Text>
           :
-          isLower ? <Text type="body3" color="accentRed">
+          isLower ? <Text type="body3" color="accentRed" lineHeight={18}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
-            {} Gas price is low for current network conditions</Text> : <></>
+            {} Gas price is low for current network conditions</Text> : <Text lineHeight={19}></Text>
           }
         </View>
         <View
