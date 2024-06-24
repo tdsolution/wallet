@@ -23,7 +23,7 @@ import SaveTransaction, {
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi1";
 import { Text } from "@tonkeeper/uikit";
-import { getNetworkFee } from "$libs/EVM/send/SendCoinAndToken";
+import { getNetworkFeeCoin } from "$libs/EVM/send/SendCoinAndToken";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -72,8 +72,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
 
   async function fetchNetworkFee() {
     try {
-      const networkFee = await getNetworkFee(to, from, chain.rpc, amount);
-      setNetworkFee(networkFee);
+      const networkFee = await getNetworkFeeCoin(to, from, chain.rpc, amount);
+      setNetworkFee(networkFee.networkFee.toString());
     } catch (error) {
       console.error('Error fetching network fee:', error);
     }

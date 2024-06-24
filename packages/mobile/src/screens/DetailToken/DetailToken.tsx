@@ -70,7 +70,6 @@ const DetailToken = ({ route }: any) => {
       address: address,
       addressToken: addressToken,
       rpc: rpc,
-      price: price,
     });
   };
   //   const handlePressSend = useCallback(async () => {
