@@ -272,6 +272,8 @@ const TransferScreen = ({route}) => {
     gasLimit={gasLimit}
     gasPrice0={gas.gasPrice}
     gasPrice={gasPrice}
+    currency={chain.currency}
+    coinRate={parseFloat(coinRate)}
     handleSave={(a, b) => handleSave(a,b)}
     />
     </SafeAreaView>

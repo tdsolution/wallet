@@ -269,7 +269,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
             -{parseFloat(amount.toString())} {assetFrom}
           </Text>
           <Text type="label1" color="textGrayLight" fontSize={20} style={{ marginTop: 5}}>
-            {`\u2248`} {coinUsd} $
+            {`\u2248`} {Math.round(((coinUsd * parseFloat(amount))*100000))/100000} $
           </Text>
         </View>
         <View style={styles.box}>
@@ -337,6 +337,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
     gasLimit={gasLimit}
     gasPrice0={gas.gasPrice}
     gasPrice={gasPrice}
+    currency={assetFrom}
+    coinRate={coinUsd}
     handleSave={(a, b) => handleSave(a,b)}
     />
     </Modal>

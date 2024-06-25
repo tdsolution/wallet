@@ -325,7 +325,7 @@ const SwapScreen = () => {
             : itemFromData2.tokenAddress
         }
         network={isChangeCoinDes ? itemFromData1.name : itemFromData2.name}
-        coinUsd={coin}
+        coinUsd={coinUsd}
         isTransfer = {isChangeCoinDes}
         chainRPC = {dataCoinDesIndex[swapCoin].rpc}
       />
