@@ -109,7 +109,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if (isAddress(addressInput)) {
-      if (max > 0 && Number(amount) <= max) {
+      if (balanceToken >= 0.001 && Number(amount) <= max) {
         navigation.navigate(WalletStackRouteNames.Transfer, {
           id: id,
           symbol: symbol,
@@ -212,7 +212,7 @@ const SendToken = ({ route }: any) => {
   }, []);
 
   const handleMaxAmount = () => {  
-    setAmount((Math.round(max*100000)/100000).toString().toString())
+    setAmount((Math.round(max*100000)/100000).toString());
   }
 
   return (
