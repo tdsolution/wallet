@@ -21,10 +21,10 @@ const TabListToken = ({
       style={{
         width: "100%",
         paddingBottom: 80,
+        marginTop: 10
       }}
     >
       <View>
-        <View style={{ marginTop: 10 }}></View>
         <FlatList
           data={tokens}
           renderItem={({ item }) => (

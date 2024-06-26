@@ -158,18 +158,16 @@ const ModalAddMnemonic = (props: Props) => {
           style={{backgroundColor: colors.Primary}}
         >
           <SafeAreaView style={styles.rowHeader}>
-            <View>
               <TouchableOpacity style={styles.boxBack} onPress={onClose}>
                 <Icon name="ic-chevron-left-16" size={20}/>
+                <Text>Back</Text>
               </TouchableOpacity>
-            </View>
             <Text
-             type="label1"
-             style={{marginRight: 22 * HEIGHT_RATIO}}
+             type="h3"
             >
               Add Account
             </Text>
-            <View></View>
+            <View style={{width: "10%"}}></View>
           </SafeAreaView>
 
           <View style={styles.modalContent}>
@@ -255,7 +253,7 @@ const ModalAddMnemonic = (props: Props) => {
           </View>
         </Pressable>
       </ScrollView>
-      <View style={{paddingHorizontal: 20 * HEIGHT_RATIO, backgroundColor: "#fff",}}>
+      <View style={{paddingHorizontal: 20, backgroundColor: "#fafafa", paddingVertical: 10}}>
         <TouchableOpacity style={styles.buttonConfirm} onPress={confirmAddWallet}>
           <Text type="label1">Confirm Secret Recovery Phrase</Text>
         </TouchableOpacity>
@@ -275,7 +273,7 @@ export default ModalAddMnemonic;
 const styles =  StyleSheet.create({
   modalContainer: {
     width: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "#fafafa",
     //flex: 1,// Màu nền của modal
   },
   rowHeader: {
@@ -283,20 +281,21 @@ const styles =  StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginTop: 20 * HEIGHT_RATIO,
-    paddingHorizontal: 15 * HEIGHT_RATIO,
+    marginTop: 15,
+    paddingBottom: 10,
   },
   boxBack: {
-    width: 26,
+    marginLeft: 10 * HEIGHT_RATIO,
     height: 26,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
   },
   modalContent: {
     width: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "#fafafa",
     marginTop: 10 * HEIGHT_RATIO,
-    padding: 20 * HEIGHT_RATIO,
+    padding: 20,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     justifyContent: "space-between"
@@ -318,7 +317,7 @@ const styles =  StyleSheet.create({
   buttonConfirm: {
     backgroundColor: colors.Primary,
     borderRadius: 25,
-    paddingHorizontal: 10 * HEIGHT_RATIO,
+    paddingHorizontal: 10,
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 10 * HEIGHT_RATIO,
@@ -331,18 +330,19 @@ const styles =  StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     borderRadius: 15,
-    padding: 5 * HEIGHT_RATIO,
+    padding: 5,
     //height: 330,
     //borderColor: colors.Primary,
   },
   textInputContainer: {
-    padding: 9 * HEIGHT_RATIO,
+    padding: 9,
     width: "50%",
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 5 * HEIGHT_RATIO,
   },
   textInput: {
-    paddingHorizontal:10 * HEIGHT_RATIO,
+    paddingHorizontal:10,
     borderWidth: 1,
     height: 35,
     width: "65%",

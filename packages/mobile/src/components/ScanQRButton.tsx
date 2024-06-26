@@ -34,8 +34,8 @@ export const ScanQRButton = memo(() => {
     () => ({
       top: 26,
       bottom: 26,
-      left: 26,
-      right: 26,
+      left: 5,
+      right: 5,
     }),
     []
   );
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
 const style = Steezy.create({
   container: {
     zIndex: 3,
+    marginHorizontal: 5,
     padding: 5
   },
 });

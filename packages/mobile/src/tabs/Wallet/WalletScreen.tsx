@@ -208,7 +208,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-     if (!evm) {
+     if (!evm || evm.addressWallet == null) {
       fetchEvm();
     };
     }, [])
@@ -594,11 +594,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
               }}
             >
               <ScanQRButton />
-              <View style={{ width: 10 }}></View>
               <ReferralButton isReferrerAddress={isReferrer} />
-              <View style={{ width: 10 }}></View>
-              <NotificationButton amount={amountTransaction} />
-              <View style={{ width: 10 }}></View>
+              <View style={{ marginRight: 5 }}>
+                <NotificationButton amount={amountTransaction} />
+              </View>
             </View>
           ) : null
         }
@@ -696,9 +695,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   activeOpacity={0.6}
                 >
                   <Text
-                    color="textSecondary"
                     type="body2"
-                    style={{ color: "#fff" }}
                   >
                     {chain.chainId == "1100"
                       ? wallet.address.ton.short
@@ -740,11 +737,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 resizeMode="contain"
               />
               <Text
-                style={{
-                  color: theme.colors.primaryColor,
-                  fontWeight: "700",
-                  fontSize: 14,
-                }}
+                type="h3"
+                color="primaryColor"
+                fontSize={14}
               >
                 {evm.name}
               </Text>

@@ -1,4 +1,4 @@
-import { IconButton, IconButtonList, Text } from "@tonkeeper/uikit";
+import { IconButton, IconButtonList, Text, isIOS } from "@tonkeeper/uikit";
 import {
   SafeAreaView,
   StyleSheet,
@@ -135,7 +135,7 @@ const DetailToken = ({ route }: any) => {
       <View
         style={[
           globalStyles.row,
-          { paddingHorizontal: 25, paddingVertical: 10 },
+          { paddingHorizontal: 25, paddingVertical: 10 , marginTop: isIOS ? 0 : 10},
         ]}
       >
         <TouchableOpacity onPress={handleBack}>

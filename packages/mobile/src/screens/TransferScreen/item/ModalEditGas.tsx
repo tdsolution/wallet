@@ -152,7 +152,7 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
           </View>
           {isLimitLower
           ?
-          <Text type="body3" color="accentRed" lineHeight={18}>
+          <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
             {} Gas limit must be higher than {gasLimit0}</Text>
           : 
@@ -178,13 +178,13 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
           </View>
           {isHigher
           ?
-          <Text type="body3" color="accentRed" lineHeight={18}>
-            <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
+          <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
+            <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1, height: 20}}></Icon>
             {} Gas price is higher than necessary</Text>
           :
-          isLower ? <Text type="body3" color="accentRed" lineHeight={18}>
+          isLower ? <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
-            {} Gas price is low for current network conditions</Text> : <Text lineHeight={19}></Text>
+            {} Gas price is low for current network conditions</Text> : <Text lineHeight={18}></Text>
           }
         </View>
         <View

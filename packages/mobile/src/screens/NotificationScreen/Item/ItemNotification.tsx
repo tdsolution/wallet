@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.White,
     paddingHorizontal: 10,
     paddingVertical: 20,
-    borderBottomWidth: 0.2,
-    borderColor: "#D0D0D0",
+    borderBottomWidth: 0.3,
+    borderColor: "#DDDDDD",
   },
   image: {
     width: 50,

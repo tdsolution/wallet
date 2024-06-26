@@ -16,8 +16,8 @@ export const ReferralButton = memo((props: any) => {
     () => ({
       top: 26,
       bottom: 26,
-      left: 26,
-      right: 26,
+      left: 5,
+      right: 5,
     }),
     []
   );

@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../../constants/colors'
 import { useNavigation } from '@tonkeeper/router'
 import { useEvm, useChain } from "@tonkeeper/shared/hooks";
-import { Text, copyText } from "@tonkeeper/uikit";
+import { Text, copyText, isIOS } from "@tonkeeper/uikit";
 import { throttle } from '@tonkeeper/router';
 import { ethers, formatUnits, formatEther } from 'ethers'
 import { ScrollView } from 'react-native';
@@ -64,7 +64,7 @@ const Referral = () => {
 
             const [users, totalItems] = await contract.getTotalUserByUp(_referrer, _limit, _skip);
 
-            console.log("User: ", users)
+            //console.log("User: ", users)
 
             // Map users array to formattedUsers
             const formattedUsers = users.map(user => ({
@@ -231,7 +231,7 @@ const Referral = () => {
     }, [totalItems, isReferrer])
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior= {isIOS ? 'padding' : undefined} >
             <SafeAreaView style={[styles.container]}>
                 <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                     <View style={[styles.headerBar]}>
@@ -273,7 +273,7 @@ const Referral = () => {
                                     <TouchableOpacity
                                         disabled={disable ? false : true}
                                         onPress={handleGetUserInfosByCode}
-                                        style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey' }]}>
+                                        style={[styles.btnRegister, { backgroundColor: code.length >= 8 ? colors.Primary : 'grey', marginBottom: isIOS ? 10 : 80}]}>
                                         {
                                             isLoading ? (<ActivityIndicator size={'small'} color={'white'} />) : (
                                                 <Text color='constantWhite' fontSize={16} type='label1'>Register</Text>
@@ -328,7 +328,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         height: 44,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        marginTop: isIOS ? 0 : 10
     },
     header: {
         fontSize: 20,
