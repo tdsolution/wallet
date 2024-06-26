@@ -21,11 +21,13 @@ import {
 import { useRoute } from '@react-navigation/native';
 import { Text } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
+import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const itemsPerPage = 20; // Số lượng phần tử hiển thị mỗi lần
-
+  const evm = useEvm()?.evm;
+  const chain = useChain()?.chain;
   const dataToShow = transactions.slice(0, itemsPerPage);
   const [visibleData, setVisibleData] = useState(dataToShow); // Danh sách dữ liệu đã hiển thị
   const navigation = useNavigation();
@@ -36,8 +38,8 @@ const TransactionHistory = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-     const data = await fetchTransactions('0xEa5007831646fa01C7079B15cFa4c62748905b04','97');
-      const transactionsData: TransactionModel[] = data.result.map(
+     const data = await fetchTransactions(evm.addressWallet, chain.chainId);
+      const transactionsData: TransactionModel[] = data.result.reverse().map(
         (item: any) => createBSTransactionFromJson(item)
       );
       // // Cập nhật transactions
@@ -120,11 +122,13 @@ const TransactionHistory = () => {
             from={item.from}
             to={item.to}
             value={item.value}
+            gasPrice={item.gasPrice}
             isError={item.isError}
             transactionIndex={item.transactionIndex}
             gasUsed={item.gasUsed}
             chainSymbol="BNB"
-            isSend={false}
+            isSend={item.from?.toLocaleLowerCase() ===
+                    evm.addressWallet.toLocaleLowerCase()}
           />
         )}
         keyExtractor={(item, index) => index.toString()}
