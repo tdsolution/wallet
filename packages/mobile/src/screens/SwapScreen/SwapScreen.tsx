@@ -7,15 +7,12 @@ import {
   Platform,
   Pressable,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import HeaderBar from "../../components/HeaderBar";
 import { colors } from "../../constants/colors";
-import { globalStyles } from "$styles/globalStyles";
 import { useChain, useEvm } from "@tonkeeper/shared/hooks";
 import { useSwapCoin } from "@tonkeeper/shared/hooks/useSwapCoin";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { FontWeights } from "@tonkeeper/uikit/src/components/Text/TextStyles";
 import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import ModalSwap from "./ModalSwap";
 import ModalCoinDes from "./ModalCoinDes";
@@ -26,17 +23,16 @@ import { getTokenListByChainID } from "$libs/EVM/token/tokenEVM";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { fetchBalaceEvm } from "$libs/EVM/useBalanceEVM";
-import { ethers } from "ethers";
-import { Text } from "@tonkeeper/uikit";
+import { Text, Toast } from "@tonkeeper/uikit";
 
 const SwapScreen = () => {
-  const chain = useChain()?.chain;
+  //const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
   const swapCoin = useSwapCoin()?.swapCoin;
   const nav = useNavigation();
-  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
-  const tokensEVM = getTokenListByChainID(chain.chainId);
+  // const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  // const tokensEVM = getTokenListByChainID(chain.chainId);
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalVisibleCoinDes, setModalVisibleCoinDes] =
@@ -48,6 +44,18 @@ const SwapScreen = () => {
   const [dataCoinOrgIndex, setDataCoinOrgIndex] = useState<any[]>(dataCoinOrg);
   const [isChangeCoinDes, setIsChangeCoinDes] = useState<boolean>(true);
   const [isDisable, setIsDisable] = useState<boolean>(true);
+  const [balance, setBalance] = useState(0);
+  const [coinUsd, setCoinUsd] = useState(0);
+  const [max, setMax] =  useState(0);
+
+  let coin = Math.round(((coinUsd * parseFloat(inputValue))*100000))/100000;
+  // Lấy phần tử từ mảng thứ nhất
+  const itemFromData1 = dataCoinDesIndex[swapCoin];
+  //console.log('itemFromData1:', itemFromData1)
+  // Lấy phần tử từ mảng thứ hai
+  const itemFromData2 = dataCoinOrgIndex[swapCoin];
+  //console.log(">>>>>>>>>>>>>>>dataCoinDesIndex: ", dataCoinOrgIndex[swapCoin])
+
   const checkValue = () => {
     if (inputValue !== "" && !isNaN(Number(inputValue))) {
       setIsDisable(false);
@@ -60,22 +68,6 @@ const SwapScreen = () => {
     }
   };
   
-  const [price, setPrice] = useState("0");
-  const [priceUsd, setPriceUsd] = useState(0);
-  const [coinUsd, setCoinUsd] = useState(0);
-  const [coinUsd24, setCoinUsd24] = useState(0);
-  const [isCheckLevel, setIsCheckLevel] = useState(false);
-  let coin = coinUsd * parseFloat(inputValue);
-  // Lấy phần tử từ mảng thứ nhất
-  const itemFromData1 = dataCoinDesIndex[swapCoin];
-  console.log('itemFromData1:', itemFromData1)
-  // Lấy phần tử từ mảng thứ hai
-  const itemFromData2 = dataCoinOrgIndex[swapCoin];
-  console.log(">>>>>>>>>>>>>>>dataCoinDesIndex: ", dataCoinOrgIndex[swapCoin])
-
-  const handleSwap = () => {
-    setModalVisible(true);
-  };
   const handleSwapCoin = () => {
     !isChangeCoinDes
       ? setModalVisibleCoinDes(true)
@@ -87,44 +79,41 @@ const SwapScreen = () => {
   };
 
   async function fetchBalance() {
-    if (tokensEVM != "coin") {
-      const balance = await getBalanceToken(chain.rpc, tokensEVM, addressEvm);
-      const coinRate = await SaveListCoinRate.getCoinRateById(
-        itemFromData1.id ?? ""
-      );
-      const rateUsd = coinRate?.usd ?? "0";
-      const coinUsd24 = coinRate?.usdChange ?? "0";
-      const checkLevel = parseFloat(coinUsd24);
-      setIsCheckLevel(checkLevel >= 0 ? true : false);
-      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
-      setPrice(balance);
-      setPriceUsd(balanceUsd);
-      setCoinUsd24(parseFloat(coinUsd24));
-      setCoinUsd(parseFloat(rateUsd));
-    } else if (tokensEVM == "coin") {
-      const balance = await fetchBalaceEvm(addressEvm, chain.rpc);
-      const coinRate = await SaveListCoinRate.getCoinRateById(
-        itemFromData1.id ?? ""
-      );
-      const rateUsd = coinRate?.usd ?? "0";
-      const coinUsd24 = coinRate?.usdChange ?? "0";
-      const checkLevel = parseFloat(coinUsd24);
-      setIsCheckLevel(checkLevel >= 0 ? true : false);
-      const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
-      setPrice(balance);
-      setPriceUsd(balanceUsd);
-      setCoinUsd24(parseFloat(coinUsd24));
-      setCoinUsd(parseFloat(rateUsd));
+    let token = isChangeCoinDes ? itemFromData2 : itemFromData1;
+    let balance;
+    if (!isChangeCoinDes) {
+      balance = await getBalanceToken(token.rpc, token.tokenAddress, addressEvm);
+    } else {
+      balance = await fetchBalaceEvm(addressEvm, token.rpc);
+    }
+    const coinRate = await SaveListCoinRate.getCoinRateById( itemFromData1.id ?? "");
+    const rateUsd = coinRate?.usd ?? "0";
+    setBalance(parseFloat(balance));
+    setCoinUsd(parseFloat(rateUsd));
+    if (parseFloat(balance) >= 0.001) {
+      setMax(parseFloat(balance) - 0.001);
+    } else {
+      setMax(0);
     }
   }
+
   useFocusEffect(
     React.useCallback(() => {
       fetchBalance();
-    }, [addressEvm, swapCoin])
+    }, [addressEvm, swapCoin, isChangeCoinDes])
   );
+
   useEffect(() => {
     checkValue(); // Gọi hàm checkValue trong useEffect
   }, [inputValue]);
+
+  const handleSwap = () => {
+    if (balance >= 0.001 && Number(inputValue) <= max) {
+      setModalVisible(true);
+    } else {
+      Toast.fail("Insufficient balance!!");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -324,7 +313,7 @@ const SwapScreen = () => {
       <ModalSwap
         visible={modalVisible}
         closeModal={() => setModalVisible(false)}
-        amount={inputValue}
+        amount={(balance >= 0.001 && Number(inputValue) <= max && inputValue != "" ) ? inputValue : "0"}
         assetFrom={
           !isChangeCoinDes ? itemFromData1.symbol : itemFromData2.symbol
         }
@@ -336,7 +325,7 @@ const SwapScreen = () => {
             : itemFromData2.tokenAddress
         }
         network={isChangeCoinDes ? itemFromData1.name : itemFromData2.name}
-        coinUsd={coin}
+        coinUsd={coinUsd}
         isTransfer = {isChangeCoinDes}
         chainRPC = {dataCoinDesIndex[swapCoin].rpc}
       />

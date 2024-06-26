@@ -24,6 +24,8 @@ interface SimpleModalProps {
   gasLimit: number;
   gasPrice0: number,
   gasPrice: number;
+  currency: string;
+  coinRate: number;
   handleSave: (a,b) => void;
 }
 
@@ -34,6 +36,8 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
   gasLimit,
   gasPrice0,
   gasPrice,
+  currency,
+  coinRate,
   handleSave,
 }) => {
   const chain = useChain()?.chain;
@@ -123,10 +127,10 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
             Edit Priority
           </Text>
           <Text type="label1" color="textBlack" fontSize={35} lineHeight={35} style={{marginTop: 20}}>
-           ~ {networkFee.toFixed(6)} {chain.currency}
+           ~ {Math.round((networkFee*1000000))/1000000} {currency}
           </Text>
           <Text type="label1" color="textGrayLight" fontSize={20} style={{ marginTop: 5}}>
-            $0.00
+            ${Math.round(((coinRate * networkFee)*100000))/100000}
           </Text>
         </View>
          <View style={{marginTop: 20}}>
@@ -148,14 +152,14 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
           </View>
           {isLimitLower
           ?
-          <Text type="body3" color="accentRed" lineHeight={18}>
+          <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
             {} Gas limit must be higher than {gasLimit0}</Text>
           : 
           <Text lineHeight={18}></Text>
           }
           </View>
-          <View style={{marginTop: 20}}>
+          <View style={{marginTop: 15}}>
           <Text type="label1" color="textBlack">Gas price</Text>
           <View style={styles.boxInput}>
             <TouchableOpacity style={styles.buttonCircle} onPress={minusGasPrice}>
@@ -174,13 +178,13 @@ const ModalEditGas: React.FC<SimpleModalProps> = ({
           </View>
           {isHigher
           ?
-          <Text type="body3" color="accentRed" lineHeight={18}>
-            <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
+          <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
+            <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1, height: 20}}></Icon>
             {} Gas price is higher than necessary</Text>
           :
-          isLower ? <Text type="body3" color="accentRed" lineHeight={18}>
+          isLower ? <Text type="body3" color="accentRed" lineHeight={18} style={{marginTop: 4}}>
             <Icon name="ic-exclamationmark-circle-28" color="accentRed" size={10} style={{marginBottom: -1}}></Icon>
-            {} Gas price is low for current network conditions</Text> : <Text lineHeight={19}></Text>
+            {} Gas price is low for current network conditions</Text> : <Text lineHeight={18}></Text>
           }
         </View>
         <View

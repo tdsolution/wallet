@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers, parseUnits } from "ethers";
 
 // Định nghĩa các tham số cho hàm swap
 interface SwapParams {
@@ -53,6 +53,8 @@ interface TransferParams {
   privateKey: string;
   recipientAddress: string;
   amount: string;
+  gasLimit: number;
+  gasPrice: number;
 }
 // Hàm transfer để chuyển tiền
 export const transfer = async ({
@@ -60,6 +62,8 @@ export const transfer = async ({
   privateKey,
   recipientAddress,
   amount,
+  gasLimit,
+  gasPrice
 }: TransferParams): Promise<any> => {
   // Kết nối với mạng Ethereum thông qua URL của provider
   const provider = new ethers.JsonRpcProvider(providerUrl);
@@ -72,11 +76,20 @@ export const transfer = async ({
     const value = ethers.parseEther(amount);
 
     // Tạo giao dịch
-    const transaction = {
+    let transaction;
+    if (gasLimit > 0 || gasPrice > 0) {
+      transaction = {
+      to: recipientAddress,
+      value: value, 
+      gasLimit: parseUnits(gasLimit.toString(), 0),
+      gasPrice: parseUnits(gasPrice.toString(), "gwei")
+    }}
+    else {
+      transaction = {
       to: recipientAddress,
       value,
+    }
     };
-
     // Gửi giao dịch
     const tx = await wallet.sendTransaction(transaction);
     console.log("Transaction Hash:", tx.hash);
@@ -98,6 +111,8 @@ interface WithdrawParams {
   contractAddress: string;
   recipientAddress: string;
   amount: string;
+  gasLimit: number;
+  gasPrice: number;
 }
 
 // Hàm withdraw để rút tiền từ ví token sang ví Ethereum
@@ -107,6 +122,8 @@ export const withdraw = async ({
   contractAddress,
   recipientAddress,
   amount,
+  gasLimit,
+  gasPrice
 }: WithdrawParams): Promise<boolean> => {
   // Kết nối với mạng Ethereum thông qua URL của provider
   const provider = new ethers.JsonRpcProvider(providerUrl);
@@ -121,10 +138,13 @@ export const withdraw = async ({
   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
   try {
+    let transaction;
     // Gọi hàm withdraw trong hợp đồng thông minh
-    const transaction = await contract.withdraw(ethers.parseUnits(amount, 18), {
-      gasLimit: 200000, // Giới hạn gas (có thể cần điều chỉnh)
-    });
+    if (gasLimit > 0 && gasPrice > 0) {
+      transaction = await contract.withdraw(ethers.parseUnits(amount, 18), {gasLimit: parseUnits(gasLimit.toString(),0), gasPrice: parseUnits(gasPrice.toString(), "gwei")});
+    } else {
+      transaction = await contract.withdraw(ethers.parseUnits(amount, 18));
+     }
     console.log("Transaction sent:", transaction);
 
     // Chờ giao dịch được xác nhận

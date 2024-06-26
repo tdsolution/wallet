@@ -20,7 +20,7 @@ export const LogoButton = memo (() => {
       > 
       <View style={{flexDirection:'row', alignItems:'center'}}>
          <Image source={require("../assets/logo/icon_logo_app.png")}  style={{width:50, height:50}} resizeMode='contain'/>
-         <Text style={{color:'#4871EA', fontWeight:'700', letterSpacing:0, lineHeight:24}}>TD WALLET</Text>
+         <Text type='h3' fontSize={16} color="primaryColor">TD WALLET</Text>
       </View>
       </TouchableOpacity>
    );

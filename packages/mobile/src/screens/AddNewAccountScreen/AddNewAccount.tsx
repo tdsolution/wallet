@@ -6,7 +6,7 @@ import { openSetupNotifications, openSetupWalletDone } from "$navigation";
 import { walletActions } from "$store/wallet";
 import { tk } from "$wallet";
 import { useParams } from "@tonkeeper/router/src/imperative";
-import { BlockingLoader, Text } from "@tonkeeper/uikit";
+import { BlockingLoader, Text, isIOS } from "@tonkeeper/uikit";
 import {
   View,
   StyleSheet,
@@ -155,11 +155,12 @@ export const AddNewAccount = () => {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.navigate(WalletStackRouteNames.Wallet)}
+          style={{width: '10%', alignItems: "flex-start"}}
         >
           <Icon name="ic-close-16" color="primaryColor" size={18} />
         </TouchableOpacity>
         <Text type="h3" color="primaryColor">Wallets</Text>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={{width: '10%', alignItems: "flex-end"}}>
           <Image
             // source={require("../../assets/icons/png/ic-done-84@4x.png")}
             source={require("../../assets/icons/png/ic_baseline-plus.png")}
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 25,
     paddingVertical: 10,
+    marginTop: isIOS ? 0 : 10,
   },
   icon: {
     width: 24,

@@ -96,30 +96,17 @@ const ModalNotification = (props: Props) => {
             }}
           >
             <TouchableOpacity onPress={onClose}>
-              {fromAddress === evm.addressWallet
-              ? <Image
+              <Image
                 style={[
                   styles.iconCancel,
                   {
                     width: 30,
                     height: 30,
-                    transform: [{ rotate: "45deg" }],
+                    transform: fromAddress === evm.addressWallet ? [{ rotate: "45deg" }] : [{ rotate: "225deg" }] ,
                   },
                 ]}
                 source={require("../../../assets/icons/png/ic-arrow-up-16.png")}
               />
-              : <Image
-                style={[
-                styles.iconCancel,
-                {
-                  width: 30,
-                  height: 30,
-                  transform: [{ rotate: "45deg" }],
-                },
-              ]}
-              source={require("../../../assets/icons/png/ic-arrow-down-16.png")}
-            />
-            }
             </TouchableOpacity>
             <Text
               type="h3"
@@ -141,27 +128,23 @@ const ModalNotification = (props: Props) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={[styles.row, { marginTop: 20 }]}>
-            <View>
+            <View style={styles.row}>
               <Text type="label1" color="textPrimaryAlternate">Status</Text>
-              <View style={styles.buttonStatus}>
+              <Text type="label1" color="textPrimaryAlternate">Time</Text>
+            </View>
+             
+            
+            <View style={styles.row}>
+               <View style={styles.buttonStatus}>
                 <Text type="body2">Successful</Text>
               </View>
-            </View>
-            <View>
-              <Text type="label1" color="textPrimaryAlternate" textAlign="right">Time</Text>
               <Text
               type="body3"
               color="textPrimaryAlternate"
-                style={[
-                  { flex: 1, marginTop: 10 },
-                ]}
               >
-                {/* 10/03/2024 9:30:03 */}
                 {formatted_time}
               </Text>
             </View>
-          </View>
           <View style={styles.line}></View>
 
           <View style={styles.row}>
@@ -203,15 +186,15 @@ const ModalNotification = (props: Props) => {
             </View>
           </View>
           <View style={styles.line}></View>
-          <View style={{ width: "100%" }}>
+          <View style={{ width: "100%", margin: 5}}>
             <Text
             type="label1" color="textPrimaryAlternate"
             textAlign="center"
             >
               Money amount
             </Text>
-            <Text type="h2" color="textPrimaryAlternate" textAlign="center">
-              {amount} <Text type="label2" color="textPrimaryAlternate" fontSize={20}>{symbol}</Text>
+            <Text type="h2" color="textPrimaryAlternate" textAlign="center" lineHeight={40}>
+              {amount} <Text type="label2" color="textPrimaryAlternate" fontSize={20} lineHeight={40}>{symbol}</Text>
             </Text>
           </View>
         </View>
@@ -246,6 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    margin: 5,
   },
   line: {
     width: "100%",
@@ -254,6 +238,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     marginVertical: 10,
     opacity: 0.5,
+    margin: 5,
   },
   buttonStatus: {
     width: 150,
@@ -262,6 +247,5 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 4,
   },
 });

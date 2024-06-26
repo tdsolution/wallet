@@ -61,7 +61,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import {
   useEvm,
   useChain,
-  useBalanceTD,
   useWallet,
   useWalletCurrency,
   useWalletStatus,
@@ -101,7 +100,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const { isReferrer, setIsReferrer } = useReferral();
-  const balanceTD = useBalanceTD()?.balance;
   const { evm, setEvm } = useEvm() || {};
   //const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
@@ -130,6 +128,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   const { isConnected } = useNetInfo();
   const [activeTab, setActiveTab] = useState("Tokens");
   const [amountTransaction, setAmountTransaction] = useState<number>(0);
+  const [balanceTD, setBalanceTD] = useState(0);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -183,8 +182,33 @@ export const WalletScreen = memo(({ navigation }: any) => {
   };
 
   useFocusEffect(
+    React.useCallback(() => { 
+     let a = 0;
+      tokensEVM.map((token1)=> {
+        async function fetchBalance(token) {
+        if (token.tokenAddress != "coin") {
+          const balance2 = await getBalanceToken(chain.rpc, token.tokenAddress, evm.addressWallet);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2); 
+          a = a + balanceUsd;
+        } else if (token.tokenAddress == "coin") {
+          const balance2 = await fetchBalaceEvm(evm.addressWallet, chain.rpc);
+          const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
+          const rateUsd = coinRate?.usd ?? "0";
+          const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2);
+          a = a + balanceUsd;
+        } 
+        setBalanceTD(a);
+      }
+      fetchBalance(token1);
+      }); 
+    }, [tokensEVM, evm.addressWallet])
+  );
+
+  useFocusEffect(
     React.useCallback(() => {
-     if (!evm) {
+     if (!evm || evm.addressWallet == null) {
       fetchEvm();
     };
     }, [])
@@ -570,11 +594,10 @@ export const WalletScreen = memo(({ navigation }: any) => {
               }}
             >
               <ScanQRButton />
-              <View style={{ width: 10 }}></View>
               <ReferralButton isReferrerAddress={isReferrer} />
-              <View style={{ width: 10 }}></View>
-              <NotificationButton amount={amountTransaction} />
-              <View style={{ width: 10 }}></View>
+              <View style={{ marginRight: 5 }}>
+                <NotificationButton amount={amountTransaction} />
+              </View>
             </View>
           ) : null
         }
@@ -672,9 +695,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   activeOpacity={0.6}
                 >
                   <Text
-                    color="textSecondary"
                     type="body2"
-                    style={{ color: "#fff" }}
                   >
                     {chain.chainId == "1100"
                       ? wallet.address.ton.short
@@ -716,11 +737,9 @@ export const WalletScreen = memo(({ navigation }: any) => {
                 resizeMode="contain"
               />
               <Text
-                style={{
-                  color: theme.colors.primaryColor,
-                  fontWeight: "700",
-                  fontSize: 14,
-                }}
+                type="h3"
+                color="primaryColor"
+                fontSize={14}
               >
                 {evm.name}
               </Text>

@@ -62,7 +62,7 @@ const NotificationScreen = () => {
           globalStyles.row,
           {
             paddingHorizontal: 5,
-            paddingVertical: 10,
+            paddingVertical: 15,
             backgroundColor: colors.Primary,
           },
         ]}

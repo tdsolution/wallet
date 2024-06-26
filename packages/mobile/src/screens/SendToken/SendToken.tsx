@@ -32,7 +32,7 @@ import { openRequireWalletModal } from "$core/ModalContainer/RequireWallet/Requi
 import { Address } from "@tonkeeper/core";
 import { store } from "$store";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { Text, Toast } from "@tonkeeper/uikit";
+import { Text, Toast, isIOS } from "@tonkeeper/uikit";
 import { WalletStackRouteNames } from "$navigation";
 import { isValidAddressEVM } from "$libs/EVM/createWallet";
 import { isAddress } from "ethers";
@@ -109,7 +109,7 @@ const SendToken = ({ route }: any) => {
   };
   const handleNext = useCallback(() => {
     if (isAddress(addressInput)) {
-      if (max > 0 && Number(amount) <= max) {
+      if (balanceToken >= 0.001 && Number(amount) <= max) {
         navigation.navigate(WalletStackRouteNames.Transfer, {
           id: id,
           symbol: symbol,
@@ -212,7 +212,7 @@ const SendToken = ({ route }: any) => {
   }, []);
 
   const handleMaxAmount = () => {  
-    setAmount((Math.round(max*100000)/100000).toString().toString())
+    setAmount((Math.round(max*100000)/100000).toString());
   }
 
   return (
@@ -222,21 +222,19 @@ const SendToken = ({ route }: any) => {
           <View
             style={[
               globalStyles.row,
-              { paddingHorizontal: 25, paddingVertical: 10 },
+              { paddingHorizontal: 20, paddingVertical: 10, marginTop: isIOS ? 0 : 10, marginBottom: 10 },
             ]}
           >
-            <TouchableOpacity onPress={handleBack}>
+            <TouchableOpacity onPress={handleBack} style={{width: "10%", alignItems: "flex-start"}}>
               <Image
                 style={styles.iconClose}
                 source={require("../../assets/icons/png/ic-arrow-up-16.png")}
               />
             </TouchableOpacity>
-            <View style={{ alignItems: "center", width: "100%" }}>
-              <Text type="h3" color="primaryColor" style={ { marginLeft: -40 }}>
+              <Text type="h3" color="primaryColor">
                 Send {symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}
               </Text>
-            </View>
-            <View></View>
+            <View style={{width: "10%"}}></View>
           </View>
           <View style={{ flex: 1, justifyContent: "space-between" }}>
             <View>
@@ -336,7 +334,7 @@ const SendToken = ({ route }: any) => {
                 style={{
                   width: "100%",
                   height: 1,
-                  borderWidth: 0.2,
+                  borderWidth: 0.3,
                   borderColor: "#EEEEEE",
                   marginVertical: 20,
                 }}

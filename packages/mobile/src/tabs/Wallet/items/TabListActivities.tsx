@@ -26,7 +26,7 @@ import { Text } from "@tonkeeper/uikit";
 import { buildAddressUrl } from "$libs/EVM/brower";
 const TabListActivities = ({ chainActive, address }) => {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
-  const dataToShow = transactions.slice(-3);
+  const dataToShow = transactions.slice(-3).reverse();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -75,7 +75,7 @@ const TabListActivities = ({ chainActive, address }) => {
       }}
     >
       <View>
-        <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop: 10 }}>
+        <View style={{ alignItems: "flex-end", marginEnd: 12, marginTop: 15, marginBottom: 10 }}>
           <TouchableOpacity
             style={styles.buttonBrower}
             onPress={() =>
@@ -110,6 +110,7 @@ const TabListActivities = ({ chainActive, address }) => {
                   from={item.from}
                   to={item.to}
                   value={item.value}
+                  gasPrice={item.gasPrice}
                   isError={item.isError}
                   transactionIndex={item.transactionIndex}
                   gasUsed={item.gasUsed}

@@ -16,7 +16,7 @@ import { WalletStackRouteNames } from "$navigation";
 import { Toast } from "$store";
 import SaveTransaction, { TransactionModel } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
-import { Text } from "@tonkeeper/uikit";
+import { Text, isIOS } from "@tonkeeper/uikit";
 import ModalEditGas from "./item/ModalEditGas";
 import { formatEther, parseUnits } from "ethers";
 
@@ -130,6 +130,7 @@ const TransferScreen = ({route}) => {
       }
     }
   };
+  
   async function fetchDataFee() {
     try {
       let dataFee;
@@ -156,7 +157,7 @@ const TransferScreen = ({route}) => {
       console.error('Error fetching coin rate:', error);
     }
   };
-  console.log(parseUnits(gasLimit.toString(),0));
+
   const fetchNetworkFee = () => {
     setNetworkFee(Number(formatEther(parseUnits(gasPrice.toString(), "gwei")*(parseUnits(gasLimit.toString(),0)))));
   }; 
@@ -184,18 +185,17 @@ const TransferScreen = ({route}) => {
       <View
         style={[
           globalStyles.row,
-          { paddingHorizontal: 25, paddingVertical: 10 },
+          { paddingHorizontal: 20, paddingVertical: 10, marginTop: isIOS ? 0 : 10},
         ]}
       >
-        <TouchableOpacity onPress={handleBack}>
+        <TouchableOpacity onPress={handleBack} style={{width: "10%", alignItems: "flex-start"}}>
           <Image
             style={styles.iconClose}
             source={require("../../assets/icons/png/ic-arrow-up-16.png")}
           />
         </TouchableOpacity>
-        <View style={{width: "100%", alignItems: "center"}}>
-        <Text type="h2" color="primaryColor" style={{marginLeft: -40}}>Transfer</Text>
-        </View>
+        <Text type="h2" color="primaryColor">Transfer</Text>
+        <View style={{width: "10%"}}></View>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center", marginHorizontal: 25 }}>
         <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{ marginTop: 10}}>{amount} {symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
@@ -271,6 +271,8 @@ const TransferScreen = ({route}) => {
     gasLimit={gasLimit}
     gasPrice0={gas.gasPrice}
     gasPrice={gasPrice}
+    currency={chain.currency}
+    coinRate={parseFloat(coinRate)}
     handleSave={(a, b) => handleSave(a,b)}
     />
     </SafeAreaView>

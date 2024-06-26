@@ -23,7 +23,9 @@ import SaveTransaction, {
 } from "$libs/EVM/HistoryEVM/SaveTransaction";
 import { postDataToApi } from "../../tabs/Wallet/api/postDataToApi1";
 import { Text } from "@tonkeeper/uikit";
-import { getNetworkFeeCoin } from "$libs/EVM/send/SendCoinAndToken";
+import { getNetworkFeeCoin, getNetworkFeeToken } from "$libs/EVM/send/SendCoinAndToken";
+import { formatEther, parseUnits } from "ethers";
+import ModalEditGas from "../../screens/TransferScreen/item/ModalEditGas";
 
 interface SimpleModalProps {
   visible: boolean;
@@ -66,23 +68,60 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
   evmAddress = evmAddress.replace(/^"|"$/g, '');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [networkFee, setNetworkFee] = useState<string>('0');
+  const [networkFee, setNetworkFee] = useState<number>(0);
   const PRIVATE_KEY = evmAddress.toString();
   const PROVIDER_URL = chainRPC;
+  const [gas, setGas] = useState({});
+  const [gasLimit, setGasLimit] = useState<number>(0);
+  const [gasPrice, setGasPrice] = useState<number>(0);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [isLoadingFee, setIsLoadingFee] = useState<boolean>(true);
 
-  async function fetchNetworkFee() {
+  async function fetchDataFee() {
     try {
-      const networkFee = await getNetworkFeeCoin(to, from, chain.rpc, amount);
-      setNetworkFee(networkFee.networkFee.toString());
+      let dataFee;
+      if (isTransfer) {
+        dataFee = await getNetworkFeeCoin(to, evm.addressWallet, chainRPC, amount);
+      }
+      else {
+        dataFee = await getNetworkFeeToken(to, evm.privateKey, chainRPC, swapCoinItem.tokenAddress, amount);
+      }
+      setGas(dataFee);
+      setGasPrice(dataFee.gasPrice);
+      setGasLimit(dataFee.gasLimit);
+      setNetworkFee(dataFee.networkFee);
     } catch (error) {
-      console.error('Error fetching network fee:', error);
+      console.error('Error fetching data fee:', error);
     }
-  }
+  };
+
+  const checkValue = () => {
+   if (gasLimit == 0 || gasPrice == 0) {
+      setIsLoadingFee(true);
+    }
+    else {
+      setIsLoadingFee(false);
+    }
+  };
+
+  const fetchNetworkFee = () => {
+    setNetworkFee(Number(formatEther(parseUnits(gasPrice.toString(), "gwei")*(parseUnits(gasLimit.toString(),0)))));
+  }; 
 
   useEffect(() => {
-    fetchNetworkFee(); // Gọi hàm checkValue trong useEffect
-  }, [nav]);
+    checkValue();
+    fetchNetworkFee();
+  }, [gasLimit, gasPrice, fetchDataFee]);
 
+  useEffect(() => {
+    fetchDataFee();
+  }, [amount, swapCoinItem, chainRPC, isTransfer]);
+
+  const handleSave = (gasLimit, gasPrice) => {
+    setGasLimit(gasLimit);
+    setGasPrice(gasPrice);
+    setModalVisible(false);
+  }; 
   const handleRandomId = () => {
     let timestamp = Date.now();
     let random = Math.floor(Math.random() * 100000);
@@ -165,6 +204,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       privateKey: PRIVATE_KEY, // Thay bằng private key của ví nguồn
       recipientAddress: swapCoinItem.tokenAddress,
       amount: amount.toLocaleString(), // Chuyển 0.01 BNB
+      gasLimit: gasLimit,
+      gasPrice: gasPrice
     };
 
     try {
@@ -191,6 +232,8 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
       contractAddress: swapCoinItem.tokenAddress, // Thay bằng địa chỉ hợp đồng token của bạn
       recipientAddress: swapCoinItem.tokenAddress,
       amount: amount.toLocaleString(), // Số lượng token cần rút
+      gasLimit: gasLimit,
+      gasPrice: gasPrice
     };
 
     try {
@@ -226,7 +269,7 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
             -{parseFloat(amount.toString())} {assetFrom}
           </Text>
           <Text type="label1" color="textGrayLight" fontSize={20} style={{ marginTop: 5}}>
-            {`\u2248`} {coinUsd} $
+            {`\u2248`} {Math.round(((coinUsd * parseFloat(amount))*100000))/100000} $
           </Text>
         </View>
         <View style={styles.box}>
@@ -248,11 +291,21 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
         <View style={styles.box}>
           <View style={styles.row}>
             <Text type="body1" color="textGray">Network fee</Text>
-            <Text type="body1" color="textGray">{parseFloat(networkFee).toFixed(6)} {assetFrom}</Text>
+            {isLoadingFee
+            ?
+              <Text type="body1" color="textGray">loading...</Text>
+            :
+            <Text type="body1" color="primaryColor" style={{textDecorationLine: "underline"}} onPress={() => setModalVisible(true)} >{networkFee.toFixed(6)} {assetFrom}</Text>
+            }
           </View>
           <View style={styles.row}>
             <Text type="body1" color="textGray">Max total</Text>
-            <Text type="body1" color="textGray">{(parseFloat(amount) + parseFloat(networkFee)).toFixed(6)} {assetFrom}</Text>
+            {isLoadingFee
+          ?
+            <Text type="body1" color="textGray">loading...</Text>
+          :
+            <Text type="body1" color="textGray">{(parseFloat(amount) + networkFee).toFixed(6)} {assetFrom}</Text>
+          }
           </View>
         </View>
 
@@ -277,6 +330,17 @@ const ModalSwap: React.FC<SimpleModalProps> = ({
           </TouchableOpacity>
         </View>
       </View>
+      <ModalEditGas
+    visible={modalVisible}
+    closeModal={() => setModalVisible(false)}
+    gasLimit0={gas.gasLimit}
+    gasLimit={gasLimit}
+    gasPrice0={gas.gasPrice}
+    gasPrice={gasPrice}
+    currency={assetFrom}
+    coinRate={coinUsd}
+    handleSave={(a, b) => handleSave(a,b)}
+    />
     </Modal>
   );
 };

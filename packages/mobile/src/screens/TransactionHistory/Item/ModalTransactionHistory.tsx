@@ -15,6 +15,8 @@ import { globalStyles } from "$styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { on } from "process";
 import { Text } from "@tonkeeper/uikit";
+import { useEvm } from "@tonkeeper/shared/hooks";
+import { formatUnits} from "ethers";
 const { width, height } = Dimensions.get("window");
 
 interface Props {
@@ -63,20 +65,22 @@ const ModalTrasactionHistory = (props: Props) => {
     from,
     to,
     value,
+    gasPrice,
     isError,
     transactionIndex,
     gasUsed,
     chainSymbol,
   } = props;
+  const evm = useEvm()?.evm;
   const truncatedFromString = TruncateString({ string: from, maxLength: 7 });
   const truncatedToString = TruncateString({ string: to, maxLength: 7 });
   const status = isError === "0" ? "Successful" : "Failed";
   const backgroundColorStatus = isError === "0" ? "#90D26D" : "#E72929";
   const divided = Number(value) / Math.pow(10, 18);
-  const decimalNumber = Number(divided).toFixed(9);
-  const gasfee = Number(value) * Number(gasUsed);
-  const dividedGasfee = Number(gasfee) / Math.pow(10, 18);
-  const decimalNumberGasFee = Number(dividedGasfee).toFixed(9);
+  const decimalNumber = Math.round(Number(divided)*1000000)/1000000;
+  const dividedGasfee = formatUnits( gasUsed && gasPrice ? (Number(gasUsed) *  Number(gasPrice)) : 0, 18);
+  const decimalNumberGasFee = Math.round(Number(dividedGasfee)*1000000)/1000000;
+  // console.log(formatUnits( gasUsed && gasPrice ? (Number(gasUsed) *  Number(gasPrice)) : 0, 18));
   const totalAmount = Number(decimalNumber) + Number(decimalNumberGasFee);
   return (
     <Modal
@@ -120,7 +124,7 @@ const ModalTrasactionHistory = (props: Props) => {
                     tintColor: colors.Primary,
                     width: 30,
                     height: 30,
-                    transform: [{ rotate: "45deg" }],
+                    transform:  from?.toLocaleLowerCase() === evm.addressWallet.toLocaleLowerCase() ? [{ rotate: "45deg" }] : [{ rotate: "225deg" }],
                   },
                 ]}
                 source={require("../../../assets/icons/png/ic-arrow-up-16.png")}
@@ -131,7 +135,7 @@ const ModalTrasactionHistory = (props: Props) => {
               color="textPrimaryAlternate"
               style={{marginLeft:10}}
             >
-              Send Coin
+              {from?.toLocaleLowerCase() === evm.addressWallet.toLocaleLowerCase() ?  'Send' : 'Receive'}
             </Text>
             <TouchableOpacity onPress={onClose}>
               <Image
@@ -211,7 +215,7 @@ const ModalTrasactionHistory = (props: Props) => {
               <View style={[styles.row, { marginTop: 5 }]}>
                 <Text type="label1" color="textPrimaryAlternate">Estiated gas fees</Text>
                 <Text numberOfLines={2} type="body2" color="textPrimaryAlternate">
-                  {decimalNumberGasFee}
+                  {decimalNumberGasFee} {chainSymbol}
                 </Text>
               </View>
               <View
@@ -223,7 +227,7 @@ const ModalTrasactionHistory = (props: Props) => {
               <View style={styles.row}>
                 <Text type="label1" color="textPrimaryAlternate">Total amount</Text>
                 <Text numberOfLines={2} type="body2" color="textPrimaryAlternate">
-                  {totalAmount}
+                  {totalAmount} {chainSymbol}
                 </Text>
               </View>
             </View>

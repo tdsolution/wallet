@@ -1,8 +1,8 @@
 import { useDeeplinking } from "$libs/deeplinking";
 import React, { memo, useMemo } from "react";
 import { Steezy } from "$styles";
-import { TouchableOpacity } from "@tonkeeper/uikit";
-import { Image, View, Text } from "react-native";
+import { Text, TouchableOpacity, isIOS } from "@tonkeeper/uikit";
+import { Image, View } from "react-native";
 import { useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
 import { colors } from "../constants/colors";
@@ -15,8 +15,8 @@ export const NotificationButton = memo((props: any) => {
     () => ({
       top: 26,
       bottom: 26,
-      left: 26,
-      right: 26,
+      left: 3,
+      right: 5,
     }),
     []
   );
@@ -54,8 +54,8 @@ export const NotificationButton = memo((props: any) => {
               right: 0,
             }}
           >
-            <Text style={{ color: "white", fontSize: 8, fontWeight: "bold" }}>
-              {amount}
+            <Text type="label3" fontSize={8} lineHeight={8} style={{marginBottom: isIOS ? -1 : -2}}>
+              {amount > 9 ? '9+' : amount}
             </Text>
           </View>
         ) : null}
@@ -66,6 +66,7 @@ export const NotificationButton = memo((props: any) => {
 const styles = Steezy.create({
   container: {
     zIndex: 3,
+    marginHorizontal: 5,
     padding: 5
   },
   badge: {},

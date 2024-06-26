@@ -51,6 +51,7 @@ const ItemTransactionHistory = (props: Props) => {
     from,
     to,
     value,
+    gasPrice,
     isError,
     transactionIndex,
     gasUsed,
@@ -136,6 +137,7 @@ const formatTimestamp = (timestamp: string): string => {
         from={from}
         to={to}
         value={value}
+        gasPrice={gasPrice}
         isError={isError}
         transactionIndex={transactionIndex}
         gasUsed={gasUsed}
