@@ -8,7 +8,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
-import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
@@ -111,7 +111,7 @@ const ItemWallet = (props: Props) => {
             <Text style={styles.title}>{symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
             <View style={styles.row}>
               <Text style={styles.body}>
-                {"$" + (coinUsd)}
+                {formatCurrency(coinUsd)}
               </Text>
               <View
                 style={{
@@ -131,17 +131,17 @@ const ItemWallet = (props: Props) => {
                   },
                 ]}
               >
-                {coinUsd24}%
+                {formatCurrencyNoCrc(coinUsd24)}%
               </Text>
             </View>
           </View>
         </View>
         <View>
           <Text style={[styles.title, { textAlign: "right" }]}>
-            {(parseFloat(price).toFixed(2))}
+            {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price))}
           </Text>
           <Text style={[styles.body, { textAlign: "right" }]}>
-            ${(priceUsd).toFixed(2)}
+            {formatCurrency(priceUsd)}
           </Text>
         </View>
       </View>

@@ -271,7 +271,6 @@ const SendToken = ({ route }: any) => {
                           style={
                             {
                               marginLeft: 8,
-                              marginBottom: -2,
                             }
                           }
                         >
@@ -320,7 +319,6 @@ const SendToken = ({ route }: any) => {
                         style={
                           {
                             marginLeft: 8,
-                            marginBottom: -2,
                           }
                         }
                       >

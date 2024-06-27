@@ -52,7 +52,7 @@ export async function fetchExchangeRate (){
         const toCurrency = 'usd'; // Loại tiền tệ cần chuyển đổi
         const stringIds = 'moonriver,wrapped-flare,flare-networks,orbit-bridge-klaytn-usdc,fantom,metis-token,celo,crypto-com-chain,the-open-network,tron,berachain-bera,optimism,wmatic,wrapped-core,weth,binancecoin,wbnb,ethereum,tether,usd-coin,shiba-inu,coredaoorg,matic-network,arbitrum,avalanche-2,bouncebit,bouncebit-usd,bouncebit-btc';
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${stringIds}&vs_currencies=${toCurrency}&include_24hr_change=true`;
-        console.log("dau cho"+ url);
+        //console.log("dau cho"+ url);
         const response = await axios.get(url);
         if(response.status === 200){
             const data = JSON.stringify(response.data);

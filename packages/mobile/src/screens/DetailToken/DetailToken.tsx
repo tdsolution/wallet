@@ -18,7 +18,7 @@ import { Events, SendAnalyticsFrom } from "$store/models";
 import { useFlags } from "$utils/flags";
 import { t } from "@tonkeeper/shared/i18n";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
-import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import ItemTransaction from "./Item/ItemTransaction";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
@@ -37,7 +37,6 @@ const DetailToken = ({ route }: any) => {
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
-console.log('addressEvm', addressEvm)
   const handleBack = () => {
     navigation.navigate(WalletStackRouteNames.Wallet);
   };
@@ -106,6 +105,7 @@ console.log('addressEvm', addressEvm)
       setPrice(balance);
       setPriceUsd(balanceUsd);
     }
+    handleGetTransaction();
   }
 
   const handleGetTransaction = async () => {
@@ -127,10 +127,10 @@ console.log('addressEvm', addressEvm)
 
   useFocusEffect(
     React.useCallback(() => {
-      handleGetTransaction();
       fetchBalance();
     }, [])
   );
+
   return (
     <SafeAreaView>
       <View
@@ -178,14 +178,14 @@ console.log('addressEvm', addressEvm)
         )}
 
         <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{marginTop: 20}}>
-          {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toString().includes('.') ? parseFloat(price).toFixed(6) : parseFloat(price).toFixed(2)} {symbol}
+          {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price), 6)} {symbol}
         </Text>
         <Text 
         type="h3"
         style={{
           color: colors.Gray_Light,
           marginTop: 5,}}
-        >≈ {formatCurrencyNoCrc(priceUsd)} $</Text>
+        >≈ {formatCurrency(priceUsd)}</Text>
       </View>
       <View 
       style={{ marginTop: 10 }}>

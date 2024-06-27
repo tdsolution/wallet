@@ -25,6 +25,8 @@ import { DataChains } from '@tonkeeper/shared/utils/network';
 import { createWalletFromMnemonic, generateMnemonic } from '$libs/EVM/createWallet';
 import { CreateWalletStackRouteNames } from '$navigation/CreateWalletStack/types';
 import SaveListCoinRate from '$libs/EVM/api/get_exchange_rate';
+import { ActivityIndicator } from 'react-native';
+import { colors } from '../../constants/colors';
 
 const bip39 = require('bip39')
 const HEIGHT_RATIO = deviceHeight / 844;
@@ -41,6 +43,7 @@ export const StartScreen = memo(() => {
   const logoShapesPosX = origShapesWidth / 2 - dimensions.width / 2;
   const logoShapesPosY =
     origShapesHeight / 2 - (origShapesHeight * ratioHeight) / 2;
+
   const handleCreatePress = useCallback(async () => {
     setIsDisable(true);
     dispatch(walletActions.generateVault());
@@ -54,21 +57,24 @@ export const StartScreen = memo(() => {
       setIsDisable(false);
     }
   }, [dispatch, nav]);
+
   const handleImportPress = useCallback(() => {
     nav.navigate(MainStackRouteNames.ImportWalletStack);
   }, [dispatch, nav]);
+
   useEffect(() => {
     fetchChainActive();
   }, []);
-    const fetchChainActive = async () => {
-        await SaveListCoinRate.fullFlowSaveData();
-        const storedChainActive = await AsyncStorage.getItem(chainActive);
-        if(storedChainActive == null){
-         await AsyncStorage.setItem(chainActive, JSON.stringify(DataChains[0]));
-        }else{
-          return;
-        }
-    };
+
+  const fetchChainActive = async () => {
+      await SaveListCoinRate.fullFlowSaveData();
+      const storedChainActive = await AsyncStorage.getItem(chainActive);
+      if (storedChainActive == null) {
+        await AsyncStorage.setItem(chainActive, JSON.stringify(DataChains[0]));
+      } else {
+        return;
+      }
+  };
 
   return (
     <Screen>
@@ -121,6 +127,20 @@ export const StartScreen = memo(() => {
           </TouchableOpacity>
         </View>
       </View>
+      {isDisable && <View
+      style={{
+        backgroundColor: "rgba(0,0,0,0.5)",
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        top: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+      <ActivityIndicator size="large" color={colors.Primary}/>
+    </View>}
     </Screen>
   );
 });
