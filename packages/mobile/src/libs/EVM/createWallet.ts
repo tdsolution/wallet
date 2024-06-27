@@ -34,7 +34,7 @@ export async function createWalletFromMnemonic(mnemonic: string){
   await AsyncStorage.setItem('EVMMnemonic',mnemonic);
   await AsyncStorage.setItem('EVMMname',name);
   SaveListWallet.fullFlowSaveData({wallet:walletModel});
-  console.log('Save Wallet');
+  console.log('Save Wallet mnemonic');
 }
 export async function createWalletFromPrivateKey(privateKey: string){
   //Tạo lần đầu tiên
@@ -60,7 +60,7 @@ export async function createWalletFromPrivateKey(privateKey: string){
       mnemonic: '', // Thêm giá trị của mnemonic tại đây
       };
       SaveListWallet.fullFlowSaveData({wallet:walletModel});
-      console.log('Save Wallet');
+      console.log('Save Wallet private key');
       return 1;
     }
     else {
@@ -96,7 +96,7 @@ export async function addWalletFromMnemonic(mnemonic: string){
       mnemonic: mnemonic, // Thêm giá trị của mnemonic tại đây
       };
       SaveListWallet.fullFlowSaveData({wallet:walletModel});
-      console.log('Save Wallet');
+      console.log('Save Wallet add wallet from mnemonic');
       return 1;
     }
     else {
@@ -124,19 +124,20 @@ export async function createNewWalletFromMnemonic(mnemonic: string, name:string)
     mnemonic: mnemonic, // Thêm giá trị của mnemonic tại đây
   };
   SaveListWallet.fullFlowSaveData({wallet:walletModel});
-  console.log('Save Wallet');
+  console.log('Save Wallet name mnemonic');
 }
 
 export async function setWalletEVM(wallet: ListWalletModel){
+  console.log('wallet', wallet);
   await AsyncStorage.setItem('EVMPrivateKey',wallet.privateKey);
   await AsyncStorage.setItem('EVMAddress',wallet.addressWallet);
   await AsyncStorage.setItem('EVMMnemonic',wallet.mnemonic);
   await AsyncStorage.setItem('EVMMname',wallet.name);
-  console.log('Save Wallet');
+  console.log('Save Wallet evm storages');
 }
 
 export function shortenWalletAddress(walletAddress: string, prefixLength: number = 8, suffixLength: number = 5): string {
-  walletAddress = walletAddress.replace(/"/g, '');
+  walletAddress = walletAddress ? walletAddress.replace(/"/g, '') : "";
   if (walletAddress.length <= prefixLength + suffixLength) {
     return walletAddress;
   }

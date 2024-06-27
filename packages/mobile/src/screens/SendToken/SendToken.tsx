@@ -40,7 +40,7 @@ import { useEvm, useChain } from "@tonkeeper/shared/hooks";
 import { fetchBalanceToken } from "$libs/EVM/token/tokenEVM";
 
 const SendToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const { id, symbol, decimals, image, address, addressToken, rpc } = route.params;
   const navigation = useNavigation();
   const [wallet, setWallet] = useState<ListWalletModel[]>();
   const [addressInput, setAddressInput] = useState("");
@@ -66,7 +66,7 @@ const SendToken = ({ route }: any) => {
   };
 
   async function fetchBalance() {
-    const balance = await fetchBalanceToken(addressToken, rpc, evm.addressWallet);
+    const balance = await fetchBalanceToken(addressToken, rpc, evm.addressWallet, decimals);
     setBalanceToken(balance);
     if (balance >= 0.001) {
       setMax(balance - 0.001);
@@ -271,7 +271,6 @@ const SendToken = ({ route }: any) => {
                           style={
                             {
                               marginLeft: 8,
-                              marginBottom: -2,
                             }
                           }
                         >
@@ -320,7 +319,6 @@ const SendToken = ({ route }: any) => {
                         style={
                           {
                             marginLeft: 8,
-                            marginBottom: -2,
                           }
                         }
                       >

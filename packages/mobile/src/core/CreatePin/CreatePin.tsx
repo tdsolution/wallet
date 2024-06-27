@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import * as S from '../AccessConfirmation/AccessConfirmation.style';
@@ -10,16 +10,18 @@ import { tk } from '$wallet';
 import { popToTop } from '$navigation/imperative';
 import { useParams } from '@tonkeeper/router/src/imperative';
 import { BlockingLoader } from '@tonkeeper/uikit';
+import { ActivityIndicator, View } from 'react-native';
+import { colors } from '../../constants/colors';
 
 export const CreatePin: FC = () => {
   const params = useParams<{ isImport?: boolean }>();
   const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const isImport = !!params.isImport;
 
   const handlePinCreated = useCallback(
     async (pin: string) => {
-      BlockingLoader.show();
+      setIsLoading(true);
       dispatch(
         walletActions.createWallet({
           pin,
@@ -32,10 +34,10 @@ export const CreatePin: FC = () => {
             } else {
               openSetupWalletDone(identifiers);
             }
-            BlockingLoader.hide();
+            setIsLoading(false);
           },
           onFail: () => {
-            BlockingLoader.hide();
+            setIsLoading(false);
           },
         }),
       );
@@ -47,6 +49,20 @@ export const CreatePin: FC = () => {
     <S.Wrap>
       <NavBar onClosePress={popToTop} />
       <CreatePinForm onPinCreated={handlePinCreated} />
+      {isLoading && <View
+      style={{
+        backgroundColor: "rgba(0,0,0,0.5)",
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        top: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+      <ActivityIndicator size="large" color={colors.Primary}/>
+    </View>}
     </S.Wrap>
   );
 };

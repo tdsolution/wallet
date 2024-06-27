@@ -8,7 +8,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../../constants/colors";
 import { getBalanceToken } from "$libs/EVM/token/tokenEVM";
-import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { useFocusEffect, useNavigation } from "@tonkeeper/router";
 import { WalletStackRouteNames } from "$navigation";
@@ -16,6 +16,7 @@ import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   id?: string;
+  decimals?: number;
   symbol: string;
   image?: string;
   address: string;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const ItemWallet = (props: Props) => {
-  const { id, symbol, image, address, addressToken, rpc } = props;
+  const { id, symbol, decimals, image, address, addressToken, rpc } = props;
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [coinUsd, setCoinUsd] = useState(0);
@@ -36,7 +37,7 @@ const ItemWallet = (props: Props) => {
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
   async function fetchBalance() {
     if (addressToken != "coin") {
-      const balance = await getBalanceToken(rpc, addressToken, address);
+      const balance = await getBalanceToken(rpc, addressToken, address, decimals);
       //console.log(">>>>>>Co balance toi: " + (parseFloat(balance)));
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
@@ -71,6 +72,7 @@ const ItemWallet = (props: Props) => {
     navigation.navigate(WalletStackRouteNames.DetailToken, {
       id: id,
       symbol: symbol,
+      decimals: decimals,
       image: image,
       address: address,
       addressToken: addressToken,
@@ -109,7 +111,7 @@ const ItemWallet = (props: Props) => {
             <Text style={styles.title}>{symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
             <View style={styles.row}>
               <Text style={styles.body}>
-                {"$" + (coinUsd)}
+                {formatCurrency(coinUsd)}
               </Text>
               <View
                 style={{
@@ -129,17 +131,17 @@ const ItemWallet = (props: Props) => {
                   },
                 ]}
               >
-                {coinUsd24}%
+                {formatCurrencyNoCrc(coinUsd24)}%
               </Text>
             </View>
           </View>
         </View>
         <View>
           <Text style={[styles.title, { textAlign: "right" }]}>
-            {(parseFloat(price).toFixed(2))}
+            {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price))}
           </Text>
           <Text style={[styles.body, { textAlign: "right" }]}>
-            ${(priceUsd).toFixed(2)}
+            {formatCurrency(priceUsd)}
           </Text>
         </View>
       </View>

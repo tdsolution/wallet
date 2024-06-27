@@ -31,6 +31,7 @@ const TabListToken = ({
             <ItemWallet
               id={item.id}
               symbol={item.symbol}
+              decimals={item.decimals}
               image={item.logo}
               rpc={chainActive.rpc}
               addressToken={item.tokenAddress}
@@ -46,6 +47,7 @@ const TabListToken = ({
             <ItemWallet
               // id={item.id}
               symbol={item.symbol}
+              decimals={item.decimals}
               // image={item.logo}
               rpc={chainActive.rpc}
               addressToken={item.tokenAddress}

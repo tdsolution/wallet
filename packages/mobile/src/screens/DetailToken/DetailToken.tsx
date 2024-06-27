@@ -18,7 +18,7 @@ import { Events, SendAnalyticsFrom } from "$store/models";
 import { useFlags } from "$utils/flags";
 import { t } from "@tonkeeper/shared/i18n";
 import { useChain, useEvm, useWallet } from "@tonkeeper/shared/hooks";
-import { fetchBalaceEvm, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
+import { fetchBalaceEvm, formatCurrency, formatCurrencyNoCrc } from "$libs/EVM/useBalanceEVM";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import ItemTransaction from "./Item/ItemTransaction";
 import { WalletStackRouteNames, openDAppBrowser } from "$navigation";
@@ -27,7 +27,7 @@ import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { buildAddressUrl } from "$libs/EVM/brower";
 
 const DetailToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const { id, symbol, decimals, image, address, addressToken, rpc } = route.params;
   //console.log('dau cho' + address);
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
@@ -37,7 +37,6 @@ const DetailToken = ({ route }: any) => {
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
-
   const handleBack = () => {
     navigation.navigate(WalletStackRouteNames.Wallet);
   };
@@ -66,6 +65,7 @@ const DetailToken = ({ route }: any) => {
     navigation.navigate(WalletStackRouteNames.SendToken, {
       id: id,
       symbol: symbol,
+      decimals: decimals,
       image: image,
       address: address,
       addressToken: addressToken,
@@ -91,7 +91,7 @@ const DetailToken = ({ route }: any) => {
 
   async function fetchBalance() {
     if (addressToken != "coin") {
-      const balance = await getBalanceToken(rpc, addressToken, addressEvm);
+      const balance = await getBalanceToken(rpc, addressToken, addressEvm, decimals);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);
@@ -105,6 +105,7 @@ const DetailToken = ({ route }: any) => {
       setPrice(balance);
       setPriceUsd(balanceUsd);
     }
+    handleGetTransaction();
   }
 
   const handleGetTransaction = async () => {
@@ -126,10 +127,10 @@ const DetailToken = ({ route }: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      handleGetTransaction();
       fetchBalance();
     }, [])
   );
+
   return (
     <SafeAreaView>
       <View
@@ -177,14 +178,14 @@ const DetailToken = ({ route }: any) => {
         )}
 
         <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{marginTop: 20}}>
-          {parseFloat(price) == 0 ? "0.0" : parseFloat(price).toString().includes('.') ? parseFloat(price).toFixed(6) : parseFloat(price).toFixed(2)} {symbol}
+          {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price), 6)} {symbol}
         </Text>
         <Text 
         type="h3"
         style={{
           color: colors.Gray_Light,
           marginTop: 5,}}
-        >≈ {formatCurrencyNoCrc(priceUsd)} $</Text>
+        >≈ {formatCurrency(priceUsd)}</Text>
       </View>
       <View 
       style={{ marginTop: 10 }}>

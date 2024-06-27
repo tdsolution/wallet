@@ -33,9 +33,9 @@ export function formatCurrency(balance: number): string {
         const finalNumber: string[] = [];
 
         // Handling cases where balance is less than 1 and greater than 0
-        if (balance < 1 && balance > 0) {
-            return `$${balance.toFixed(6)}`;
-        } else {
+        // if (balance < 1 && balance > 0) {
+        //     return `$${balance.toFixed(6)}`;
+        // } else {
             for (let i = 0; i < numberAfterParse.length; i++) {
                 if (numberAfterParse[i] !== ',' && numberAfterParse[i] !== '.') {
                     finalNumber.push(numberAfterParse[i]);
@@ -48,7 +48,7 @@ export function formatCurrency(balance: number): string {
                 if (numberAfterParse[i] === '.') {
                     finalNumber.push(',');
                 }
-            }
+            //}
         }
 
         return finalNumber.join('').replace(/,00/g, '');
@@ -56,21 +56,21 @@ export function formatCurrency(balance: number): string {
         return '';
     }
 }
-export function formatCurrencyNoCrc(balance: number): string {
+export function formatCurrencyNoCrc(balance: number, max?: number): string {
     // console.log(balance);
     try {
         const f = new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+            minimumFractionDigits: 0,
+            maximumFractionDigits: max ? max : 2,
         });
         const numberAfterParse = f.format(balance);
         const finalNumber: string[] = [];
 
         // Xử lý trường hợp nhỏ hơn 1 và lớn hơn 0
-        if (balance < 1 && balance > 0) {
-            const formattedBalance = balance.toFixed(3);
-            return formattedBalance;
-        } else {
+        // if (balance < 1 && balance > 0) {
+        //     const formattedBalance = balance.toFixed(3);
+        //     return formattedBalance;
+        // } else {
             for (let i = 0; i < numberAfterParse.length; i++) {
                 if (numberAfterParse[i] !== ',' && numberAfterParse[i] !== '.') {
                     finalNumber.push(numberAfterParse[i]);
@@ -83,12 +83,12 @@ export function formatCurrencyNoCrc(balance: number): string {
                 if (numberAfterParse[i] === '.') {
                     finalNumber.push(',');
                 }
-            }
+            //}
         }
-
-        return balance === 0.0
-            ? finalNumber.join('').replace(/,/g, '.')
-            : finalNumber.join('').replace(/,00/g, '');
+        // return balance === 0.0
+        //     ? finalNumber.join('').replace(/,/g, '.')
+        //     : finalNumber.join('').replace(/,00/g, '');
+        return finalNumber.join('')
     } catch (e) {
         return '';
     }
