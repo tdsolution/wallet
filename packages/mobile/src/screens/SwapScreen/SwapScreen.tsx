@@ -82,7 +82,7 @@ const SwapScreen = () => {
     let token = isChangeCoinDes ? itemFromData2 : itemFromData1;
     let balance;
     if (!isChangeCoinDes) {
-      balance = await getBalanceToken(token.rpc, token.tokenAddress, addressEvm);
+      balance = await getBalanceToken(token.rpc, token.tokenAddress, addressEvm, token.decimals);
     } else {
       balance = await fetchBalaceEvm(addressEvm, token.rpc);
     }

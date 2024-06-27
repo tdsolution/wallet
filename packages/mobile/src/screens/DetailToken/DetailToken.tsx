@@ -27,7 +27,7 @@ import SaveListCoinRate from "$libs/EVM/api/get_exchange_rate";
 import { buildAddressUrl } from "$libs/EVM/brower";
 
 const DetailToken = ({ route }: any) => {
-  const { id, symbol, image, address, addressToken, rpc } = route.params;
+  const { id, symbol, decimals, image, address, addressToken, rpc } = route.params;
   //console.log('dau cho' + address);
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
@@ -37,7 +37,7 @@ const DetailToken = ({ route }: any) => {
   const chain = useChain()?.chain;
   const evm = useEvm()?.evm;
   const addressEvm = evm.addressWallet;
-
+console.log('addressEvm', addressEvm)
   const handleBack = () => {
     navigation.navigate(WalletStackRouteNames.Wallet);
   };
@@ -66,6 +66,7 @@ const DetailToken = ({ route }: any) => {
     navigation.navigate(WalletStackRouteNames.SendToken, {
       id: id,
       symbol: symbol,
+      decimals: decimals,
       image: image,
       address: address,
       addressToken: addressToken,
@@ -91,7 +92,7 @@ const DetailToken = ({ route }: any) => {
 
   async function fetchBalance() {
     if (addressToken != "coin") {
-      const balance = await getBalanceToken(rpc, addressToken, addressEvm);
+      const balance = await getBalanceToken(rpc, addressToken, addressEvm, decimals);
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? "");
       const rateUsd = coinRate?.usd ?? "0";
       const balanceUsd = parseFloat(rateUsd) * parseFloat(balance);

@@ -16,6 +16,7 @@ import { Text } from "@tonkeeper/uikit";
 
 interface Props {
   id?: string;
+  decimals?: number;
   symbol: string;
   image?: string;
   address: string;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const ItemWallet = (props: Props) => {
-  const { id, symbol, image, address, addressToken, rpc } = props;
+  const { id, symbol, decimals, image, address, addressToken, rpc } = props;
   const [price, setPrice] = useState("0");
   const [priceUsd, setPriceUsd] = useState(0);
   const [coinUsd, setCoinUsd] = useState(0);
@@ -36,7 +37,7 @@ const ItemWallet = (props: Props) => {
     "https://app.plearnclub.com/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png";
   async function fetchBalance() {
     if (addressToken != "coin") {
-      const balance = await getBalanceToken(rpc, addressToken, address);
+      const balance = await getBalanceToken(rpc, addressToken, address, decimals);
       //console.log(">>>>>>Co balance toi: " + (parseFloat(balance)));
       const coinRate = await SaveListCoinRate.getCoinRateById(id ?? '');
       const rateUsd = coinRate?.usd ?? "0";
@@ -71,6 +72,7 @@ const ItemWallet = (props: Props) => {
     navigation.navigate(WalletStackRouteNames.DetailToken, {
       id: id,
       symbol: symbol,
+      decimals: decimals,
       image: image,
       address: address,
       addressToken: addressToken,

@@ -100,7 +100,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
   //const [addressEvm, setAddressEVM] = useState("");
   const chain = useChain()?.chain;
   const { isReferrer, setIsReferrer } = useReferral();
-  const { evm, setEvm } = useEvm() || {};
+  const { evm, setEvm } = useEvm();
   //const addressEvm = evm.addressWallet;
   const [tokensImportEVM, setTokensImportEVM] = useState<any>([]);
   const flags = useFlags(["disable_swap"]);
@@ -163,6 +163,14 @@ export const WalletScreen = memo(({ navigation }: any) => {
     return () => clearTimeout(timer);
   }, [dispatch]);
 
+   useFocusEffect(
+    React.useCallback(() => {
+     if (!evm || evm.addressWallet == null ||  evm.addressWallet === "") {
+      fetchEvm();
+    };
+    }, [])
+  );
+
   const fetchEvm = async () => {
     try {
       const address = await AsyncStorage.getItem("EVMAddress");
@@ -174,7 +182,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
         privateKey: privateKey,
         mnemonic: mnemonic,
         name: name,
-      }
+      };
       setEvm(evmModal);
     } catch (error) {
       console.error('Error reading data from AsyncStorage:', error);
@@ -187,7 +195,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       tokensEVM.map((token1)=> {
         async function fetchBalance(token) {
         if (token.tokenAddress != "coin") {
-          const balance2 = await getBalanceToken(chain.rpc, token.tokenAddress, evm.addressWallet);
+          const balance2 = await getBalanceToken(chain.rpc, token.tokenAddress, evm.addressWallet, token.decimals);
           const coinRate = await SaveListCoinRate.getCoinRateById(token.id ?? '');
           const rateUsd = coinRate?.usd ?? "0";
           const balanceUsd = parseFloat(rateUsd) * parseFloat(balance2); 
@@ -203,15 +211,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       }
       fetchBalance(token1);
       }); 
-    }, [tokensEVM, evm.addressWallet])
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-     if (!evm || evm.addressWallet == null) {
-      fetchEvm();
-    };
-    }, [])
+    }, [tokensEVM, evm])
   );
   
   useEffect(() => {
@@ -231,38 +231,6 @@ export const WalletScreen = memo(({ navigation }: any) => {
       console.error("Error saving sample transaction:", error);
     }
   };
-
-  async function getFirstAddress() {
-    try {
-      // Lấy chuỗi JSON từ AsyncStorage
-      const jsonString = await AsyncStorage.getItem("LIST_WALLET");
-
-      // Kiểm tra nếu chuỗi JSON không null
-      if (jsonString !== null) {
-        // Chuyển đổi chuỗi JSON thành mảng
-        const walletArray = JSON.parse(jsonString);
-
-        // Kiểm tra nếu mảng không rỗng và lấy phần tử đầu tiên
-        if (Array.isArray(walletArray) && walletArray.length > 0) {
-          const firstAddress = walletArray[0];
-          console.log(
-            ">>>>>>>>>>>>>>>>>>>>Addddddddddddddressss: ",
-            firstAddress
-          );
-          return firstAddress;
-        } else {
-          console.log("Mảng rỗng hoặc không phải là mảng");
-          return null;
-        }
-      } else {
-        console.log("Không có dữ liệu trong AsyncStorage");
-        return null;
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu từ AsyncStorage", error);
-      return null;
-    }
-  }
 
   const URL_NETWORK = chain.rpc;
   const CONTRACT_ADDRESS = chain.contractAddressReferrer;
@@ -297,23 +265,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
 
   useEffect(() => {
     checkIsReferrer();
-  }, [isReferrer, chain, evm.addressWallet]);
-
-  useEffect(() => {
-    // Gọi hàm và kiểm tra kết quả
-    getFirstAddress().then((address) => {
-      if (address) {
-        console.log("Địa chỉ đầu tiên: ", address.addressWallet);
-        setWalletEVM(evm.addressWallet == null ? address : evm);
-      } else {
-        console.log("Không lấy được địa chỉ đầu tiên");
-      }
-    });
-
-    return () => {
-      getFirstAddress();
-    };
-  }, []);
+  }, [isReferrer, chain, evm]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -349,6 +301,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
       navigation.navigate(WalletStackRouteNames.SendToken, {
         id: tokensEVM[0].id,
         symbol: tokensEVM[0].symbol,
+        decimals: tokensEVM[0].decimals,
         image: tokensEVM[0].logo,
         address: evm.addressWallet,
         addressToken: tokensEVM[0].tokenAddress,
@@ -629,7 +582,7 @@ export const WalletScreen = memo(({ navigation }: any) => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 14 }}>{evm.name}</Text>
+                <Text style={{ fontSize: 14 }}>{evm ? evm.name : ""}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <TouchableOpacity
                     onPress={() => {

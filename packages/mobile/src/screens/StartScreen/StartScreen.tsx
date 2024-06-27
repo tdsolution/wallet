@@ -11,7 +11,7 @@ import {
 import Svg from 'react-native-svg';
 import { useWindowDimensions, Image,TouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { t } from '@tonkeeper/shared/i18n';
 import { MainStackRouteNames } from '$navigation';
 import { useDispatch } from 'react-redux';
@@ -30,6 +30,7 @@ const bip39 = require('bip39')
 const HEIGHT_RATIO = deviceHeight / 844;
 const  WIDTH_RATIO = deviceWidth / 844;
 export const StartScreen = memo(() => {
+  const [isDisable, setIsDisable] = useState<boolean>(false)
   const dimensions = useWindowDimensions();
   const dispatch = useDispatch();
   const nav = useNavigation();
@@ -41,10 +42,17 @@ export const StartScreen = memo(() => {
   const logoShapesPosY =
     origShapesHeight / 2 - (origShapesHeight * ratioHeight) / 2;
   const handleCreatePress = useCallback(async () => {
+    setIsDisable(true);
     dispatch(walletActions.generateVault());
     const mnemonic  = await generateMnemonic();
-    await createWalletFromMnemonic(mnemonic);
-    nav.navigate(MainStackRouteNames.CreateWalletStack);
+    try {
+      await createWalletFromMnemonic(mnemonic);
+      nav.navigate(MainStackRouteNames.CreateWalletStack);
+    } catch (error) {
+      console.log("Error: ", error)
+    } finally {
+      setIsDisable(false);
+    }
   }, [dispatch, nav]);
   const handleImportPress = useCallback(() => {
     nav.navigate(MainStackRouteNames.ImportWalletStack);
@@ -89,7 +97,7 @@ export const StartScreen = memo(() => {
       </View >
       <View style={styles.content}>
         <View style={styles.buttons}>
-          <TouchableOpacity onPress={handleCreatePress}>
+          <TouchableOpacity disabled={isDisable} onPress={handleCreatePress}>
             <View style={styles.buttonV}>
                 <View style={styles.iconButton}>
                   <Image source={require('../../assets/icons/png/ic_baseline-plus.png')} style={{width:30 * HEIGHT_RATIO,height:30 * HEIGHT_RATIO}}/>

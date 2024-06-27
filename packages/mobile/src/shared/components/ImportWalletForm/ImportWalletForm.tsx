@@ -27,19 +27,21 @@ import { wordlist } from "$libs/Ton/mnemonic/wordlist";
 import { Toast } from "$store";
 import { t } from "@tonkeeper/shared/i18n";
 import {
-  addWalletFromMnemonic,
   createWalletFromMnemonic,
-  generateMnemonic,
 } from "$libs/EVM/createWallet";
-import { CreateWalletStackRouteNames } from "$navigation/CreateWalletStack/types";
 import { ImportWalletStackRouteNames } from "$navigation/ImportWalletStack/types";
-import { MainStackRouteNames } from "$navigation";
-
 import { useNavigation } from "@tonkeeper/router";
-import { Wallet as WalletETH } from "ethers";
 import { walletActions } from "$store/wallet";
+import { useChain } from "@tonkeeper/shared/hooks";
+import { DataChains } from "@tonkeeper/shared/utils/network";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { chainActive } from "@tonkeeper/shared/utils/KEY_STORAGE";
 
 export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
+  const {chain,setChain} = useChain();
+  const dataChain = useMemo(() => {
+        return DataChains;
+    }, []);
   const [isWord24, setIsWord24] = useState<boolean>(true);
   const { onWordsFilled, onWordsFilled12 } = props;
   const { bottom: bottomInset } = useSafeAreaInsets();
@@ -232,29 +234,10 @@ export const ImportWalletForm: FC<ImportWalletFormProps> = (props) => {
         return mnemonic;
       };
 
-      // const wallet = WalletETH.fromPhrase(valueMnemonic());
-      // console.log("Add wallet: ", wallet);
-      // if (wallet) {
-      //   console.log("Import wallet successfully");
-      //   handleCreatePress();
-
-      // } else {
-      //   Toast.fail("Mnemonic phrase is incorrect");
-      //   setRestoring(false);
-      // }
-      const a = await addWalletFromMnemonic(valueMnemonic());
-      if (a) {
-        if (a == 1) {
-          console.log("Import wallet successfully");
+      await createWalletFromMnemonic(valueMnemonic());
+      await AsyncStorage.setItem(chainActive, JSON.stringify(dataChain[3]));
+          setChain(dataChain[3]);
           handleCreateTonPress();
-        } else {
-          console.log("Wallet already exists!");
-          setRestoring(false);
-        }
-      } else {
-        console.log("Seed phrase is wrong!");
-        setRestoring(false);
-      }
     } catch (error) {
       console.log("Error: ", error);
       Toast.fail("Mnemonic phrase is incorrect");

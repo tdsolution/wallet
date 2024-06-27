@@ -47,6 +47,8 @@ import { trackEvent } from "$utils/stats";
 import { openAppearance } from "$core/ModalContainer/AppearanceModal";
 import { config } from "$config";
 import {
+  useChain,
+  useEvm,
   useNftsState,
   useWallet,
   useWalletCurrency,
@@ -64,8 +66,15 @@ import SaveListToken from "$libs/EVM/HistoryEVM/SaveToken";
 import SaveTransaction from "$libs/EVM/HistoryEVM/SaveTransaction";
 import SaveListWallet from "$libs/EVM/SaveWallet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DataChains } from "@tonkeeper/shared/utils/network";
+import { chainActive } from "@tonkeeper/shared/utils/KEY_STORAGE";
 
 export const Settings: FC = () => {
+  const {evm, setEvm} = useEvm();
+  const {chain,setChain} = useChain();
+  const dataChain = useMemo(() => {
+        return DataChains;
+    }, []);
   const animationRef = useRef<AnimatedLottieView>(null);
   const devMenuHandlerRef = useRef(null);
   const [modalVisibleSignOut, setModalVisibleSignOut] =
@@ -152,6 +161,7 @@ export const Settings: FC = () => {
       await AsyncStorage.removeItem('EVMAddress');
       await AsyncStorage.removeItem('EVMMnemonic');
       await AsyncStorage.removeItem('EVMMname');
+      await AsyncStorage.setItem(chainActive, JSON.stringify(dataChain[0]));
       console.log("Token clear successfully!: ");
     } catch (error) {
       console.error("Error clear token:", error);
@@ -180,6 +190,14 @@ export const Settings: FC = () => {
 
     setModalVisibleSignOut(false);
     handleClearToken();
+     const evmModal = {
+        addressWallet: "",
+        privateKey: "",
+        mnemonic: "",
+        name: "",
+      }
+    setEvm(evmModal);
+    setChain(dataChain[0]);
   }, [dispatch]);
 
   const handleStopWatchWallet = useCallback(() => {

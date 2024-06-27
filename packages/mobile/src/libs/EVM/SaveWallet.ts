@@ -74,7 +74,7 @@ class SaveListWallet {
       await AsyncStorage.removeItem(this._key);
       console.log('Cleared data successfully');
       } catch (error) {
-      console.error('Error clearing data:', error);
+      console.error('Error clearing data wallet:', error);
       throw error;
       }
     }
