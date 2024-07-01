@@ -109,6 +109,7 @@ const ItemWallet = (props: Props) => {
           </View>
           <View>
             <Text style={styles.title}>{symbol.length < 10 ? symbol : symbol.substring(0,8)+ '...'}</Text>
+            {id ? 
             <View style={styles.row}>
               <Text style={styles.body}>
                 {formatCurrency(coinUsd)}
@@ -134,6 +135,11 @@ const ItemWallet = (props: Props) => {
                 {formatCurrencyNoCrc(coinUsd24)}%
               </Text>
             </View>
+            : 
+            <Text style={styles.body}>
+              updating...
+            </Text>
+            }
           </View>
         </View>
         <View>
@@ -141,7 +147,7 @@ const ItemWallet = (props: Props) => {
             {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price))}
           </Text>
           <Text style={[styles.body, { textAlign: "right" }]}>
-            {formatCurrency(priceUsd)}
+            {id ? formatCurrency(priceUsd) : "updating..."}
           </Text>
         </View>
       </View>

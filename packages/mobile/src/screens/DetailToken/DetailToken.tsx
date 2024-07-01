@@ -180,12 +180,15 @@ const DetailToken = ({ route }: any) => {
         <Text type="h1" color="textPrimaryAlternate" textAlign="center" style={{marginTop: 20}}>
           {parseFloat(price) == 0 ? "0,0" : formatCurrencyNoCrc(parseFloat(price), 6)} {symbol}
         </Text>
+        {id ? 
         <Text 
         type="h3"
         style={{
           color: colors.Gray_Light,
           marginTop: 5,}}
         >≈ {formatCurrency(priceUsd)}</Text>
+        : <></>
+        }
       </View>
       <View 
       style={{ marginTop: 10 }}>
