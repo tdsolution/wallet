@@ -116,7 +116,8 @@ export const DataTokens: any[] = [
                 logo: "https://assets.coingecko.com/coins/images/29276/large/wcore.png?1696528228",
             },
             {
-                id: "cst",
+                // id: "cst",
+                id: "core-stake-token",
                 tokenAddress: "0xc24b642357d7dd1bbe33f3d8aa0101dfa2cf6eb9",
                 symbol: "CST",
                 decimals: 18,
